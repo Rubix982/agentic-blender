@@ -101,4 +101,42 @@ bpy.context.view_layer.update()
 E.fact("pose_bone.head/tail are in armature (object) space: an armature moved 5 m along X still reports x = 0; "
        "multiply by the object's matrix_world for world space",
        pose_head=list(r.pose.bones["upper"].head), world_head=list(r.matrix_world @ r.pose.bones["upper"].head))
+# 6. an object parented to a bone sits at the bone's TAIL, in the bone's frame
+r = rig()
+bpy.ops.object.empty_add(location=(0, 0, 0))
+emp = bpy.context.object
+emp.parent = r
+emp.parent_type = "BONE"
+emp.parent_bone = "lower"
+bpy.context.view_layer.update()
+at_identity = [round(x, 4) for x in emp.matrix_world.translation]
+r.pose.bones["lower"].rotation_quaternion = Euler((math.radians(90), 0, 0)).to_quaternion()
+bpy.context.view_layer.update()
+after_pose = [round(x, 4) for x in emp.matrix_world.translation]
+E.fact("an object parented to a bone (parent_type 'BONE') with an identity parent inverse and location 0 sits at the "
+       "bone's tail, not its head, and follows the bone's pose", bone_head=list(r.data.bones["lower"].head_local),
+       bone_tail=list(r.data.bones["lower"].tail_local), empty_world=at_identity, empty_after_90deg=after_pose)
+
+# 7. a bone with use_deform off ignores its vertex group
+r = rig()
+bpy.ops.mesh.primitive_cylinder_add(radius=0.1, depth=2.0, location=(0, 0, 1.0), vertices=12)
+cyl = bpy.context.object
+for name in ("lower", "upper"):
+    vg = cyl.vertex_groups.new(name=name)
+    vg.add([v.index for v in cyl.data.vertices if (v.co.z + 1.0 > 1.0) == (name == "upper")], 1.0, "REPLACE")
+md = cyl.modifiers.new("Armature", "ARMATURE"); md.object = r
+r.pose.bones["upper"].rotation_quaternion = Euler((math.radians(90), 0, 0)).to_quaternion()
+
+
+def top_y():
+    dg = bpy.context.evaluated_depsgraph_get()
+    ev = cyl.evaluated_get(dg)
+    return round(max(abs((ev.matrix_world @ v.co).y) for v in ev.data.vertices), 4)
+
+
+moved = top_y()
+r.data.bones["upper"].use_deform = False
+not_moved = top_y()
+E.fact("a bone with use_deform = False does not move the points weighted to it", top_offset_deform_on=moved,
+       top_offset_deform_off=not_moved)
 E.save()

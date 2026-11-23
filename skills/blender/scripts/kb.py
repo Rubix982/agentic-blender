@@ -76,8 +76,11 @@ def fmt_prop(p, full=False, indent=2):
     if "default" in p and p["type"] not in ("POINTER", "COLLECTION"):
         bits.append(f"= {json.dumps(p['default'])}")
     if p.get("range") and p["range"] != [None, None]:
-        r = p.get("soft") or p["range"]
-        bits.append(f"[{r[0]} .. {r[1]}]")
+        r = p["range"]
+        if p.get("soft"):
+            bits.append(f"[{p['soft'][0]} .. {p['soft'][1]}; hard {r[0]} .. {r[1]}]")
+        else:
+            bits.append(f"[{r[0]} .. {r[1]}]")
     flags = [f for f in ("readonly", "required", "flag", "dynamic") if p.get(f)]
     if flags:
         bits.append("{" + ",".join(flags) + "}")

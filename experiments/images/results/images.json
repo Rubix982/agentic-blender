@@ -1,0 +1,144 @@
+{
+ "experiment": "experiments/images/images.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.24,
+ "facts": [
+  {
+   "fact": "A new image's colour space: 8-bit images start as sRGB, float images as Linear Rec.709; both start black and opaque, with alpha",
+   "byte_colorspace": "sRGB",
+   "float_colorspace": "Linear Rec.709",
+   "byte_first_pixel": [
+    0.0,
+    0.0,
+    0.0,
+    1.0
+   ],
+   "float_first_pixel": [
+    0.0,
+    0.0,
+    0.0,
+    1.0
+   ],
+   "channels": 4,
+   "is_float": [
+    false,
+    true
+   ]
+  },
+  {
+   "fact": "Writing 1024 x 1024 RGBA pixels: image.pixels.foreach_set(float32 array) is many times faster than image.pixels[:] = list; foreach_get reads them back the same way. Pixel rows run bottom to top",
+   "foreach_set_s": 0.0006,
+   "slice_assign_s": 0.075,
+   "foreach_get_s": 0.0013,
+   "round_trip_exact": true
+  },
+  {
+   "fact": "What image.save() writes for a pixel value of 0.5 (no view transform is applied). An 8-bit image stores 0.5 as byte 128, already sRGB-encoded: its PNG holds 128, and its EXR holds 0.2158, the linear value of that byte. A new float image's 0.5 is treated as linear: its PNG holds byte 188 (0.5 encoded as sRGB), and its EXR holds 0.7354, not 0.5 (the next fact)",
+   "value_written": 0.5,
+   "results": {
+    "byte -> PNG": {
+     "read_back": 0.502,
+     "colorspace": "sRGB",
+     "png_byte": 128
+    },
+    "byte -> OPEN_EXR": {
+     "read_back": 0.2158,
+     "colorspace": "Linear Rec.709"
+    },
+    "float -> PNG": {
+     "read_back": 0.5,
+     "colorspace": "sRGB",
+     "png_byte": 188
+    },
+    "float -> OPEN_EXR": {
+     "read_back": 0.7354,
+     "colorspace": "Linear Rec.709"
+    }
+   },
+   "srgb_of_half": 0.7354
+  },
+  {
+   "fact": "Saving a new float image to EXR does not keep 0.5 as 0.5 unless its colour space is 'Non-Color' set before the pixels are written: as created it is switched to sRGB on save and the file holds 0.7354 (0.5 encoded as sRGB); setting a colour space after writing the pixels throws them away (the file holds 0). After save() the image's pixel buffer can read as empty until the image is reloaded. Mechanism not traced; measured with OpenImageIO",
+   "results": {
+    "as created (Linear Rec.709)": {
+     "value_in_file": 0.7354,
+     "colorspace_after_save": "sRGB",
+     "pixels_in_memory_after_save": 0
+    },
+    "Non-Color, set before the pixels": {
+     "value_in_file": 0.5,
+     "colorspace_after_save": "Non-Color",
+     "pixels_in_memory_after_save": 256
+    },
+    "Linear Rec.709, set after the pixels": {
+     "value_in_file": 0.0,
+     "colorspace_after_save": "sRGB",
+     "pixels_in_memory_after_save": 0
+    }
+   }
+  },
+  {
+   "fact": "After image.save(), a new image becomes a FILE image tied to the saved path. A float image saved as EXR and then saved again as PNG fails ('does not have any image data'); with save_copy=True the image stays as it was and can be saved again in another format",
+   "results": {
+    "byte, save_copy=False": {
+     "source_after_first_save": "FILE",
+     "second_save_as_png": "ok"
+    },
+    "byte, save_copy=True": {
+     "source_after_first_save": "GENERATED",
+     "second_save_as_png": "ok"
+    },
+    "float, save_copy=False": {
+     "source_after_first_save": "FILE",
+     "second_save_as_png": "ERROR Error: Image 'twice_float_False' does not have any image data"
+    },
+    "float, save_copy=True": {
+     "source_after_first_save": "GENERATED",
+     "second_save_as_png": "ok"
+    }
+   }
+  },
+  {
+   "fact": "image.save_render(path) applies the scene's view transform and look, like a render: the same linear 0.5 grey comes out differently under each view transform (AgX is 4.5's default); use image.save() to keep the values",
+   "read_back_8bit": {
+    "Standard": 0.7373,
+    "AgX": 0.6667,
+    "Filmic": 0.6941
+   },
+   "factory_default_view_transform": "AgX"
+  },
+  {
+   "fact": "A texture that holds data (roughness, normals, heights) must be read with colour space 'Non-Color', set on the image: colorspace_settings.name accepts it",
+   "set_to": "Non-Color",
+   "is_data": true
+  },
+  {
+   "fact": "A data-block with no users is not written to the .blend: an image nobody uses is gone after save and reopen. With use_fake_user it survives, but an image never saved or packed comes back as a GENERATED image: the pixels written into it are lost (painted blue, reopened red, its generated colour); pack() or saving it to a file keeps them",
+   "orphan_after_reopen": false,
+   "fake_user_after_reopen": {
+    "source": "GENERATED",
+    "first_pixel": [
+     1.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "fact": "A packed image keeps its pixels through save and reopen",
+   "source": "FILE",
+   "packed": true,
+   "first_pixel": [
+    0.0,
+    1.0,
+    0.0,
+    1.0
+   ]
+  }
+ ],
+ "data": {},
+ "args": []
+}

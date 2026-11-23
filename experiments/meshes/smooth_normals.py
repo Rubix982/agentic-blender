@@ -72,7 +72,7 @@ me.corner_normals.foreach_get("vector", cn)
 cn = cn.reshape(-1, 3)
 uniq = len(np.unique(np.round(cn, 4), axis=0))
 vn = np.empty(len(me.vertices) * 3, np.float32); me.vertex_normals.foreach_get("vector", vn)
-E.fact("after set_sharp_from_angle, corner_normals has one normal per loop and the top cap corners point straight up",
+E.fact("after set_sharp_from_angle on the 16-sided cylinder, corner_normals has one normal per corner (96) with 18 distinct directions (16 sides + 2 caps), and normals_domain is CORNER",
        loops=len(me.loops), distinct_corner_normals=uniq, normals_domain=me.normals_domain,
        has_corner_normals_attr=hasattr(me, "corner_normals"))
 

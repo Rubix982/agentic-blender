@@ -1,0 +1,163 @@
+{
+ "experiment": "experiments/data/import_formats.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.1,
+ "facts": [
+  {
+   "fact": "4.5 has the C++ importers/exporters under bpy.ops.wm.*; the old Python add-on operator names are gone",
+   "wm": {
+    "obj_import": true,
+    "obj_export": true,
+    "ply_import": true,
+    "ply_export": true,
+    "stl_import": true,
+    "stl_export": true,
+    "fbx_import": true
+   },
+   "old": {
+    "import_scene.obj": "KeyError",
+    "export_scene.obj": "KeyError",
+    "import_mesh.ply": "KeyError",
+    "import_mesh.stl": "KeyError",
+    "export_mesh.stl": "KeyError"
+   }
+  },
+  {
+   "fact": "round trip of a 16x8 UV sphere (114 verts, 128 faces) through each format",
+   "by_format": {
+    "obj": {
+     "export": [
+      "FINISHED"
+     ],
+     "import_": [
+      "FINISHED"
+     ],
+     "new_objects": [
+      "Sphere.001"
+     ],
+     "verts": 114,
+     "faces": 128,
+     "same_world_bbox": true,
+     "rotation_deg": [
+      90.0,
+      -0.0,
+      0.0
+     ],
+     "selected_after": [
+      "Sphere.001"
+     ],
+     "export_ms": 0.5,
+     "import_ms": 0.6,
+     "size_kb": 14.4
+    },
+    "ply": {
+     "export": [
+      "FINISHED"
+     ],
+     "import_": [
+      "FINISHED"
+     ],
+     "new_objects": [
+      "import_formats-sphere"
+     ],
+     "verts": 151,
+     "faces": 128,
+     "same_world_bbox": true,
+     "rotation_deg": [
+      0.0,
+      -0.0,
+      0.0
+     ],
+     "selected_after": [
+      "import_formats-sphere"
+     ],
+     "export_ms": 0.4,
+     "import_ms": 0.3,
+     "size_kb": 5.2
+    },
+    "stl": {
+     "export": [
+      "FINISHED"
+     ],
+     "import_": [
+      "FINISHED"
+     ],
+     "new_objects": [
+      "import_formats-sphere"
+     ],
+     "verts": 114,
+     "faces": 224,
+     "same_world_bbox": true,
+     "rotation_deg": [
+      0.0,
+      -0.0,
+      0.0
+     ],
+     "selected_after": [
+      "import_formats-sphere"
+     ],
+     "export_ms": 0.2,
+     "import_ms": 0.2,
+     "size_kb": 11.0
+    }
+   }
+  },
+  {
+   "fact": "import operator options",
+   "obj": [
+    "filepath",
+    "directory",
+    "files",
+    "check_existing",
+    "filemode",
+    "display_type",
+    "sort_method",
+    "global_scale",
+    "clamp_size",
+    "forward_axis",
+    "up_axis",
+    "use_split_objects",
+    "use_split_groups",
+    "import_vertex_groups",
+    "validate_meshes",
+    "close_spline_loops",
+    "collection_separator"
+   ],
+   "stl": [
+    "filepath",
+    "directory",
+    "files",
+    "check_existing",
+    "filemode",
+    "display_type",
+    "sort_method",
+    "global_scale",
+    "use_scene_unit",
+    "use_facet_normal",
+    "forward_axis",
+    "up_axis",
+    "use_mesh_validate"
+   ],
+   "ply": [
+    "filepath",
+    "directory",
+    "files",
+    "check_existing",
+    "filemode",
+    "display_type",
+    "sort_method",
+    "global_scale",
+    "use_scene_unit",
+    "forward_axis",
+    "up_axis",
+    "merge_verts",
+    "import_colors",
+    "import_attributes"
+   ]
+  }
+ ],
+ "data": {},
+ "args": []
+}

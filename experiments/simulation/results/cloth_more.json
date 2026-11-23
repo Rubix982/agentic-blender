@@ -1,0 +1,265 @@
+{
+ "experiment": "experiments/simulation/cloth_more.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 2.71,
+ "facts": [
+  {
+   "fact": "sewing springs 20 cm long against soft pins (0.9, stiffness 50), no gravity, 40 frames: the seam gap left at each sewing_force_max, and with the force keyframed up or down. Keyed values act: each keyed run ends where a constant run at its later value ends",
+   "gaps": {
+    "sewing_force_max 0 (no limit)": {
+     "gap_m": 0.1522,
+     "mean_z": 1.0,
+     "fcurve_count": 0
+    },
+    "sewing_force_max 1": {
+     "gap_m": 0.1989,
+     "mean_z": 1.0,
+     "fcurve_count": 0
+    },
+    "sewing_force_max 200": {
+     "gap_m": 0.1522,
+     "mean_z": 1.0,
+     "fcurve_count": 0
+    },
+    "keyed 1 at frame 1 -> 200 at frame 10": {
+     "gap_m": 0.1522,
+     "mean_z": 1.0,
+     "fcurve_count": 1
+    },
+    "keyed 200 at frame 1 -> 1 at frame 2": {
+     "gap_m": 0.1989,
+     "mean_z": 1.0,
+     "fcurve_count": 1
+    }
+   }
+  },
+  {
+   "fact": "control: a keyframed gravity weight does act mid-simulation (mean height after 40 frames, no pins)",
+   "mean_z": {
+    "gravity 0": 1.0,
+    "gravity keyed 0 -> 1 at frame 20": -0.7458
+   }
+  },
+  {
+   "fact": "a sheet pinned everywhere, a sphere pushed up into it from below (its top 20 cm past the sheet): points left inside the sphere and how far the sheet was lifted, by pin weight",
+   "rows": {
+    "weight 1.0, stiffness 1.0": {
+     "points_inside_ball": 109,
+     "highest_lift_m": 0.0
+    },
+    "weight 0.9, stiffness 1.0": {
+     "points_inside_ball": 24,
+     "highest_lift_m": 0.085
+    },
+    "weight 0.9, stiffness 50.0": {
+     "points_inside_ball": 41,
+     "highest_lift_m": 0.0459
+    },
+    "weight 0.5, stiffness 1.0": {
+     "points_inside_ball": 0,
+     "highest_lift_m": 0.2342
+    }
+   }
+  },
+  {
+   "fact": "collision_settings.collection limits a cloth's colliders: with it set to a collection holding only the lower plane, the cloth falls through the upper one (mean height after 30 frames)",
+   "mean_z": {
+    "no collection (both planes collide)": 0.534,
+    "collection holding only the lower plane": 0.034
+   }
+  },
+  {
+   "fact": "a 12 cm strip clamped at one end, at a 15 mm and a 7.5 mm grid with the same settings, and the fine grid with its mass scaled by the square of the spacing: where its tip ends (reach along the strip, drop below the clamp)",
+   "rows": {
+    "bending 0.5, mass 0.3: 15 mm grid": {
+     "points": 27,
+     "tip_reach_m": 0.0136,
+     "tip_drop_m": 0.1051
+    },
+    "bending 0.5, mass 0.3: 7.5 mm grid": {
+     "points": 85,
+     "tip_reach_m": 0.0046,
+     "tip_drop_m": 0.1126
+    },
+    "bending 0.5, mass 0.3: 7.5 mm grid, mass x (7.5/15)^2": {
+     "points": 85,
+     "tip_reach_m": 0.0077,
+     "tip_drop_m": 0.1125
+    },
+    "bending 200.0, mass 0.3: 15 mm grid": {
+     "points": 27,
+     "tip_reach_m": 0.0596,
+     "tip_drop_m": 0.0903
+    },
+    "bending 200.0, mass 0.3: 7.5 mm grid": {
+     "points": 85,
+     "tip_reach_m": -0.0013,
+     "tip_drop_m": 0.1101
+    },
+    "bending 200.0, mass 0.3: 7.5 mm grid, mass x (7.5/15)^2": {
+     "points": 85,
+     "tip_reach_m": 0.032,
+     "tip_drop_m": 0.1056
+    },
+    "bending 0.5, mass 0.0012: 15 mm grid": {
+     "points": 27,
+     "tip_reach_m": 0.074,
+     "tip_drop_m": 0.0848
+    },
+    "bending 0.5, mass 0.0012: 7.5 mm grid": {
+     "points": 85,
+     "tip_reach_m": 0.0538,
+     "tip_drop_m": 0.1015
+    },
+    "bending 0.5, mass 0.0012: 7.5 mm grid, mass x (7.5/15)^2": {
+     "points": 85,
+     "tip_reach_m": 0.1122,
+     "tip_drop_m": 0.0355
+    },
+    "bending 0.5, mass 0.003: 15 mm grid": {
+     "points": 27,
+     "tip_reach_m": 0.0312,
+     "tip_drop_m": 0.1008
+    },
+    "bending 0.5, mass 0.003: 7.5 mm grid": {
+     "points": 85,
+     "tip_reach_m": 0.0117,
+     "tip_drop_m": 0.1119
+    },
+    "bending 0.5, mass 0.003: 7.5 mm grid, mass x (7.5/15)^2": {
+     "points": 85,
+     "tip_reach_m": 0.0834,
+     "tip_drop_m": 0.0807
+    }
+   }
+  }
+ ],
+ "data": {
+  "sewing": {
+   "sewing_force_max 0 (no limit)": {
+    "gap_m": 0.1522,
+    "mean_z": 1.0,
+    "fcurve_count": 0
+   },
+   "sewing_force_max 1": {
+    "gap_m": 0.1989,
+    "mean_z": 1.0,
+    "fcurve_count": 0
+   },
+   "sewing_force_max 200": {
+    "gap_m": 0.1522,
+    "mean_z": 1.0,
+    "fcurve_count": 0
+   },
+   "keyed 1 at frame 1 -> 200 at frame 10": {
+    "gap_m": 0.1522,
+    "mean_z": 1.0,
+    "fcurve_count": 1
+   },
+   "keyed 200 at frame 1 -> 1 at frame 2": {
+    "gap_m": 0.1989,
+    "mean_z": 1.0,
+    "fcurve_count": 1
+   }
+  },
+  "gravity": {
+   "gravity 0": {
+    "gap_m": 0.0,
+    "mean_z": 1.0,
+    "fcurve_count": 0
+   },
+   "gravity keyed 0 -> 1 at frame 20": {
+    "gap_m": 0.0,
+    "mean_z": -0.7458,
+    "fcurve_count": 1
+   }
+  },
+  "pins": {
+   "weight 1.0, stiffness 1.0": {
+    "points_inside_ball": 109,
+    "highest_lift_m": 0.0
+   },
+   "weight 0.9, stiffness 1.0": {
+    "points_inside_ball": 24,
+    "highest_lift_m": 0.085
+   },
+   "weight 0.9, stiffness 50.0": {
+    "points_inside_ball": 41,
+    "highest_lift_m": 0.0459
+   },
+   "weight 0.5, stiffness 1.0": {
+    "points_inside_ball": 0,
+    "highest_lift_m": 0.2342
+   }
+  },
+  "collection": {
+   "no collection (both planes collide)": 0.534,
+   "collection holding only the lower plane": 0.034
+  },
+  "strips": {
+   "bending 0.5, mass 0.3: 15 mm grid": {
+    "points": 27,
+    "tip_reach_m": 0.0136,
+    "tip_drop_m": 0.1051
+   },
+   "bending 0.5, mass 0.3: 7.5 mm grid": {
+    "points": 85,
+    "tip_reach_m": 0.0046,
+    "tip_drop_m": 0.1126
+   },
+   "bending 0.5, mass 0.3: 7.5 mm grid, mass x (7.5/15)^2": {
+    "points": 85,
+    "tip_reach_m": 0.0077,
+    "tip_drop_m": 0.1125
+   },
+   "bending 200.0, mass 0.3: 15 mm grid": {
+    "points": 27,
+    "tip_reach_m": 0.0596,
+    "tip_drop_m": 0.0903
+   },
+   "bending 200.0, mass 0.3: 7.5 mm grid": {
+    "points": 85,
+    "tip_reach_m": -0.0013,
+    "tip_drop_m": 0.1101
+   },
+   "bending 200.0, mass 0.3: 7.5 mm grid, mass x (7.5/15)^2": {
+    "points": 85,
+    "tip_reach_m": 0.032,
+    "tip_drop_m": 0.1056
+   },
+   "bending 0.5, mass 0.0012: 15 mm grid": {
+    "points": 27,
+    "tip_reach_m": 0.074,
+    "tip_drop_m": 0.0848
+   },
+   "bending 0.5, mass 0.0012: 7.5 mm grid": {
+    "points": 85,
+    "tip_reach_m": 0.0538,
+    "tip_drop_m": 0.1015
+   },
+   "bending 0.5, mass 0.0012: 7.5 mm grid, mass x (7.5/15)^2": {
+    "points": 85,
+    "tip_reach_m": 0.1122,
+    "tip_drop_m": 0.0355
+   },
+   "bending 0.5, mass 0.003: 15 mm grid": {
+    "points": 27,
+    "tip_reach_m": 0.0312,
+    "tip_drop_m": 0.1008
+   },
+   "bending 0.5, mass 0.003: 7.5 mm grid": {
+    "points": 85,
+    "tip_reach_m": 0.0117,
+    "tip_drop_m": 0.1119
+   },
+   "bending 0.5, mass 0.003: 7.5 mm grid, mass x (7.5/15)^2": {
+    "points": 85,
+    "tip_reach_m": 0.0834,
+    "tip_drop_m": 0.0807
+   }
+  }
+ },
+ "args": []
+}

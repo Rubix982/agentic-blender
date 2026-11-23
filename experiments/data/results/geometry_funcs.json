@@ -1,0 +1,227 @@
+{
+ "experiment": "experiments/data/geometry_funcs.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.05,
+ "facts": [
+  {
+   "fact": "delaunay_2d_cdt(verts, edges, faces, output_type, epsilon) on a 4x4 square with a 2x2 square hole given as EDGES only: output types that leave the hole out: none (pass the loops as faces to get holes)",
+   "by_output_type": {
+    "0": {
+     "verts": 8,
+     "edges": 17,
+     "faces": 10,
+     "area": 16.0,
+     "max_face_size": 3
+    },
+    "1": {
+     "verts": 8,
+     "edges": 17,
+     "faces": 10,
+     "area": 16.0,
+     "max_face_size": 3
+    },
+    "2": {
+     "verts": 8,
+     "edges": 17,
+     "faces": 10,
+     "area": 16.0,
+     "max_face_size": 3
+    },
+    "3": {
+     "verts": 8,
+     "edges": 8,
+     "faces": 2,
+     "area": 20.0,
+     "max_face_size": 4
+    },
+    "4": {
+     "verts": 8,
+     "edges": 17,
+     "faces": 10,
+     "area": 16.0,
+     "max_face_size": 3
+    },
+    "5": {
+     "verts": 8,
+     "edges": 17,
+     "faces": 10,
+     "area": 16.0,
+     "max_face_size": 3
+    }
+   },
+   "expected_area_without_hole": 12.0
+  },
+  {
+   "fact": "the same square-with-hole passed as two FACES (outer, inner): output types 0-5 (area 12 means the hole was left out, 16 filled, 20 = both loops as overlapping faces)",
+   "by_output_type": {
+    "0": {
+     "faces": 10,
+     "area": 16.0,
+     "max_face_size": 3
+    },
+    "1": {
+     "faces": 10,
+     "area": 16.0,
+     "max_face_size": 3
+    },
+    "2": {
+     "faces": 8,
+     "area": 12.0,
+     "max_face_size": 3
+    },
+    "3": {
+     "faces": 2,
+     "area": 20.0,
+     "max_face_size": 4
+    },
+    "4": {
+     "faces": 3,
+     "area": 16.0,
+     "max_face_size": 6
+    },
+    "5": {
+     "faces": 2,
+     "area": 12.0,
+     "max_face_size": 6
+    }
+   }
+  },
+  {
+   "fact": "the same with the inner loop wound clockwise",
+   "by_output_type": {
+    "3": {
+     "faces": 2,
+     "area": 20.0
+    },
+    "5": {
+     "faces": 2,
+     "area": 12.0
+    }
+   }
+  },
+  {
+   "fact": "delaunay_2d_cdt with 3D vertex tuples",
+   "result": "ValueError: delaunay_2d_cdt: sequence length is 3, expected 2"
+  },
+  {
+   "fact": "tessellate_polygon([outer, inner]) triangulates with the inner loop as a hole; indices refer to the concatenated loops",
+   "tris": 8,
+   "max_index": 7
+  },
+  {
+   "fact": "intersect_ray_tri(v1, v2, v3, ray_direction, ray_origin) -- direction BEFORE origin -- returns the hit point or None",
+   "hit": [
+    0.20000000298023224,
+    0.20000000298023224,
+    0.0
+   ],
+   "behind": null
+  },
+  {
+   "fact": "intersect_line_plane(line_a, line_b, plane_co, plane_no) treats the line as infinite",
+   "point": [
+    0.0,
+    0.0,
+    1.0
+   ]
+  },
+  {
+   "fact": "intersect_point_line(pt, line_a, line_b) returns (closest point, factor along a->b)",
+   "closest": [
+    0.5,
+    0.0,
+    0.0
+   ],
+   "factor": 0.25
+  },
+  {
+   "fact": "intersect_line_line returns the two closest points between skew lines",
+   "points": [
+    [
+     0.5,
+     0.0,
+     0.0
+    ],
+    [
+     0.5,
+     0.0,
+     1.0
+    ]
+   ]
+  },
+  {
+   "fact": "intersect_line_line_2d works on segments and returns the crossing point or None",
+   "point": [
+    1.0,
+    1.0
+   ],
+   "none_case": null
+  },
+  {
+   "fact": "intersect_sphere_sphere_2d",
+   "points": [
+    [
+     0.5,
+     -0.866
+    ],
+    [
+     0.5,
+     0.866
+    ]
+   ]
+  },
+  {
+   "fact": "other helpers present",
+   "names": [
+    "area_tri",
+    "barycentric_transform",
+    "box_fit_2d",
+    "box_pack_2d",
+    "closest_point_on_tri",
+    "convex_hull_2d",
+    "delaunay_2d_cdt",
+    "distance_point_to_plane",
+    "interpolate_bezier",
+    "intersect_line_line",
+    "intersect_line_line_2d",
+    "intersect_line_plane",
+    "intersect_line_sphere",
+    "intersect_line_sphere_2d",
+    "intersect_plane_plane",
+    "intersect_point_line",
+    "intersect_point_quad_2d",
+    "intersect_point_tri",
+    "intersect_point_tri_2d",
+    "intersect_ray_tri",
+    "intersect_sphere_sphere_2d",
+    "intersect_tri_tri_2d",
+    "normal",
+    "points_in_planes",
+    "tessellate_polygon",
+    "volume_tetrahedron"
+   ]
+  },
+  {
+   "fact": "convex_hull_2d returns hull vertex indices",
+   "hull": [
+    0,
+    1,
+    3,
+    4
+   ]
+  },
+  {
+   "fact": "area_tri and normal",
+   "area": 0.5,
+   "normal": [
+    0.0,
+    0.0,
+    1.0
+   ]
+  }
+ ],
+ "data": {},
+ "args": []
+}

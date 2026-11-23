@@ -1,0 +1,293 @@
+{
+ "experiment": "experiments/export/gltf_materials.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.22,
+ "facts": [
+  {
+   "fact": "export_scene.gltf's export_format is a dynamic enum; valid values",
+   "type_error": "('GLB', 'GLTF_SEPARATE')"
+  },
+  {
+   "fact": "glTF export (GLB) of a Principled BSDF keeps base colour (linear factor), metallic, roughness, emission (colour as emissiveFactor, strength above 1 as KHR_materials_emissive_strength), alpha < 1 (alphaMode BLEND, alpha in the baseColorFactor) and coat, transmission and IOR as KHR extensions; Specular IOR Level 0.8 becomes specularColorFactor 1.6 (2x); Sheen Weight 0.4 is lost (sheenColorFactor written as the tint, 1.0)",
+   "factors": {
+    "alphaMode": "BLEND",
+    "doubleSided": true,
+    "emissiveFactor": [
+     0,
+     1,
+     0
+    ],
+    "extensions": {
+     "KHR_materials_clearcoat": {
+      "clearcoatFactor": 0.699999988079071
+     },
+     "KHR_materials_transmission": {
+      "transmissionFactor": 0.20000000298023224
+     },
+     "KHR_materials_emissive_strength": {
+      "emissiveStrength": 2
+     },
+     "KHR_materials_specular": {
+      "specularColorFactor": [
+       1.600000023841858,
+       1.600000023841858,
+       1.600000023841858
+      ]
+     },
+     "KHR_materials_sheen": {
+      "sheenColorFactor": [
+       1.0,
+       1.0,
+       1.0
+      ],
+      "sheenRoughnessFactor": 0.5
+     },
+     "KHR_materials_ior": {
+      "ior": 1.7000000476837158
+     }
+    },
+    "name": "factors",
+    "pbrMetallicRoughness": {
+     "baseColorFactor": [
+      0.800000011920929,
+      0.20000000298023224,
+      0.10000000149011612,
+      0.5
+     ],
+     "metallicFactor": 0.30000001192092896,
+     "roughnessFactor": 0.6000000238418579
+    }
+   },
+   "extensionsUsed": [
+    "KHR_materials_clearcoat",
+    "KHR_materials_transmission",
+    "KHR_materials_emissive_strength",
+    "KHR_materials_specular",
+    "KHR_materials_sheen",
+    "KHR_materials_ior"
+   ]
+  },
+  {
+   "fact": "an Image Texture into Base Color exports as baseColorTexture with the image embedded; a Normal Map node exports as normalTexture",
+   "imagetex": {
+    "doubleSided": true,
+    "name": "imagetex",
+    "normalTexture": {
+     "index": 0
+    },
+    "pbrMetallicRoughness": {
+     "baseColorTexture": {
+      "index": 1
+     },
+     "metallicFactor": 0,
+     "roughnessFactor": 0.5
+    }
+   },
+   "images": [
+    [
+     "flatnormal",
+     "image/png"
+    ],
+    [
+     "checker",
+     "image/png"
+    ]
+   ]
+  },
+  {
+   "fact": "a procedural texture (Noise) into Base Color is dropped silently: the material exports with no baseColorTexture and no baseColorFactor, which glTF reads as white (1, 1, 1); bake it to an image first",
+   "procedural": {
+    "doubleSided": true,
+    "name": "procedural",
+    "pbrMetallicRoughness": {
+     "metallicFactor": 0,
+     "roughnessFactor": 0.5
+    }
+   }
+  },
+  {
+   "fact": "export_apply defaults to False: modifiers are NOT applied unless export_apply=True (a cube with Subdivision level 2 exports 24 vertices by default, 384 when applied). glTF mesh names are the mesh datablock names (Cube.003), and an applied mesh is renamed 'Mesh'",
+   "default_vertices": [
+    24
+   ],
+   "applied_vertices": [
+    384
+   ],
+   "all_default": {
+    "Cube": [
+     24
+    ],
+    "Cube.001": [
+     24
+    ],
+    "Cube.002": [
+     24
+    ],
+    "Cube.003": [
+     24
+    ]
+   },
+   "all_applied": {
+    "Cube": [
+     24
+    ],
+    "Cube.001": [
+     24
+    ],
+    "Cube.002": [
+     24
+    ],
+    "Mesh": [
+     384
+    ]
+   }
+  },
+  {
+   "fact": "export_yup (default True) converts Blender's +Z up to glTF's +Y up: an object at Blender (9, 0, 3) is at glTF (9, 3, 0)",
+   "gltf_translation": [
+    9,
+    3,
+    0
+   ]
+  },
+  {
+   "fact": "import_scene.gltf rebuilds a Principled BSDF with the exported factors (coat 0.7, transmission 0.2, emission 2, alpha -> surface_render_method BLENDED) and image textures; sheen comes back 1.0 (was 0.4); the procedural material comes back white with no texture",
+   "imported": {
+    "factors": {
+     "material": "factors",
+     "node_types": [
+      "BSDF_PRINCIPLED",
+      "OUTPUT_MATERIAL"
+     ],
+     "base_color": [
+      0.8,
+      0.2,
+      0.1,
+      1.0
+     ],
+     "coat": 0.7,
+     "sheen": 1.0,
+     "transmission": 0.2,
+     "emission_strength": 2.0,
+     "surface_render_method": "BLENDED"
+    },
+    "imagetex": {
+     "material": "imagetex",
+     "node_types": [
+      "BSDF_PRINCIPLED",
+      "NORMAL_MAP",
+      "OUTPUT_MATERIAL",
+      "TEX_IMAGE"
+     ],
+     "base_color": [
+      0.8,
+      0.8,
+      0.8,
+      1.0
+     ],
+     "coat": 0.0,
+     "sheen": 0.0,
+     "transmission": 0.0,
+     "emission_strength": 0.0,
+     "surface_render_method": "DITHERED"
+    },
+    "procedural": {
+     "material": "procedural",
+     "node_types": [
+      "BSDF_PRINCIPLED",
+      "OUTPUT_MATERIAL"
+     ],
+     "base_color": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ],
+     "coat": 0.0,
+     "sheen": 0.0,
+     "transmission": 0.0,
+     "emission_strength": 0.0,
+     "surface_render_method": "DITHERED"
+    }
+   }
+  }
+ ],
+ "data": {
+  "materials": {
+   "factors": {
+    "alphaMode": "BLEND",
+    "doubleSided": true,
+    "emissiveFactor": [
+     0,
+     1,
+     0
+    ],
+    "extensions": {
+     "KHR_materials_clearcoat": {
+      "clearcoatFactor": 0.699999988079071
+     },
+     "KHR_materials_transmission": {
+      "transmissionFactor": 0.20000000298023224
+     },
+     "KHR_materials_emissive_strength": {
+      "emissiveStrength": 2
+     },
+     "KHR_materials_specular": {
+      "specularColorFactor": [
+       1.600000023841858,
+       1.600000023841858,
+       1.600000023841858
+      ]
+     },
+     "KHR_materials_sheen": {
+      "sheenColorFactor": [
+       1.0,
+       1.0,
+       1.0
+      ],
+      "sheenRoughnessFactor": 0.5
+     },
+     "KHR_materials_ior": {
+      "ior": 1.7000000476837158
+     }
+    },
+    "name": "factors",
+    "pbrMetallicRoughness": {
+     "baseColorFactor": [
+      0.800000011920929,
+      0.20000000298023224,
+      0.10000000149011612,
+      0.5
+     ],
+     "metallicFactor": 0.30000001192092896,
+     "roughnessFactor": 0.6000000238418579
+    }
+   },
+   "imagetex": {
+    "doubleSided": true,
+    "name": "imagetex",
+    "normalTexture": {
+     "index": 0
+    },
+    "pbrMetallicRoughness": {
+     "baseColorTexture": {
+      "index": 1
+     },
+     "metallicFactor": 0,
+     "roughnessFactor": 0.5
+    }
+   },
+   "procedural": {
+    "doubleSided": true,
+    "name": "procedural",
+    "pbrMetallicRoughness": {
+     "metallicFactor": 0,
+     "roughnessFactor": 0.5
+    }
+   }
+  }
+ },
+ "args": []
+}

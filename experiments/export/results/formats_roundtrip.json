@@ -1,0 +1,885 @@
+{
+ "experiment": "experiments/export/formats_roundtrip.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.64,
+ "facts": [
+  {
+   "fact": "exporter/importer operators present in 4.5: the C++ wm.obj_*, wm.stl_*, wm.ply_*, wm.usd_* and the add-on export_scene.fbx/gltf; the old Python export_scene.obj, export_mesh.stl/ply are gone (AttributeError on call); 4.5 also has wm.fbx_import (new C++ FBX importer) and still wm.collada_export",
+   "present": {
+    "export_scene.obj": false,
+    "import_scene.obj": false,
+    "export_mesh.stl": false,
+    "import_mesh.stl": false,
+    "export_mesh.ply": false,
+    "import_mesh.ply": false,
+    "wm.obj_export": true,
+    "wm.stl_export": true,
+    "wm.ply_export": true,
+    "wm.usd_export": true,
+    "export_scene.fbx": true,
+    "export_scene.gltf": true,
+    "wm.fbx_import": true,
+    "import_scene.fbx": true,
+    "wm.collada_export": true
+   }
+  },
+  {
+   "fact": "the source objects",
+   "objects": {
+    "Ball": {
+     "verts": 114,
+     "faces": 128,
+     "centre": [
+      -2.0,
+      0.0,
+      0.5
+     ],
+     "size": [
+      1.0,
+      1.0,
+      1.0
+     ],
+     "scale": [
+      1.0,
+      1.0,
+      1.0
+     ],
+     "uv": [
+      "UVMap"
+     ],
+     "materials": [],
+     "colors": []
+    },
+    "Box": {
+     "verts": 8,
+     "faces": 6,
+     "centre": [
+      1.0,
+      2.0,
+      3.0
+     ],
+     "size": [
+      2.0,
+      2.0,
+      1.0
+     ],
+     "scale": [
+      1.0,
+      1.0,
+      0.5
+     ],
+     "uv": [
+      "UVMap"
+     ],
+     "materials": [
+      [
+       "Red",
+       [
+        0.8,
+        0.05,
+        0.05
+       ]
+      ]
+     ],
+     "colors": [
+      "Col"
+     ]
+    }
+   }
+  },
+  {
+   "fact": "OBJ (wm.obj_export defaults) writes .obj + .mtl; on import: names kept (Box, Ball), world positions and sizes kept, but the object's rotation and scale are baked into the vertices (scale reads 1), UVs kept, material and its base colour kept through MTL Kd; colour attributes are not exported (export_colors False)",
+   "obj": {
+    "files": [
+     "scene.mtl",
+     "scene.obj"
+    ],
+    "objects": {
+     "Ball": {
+      "verts": 114,
+      "faces": 128,
+      "centre": [
+       -2.0,
+       0.0,
+       0.5
+      ],
+      "size": [
+       1.0,
+       1.0,
+       1.0
+      ],
+      "scale": [
+       1.0,
+       1.0,
+       1.0
+      ],
+      "uv": [
+       "UVMap"
+      ],
+      "materials": [
+       [
+        "Red",
+        [
+         0.8,
+         0.05,
+         0.05
+        ]
+       ]
+      ],
+      "colors": []
+     },
+     "Box": {
+      "verts": 8,
+      "faces": 6,
+      "centre": [
+       1.0,
+       2.0,
+       3.0
+      ],
+      "size": [
+       2.732,
+       1.0,
+       2.732
+      ],
+      "scale": [
+       1.0,
+       1.0,
+       1.0
+      ],
+      "uv": [
+       "UVMap"
+      ],
+      "materials": [
+       [
+        "Red",
+        [
+         0.8,
+         0.05,
+         0.05
+        ]
+       ]
+      ],
+      "colors": []
+     }
+    },
+    "types": [
+     "MESH"
+    ]
+   }
+  },
+  {
+   "fact": "STL keeps only triangles: one object per file by default (both merged), no UVs, no materials, no colours, and the vertex count is per-triangle-corner unless merged",
+   "stl": {
+    "files": [
+     "scene.stl"
+    ],
+    "objects": {
+     "scene": {
+      "verts": 122,
+      "faces": 236,
+      "centre": [
+       -0.067,
+       1.433,
+       1.75
+      ],
+      "size": [
+       4.866,
+       3.866,
+       3.5
+      ],
+      "scale": [
+       1.0,
+       1.0,
+       1.0
+      ],
+      "uv": [],
+      "materials": [],
+      "colors": []
+     }
+    },
+    "types": [
+     "MESH"
+    ]
+   }
+  },
+  {
+   "fact": "PLY (wm.ply_export defaults) merges everything into one object, keeps UVs and colour attributes, drops materials",
+   "ply": {
+    "files": [
+     "scene.ply"
+    ],
+    "objects": {
+     "scene": {
+      "verts": 165,
+      "faces": 134,
+      "centre": [
+       -0.067,
+       1.433,
+       1.75
+      ],
+      "size": [
+       4.866,
+       3.866,
+       3.5
+      ],
+      "scale": [
+       1.0,
+       1.0,
+       1.0
+      ],
+      "uv": [
+       "UVMap"
+      ],
+      "materials": [],
+      "colors": [
+       "Col"
+      ]
+     }
+    },
+    "types": [
+     "MESH"
+    ]
+   }
+  },
+  {
+   "fact": "FBX (export_scene.fbx defaults) keeps names, transforms (rotation and scale stay on the object), UVs, material and base colour, colour attribute",
+   "fbx": {
+    "files": [
+     "scene.fbx"
+    ],
+    "objects": {
+     "Ball": {
+      "verts": 114,
+      "faces": 128,
+      "centre": [
+       -2.0,
+       -0.0,
+       0.5
+      ],
+      "size": [
+       1.0,
+       1.0,
+       1.0
+      ],
+      "scale": [
+       1.0,
+       1.0,
+       1.0
+      ],
+      "uv": [
+       "UVMap"
+      ],
+      "materials": [],
+      "colors": []
+     },
+     "Box": {
+      "verts": 8,
+      "faces": 6,
+      "centre": [
+       1.0,
+       2.0,
+       3.0
+      ],
+      "size": [
+       2.0,
+       2.0,
+       1.0
+      ],
+      "scale": [
+       1.0,
+       1.0,
+       0.5
+      ],
+      "uv": [
+       "UVMap"
+      ],
+      "materials": [
+       [
+        "Red",
+        [
+         0.8,
+         0.05,
+         0.05
+        ]
+       ]
+      ],
+      "colors": [
+       "Col"
+      ]
+     }
+    },
+    "types": [
+     "MESH"
+    ]
+   }
+  },
+  {
+   "fact": "USD (wm.usd_export defaults, .usdc) keeps names, transforms, UVs, material with base colour (UsdPreviewSurface), colour attribute",
+   "usd": {
+    "files": [
+     "scene.usdc"
+    ],
+    "objects": {
+     "BoxMesh": {
+      "verts": 8,
+      "faces": 6,
+      "centre": [
+       1.0,
+       2.0,
+       3.0
+      ],
+      "size": [
+       2.0,
+       2.0,
+       1.0
+      ],
+      "scale": [
+       1.0,
+       1.0,
+       0.5
+      ],
+      "uv": [
+       "st"
+      ],
+      "materials": [
+       [
+        "Red",
+        [
+         0.8,
+         0.05,
+         0.05
+        ]
+       ]
+      ],
+      "colors": [
+       "Col"
+      ]
+     },
+     "Sphere": {
+      "verts": 114,
+      "faces": 128,
+      "centre": [
+       -2.0,
+       0.0,
+       0.5
+      ],
+      "size": [
+       1.0,
+       1.0,
+       1.0
+      ],
+      "scale": [
+       1.0,
+       1.0,
+       1.0
+      ],
+      "uv": [
+       "st"
+      ],
+      "materials": [],
+      "colors": []
+     }
+    },
+    "types": [
+     "EMPTY",
+     "MESH"
+    ]
+   }
+  },
+  {
+   "fact": "glTF (GLB defaults) keeps names, transforms, UVs, material and base colour; the colour attribute comes back as 'Color' (glTF COLOR_0)",
+   "gltf": {
+    "files": [
+     "scene.glb"
+    ],
+    "objects": {
+     "Ball": {
+      "verts": 480,
+      "faces": 224,
+      "centre": [
+       -2.0,
+       0.0,
+       0.5
+      ],
+      "size": [
+       1.0,
+       1.0,
+       1.0
+      ],
+      "scale": [
+       1.0,
+       1.0,
+       1.0
+      ],
+      "uv": [
+       "UVMap"
+      ],
+      "materials": [],
+      "colors": []
+     },
+     "Box": {
+      "verts": 24,
+      "faces": 12,
+      "centre": [
+       1.0,
+       2.0,
+       3.0
+      ],
+      "size": [
+       2.0,
+       2.0,
+       1.0
+      ],
+      "scale": [
+       1.0,
+       1.0,
+       0.5
+      ],
+      "uv": [
+       "UVMap"
+      ],
+      "materials": [
+       [
+        "Red",
+        [
+         0.8,
+         0.8,
+         0.8
+        ]
+       ]
+      ],
+      "colors": [
+       "Color",
+       "Color.001"
+      ]
+     }
+    },
+    "types": [
+     "MESH"
+    ]
+   }
+  }
+ ],
+ "data": {
+  "original": {
+   "Ball": {
+    "verts": 114,
+    "faces": 128,
+    "centre": [
+     -2.0,
+     0.0,
+     0.5
+    ],
+    "size": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "uv": [
+     "UVMap"
+    ],
+    "materials": [],
+    "colors": []
+   },
+   "Box": {
+    "verts": 8,
+    "faces": 6,
+    "centre": [
+     1.0,
+     2.0,
+     3.0
+    ],
+    "size": [
+     2.0,
+     2.0,
+     1.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     0.5
+    ],
+    "uv": [
+     "UVMap"
+    ],
+    "materials": [
+     [
+      "Red",
+      [
+       0.8,
+       0.05,
+       0.05
+      ]
+     ]
+    ],
+    "colors": [
+     "Col"
+    ]
+   }
+  },
+  "results": {
+   "obj": {
+    "files": [
+     "scene.mtl",
+     "scene.obj"
+    ],
+    "objects": {
+     "Ball": {
+      "verts": 114,
+      "faces": 128,
+      "centre": [
+       -2.0,
+       0.0,
+       0.5
+      ],
+      "size": [
+       1.0,
+       1.0,
+       1.0
+      ],
+      "scale": [
+       1.0,
+       1.0,
+       1.0
+      ],
+      "uv": [
+       "UVMap"
+      ],
+      "materials": [
+       [
+        "Red",
+        [
+         0.8,
+         0.05,
+         0.05
+        ]
+       ]
+      ],
+      "colors": []
+     },
+     "Box": {
+      "verts": 8,
+      "faces": 6,
+      "centre": [
+       1.0,
+       2.0,
+       3.0
+      ],
+      "size": [
+       2.732,
+       1.0,
+       2.732
+      ],
+      "scale": [
+       1.0,
+       1.0,
+       1.0
+      ],
+      "uv": [
+       "UVMap"
+      ],
+      "materials": [
+       [
+        "Red",
+        [
+         0.8,
+         0.05,
+         0.05
+        ]
+       ]
+      ],
+      "colors": []
+     }
+    },
+    "types": [
+     "MESH"
+    ]
+   },
+   "stl": {
+    "files": [
+     "scene.stl"
+    ],
+    "objects": {
+     "scene": {
+      "verts": 122,
+      "faces": 236,
+      "centre": [
+       -0.067,
+       1.433,
+       1.75
+      ],
+      "size": [
+       4.866,
+       3.866,
+       3.5
+      ],
+      "scale": [
+       1.0,
+       1.0,
+       1.0
+      ],
+      "uv": [],
+      "materials": [],
+      "colors": []
+     }
+    },
+    "types": [
+     "MESH"
+    ]
+   },
+   "ply": {
+    "files": [
+     "scene.ply"
+    ],
+    "objects": {
+     "scene": {
+      "verts": 165,
+      "faces": 134,
+      "centre": [
+       -0.067,
+       1.433,
+       1.75
+      ],
+      "size": [
+       4.866,
+       3.866,
+       3.5
+      ],
+      "scale": [
+       1.0,
+       1.0,
+       1.0
+      ],
+      "uv": [
+       "UVMap"
+      ],
+      "materials": [],
+      "colors": [
+       "Col"
+      ]
+     }
+    },
+    "types": [
+     "MESH"
+    ]
+   },
+   "fbx": {
+    "files": [
+     "scene.fbx"
+    ],
+    "objects": {
+     "Ball": {
+      "verts": 114,
+      "faces": 128,
+      "centre": [
+       -2.0,
+       -0.0,
+       0.5
+      ],
+      "size": [
+       1.0,
+       1.0,
+       1.0
+      ],
+      "scale": [
+       1.0,
+       1.0,
+       1.0
+      ],
+      "uv": [
+       "UVMap"
+      ],
+      "materials": [],
+      "colors": []
+     },
+     "Box": {
+      "verts": 8,
+      "faces": 6,
+      "centre": [
+       1.0,
+       2.0,
+       3.0
+      ],
+      "size": [
+       2.0,
+       2.0,
+       1.0
+      ],
+      "scale": [
+       1.0,
+       1.0,
+       0.5
+      ],
+      "uv": [
+       "UVMap"
+      ],
+      "materials": [
+       [
+        "Red",
+        [
+         0.8,
+         0.05,
+         0.05
+        ]
+       ]
+      ],
+      "colors": [
+       "Col"
+      ]
+     }
+    },
+    "types": [
+     "MESH"
+    ]
+   },
+   "usdc": {
+    "files": [
+     "scene.usdc"
+    ],
+    "objects": {
+     "BoxMesh": {
+      "verts": 8,
+      "faces": 6,
+      "centre": [
+       1.0,
+       2.0,
+       3.0
+      ],
+      "size": [
+       2.0,
+       2.0,
+       1.0
+      ],
+      "scale": [
+       1.0,
+       1.0,
+       0.5
+      ],
+      "uv": [
+       "st"
+      ],
+      "materials": [
+       [
+        "Red",
+        [
+         0.8,
+         0.05,
+         0.05
+        ]
+       ]
+      ],
+      "colors": [
+       "Col"
+      ]
+     },
+     "Sphere": {
+      "verts": 114,
+      "faces": 128,
+      "centre": [
+       -2.0,
+       0.0,
+       0.5
+      ],
+      "size": [
+       1.0,
+       1.0,
+       1.0
+      ],
+      "scale": [
+       1.0,
+       1.0,
+       1.0
+      ],
+      "uv": [
+       "st"
+      ],
+      "materials": [],
+      "colors": []
+     }
+    },
+    "types": [
+     "EMPTY",
+     "MESH"
+    ]
+   },
+   "glb": {
+    "files": [
+     "scene.glb"
+    ],
+    "objects": {
+     "Ball": {
+      "verts": 480,
+      "faces": 224,
+      "centre": [
+       -2.0,
+       0.0,
+       0.5
+      ],
+      "size": [
+       1.0,
+       1.0,
+       1.0
+      ],
+      "scale": [
+       1.0,
+       1.0,
+       1.0
+      ],
+      "uv": [
+       "UVMap"
+      ],
+      "materials": [],
+      "colors": []
+     },
+     "Box": {
+      "verts": 24,
+      "faces": 12,
+      "centre": [
+       1.0,
+       2.0,
+       3.0
+      ],
+      "size": [
+       2.0,
+       2.0,
+       1.0
+      ],
+      "scale": [
+       1.0,
+       1.0,
+       0.5
+      ],
+      "uv": [
+       "UVMap"
+      ],
+      "materials": [
+       [
+        "Red",
+        [
+         0.8,
+         0.8,
+         0.8
+        ]
+       ]
+      ],
+      "colors": [
+       "Color",
+       "Color.001"
+      ]
+     }
+    },
+    "types": [
+     "MESH"
+    ]
+   }
+  }
+ },
+ "args": []
+}

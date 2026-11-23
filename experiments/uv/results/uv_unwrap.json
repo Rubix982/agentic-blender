@@ -1,0 +1,145 @@
+{
+ "experiment": "experiments/uv/uv_unwrap.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.58,
+ "facts": [
+  {
+   "fact": "A new UV layer on a mesh without UVs is not empty: each face gets the whole unit square (its corners at the square's corners; triangles use three of them)",
+   "corners": 1984,
+   "distinct_uvs": [
+    [
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     1.0
+    ],
+    [
+     1.0,
+     0.0
+    ],
+    [
+     1.0,
+     1.0
+    ]
+   ],
+   "quads": 448,
+   "triangles": 64
+  },
+  {
+   "fact": "A UV map is an attribute: a FLOAT2 on the CORNER domain, under the UV map's name",
+   "attribute": [
+    [
+     "UVMap",
+     "FLOAT2",
+     "CORNER"
+    ]
+   ]
+  },
+  {
+   "fact": "uv.smart_project in object mode",
+   "result": "ERROR Operator bpy.ops.uv.smart_project.poll() failed, context is incorrect"
+  },
+  {
+   "fact": "Smart UV Project's angle_limit is in radians (default 1.1519 = 66 degrees; soft range to 1.5533 = 89 degrees, hard limit 1.5708 = 90). Passing 66, meaning degrees, raises nothing: it is clamped to the hard limit, and the islands match 90 degrees, not 66",
+   "islands": {
+    "66 (meant as degrees)": 2,
+    "radians(89) (the soft maximum)": 4,
+    "radians(90) (the hard maximum)": 2,
+    "radians(66)": 6,
+    "radians(30)": 28
+   }
+  },
+  {
+   "fact": "uv.smart_project works headless once the object is active, in edit mode with its faces selected; on a 32 x 16 UV sphere it gives these islands, inside the unit square",
+   "result": "{'FINISHED'}",
+   "seconds": 0.0,
+   "islands": 6,
+   "uv_min": [
+    0.0039,
+    0.0039
+   ],
+   "uv_max": [
+    0.9961,
+    0.699
+   ],
+   "uv_area_used": 0.5051
+  },
+  {
+   "fact": "uv.unwrap splits along seams (edge.use_seam, set here through bmesh's edge.seam): a cylinder with seams around both caps and down one side unwraps into 3 islands with each method 4.5 offers",
+   "seams": 65,
+   "methods": {
+    "ANGLE_BASED": {
+     "islands": 3,
+     "uv_area": 0.7872,
+     "seconds": 0.001
+    },
+    "CONFORMAL": {
+     "islands": 3,
+     "uv_area": 0.7872,
+     "seconds": 0.001
+    },
+    "MINIMUM_STRETCH": {
+     "islands": 3,
+     "uv_area": 0.7868,
+     "seconds": 0.003
+    }
+   }
+  },
+  {
+   "fact": "uv.pack_islands acts on islands selected in the UV editor's own selection, not the mesh's: after Smart UV Project, with the faces selected, it returned CANCELLED; with tool_settings.use_uv_select_sync = True (UV selection follows the mesh) it packed",
+   "default_result": "{'CANCELLED'}",
+   "use_uv_select_sync_default": false,
+   "with_sync": "{'FINISHED'}",
+   "seconds": 0.351,
+   "uv_area_used_after": 0.5152,
+   "options": [
+    "margin",
+    "margin_method",
+    "merge_overlap",
+    "pin",
+    "pin_method",
+    "rotate",
+    "rotate_method",
+    "scale",
+    "shape_method",
+    "udim_source"
+   ]
+  },
+  {
+   "fact": "uv.lightmap_pack gives every face of a cube its own island",
+   "result": "{'FINISHED'}",
+   "islands": 6,
+   "uv_area": 0.6507
+  },
+  {
+   "fact": "UVs from arrays: uv_layer.uv.foreach_set('vector', flat_array) per corner is far faster than a loop over uv_layer.data (marked deprecated in 4.5, still working); corners map to vertices through loops.vertex_index",
+   "corners": 160000,
+   "foreach_set_s": 0.0,
+   "python_loop_s": 0.097,
+   "round_trip_max_error": 0.0
+  },
+  {
+   "fact": "bmesh: bm.loops.layers.uv.verify() returns the active UV layer, creating one if there is none, and that new layer is named 'Float2', not 'UVMap'; bm.loops.layers.uv.new('UVMap') names it. loop[layer].uv sets a corner's UV",
+   "verify_created": [
+    "Float2"
+   ],
+   "new_named": "UVMap",
+   "uv_range": [
+    0.0,
+    1.0
+   ]
+  }
+ ],
+ "data": {
+  "unwrap_methods": [
+   "ANGLE_BASED",
+   "CONFORMAL",
+   "MINIMUM_STRETCH"
+  ]
+ },
+ "args": []
+}

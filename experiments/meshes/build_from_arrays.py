@@ -95,7 +95,7 @@ for r in rows:
 for r in rows:
     E.fact(f"at {r['verts']} vertices, writing positions and corner vertices through mesh.attributes ('position', '.corner_vert') takes {r['attr_set_s']+r['attr_update_s']:.3f} s against {r['foreach_set_s']+r['foreach_update_calc_edges_s']:.3f} s through vertices/loops.foreach_set",
            same_mesh=r["attr_same_mesh"])
-E.fact("from_pydata computes edges itself; the foreach_set route has no edges until update(calc_edges=True)",
+E.fact("both routes end with the same edge count (from_pydata makes edges itself; the foreach_set route gets them from update())",
        edges_pydata=rows[0]["edges_pydata"], edges_foreach=rows[0]["edges_foreach"])
 E.fact("neither route leaves anything for validate() to fix on a clean grid", changed=[(r["validate_changed_pydata"], r["validate_changed_foreach"]) for r in rows])
 

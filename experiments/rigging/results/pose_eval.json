@@ -3,7 +3,7 @@
  "blender": "4.5.14 LTS",
  "machine": "Darwin arm64",
  "date": "2026-11-23",
- "seconds": 0.19,
+ "seconds": 0.23,
  "facts": [
   {
    "fact": "a pose bone's rotation_mode is QUATERNION by default, so setting rotation_euler alone does not turn it; switching rotation_mode to 'XYZ' converts the current rotation (identity) and overwrites the euler set before, so the euler must be set after the mode",
@@ -78,6 +78,34 @@
     0.0,
     1.0
    ]
+  },
+  {
+   "fact": "an object parented to a bone (parent_type 'BONE') with an identity parent inverse and location 0 sits at the bone's tail, not its head, and follows the bone's pose",
+   "bone_head": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "bone_tail": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "empty_world": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "empty_after_90deg": [
+    0.0,
+    -1.0,
+    -0.0
+   ]
+  },
+  {
+   "fact": "a bone with use_deform = False does not move the points weighted to it",
+   "top_offset_deform_on": 1.0,
+   "top_offset_deform_off": 0.1
   }
  ],
  "data": {},

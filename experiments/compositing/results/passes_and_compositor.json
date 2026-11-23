@@ -1,0 +1,183 @@
+{
+ "experiment": "experiments/compositing/passes_and_compositor.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 1.11,
+ "facts": [
+  {
+   "fact": "passes written to a multilayer EXR with Z, Normal, AO, Mist, Position, DiffCol, Shadow, IndexOB and Cryptomatte (object, material) enabled on the view layer; channel names are '<ViewLayer>.<Pass>.<channel>'. Cycles has no Shadow pass (use_pass_shadow is EEVEE's; Cycles has Shadow Catcher instead) and EEVEE has no object index pass",
+   "cycles": [
+    "ViewLayer.AO",
+    "ViewLayer.Combined",
+    "ViewLayer.CryptoMaterial00",
+    "ViewLayer.CryptoMaterial01",
+    "ViewLayer.CryptoMaterial02",
+    "ViewLayer.CryptoObject00",
+    "ViewLayer.CryptoObject01",
+    "ViewLayer.CryptoObject02",
+    "ViewLayer.Depth",
+    "ViewLayer.DiffCol",
+    "ViewLayer.IndexOB",
+    "ViewLayer.Mist",
+    "ViewLayer.Normal",
+    "ViewLayer.Position"
+   ],
+   "eevee": [
+    "ViewLayer.AO",
+    "ViewLayer.Combined",
+    "ViewLayer.CryptoMaterial00",
+    "ViewLayer.CryptoMaterial01",
+    "ViewLayer.CryptoMaterial02",
+    "ViewLayer.CryptoObject00",
+    "ViewLayer.CryptoObject01",
+    "ViewLayer.CryptoObject02",
+    "ViewLayer.Depth",
+    "ViewLayer.DiffCol",
+    "ViewLayer.Mist",
+    "ViewLayer.Normal",
+    "ViewLayer.Position",
+    "ViewLayer.Shadow"
+   ]
+  },
+  {
+   "fact": "Cycles' Depth (Z) pass is the distance along the camera's view axis (planar depth), not the distance along the ray",
+   "corner_depth": 12.7,
+   "planar": 12.7,
+   "radial": 14.03
+  },
+  {
+   "fact": "in 4.5 the compositor is scene.node_tree, created by scene.use_nodes = True (in 5.0 this becomes scene.compositing_node_group); before use_nodes it is None",
+   "node_tree_before": false,
+   "has_compositing_node_group": false
+  },
+  {
+   "fact": "a new compositor tree in 4.5 holds Render Layers, Composite, a Viewer and a Reroute: Render Layers Image -> Reroute -> Composite and Viewer",
+   "nodes": [
+    [
+     "CompositorNodeComposite",
+     "Composite"
+    ],
+    [
+     "CompositorNodeRLayers",
+     "Render Layers"
+    ],
+    [
+     "NodeReroute",
+     "Reroute"
+    ],
+    [
+     "CompositorNodeViewer",
+     "Viewer"
+    ]
+   ],
+   "links": [
+    [
+     "CompositorNodeRLayers",
+     "Image",
+     "NodeReroute",
+     "Input"
+    ],
+    [
+     "NodeReroute",
+     "Output",
+     "CompositorNodeComposite",
+     "Image"
+    ],
+    [
+     "NodeReroute",
+     "Output",
+     "CompositorNodeViewer",
+     "Image"
+    ]
+   ]
+  },
+  {
+   "fact": "the Render Layers node exposes one output per enabled pass, by pass name",
+   "outputs": [
+    "Image",
+    "Alpha",
+    "Depth",
+    "Mist",
+    "Position",
+    "Normal",
+    "IndexOB",
+    "DiffCol",
+    "AO",
+    "CryptoObject00",
+    "CryptoObject01",
+    "CryptoObject02",
+    "CryptoMaterial00",
+    "CryptoMaterial01",
+    "CryptoMaterial02"
+   ]
+  },
+  {
+   "fact": "the 'Viewer Node' image after a background render does not hold the render (a 256x256 placeholder here); save the render to a file and read that instead",
+   "viewer_exists": true,
+   "size": [
+    256,
+    256
+   ],
+   "matches_render": false
+  },
+  {
+   "fact": "compositor nodes run in background renders: the written image is what reaches the Composite node (here an Invert: written = 1 - plain render, to float precision)",
+   "max_err": 4.76837158203125e-07,
+   "sample_plain": [
+    2.322,
+    2.322,
+    2.322
+   ],
+   "sample_written": [
+    -1.322,
+    -1.322,
+    -1.322
+   ]
+  },
+  {
+   "fact": "a File Output node writes one file per slot, named base_path + slot path + 4-digit frame number + extension (depth_0001.exr), as part of the render",
+   "files": [
+    "depth_0001.exr",
+    "normal_0001.exr"
+   ]
+  }
+ ],
+ "data": {
+  "channels": {
+   "CYCLES": [
+    "ViewLayer.AO",
+    "ViewLayer.Combined",
+    "ViewLayer.CryptoMaterial00",
+    "ViewLayer.CryptoMaterial01",
+    "ViewLayer.CryptoMaterial02",
+    "ViewLayer.CryptoObject00",
+    "ViewLayer.CryptoObject01",
+    "ViewLayer.CryptoObject02",
+    "ViewLayer.Depth",
+    "ViewLayer.DiffCol",
+    "ViewLayer.IndexOB",
+    "ViewLayer.Mist",
+    "ViewLayer.Normal",
+    "ViewLayer.Position"
+   ],
+   "BLENDER_EEVEE_NEXT": [
+    "ViewLayer.AO",
+    "ViewLayer.Combined",
+    "ViewLayer.CryptoMaterial00",
+    "ViewLayer.CryptoMaterial01",
+    "ViewLayer.CryptoMaterial02",
+    "ViewLayer.CryptoObject00",
+    "ViewLayer.CryptoObject01",
+    "ViewLayer.CryptoObject02",
+    "ViewLayer.Depth",
+    "ViewLayer.DiffCol",
+    "ViewLayer.Mist",
+    "ViewLayer.Normal",
+    "ViewLayer.Position",
+    "ViewLayer.Shadow"
+   ]
+  }
+ },
+ "args": []
+}

@@ -3,7 +3,7 @@
  "blender": "4.5.14 LTS",
  "machine": "Darwin arm64",
  "date": "2026-11-23",
- "seconds": 1.59,
+ "seconds": 1.57,
  "facts": [
   {
    "fact": "use_auto_smooth, auto_smooth_angle, calc_normals_split, free_normals_split and create_normals_split no longer exist on Mesh",
@@ -69,7 +69,7 @@
    "edges": 48
   },
   {
-   "fact": "after set_sharp_from_angle, corner_normals has one normal per loop and the top cap corners point straight up",
+   "fact": "after set_sharp_from_angle on the 16-sided cylinder, corner_normals has one normal per corner (96) with 18 distinct directions (16 sides + 2 caps), and normals_domain is CORNER",
    "loops": 96,
    "distinct_corner_normals": 18,
    "normals_domain": "CORNER",
@@ -178,5 +178,6 @@
    "smooth_with_sharp_edges": "CORNER"
   }
  ],
- "data": {}
+ "data": {},
+ "args": []
 }

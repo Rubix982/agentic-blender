@@ -1,0 +1,197 @@
+{
+ "experiment": "experiments/materials/attributes_and_slots.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.47,
+ "facts": [
+  {
+   "fact": "mesh.vertex_colors (the pre-3.2 API) still exists in 4.5 next to mesh.color_attributes, the current API for colour attributes (types FLOAT_COLOR, BYTE_COLOR; domains POINT, CORNER)",
+   "has_vertex_colors": true,
+   "has_color_attributes": true,
+   "color_attribute_types": [
+    "FLOAT_COLOR",
+    "BYTE_COLOR"
+   ],
+   "domains": [
+    "POINT",
+    "CORNER"
+   ]
+  },
+  {
+   "fact": "ByteColorAttribute values: .color reads and writes scene-linear, .color_srgb the stored sRGB-encoded value",
+   "color": [
+    0.5029,
+    0.5029,
+    0.5029,
+    1.0
+   ],
+   "color_srgb": [
+    0.7373,
+    0.7373,
+    0.7373,
+    1.0
+   ]
+  },
+  {
+   "fact": "the Color Attribute node (ShaderNodeVertexColor, layer_name) delivers the colour attribute linear, in both engines",
+   "CYCLES": {
+    "f0_bl": [
+     0.996,
+     0.0,
+     0.0
+    ],
+    "f1_br": [
+     0.0,
+     0.997,
+     0.0
+    ],
+    "f2_tl": [
+     0.0,
+     0.0,
+     0.996
+    ],
+    "f3_tr": [
+     0.502,
+     0.503,
+     0.502
+    ]
+   },
+   "BLENDER_EEVEE_NEXT": {
+    "f0_bl": [
+     1.0,
+     -0.0,
+     0.0
+    ],
+    "f1_br": [
+     -0.0,
+     1.0,
+     -0.0
+    ],
+    "f2_tl": [
+     0.0,
+     -0.0,
+     1.0
+    ],
+    "f3_tr": [
+     0.502,
+     0.502,
+     0.502
+    ]
+   }
+  },
+  {
+   "fact": "an Attribute node (attribute_type GEOMETRY, the default) reads a generic float attribute by name through Fac",
+   "attribute_type_items": [
+    "GEOMETRY",
+    "OBJECT",
+    "INSTANCER",
+    "VIEW_LAYER"
+   ],
+   "result": {
+    "f0_bl": [
+     0.25,
+     0.251,
+     0.25
+    ],
+    "f1_br": [
+     0.25,
+     0.25,
+     0.25
+    ],
+    "f2_tl": [
+     0.249,
+     0.25,
+     0.25
+    ],
+    "f3_tr": [
+     0.249,
+     0.25,
+     0.249
+    ]
+   }
+  },
+  {
+   "fact": "an Attribute node with attribute_type OBJECT reads an object custom property (obj['tint'])",
+   "result": {
+    "f0_bl": [
+     0.1,
+     0.2,
+     0.3
+    ],
+    "f1_br": [
+     0.1,
+     0.2,
+     0.3
+    ],
+    "f2_tl": [
+     0.1,
+     0.2,
+     0.3
+    ],
+    "f3_tr": [
+     0.1,
+     0.2,
+     0.299
+    ]
+   }
+  },
+  {
+   "fact": "a missing attribute name renders as black (0), with no error",
+   "result": {
+    "f0_bl": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "f1_br": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "f2_tl": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "f3_tr": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   }
+  },
+  {
+   "fact": "polygon.material_index picks the slot per face (mesh.materials.append adds a slot on the mesh data); faces 1 and 3 on slot 1 render yellow",
+   "result": {
+    "f0_bl": [
+     0.994,
+     0.0,
+     0.0
+    ],
+    "f1_br": [
+     0.998,
+     1.0,
+     0.0
+    ],
+    "f2_tl": [
+     0.0,
+     0.0,
+     0.985
+    ],
+    "f3_tr": [
+     0.996,
+     1.001,
+     0.0
+    ]
+   },
+   "slots": [
+    "attr",
+    "second"
+   ],
+   "link": "DATA"
+  }
+ ],
+ "data": {},
+ "args": []
+}

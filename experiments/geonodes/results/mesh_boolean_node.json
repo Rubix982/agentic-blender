@@ -1,0 +1,55 @@
+{
+ "experiment": "experiments/geonodes/mesh_boolean_node.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.08,
+ "facts": [
+  {
+   "fact": "node and modifier use different identifiers and defaults for the same solvers",
+   "node_solvers": [
+    "EXACT",
+    "FLOAT",
+    "MANIFOLD"
+   ],
+   "node_default": "FLOAT",
+   "node_operation": "DIFFERENCE",
+   "modifier_solvers": [
+    "FAST",
+    "EXACT",
+    "MANIFOLD"
+   ],
+   "modifier_default": "EXACT",
+   "modifier_operation_default": "DIFFERENCE"
+  },
+  {
+   "fact": "setting the node's solver to 'FAST' (the modifier's name) raises",
+   "error": "TypeError: bpy_struct: item.attr = val: enum \"FAST\" not found in ('EXACT', 'FLOAT', 'MANIFOLD')"
+  },
+  {
+   "fact": "a cube minus a cylinder (32 sides, r 0.5) with each node solver: one through-hole (genus 1), manifold, same volume",
+   "by_solver": {
+    "FLOAT": {
+     "verts": 72,
+     "non_manifold": 0,
+     "volume": 6.4393,
+     "genus": 1.0
+    },
+    "EXACT": {
+     "verts": 72,
+     "non_manifold": 0,
+     "volume": 6.4393,
+     "genus": 1.0
+    },
+    "MANIFOLD": {
+     "verts": 72,
+     "non_manifold": 0,
+     "volume": 6.4393,
+     "genus": 1.0
+    }
+   }
+  }
+ ],
+ "data": {},
+ "args": []
+}
