@@ -158,9 +158,12 @@ laptop, and kept one Blender open as a live server. Each is `[lesson]` unless ma
   stopped at "Updating Meshes"), and renders crashed with about five GPU renders at once. Check the image exists and is
   not empty; retry. For emission-only bakes the CPU avoids the Metal compile. `[lesson]`
 - **Fix the thread count for reproducible simulations.** The same cloth job at the same thread count gave identical
-  vertices; at `-t 3` one drape differed by up to 0.10 m. A voxel remesh returned its points in a different order from
-  run to run (15,184 of 41,244 moved), which changed collisions by 2 to 6 cm until the points were re-sorted by
-  position. `[lesson]`
+  vertices; at `-t 3` one drape differed by up to 0.10 m. The project also saw a voxel remesh return its points in a different
+  order between runs (15,184 of 41,244 moved), changing collisions by 2 to 6 cm until the points were re-sorted by
+  position `[lesson]`. Not reproduced here: with identical input the remesh returned the identical point array in
+  every run, at 1 and 12 threads and three voxel sizes, while moving the input points by about 1e-6 m changed the count
+  and left only 21,838 of 60,010 points at their old index `[exp: experiments/modifiers/remesh_order.py]`. So the
+  project's input most likely differed slightly between runs; re-sorting by position is still a safe habit.
 - **In a live session, tag what you create.** Reloading a module forgets its lists, so objects from earlier runs stayed
   in the scene (32 meshes) and rendered over new ones. Mark created objects (`o["made_by"] = "fit"`) and clean up by
   the tag. `[lesson]`

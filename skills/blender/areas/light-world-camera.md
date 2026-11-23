@@ -136,7 +136,7 @@ wnt.links.new(env.outputs["Color"], bg.inputs["Color"])
 
 A uniform 0.25 equirectangular EXR lit the floor with 0.786 (pi x 0.25 = 0.785). `[exp: experiments/light/world_sky.py]`
 To rotate an HDRI, put a Texture Coordinate (Generated) -> Mapping (Rotation Z) in front of the Vector input; the
-Mapping node is covered in `materials.md`. Untested here for the world.
+Mapping node and the direction it turns the lighting are measured in `materials.md` (Rotating an HDRI).
 
 ## Shadow catcher (Cycles)
 

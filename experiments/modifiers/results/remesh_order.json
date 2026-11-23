@@ -5,7 +5,7 @@
  "date": "2026-11-23",
  "facts": [
   {
-   "fact": "Voxel Remesh output order across separate Blender processes and thread counts, and within one process: for each voxel size, every run compared with the first run at -t 1 (identical arrays, indices holding a different point, and whether the same set of points came back)",
+   "fact": "The voxel Remesh returned the identical point array (same points, same order) in every run: 3 separate processes at -t 1 and 3 at the default thread count (12), at voxel 0.05, 0.02 and 0.01, for the Remesh modifier and the voxel_remesh operator, and when evaluated twice in one process. Each run is compared with the first run at -t 1",
    "any_run_reordered": false,
    "threads_default": 12,
    "threads_t1": 1,
@@ -109,7 +109,7 @@
      "max_sorted_diff": 0.0
     },
     "seconds (-t 1, default)": [
-     0.041,
+     0.034,
      0.012
     ]
    },
@@ -213,7 +213,7 @@
      "max_sorted_diff": 0.0
     },
     "seconds (-t 1, default)": [
-     0.095,
+     0.096,
      0.025
     ]
    },
@@ -317,9 +317,46 @@
      "max_sorted_diff": 0.0
     },
     "seconds (-t 1, default)": [
-     0.308,
-     0.075
+     0.292,
+     0.065
     ]
+   }
+  },
+  {
+   "fact": "The voxel Remesh output depends on the surface, not on the input's point order: the same input with its points shuffled gave the identical array; moving each input point by about 1e-6 m changed the output's point count (60,010 to 60,008), and with it the index of most points",
+   "-t 1: input points shuffled": {
+    "same_count": true,
+    "identical": true,
+    "points": 60010,
+    "indices_differing": 0,
+    "same_set": true,
+    "max_sorted_diff": 0.0
+   },
+   "-t 1: input moved by 1e-6 m noise": {
+    "same_count": false,
+    "counts": [
+     60010,
+     60008
+    ],
+    "same_index_within_0_1_mm": 21838,
+    "first_index_that_differs": 797
+   },
+   "-t default: input points shuffled": {
+    "same_count": true,
+    "identical": true,
+    "points": 60010,
+    "indices_differing": 0,
+    "same_set": true,
+    "max_sorted_diff": 0.0
+   },
+   "-t default: input moved by 1e-6 m noise": {
+    "same_count": false,
+    "counts": [
+     60010,
+     60008
+    ],
+    "same_index_within_0_1_mm": 21838,
+    "first_index_that_differs": 797
    }
   }
  ]

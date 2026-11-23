@@ -44,6 +44,11 @@ Blender 4.5.14 LTS on Apple Silicon. Tags: `[inv]` read from Blender (`scripts/k
 11. **Mirror with bisect keeps the side you did not expect.** On a mesh spanning x -0.5..1.5, `use_bisect_axis[0]`
     kept the negative side and mirrored it (x -0.5..0.5); `use_bisect_flip_axis[0]` keeps the positive side
     (x -1.5..1.5). `[exp: experiments/modifiers/subsurf_array_mirror.py]`
+12. **Blaming the voxel Remesh when its point order changes.** Given the same input it returned the identical array,
+    same points in the same order, in 3 processes at `-t 1` and 3 at the default 12 threads, at voxel 0.05, 0.02 and
+    0.01. But moving each input point by about 1e-6 m changed the count (60,010 to 60,008) and left only 21,838 points
+    at their old index. A remesh that comes back reordered had a different input, however slightly; check what feeds it,
+    and re-sort by position if order matters. `[exp: experiments/modifiers/remesh_order.py]`
 
 ## Add, order and remove
 
@@ -199,6 +204,15 @@ mi = ob.modifiers.new("Mirror", "MIRROR")           # X axis across the object's
   all manifold. Halving the voxel size quadrupled the faces. `adaptivity = 0.5` at 0.05 gave 571 faces, 210 of them
   triangles. `[exp: experiments/modifiers/remesh_weld_decimate.py]` A voxel-remeshed closed copy of a body made a much
   better cloth collider than the body itself: no lumps, and 4x faster. `[lesson: kb/lessons/cloth.md]`
+- **Remesh output order.** A monkey head and a sphere in one mesh, remeshed in six separate Blender processes (`-t 1`
+  and the default 12 threads, three each) and twice inside each: at voxel 0.05 (9,358 points), 0.02 (60,010) and 0.01
+  (242,820) every run gave the identical array, and so did `bpy.ops.object.voxel_remesh()` (9,944, 61,368, 245,146
+  points: a slightly different result from the modifier's). The same input with its points shuffled also gave the
+  identical array; 1e-6 m of noise on the input gave 60,008 points with the first difference at index 797. At voxel 0.01
+  the modifier took 0.292 s at `-t 1` and 0.065 s on 12 threads. `[exp: experiments/modifiers/remesh_order.py]`
+- **Remesh order on a project.** A remeshed body had 15,184 of 41,244 points at other indices between runs, even at
+  `-t 1` `[lesson]`. With identical input that did not happen in the experiment above, so the probable cause there is
+  an input that differed slightly between runs (not checked).
 - **Weld** defaults to 0.001 m, mode `ALL`: it rejoined a sphere whose faces had all been split apart (480 -> 114
   vertices, manifold). Mode `CONNECTED` merges only along existing edges and left it split.
   `[exp: experiments/modifiers/remesh_weld_decimate.py]`

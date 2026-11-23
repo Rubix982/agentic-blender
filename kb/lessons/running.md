@@ -103,7 +103,9 @@ byte-identical. One drape at the default thread count matched its earlier run po
 differed by up to 0.10 m and the remeshed collision proxy had a different point count. On another design a whole chain at
 `-t 3` reproduced every measured number. Separately, a remeshed proxy had 15,184 of 41,244 points at other indices between
 runs, even at `-t 1`, and two drapes of the same inputs differed by 2-6 cm until the remesh output was re-sorted into a
-canonical order. (not re-checked here)
+canonical order. (Not reproduced here with identical input: the remesh returned the identical point array in every
+run, at 1 and 12 threads, `experiments/modifiers/remesh_order.py`; a 1e-6 m change in the input reordered most points,
+so the project's input probably differed slightly between runs.)
 **What to do:** fix the thread count per stage and record it with any cached result; re-sort freshly remeshed meshes by
 position (points by x, y, z; faces by their points) before simulating against them.
 **How it was found:** a thread-determinism test.

@@ -104,7 +104,7 @@ def audit(page, verbose):
     notes = []
     for b in blocks(text):
         cites = [c for c in TAG.findall(re.sub(r"`\[exp: path\]`", "", b)) if c.strip() != "path"]
-        claim = TAG.sub("", b)
+        claim = re.sub(r"(?m)^\s*\d+\.\s", "", TAG.sub("", b))   # a list item's own number is not a claim
         claim = re.sub(r"`[^`]*`", "", claim)               # identifiers and code spans
         claim = re.sub(r"\[(?:inv|lesson|doc:[^\]]*)\]", "", claim)
         claim = re.sub(r"https?://\S+", "", claim)

@@ -105,7 +105,10 @@ for threads in ("1", None):
 
 def compare(a, b):
     if a.shape != b.shape:
-        return dict(same_count=False, counts=[len(a), len(b)])
+        n = min(len(a), len(b))
+        close = np.abs(a[:n] - b[:n]).max(axis=1) < 1e-4
+        return dict(same_count=False, counts=[len(a), len(b)], same_index_within_0_1_mm=int(close.sum()),
+                    first_index_that_differs=int(np.argmin(close)) if not close.all() else n)
     rows_differ = int((np.abs(a - b).max(axis=1) > 0).sum())
     sa = a[np.lexsort(a.T[::-1])]
     sb = b[np.lexsort(b.T[::-1])]
@@ -138,14 +141,16 @@ for threads in ("1", "default"):
     base = runs[(threads, 0)]["var_base"]
     variants[f"-t {threads}: input points shuffled"] = compare(base, runs[(threads, 0)]["var_shuffled"])
     variants[f"-t {threads}: input moved by 1e-6 m noise"] = compare(base, runs[(threads, 0)]["var_noise"])
-facts.append(dict(fact="The voxel Remesh output as a function of its input (voxel 0.02): the same surface with its "
-                       "points listed in another order, and with each point moved by about 1e-6 m",
+facts.append(dict(fact="The voxel Remesh output depends on the surface, not on the input's point order: the same input "
+                       "with its points shuffled gave the identical array; moving each input point by about 1e-6 m "
+                       "changed the output's point count (60,010 to 60,008), and with it the index of most points",
                   **variants))
 any_reorder = any(v.get("same_count") and not v.get("identical") for row in table.values() for v in row.values()
                   if isinstance(v, dict))
-facts.insert(0, dict(fact="Voxel Remesh output order across separate Blender processes and thread counts, and within one "
-                       "process: for each voxel size, every run compared with the first run at -t 1 (identical arrays, "
-                       "indices holding a different point, and whether the same set of points came back)",
+facts.insert(0, dict(fact="The voxel Remesh returned the identical point array (same points, same order) in every run: "
+                       "3 separate processes at -t 1 and 3 at the default thread count (12), at voxel 0.05, 0.02 and 0.01, "
+                       "for the Remesh modifier and the voxel_remesh operator, and when evaluated twice in one process. "
+                       "Each run is compared with the first run at -t 1",
                   any_run_reordered=any_reorder, threads_default=int(runs[("default", 0)]["threads"][0]),
                   threads_t1=int(runs[("1", 0)]["threads"][0]), **table))
 print(json.dumps(facts, indent=1)[:4000])
