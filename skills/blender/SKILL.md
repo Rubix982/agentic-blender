@@ -81,6 +81,7 @@ rendering it raises, and a failed render sets the exit code to 1 even if caught.
 
 | Page | What it covers |
 |---|---|
+| `areas/glossary.md` | Blender's words (data-block, original vs evaluated, depsgraph, RNA, poll, context, attribute domains, view transform, slots...), each pointing to where it is measured |
 | `areas/running.md` | running headless, exit codes, output, arguments, background context, drivers, command-line rendering, memory, crashes, add-ons and extensions, bpy as a module, a live Blender |
 | `areas/data-model.md` | objects, data and the evaluated depsgraph; context and `temp_override`; collections; files, append and link; `mathutils` |
 | `areas/meshes.md` | meshes from arrays, reading them back, normals and smooth shading in 4.1+, attributes, `bmesh` |
