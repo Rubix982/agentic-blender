@@ -1,0 +1,391 @@
+{
+ "experiment": "experiments/export/fbx_roundtrip.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.9,
+ "facts": [
+  {
+   "fact": "FBX operators in 4.5: export_scene.fbx and import_scene.fbx (the bundled add-on) and wm.fbx_import (labelled 'Import FBX (experimental)'); there is no wm.fbx_export",
+   "present": {
+    "export_scene.fbx": true,
+    "import_scene.fbx": true,
+    "wm.fbx_import": true,
+    "wm.fbx_export": false
+   },
+   "labels": {
+    "import_scene.fbx": "Import FBX",
+    "wm.fbx_import": "Import FBX (experimental)",
+    "export_scene.fbx": "Export FBX"
+   }
+  },
+  {
+   "fact": "export_scene.fbx with its defaults wrote the file",
+   "result": [
+    "FINISHED"
+   ],
+   "defaults": {
+    "global_scale": 1.0,
+    "apply_unit_scale": true,
+    "apply_scale_options": "FBX_SCALE_NONE",
+    "axis_forward": "-Z",
+    "axis_up": "Y",
+    "add_leaf_bones": true,
+    "primary_bone_axis": "Y",
+    "secondary_bone_axis": "X",
+    "bake_anim": true,
+    "mesh_smooth_type": "OFF"
+   },
+   "size_kb": 26.8
+  },
+  {
+   "fact": "Round trip through export_scene.fbx and import_scene.fbx (defaults): what came back",
+   "result": [
+    "FINISHED"
+   ],
+   "objects": {
+    "Body": {
+     "type": "MESH",
+     "parent": "Rig",
+     "location": [
+      0.0,
+      0.0,
+      -0.0
+     ],
+     "rotation_deg": [
+      -0.0,
+      0.0,
+      -0.0
+     ],
+     "scale": [
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    "Rig": {
+     "type": "ARMATURE",
+     "parent": null,
+     "location": [
+      1.0,
+      2.0,
+      0.0
+     ],
+     "rotation_deg": [
+      0.0,
+      -0.0,
+      30.0
+     ],
+     "scale": [
+      1.0,
+      1.0,
+      1.0
+     ]
+    }
+   },
+   "mesh": {
+    "points": 336,
+    "max_dist_to_source_m": 0.0,
+    "vertex_groups": [
+     "arm",
+     "root"
+    ],
+    "modifiers": [
+     [
+      "ARMATURE",
+      "Rig"
+     ]
+    ],
+    "unweighted": 0
+   },
+   "materials": [
+    {
+     "name": "Red",
+     "use_nodes": true,
+     "base_color": [
+      0.8,
+      0.05,
+      0.05
+     ],
+     "roughness": 0.3,
+     "metallic": 0.5
+    }
+   ],
+   "bones": {
+    "root": {
+     "head": [
+      1.0,
+      2.0,
+      0.0
+     ],
+     "tail": [
+      1.0,
+      2.0,
+      1.0
+     ],
+     "z_axis": [
+      0.5,
+      -0.866,
+      -0.0
+     ]
+    },
+    "arm": {
+     "head": [
+      1.0,
+      2.0,
+      1.0
+     ],
+     "tail": [
+      1.0,
+      2.0,
+      2.0
+     ],
+     "z_axis": [
+      0.866,
+      -0.5,
+      -0.0
+     ]
+    },
+    "arm_end": {
+     "head": [
+      1.0,
+      2.0,
+      2.0
+     ],
+     "tail": [
+      1.0,
+      2.0,
+      3.0
+     ],
+     "z_axis": [
+      0.866,
+      -0.5,
+      -0.0
+     ]
+    }
+   },
+   "bone_max_head_tail_error_m": 0.0,
+   "bone_roll_axis_error_deg": {
+    "root": 0.0,
+    "arm": 0.0
+   },
+   "posed_max_dist_to_source_posed_m": 0.0
+  },
+  {
+   "fact": "Round trip through export_scene.fbx and wm.fbx_import (defaults): what came back",
+   "result": [
+    "FINISHED"
+   ],
+   "objects": {
+    "Body": {
+     "type": "MESH",
+     "parent": "Rig",
+     "location": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "rotation_deg": [
+      0.0,
+      -0.0,
+      0.0
+     ],
+     "scale": [
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    "Rig": {
+     "type": "ARMATURE",
+     "parent": null,
+     "location": [
+      1.0,
+      2.0,
+      -0.0
+     ],
+     "rotation_deg": [
+      0.0,
+      -0.0,
+      30.0
+     ],
+     "scale": [
+      1.0,
+      1.0,
+      1.0
+     ]
+    }
+   },
+   "mesh": {
+    "points": 336,
+    "max_dist_to_source_m": 0.0,
+    "vertex_groups": [
+     "arm",
+     "root"
+    ],
+    "modifiers": [
+     [
+      "ARMATURE",
+      "Rig"
+     ]
+    ],
+    "unweighted": 0
+   },
+   "materials": [
+    {
+     "name": "Red",
+     "use_nodes": true,
+     "base_color": [
+      0.8,
+      0.05,
+      0.05
+     ],
+     "roughness": 0.3,
+     "metallic": 0.5
+    }
+   ],
+   "bones": {
+    "root": {
+     "head": [
+      1.0,
+      2.0,
+      -0.0
+     ],
+     "tail": [
+      1.0,
+      2.0,
+      1.0
+     ],
+     "z_axis": [
+      0.5,
+      -0.866,
+      -0.0
+     ]
+    },
+    "arm": {
+     "head": [
+      1.0,
+      2.0,
+      1.0
+     ],
+     "tail": [
+      1.0,
+      2.0,
+      2.0
+     ],
+     "z_axis": [
+      0.866,
+      -0.5,
+      -0.0
+     ]
+    },
+    "arm_end": {
+     "head": [
+      1.0,
+      2.0,
+      2.0
+     ],
+     "tail": [
+      1.0,
+      2.0,
+      3.0
+     ],
+     "z_axis": [
+      0.866,
+      -0.5,
+      -0.0
+     ]
+    }
+   },
+   "bone_max_head_tail_error_m": 0.0,
+   "bone_roll_axis_error_deg": {
+    "root": 0.0,
+    "arm": 0.0
+   },
+   "posed_max_dist_to_source_posed_m": 0.0
+  },
+  {
+   "fact": "The exporter adds a leaf bone ('arm_end') at the end of each chain by default; add_leaf_bones=False at export, or ignore_leaf_bones=True at import (both importers have it), gives back the two bones",
+   "add_leaf_bones=False, import_scene.fbx": [
+    "arm",
+    "root"
+   ],
+   "add_leaf_bones=False, wm.fbx_import": [
+    "arm",
+    "root"
+   ],
+   "default export, import_scene.fbx(ignore_leaf_bones=True)": [
+    "arm",
+    "root"
+   ],
+   "default export, wm.fbx_import(ignore_leaf_bones=True)": [
+    "arm",
+    "root"
+   ]
+  },
+  {
+   "fact": "On a 160,801-point grid the C++ importer wm.fbx_import was faster than import_scene.fbx",
+   "export_s": 0.114,
+   "file_mb": 3.2,
+   "import_scene.fbx": {
+    "seconds": 0.235,
+    "points": [
+     160801
+    ]
+   },
+   "wm.fbx_import": {
+    "seconds": 0.092,
+    "points": [
+     160801
+    ]
+   }
+  }
+ ],
+ "data": {
+  "source": {
+   "bones": {
+    "root": {
+     "head": [
+      1.0,
+      2.0,
+      0.0
+     ],
+     "tail": [
+      1.0,
+      2.0,
+      1.0
+     ],
+     "z_axis": [
+      0.5,
+      -0.866,
+      0.0
+     ]
+    },
+    "arm": {
+     "head": [
+      1.0,
+      2.0,
+      1.0
+     ],
+     "tail": [
+      1.0,
+      2.0,
+      2.0
+     ],
+     "z_axis": [
+      0.866,
+      -0.5,
+      0.0
+     ]
+    }
+   },
+   "groups": [
+    "arm",
+    "root"
+   ],
+   "points": 336
+  },
+  "pose_arm_x_deg": 60
+ },
+ "args": []
+}

@@ -1,0 +1,101 @@
+{
+ "experiment": "experiments/curves/curve_to_mesh_node.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.06,
+ "facts": [
+  {
+   "fact": "Curve to Mesh from a 37-point open path: with no profile it gives a polyline (edges, no faces); with an 8-point circle profile an open tube, 37 x 8 points, not manifold; Fill Caps adds two 8-sided faces and makes it manifold with outward normals (positive signed volume); a closed path needs no caps; a line profile makes a ribbon",
+   "new_node": {
+    "inputs": {
+     "Curve": null,
+     "Profile Curve": null,
+     "Scale": 1.0,
+     "Fill Caps": false
+    },
+    "outputs": [
+     "Mesh"
+    ]
+   },
+   "no profile": {
+    "vertices": 37,
+    "edges": 36,
+    "faces": 0,
+    "non_manifold_edges": 36,
+    "boundary_edges": 0,
+    "ngons": 0,
+    "signed_volume": 0.0,
+    "manifold": false,
+    "max_abs_z": 0.3
+   },
+   "circle profile": {
+    "vertices": 296,
+    "edges": 584,
+    "faces": 288,
+    "non_manifold_edges": 16,
+    "boundary_edges": 16,
+    "ngons": 0,
+    "signed_volume": 0.08455,
+    "manifold": false,
+    "max_abs_z": 0.3988
+   },
+   "circle profile, Fill Caps": {
+    "vertices": 296,
+    "edges": 584,
+    "faces": 290,
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "ngons": 2,
+    "signed_volume": 0.10899,
+    "manifold": true,
+    "max_abs_z": 0.3988
+   },
+   "closed path, circle, Fill Caps": {
+    "vertices": 384,
+    "edges": 768,
+    "faces": 384,
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "ngons": 0,
+    "signed_volume": 0.21202,
+    "manifold": true,
+    "max_abs_z": 0.3992
+   },
+   "closed path, circle": {
+    "vertices": 384,
+    "edges": 768,
+    "faces": 384,
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "ngons": 0,
+    "signed_volume": 0.21202,
+    "manifold": true,
+    "max_abs_z": 0.3992
+   },
+   "line profile": {
+    "vertices": 74,
+    "edges": 109,
+    "faces": 36,
+    "non_manifold_edges": 74,
+    "boundary_edges": 74,
+    "ngons": 0,
+    "signed_volume": 0.06124,
+    "manifold": false,
+    "max_abs_z": 0.3153
+   }
+  },
+  {
+   "fact": "The tube's size: profile radius 0.1 x the Scale input (default 1.0). The curve's own point radius is not applied unless it is wired into Scale (a Radius node -> Scale)",
+   "default": 0.1,
+   "Scale 2": 0.2,
+   "point radius 3, Scale 1": 0.1,
+   "point radius 3, Radius -> Scale": 0.3
+  }
+ ],
+ "data": {
+  "path_points": 37,
+  "profile_points": 8
+ },
+ "args": []
+}

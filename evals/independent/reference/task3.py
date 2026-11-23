@@ -20,7 +20,7 @@ values = {
     "Metallic": 0.6,
     "Roughness": 0.4,
     "Coat Weight": 1.0,
-    "Coat Roughness": 0.03,
+    "Coat Roughness": 0.08,
     "Sheen Weight": 0.3,
     "Transmission Weight": 0.25,
     "Emission Color": (1.0, 0.5, 0.1, 1.0),

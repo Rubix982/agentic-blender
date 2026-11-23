@@ -28,6 +28,11 @@ Blender 4.5.14 LTS on Apple Silicon. Tags: `[inv]` read from Blender (`scripts/k
    `[exp: experiments/compositing/passes_and_compositor.py]`
 7. **File Output slots in multilayer mode.** With `format.file_format = "OPEN_EXR_MULTILAYER"` the inputs are
    `layer_slots`, not `file_slots`, and the node writes one file. `[exp: experiments/compositing/multilayer_readback.py]`
+8. **The Cryptomatte node's layer by its listed name.** `layer_name` is filled at run time: the registered items read
+   `CryptoObject`, `CryptoMaterial`, `CryptoAsset`, but setting `"CryptoObject"` raised `TypeError: ... enum
+   "CryptoObject" not found in ('ViewLayer.CryptoObject', 'ViewLayer.CryptoMaterial')`. Use
+   `"<view layer name>.CryptoObject"`; a new node already starts at `ViewLayer.CryptoObject`. A misspelt object name in
+   `matte_id` raises nothing and gives an all-zero matte. `[exp: experiments/compositing/cryptomatte.py]`
 
 ## Turn passes on and write them all to one file
 
@@ -125,6 +130,45 @@ for name, out in (("beauty", "Image"), ("depth", "Depth"), ("normal", "Normal"))
 This wrote `passes_0001.exr` with channels `beauty.R/G/B/A`, `depth.V`, `normal.X/Y/Z`: a single-value slot's channel
 is named `V`, not `Z`. `[exp: experiments/compositing/multilayer_readback.py]` `File Output.save_as_render` (default
 False) applies the display transform when saving byte images. `[inv]`
+
+## Cryptomatte: a matte for one object
+
+Copied from `experiments/compositing/cryptomatte.py`:
+
+```python
+vl.use_pass_cryptomatte_object = True                    # and/or use_pass_cryptomatte_material
+scene.use_nodes = True
+tree = scene.node_tree
+rl = next(n for n in tree.nodes if n.type == "R_LAYERS")
+cm = tree.nodes.new("CompositorNodeCryptomatteV2")       # "CompositorNodeCryptomatte" is the deprecated one
+tree.links.new(rl.outputs["Image"], cm.inputs["Image"])
+cm.layer_name = "ViewLayer.CryptoObject"                 # '<view layer>.CryptoObject', '...CryptoMaterial'
+cm.matte_id = "CubeB"                                    # object (or material) names, comma-separated
+fo = tree.nodes.new("CompositorNodeOutputFile")
+fo.base_path = out_dir + os.sep
+fo.format.file_format = "OPEN_EXR"
+fo.file_slots[0].path = "matte_"
+tree.links.new(cm.outputs["Matte"], fo.inputs[0])
+bpy.ops.render.render(write_still=True)                  # writes matte_0001.exr
+```
+
+A new node starts with `source` RENDER, `scene` the current scene, `layer_name` `ViewLayer.CryptoObject` and an empty
+`matte_id`; its sockets are Image in, Image, Matte and Pick out. The view layer's `pass_cryptomatte_depth` is 6 by
+default. `[exp: experiments/compositing/cryptomatte.py]`
+
+Three cubes from above (128 px), the matte checked against the Object Index pass `[exp: experiments/compositing/cryptomatte.py]`:
+
+| `matte_id`, layer | index pixels | matte sum | inside (interior) | outside, max | agree at 0.5 |
+|---|---|---|---|---|---|
+| `CubeB`, CryptoObject (Cycles) | 900 | 940.9 | 1.0 | 0.375 | 1.0 |
+| `CubeA,CubeC` (or `CubeA, CubeC`) | 1800 | 1880.7 | 1.0 | 0.4375 | 1.0 |
+| `MatB`, CryptoMaterial | 900 | 940.9 | 1.0 | 0.375 | 1.0 |
+| `CubeB`, EEVEE render | 900 | 943.3 | 1.0 | 0.3998 | 1.0 |
+| `CubeX` (no such object) | | 0.0 | | | |
+
+The pixels "outside" with a value are the anti-aliased edges the index pass does not have. The node's Image output had
+the matte as its alpha (largest difference 0.0; the render itself was opaque), and `cm.entries` listed the names
+(`['CubeA', 'CubeC']`). `[exp: experiments/compositing/cryptomatte.py]`
 
 ## Reference
 

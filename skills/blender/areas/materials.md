@@ -40,6 +40,13 @@ read back is the number the shader saw.
 10. **Textures on Object or Generated coordinates with unapplied scale.** Generated runs 0..1 over the bounding box
     and Object gives local coordinates, so both ignore object scale: a texture stretches with it. UV does too, unless
     the UVs match the scaled shape. `[exp: experiments/materials/texture_coordinates.py]`
+11. **A bump that barely shows, or changes with object scale.** Bump's `Distance` is the height in world units that
+    one unit of `Height` stands for, and it defaults to 0.001: a 0..1 ramp across 2 m tilted the normal 0.0 degrees at
+    the default and 26.57 at Distance 1.0. At uniform object scale 2 the same bump tilted 14.05 degrees, while a
+    tangent-space normal map kept 26.57. `[exp: experiments/materials/bump_vs_normal_map.py]`
+12. **Rotating an HDRI the wrong way.** A Mapping node of type `POINT` (the default) in front of the Environment
+    Texture turns the lighting by minus its angle: Rotation Z +90 degrees moved a light that came from +x (azimuth 0)
+    to -y (-89.9). Type `TEXTURE` turns it by the angle as written (90.0). `[exp: experiments/materials/hdri_rotation.py]`
 
 ## Make a material and set the Principled BSDF
 
@@ -128,6 +135,37 @@ texture grows. Texture Coordinate outputs: Generated, Normal, UV, Object, Camera
 POINT, TEXTURE, VECTOR, NORMAL with inputs Vector, Location, Rotation, Scale.
 `[exp: experiments/materials/texture_coordinates.py]`
 
+### Rotating an HDRI
+
+Copied from `experiments/materials/hdri_rotation.py` (`env` is the world's Environment Texture node):
+
+```python
+tc = wnt.nodes.new("ShaderNodeTexCoord")
+mp = wnt.nodes.new("ShaderNodeMapping")
+wnt.links.new(tc.outputs["Generated"], mp.inputs["Vector"])
+wnt.links.new(mp.outputs["Vector"], env.inputs["Vector"])
+mp.vector_type = "TEXTURE"                                       # the lighting turns by the angle as written
+mp.inputs["Rotation"].default_value = (0, 0, math.radians(90))
+```
+
+A black equirectangular EXR with one bright spot in its middle column (u = 0.5), 30 degrees above the horizon, lit a
+white sphere; the azimuth the light came from was read from the sphere's brightness-weighted centre, seen from above
+(degrees counter-clockwise from +x) `[exp: experiments/materials/hdri_rotation.py]`:
+
+| Mapping | Rotation Z | light from |
+|---|---|---|
+| nothing in the Vector input | | -0.0 (+x) |
+| Generated -> Mapping | 0 | -0.0 |
+| POINT (default) | +30 | -30.0 |
+| POINT | +90 | -89.9 |
+| POINT | -90 | 90.0 |
+| TEXTURE | +30 | 30.0 |
+| TEXTURE | +90 | 90.0 |
+| TEXTURE | -90 | -89.9 |
+
+So the middle of an equirectangular image faces +x, and a positive Z rotation turns the lighting counter-clockwise
+(seen from above) only with type `TEXTURE`. `[exp: experiments/materials/hdri_rotation.py]`
+
 ## Image textures and colour space
 
 ```python
@@ -165,7 +203,51 @@ Sockets: Displacement node Height, Midlevel (0.5), Scale (0.01 on a new node, in
 Distance (0.001), Filter Width (0.1), Height, Normal, `invert` False; Normal Map node Strength, Color, `space` TANGENT
 (also OBJECT, WORLD, BLENDER_OBJECT, BLENDER_WORLD). Wire Bump's or Normal Map's Normal output into the Principled
 BSDF's Normal input; a tangent-space normal map needs a UV map and a Non-Color image.
-`[exp: experiments/materials/displacement.py]` The shading difference between bump and normal map was not measured here.
+`[exp: experiments/materials/displacement.py]`
+
+### Bump or normal map
+
+A 2 m plane whose height rises linearly in U (h = u, 0 to 1 across the plane: 0.5 per metre); the normal each node
+gives, read in Cycles by emitting it `[exp: experiments/materials/bump_vs_normal_map.py]`:
+
+| node and setting | normal (x, y, z) | tilt (degrees) |
+|---|---|---|
+| Bump, Distance 0.001 (default) | (-0.0005, 0, 1.0) | 0.0 |
+| Bump, Distance 0.25 | (-0.124, 0, 0.9923) | 7.11 |
+| Bump, Distance 1.0 | (-0.4472, 0, 0.8944) | 26.57 |
+| Bump, Distance 2.0 | (-0.7071, 0, 0.7071) | 45.0 |
+| Bump, Distance 1.0, Strength 0.5 | (-0.2298, 0, 0.9732) | 13.29 |
+| Bump, Distance 1.0, `invert` | (0.4472, 0, 0.8944) | 26.57 |
+| Normal Map, colour (0.2764, 0.5, 0.9472) from a float EXR, Non-Color | (-0.4472, 0, 0.8944) | 26.57 |
+| the same colour from an 8-bit PNG, Non-Color | (-0.4488, 0.0039, 0.8936) | |
+| the same PNG left in sRGB | (-0.674, -0.4365, 0.5959) | 53.42 |
+| Normal Map, Strength 0.5 | (-0.2298, 0, 0.9732) | 13.29 |
+| Normal Map, Strength 2.0 | (-0.7071, 0, 0.7071) | 45.0 |
+
+`[exp: experiments/materials/bump_vs_normal_map.py]`
+
+- **Bump's units.** The normal matched normalize(-Distance x slope, 0, 1) at every Distance tried, so Distance is the
+  height in world units for one unit of Height. Strength blends the bumped normal with the unbumped one and
+  renormalises: Strength 0.5 at Distance 1 gave 13.29 degrees, not the 14.05 of Distance 0.5.
+  `[exp: experiments/materials/bump_vs_normal_map.py]`
+- **The same slope gives the same render.** A normal map encoding the bump's normal (rgb = n x 0.5 + 0.5) gave the
+  same normal. Under a sun from -x at 45 degrees a white diffuse surface rendered 0.2997 with either (flat 0.2251;
+  Lambert predicts 0.302), and Cycles' Normal pass held the perturbed normal (-0.4472, 0, 0.8944) for both, not the
+  geometric one. `[exp: experiments/materials/bump_vs_normal_map.py]`
+- **Tangent space follows the UVs.** Colour (0.8, 0.5, 0.9) tilted the normal toward +U, here +x: (0.6, 0.0, 0.8);
+  (0.5, 0.8, 0.9) toward +V: (0.0, 0.6, 0.8). That is the OpenGL convention; a DirectX normal map needs its green
+  channel inverted. On a quad with no UV map the normal map still gave the encoded normal, with its tangent along the
+  object's local +x. `[exp: experiments/materials/bump_vs_normal_map.py]`
+- **Where they differ: object scale.** At uniform scale 2 the bump flattened to 14.05 degrees (its height stays in
+  world units while the surface doubled) and the normal map stayed at 26.57. At non-uniform scale (2, 2, 1) both
+  flattened to 14.05. Bump also needs no UVs; any coordinate can drive Height.
+  `[exp: experiments/materials/bump_vs_normal_map.py]`
+
+Writing a normal map image from Python: `Image.save()` of a float image made with `images.new(float_buffer=True)` and
+`file_format = "OPEN_EXR"` wrote sRGB-encoded values (0.5 became 0.7354, 2.0 became 1.3533), and the image's colour
+space changed from Linear Rec.709 to sRGB. `image.save_render(path)`, with the scene's file format set to OPEN_EXR,
+wrote 0.5 and 2.0 unchanged; the experiment writes its EXRs with OpenImageIO. An 8-bit PNG written with `save()` came
+back right. `[exp: experiments/materials/bump_vs_normal_map.py]`
 
 ## Attributes into the shader
 

@@ -51,6 +51,10 @@ ratios much less.
 11. **`obj.dimensions` (and `matrix_world`) read right after a change.** After `obj.scale = (2, 1, 1)`, `dimensions`
     still read (2, 2, 2); after `bpy.context.view_layer.update()` it read (4, 2, 2).
     `[exp: experiments/meshes/units_scale.py]`
+12. **STRING attributes as str, or in bulk.** A STRING attribute's `value` is `bytes`: assigning a str raised
+    `TypeError: ... StringAttributeValue.value expected a bytes type, not str`. `foreach_set` and `foreach_get` do not
+    work on it in any form (RuntimeError "internal error setting the array"; the log says "Only boolean, int, float,
+    and enum properties supported"): loop over `data`. `[exp: experiments/meshes/string_attributes.py]`
 
 ## Build a mesh from arrays
 
@@ -222,6 +226,20 @@ me.uv_layers["UVMap"].uv.foreach_get("vector", uvs)
 All of the above: `[exp: experiments/meshes/attributes.py]`. Attributes written by geometry nodes reach shaders by
 name; see `geometry-nodes.md`.
 
+STRING attributes, copied from `experiments/meshes/string_attributes.py`:
+
+```python
+a = me.attributes.new("label", "STRING", "POINT")       # any of POINT, EDGE, FACE, CORNER; values start as b''
+for d, text in zip(a.data, texts):
+    d.value = text.encode("utf-8")                     # bytes in, bytes out; no foreach
+labels = [d.value.decode("utf-8") for d in a.data]
+```
+
+UTF-8 text ("héllo ✓ 日本") came back as written, and after a save and reload; a 1,000-byte value came back cut to 254
+bytes. bmesh reaches the same data as `bm.verts.layers.string["label"]`, also bytes (a str raised "expected bytes, not a
+str"). Through modifiers the original points kept their text; the 18 points a level-1 Subdivision added to a cube got
+`b''`, and Mirror copied the text to its new points. `[exp: experiments/meshes/string_attributes.py]`
+
 ## bmesh
 
 ```python
@@ -327,8 +345,8 @@ Look up any other op with `python3 scripts/kb.py py bmesh.ops.NAME`.
 | INT32_2D | `value` | int32, 2 |
 | QUATERNION | `value` | float32, 4 |
 | FLOAT4X4 | `value` | float32, 16 |
-| STRING | `value` | per element (no foreach tried) |
+| STRING | `value` (bytes) | none: foreach raises; per element, at most 254 bytes |
 
 Every row except STRING was written with `foreach_set` and read back identical with `foreach_get`.
-`[exp: experiments/meshes/attributes.py]` Domains: POINT, EDGE, FACE, CORNER (and CURVE, INSTANCE, LAYER for other
+`[exp: experiments/meshes/attributes.py]` STRING: `[exp: experiments/meshes/string_attributes.py]` Domains: POINT, EDGE, FACE, CORNER (and CURVE, INSTANCE, LAYER for other
 geometry) `[inv]`. Domain sizes of a cube: 8, 12, 6, 24 (`me.attributes.domain_size("CORNER")`).

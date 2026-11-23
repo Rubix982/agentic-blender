@@ -1,0 +1,466 @@
+{
+ "experiment": "experiments/curves/text_fonts.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 1.98,
+ "facts": [
+  {
+   "fact": "The built-in font (Bfont Regular) draws every character tried, including CJK, Devanagari, Arabic and emoji: those glyphs have exactly the vertex count of the same character in the matching bundled Noto font (drawn at a different size), so the built-in font falls back to Blender's bundled fonts",
+   "chars": {
+    "H": {
+     "vertices": 12,
+     "width": 0.578,
+     "drawn": true
+    },
+    "e acute": {
+     "vertices": 103,
+     "width": 0.405,
+     "drawn": true
+    },
+    "check mark": {
+     "vertices": 6,
+     "width": 0.688,
+     "drawn": true
+    },
+    "CJK": {
+     "vertices": 16,
+     "width": 0.656,
+     "drawn": true
+    },
+    "Devanagari ka": {
+     "vertices": 336,
+     "width": 0.777,
+     "drawn": true
+    },
+    "Arabic beh": {
+     "vertices": 413,
+     "width": 0.913,
+     "drawn": true
+    },
+    "emoji": {
+     "vertices": 1058,
+     "width": 1.016,
+     "drawn": true
+    }
+   },
+   "missing_glyph": {
+    "vertices": 1888,
+    "width": 0.956
+   },
+   "identical_to": {
+    "H": [
+     {
+      "font": "DejaVuSansMono.woff2",
+      "width_ratio": 1.731
+     },
+     {
+      "font": "Inter.woff2",
+      "width_ratio": 1.456
+     },
+     {
+      "font": "Noto Sans CJK Regular.woff2",
+      "width_ratio": 3.124
+     }
+    ],
+    "e acute": [],
+    "check mark": [
+     {
+      "font": "Inter.woff2",
+      "width_ratio": 1.43
+     }
+    ],
+    "CJK": [
+     {
+      "font": "Noto Sans CJK Regular.woff2",
+      "width_ratio": 2.852
+     }
+    ],
+    "Devanagari ka": [
+     {
+      "font": "NotoSansDevanagari-Regular.woff2",
+      "width_ratio": 1.742
+     }
+    ],
+    "Arabic beh": [
+     {
+      "font": "NotoSansArabic-VariableFont_wdth,wght.woff2",
+      "width_ratio": 1.688
+     }
+    ],
+    "emoji": [
+     {
+      "font": "NotoEmoji-VariableFont_wght.woff2",
+      "width_ratio": 1.089
+     }
+    ]
+   }
+  },
+  {
+   "fact": "The check mark in 'H\u00e9llo \u2713' has geometry with the built-in font: the string has more vertices than 'H\u00e9llo '",
+   "with_check": 225,
+   "without": 219,
+   "check_alone": 6
+  },
+  {
+   "fact": "bpy.data.fonts.load() reads the .woff2 fonts shipped in Blender's datafiles/fonts. A loaded font draws only its own glyphs: characters it lacks come out as its missing-glyph shape (no fallback, no error)",
+   "builtin_hello_width": 2.087,
+   "DejaVuSansMono.woff2": {
+    "name": "DejaVu Sans Mono Book",
+    "filepath_is_set": true,
+    "packed": false,
+    "missing_glyph": {
+     "vertices": 8,
+     "width": 0.357
+    },
+    "chars": {
+     "H": {
+      "vertices": 12,
+      "width": 0.334,
+      "drawn": true
+     },
+     "e acute": {
+      "vertices": 201,
+      "width": 0.344,
+      "drawn": true
+     },
+     "check mark": {
+      "vertices": 180,
+      "width": 0.323,
+      "drawn": true
+     },
+     "CJK": {
+      "vertices": 8,
+      "width": 0.357,
+      "drawn": false
+     },
+     "Devanagari ka": {
+      "vertices": 8,
+      "width": 0.357,
+      "drawn": false
+     },
+     "Arabic beh": {
+      "vertices": 150,
+      "width": 0.394,
+      "drawn": true
+     },
+     "emoji": {
+      "vertices": 8,
+      "width": 0.357,
+      "drawn": false
+     }
+    },
+    "hello_width": 2.051
+   },
+   "Inter.woff2": {
+    "name": "Inter Variable Regular",
+    "filepath_is_set": true,
+    "packed": false,
+    "missing_glyph": {
+     "vertices": 72,
+     "width": 0.235
+    },
+    "chars": {
+     "H": {
+      "vertices": 12,
+      "width": 0.397,
+      "drawn": true
+     },
+     "e acute": {
+      "vertices": 311,
+      "width": 0.337,
+      "drawn": true
+     },
+     "check mark": {
+      "vertices": 6,
+      "width": 0.481,
+      "drawn": true
+     },
+     "CJK": {
+      "vertices": 72,
+      "width": 0.235,
+      "drawn": false
+     },
+     "Devanagari ka": {
+      "vertices": 72,
+      "width": 0.235,
+      "drawn": false
+     },
+     "Arabic beh": {
+      "vertices": 72,
+      "width": 0.235,
+      "drawn": false
+     },
+     "emoji": {
+      "vertices": 72,
+      "width": 0.235,
+      "drawn": false
+     }
+    },
+    "hello_width": 1.62
+   },
+   "Noto Sans CJK Regular.woff2": {
+    "name": "Noto Sans CJK SC Regular",
+    "filepath_is_set": true,
+    "packed": false,
+    "missing_glyph": {
+     "vertices": 16,
+     "width": 0.28
+    },
+    "chars": {
+     "H": {
+      "vertices": 12,
+      "width": 0.185,
+      "drawn": true
+     },
+     "e acute": {
+      "vertices": 115,
+      "width": 0.161,
+      "drawn": true
+     },
+     "check mark": {
+      "vertices": 52,
+      "width": 0.241,
+      "drawn": true
+     },
+     "CJK": {
+      "vertices": 16,
+      "width": 0.23,
+      "drawn": true
+     },
+     "Devanagari ka": {
+      "vertices": 16,
+      "width": 0.28,
+      "drawn": false
+     },
+     "Arabic beh": {
+      "vertices": 16,
+      "width": 0.28,
+      "drawn": false
+     },
+     "emoji": {
+      "vertices": 16,
+      "width": 0.28,
+      "drawn": false
+     }
+    },
+    "hello_width": 0.806
+   },
+   "NotoSansDevanagari-Regular.woff2": {
+    "name": "Noto Sans Devanagari Regular",
+    "filepath_is_set": true,
+    "packed": false,
+    "missing_glyph": {
+     "vertices": 8,
+     "width": 0.236
+    },
+    "chars": {
+     "H": {
+      "vertices": 8,
+      "width": 0.236,
+      "drawn": false
+     },
+     "e acute": {
+      "vertices": 8,
+      "width": 0.236,
+      "drawn": false
+     },
+     "check mark": {
+      "vertices": 8,
+      "width": 0.236,
+      "drawn": false
+     },
+     "CJK": {
+      "vertices": 8,
+      "width": 0.236,
+      "drawn": false
+     },
+     "Devanagari ka": {
+      "vertices": 336,
+      "width": 0.446,
+      "drawn": true
+     },
+     "Arabic beh": {
+      "vertices": 8,
+      "width": 0.236,
+      "drawn": false
+     },
+     "emoji": {
+      "vertices": 8,
+      "width": 0.236,
+      "drawn": false
+     }
+    },
+    "hello_width": 1.615
+   },
+   "NotoSansArabic-VariableFont_wdth,wght.woff2": {
+    "name": "Noto Sans Arabic Regular",
+    "filepath_is_set": true,
+    "packed": false,
+    "missing_glyph": {
+     "vertices": 8,
+     "width": 0.244
+    },
+    "chars": {
+     "H": {
+      "vertices": 8,
+      "width": 0.244,
+      "drawn": false
+     },
+     "e acute": {
+      "vertices": 8,
+      "width": 0.244,
+      "drawn": false
+     },
+     "check mark": {
+      "vertices": 8,
+      "width": 0.244,
+      "drawn": false
+     },
+     "CJK": {
+      "vertices": 8,
+      "width": 0.244,
+      "drawn": false
+     },
+     "Devanagari ka": {
+      "vertices": 8,
+      "width": 0.244,
+      "drawn": false
+     },
+     "Arabic beh": {
+      "vertices": 413,
+      "width": 0.541,
+      "drawn": true
+     },
+     "emoji": {
+      "vertices": 8,
+      "width": 0.244,
+      "drawn": false
+     }
+    },
+    "hello_width": 1.666
+   },
+   "NotoEmoji-VariableFont_wght.woff2": {
+    "name": "Noto Emoji Regular",
+    "filepath_is_set": true,
+    "packed": false,
+    "missing_glyph": {
+     "vertices": 8,
+     "width": 0.355
+    },
+    "chars": {
+     "H": {
+      "vertices": 8,
+      "width": 0.355,
+      "drawn": false
+     },
+     "e acute": {
+      "vertices": 8,
+      "width": 0.355,
+      "drawn": false
+     },
+     "check mark": {
+      "vertices": 8,
+      "width": 0.355,
+      "drawn": false
+     },
+     "CJK": {
+      "vertices": 8,
+      "width": 0.355,
+      "drawn": false
+     },
+     "Devanagari ka": {
+      "vertices": 8,
+      "width": 0.355,
+      "drawn": false
+     },
+     "Arabic beh": {
+      "vertices": 8,
+      "width": 0.355,
+      "drawn": false
+     },
+     "emoji": {
+      "vertices": 1058,
+      "width": 0.933,
+      "drawn": true
+     }
+    },
+    "hello_width": 2.149
+   }
+  },
+  {
+   "fact": "System fonts load the same way: a .ttf, and a .ttc collection (its first face)",
+   "Arial.ttf": {
+    "name": "Arial Regular",
+    "missing_glyph": {
+     "vertices": 8,
+     "width": 0.376
+    },
+    "drawn": [
+     "H",
+     "e acute",
+     "Arabic beh"
+    ],
+    "hello_width": 1.625
+   },
+   "Helvetica.ttc": {
+    "name": "Helvetica Regular",
+    "missing_glyph": {
+     "vertices": 8,
+     "width": 0.355
+    },
+    "drawn": [
+     "H",
+     "e acute"
+    ],
+    "hello_width": 1.348
+   }
+  },
+  {
+   "fact": "fonts.load() of a path already loaded makes a new datablock (check_existing defaults to False); check_existing=True returned the one already loaded",
+   "default_check_existing": false,
+   "first": "Inter Variable Regular.001",
+   "with_check_existing": "Inter Variable Regular",
+   "same": false,
+   "without": "Inter Variable Regular.002",
+   "fonts_before": 9,
+   "fonts_after": 11
+  },
+  {
+   "fact": "No shaping: the Devanagari conjunct \u0915\u094d\u0937 (ka + virama + ssa) came out as its three separate glyphs, its vertices exactly the sum of the three drawn alone: the text was not shaped into a conjunct",
+   "conjunct": {
+    "vertices": 592,
+    "width": 0.778
+   },
+   "parts": [
+    {
+     "vertices": 336,
+     "width": 0.446
+    },
+    {
+     "vertices": 98,
+     "width": 0.19
+    },
+    {
+     "vertices": 158,
+     "width": 0.341
+    }
+   ],
+   "sum_part_vertices": 592,
+   "namaste": {
+    "vertices": 907,
+    "width": 1.386
+   }
+  }
+ ],
+ "data": {
+  "fonts_dir_listed": [
+   "DejaVuSansMono.woff2",
+   "Inter.woff2",
+   "Noto Sans CJK Regular.woff2",
+   "NotoEmoji-VariableFont_wght.woff2",
+   "NotoSansArabic-VariableFont_wdth,wght.woff2"
+  ]
+ },
+ "args": []
+}

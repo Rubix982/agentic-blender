@@ -25,9 +25,15 @@ the attribute-based type that hair and geometry nodes use. `[exp: experiments/cu
 5. **`new_from_object` on a Curves (hair) object.** It raised "Object does not have geometry data".
    `bpy.ops.object.convert(target='MESH')` worked (12 points -> 12 vertices, 9 edges).
    `[exp: experiments/curves/hair_curves.py]`
-6. **Text characters the font lacks.** "Héllo ✓" with the built-in font raised nothing; glyphs missing from the font
-   produce nothing. Load a font that has them (`bpy.data.fonts.load(path)`, untested here).
-   `[exp: experiments/curves/text_to_mesh.py]`
+6. **Text characters the font lacks.** The built-in font falls back to Blender's bundled fonts: it drew a check mark,
+   CJK, Devanagari, Arabic and an emoji ("Héllo ✓" had 225 vertices, "Héllo " 219). A font loaded with
+   `bpy.data.fonts.load(path)` does not fall back: a character it lacks comes out as its missing-glyph box (8 vertices
+   in DejaVu Sans Mono), with no error. Neither shapes complex scripts (below).
+   `[exp: experiments/curves/text_fonts.py]`
+7. **Curve to Mesh without caps, or with the curve's radius.** The node's tube is open (16 boundary edges on an
+   8-point profile) until `Fill Caps` is on, and in 4.5 the curve's point radius does nothing unless a Radius node is
+   wired into the node's `Scale` input (radius 3 left the tube at 0.1 m; wired, 0.3).
+   `[exp: experiments/curves/curve_to_mesh_node.py]`
 
 ## Bezier and poly curves
 
@@ -84,7 +90,36 @@ with bpy.context.temp_override(active_object=ob, object=ob, selected_objects=[ob
 
 `new_from_object` gave the 37-vertex polyline; `convert` turned the bevelled curve object into a MESH object with 296
 vertices, and the curve datablocks stayed in `bpy.data.curves` (orphans to purge). `[exp: experiments/curves/bezier_poly.py]`
-The geometry-nodes route is the Curve to Mesh node (`GeometryNodeCurveToMesh`) `[inv]`; untested here.
+
+### The Curve to Mesh node
+
+A geometry-nodes modifier on the Curve object, Group Input -> Curve to Mesh -> Group Output, with a Curve Circle
+(Resolution 8, Radius 0.1) wired into Profile Curve `[exp: experiments/curves/curve_to_mesh_node.py]`:
+
+```python
+c2m = ng.nodes.new("GeometryNodeCurveToMesh")          # inputs Curve, Profile Curve, Scale (1.0), Fill Caps (False)
+circle = ng.nodes.new("GeometryNodeCurvePrimitiveCircle")
+circle.inputs["Resolution"].default_value = 8
+circle.inputs["Radius"].default_value = 0.1
+ng.links.new(gi.outputs[0], c2m.inputs["Curve"])
+ng.links.new(circle.outputs["Curve"], c2m.inputs["Profile Curve"])
+c2m.inputs["Fill Caps"].default_value = True
+ng.links.new(c2m.outputs["Mesh"], go.inputs[0])
+```
+
+The same 4-point open Bezier as above (37 evaluated points) `[exp: experiments/curves/curve_to_mesh_node.py]`:
+
+| profile | vertices, edges, faces | boundary edges | manifold | signed volume |
+|---|---|---|---|---|
+| none | 37, 36, 0 (a polyline) | | no | |
+| circle | 296, 584, 288 | 16 | no | |
+| circle, Fill Caps | 296, 584, 290 (two 8-gon caps) | 0 | yes | 0.10899 (normals outward) |
+| circle, path closed (`use_cyclic_u`) | 384, 768, 384 | 0 | yes, caps or not | 0.21202 |
+| a line 0.2 m wide | 74, 109, 36 (a ribbon) | 74 | no | |
+
+Unlike a bevelled curve with `use_fill_caps` (300 faces, still not manifold, above), Fill Caps made a closed solid.
+The size is the profile times the `Scale` input: Scale 2 gave a 0.2 m tube. Points with radius 3 left it at 0.1 until a
+Radius node (`GeometryNodeInputRadius`) was wired into Scale (then 0.3). `[exp: experiments/curves/curve_to_mesh_node.py]`
 
 ## Text
 
@@ -112,7 +147,42 @@ me = bpy.data.meshes.new_from_object(ob.evaluated_get(bpy.context.evaluated_deps
 made it 430 and manifold, with no n-gons left. `[exp: experiments/curves/text_to_mesh.py]`
 
 Fonts shipped with Blender are in `datafiles/fonts` (`DejaVuSansMono.woff2`, `Inter.woff2`, Noto families for CJK,
-Arabic, Devanagari and others). `[exp: experiments/curves/text_to_mesh.py]` Loading them as text fonts was not tried.
+Arabic, Devanagari and others). `[exp: experiments/curves/text_to_mesh.py]`
+
+### Fonts from files
+
+Copied from `experiments/curves/text_fonts.py`:
+
+```python
+fdir = os.path.join(bpy.utils.system_resource("DATAFILES"), "fonts")
+f = bpy.data.fonts.load(os.path.join(fdir, "NotoSansDevanagari-Regular.woff2"), check_existing=True)
+cu.font = f                                    # cu: a FONT curve; regular glyphs only (font_bold etc. are separate)
+```
+
+Each bundled `.woff2` loaded, and so did a system `.ttf` (Arial) and a `.ttc` collection (Helvetica, its first face).
+`check_existing` defaults to False: loading the same path again made a second datablock (`Inter Variable
+Regular.001`); with True it returned the one already loaded. `[exp: experiments/curves/text_fonts.py]`
+
+Which characters each font drew (a character counts as drawn when it differs from the font's own missing-glyph shape,
+read from an unassigned code point) `[exp: experiments/curves/text_fonts.py]`:
+
+| font | H, é | ✓ | 日 | क | ب | 😀 |
+|---|---|---|---|---|---|---|
+| built in (Bfont Regular) | yes | yes | yes | yes | yes | yes |
+| DejaVu Sans Mono | yes | yes | no | no | yes | no |
+| Inter | yes | yes | no | no | no | no |
+| Noto Sans CJK | yes | yes | yes | no | no | no |
+| Noto Sans Devanagari | no | no | no | yes | no | no |
+| Noto Sans Arabic | no | no | no | no | yes | no |
+| Noto Emoji | no | no | no | no | no | yes |
+
+The built-in font's क, ب and 😀 had exactly the vertex counts of the same characters in the bundled Noto fonts (336,
+413, 1058), drawn larger: it falls back to those files. A loaded font has no fallback, so mixed scripts in one text object
+need the built-in font. `[exp: experiments/curves/text_fonts.py]`
+
+No shaping: the Devanagari conjunct क्ष (ka, virama, ssa) in Noto Sans Devanagari had 592 vertices, exactly the 336 +
+98 + 158 of its three characters drawn alone, so it came out as separate letters rather than the joined form. Arabic
+joining was not checked. `[exp: experiments/curves/text_fonts.py]`
 
 ## The Curves (hair) type, briefly
 
@@ -142,3 +212,5 @@ node groups (`geometry-nodes.md`).
 | closed spline | `spline.use_cyclic_u = True` |
 | sweep a profile | `bevel_depth` + `bevel_resolution`, or `bevel_mode='OBJECT'` + `bevel_object` |
 | hair-type curves | `bpy.data.hair_curves.new(name)`, `add_curves([...])`, attributes `position`, `radius`, `curve_type` |
+| a font from a file | `bpy.data.fonts.load(path, check_existing=True)`, then `text_curve.font = f` `[exp: experiments/curves/text_fonts.py]` |
+| sweep in geometry nodes | `GeometryNodeCurveToMesh`: Curve, Profile Curve, Scale, Fill Caps `[exp: experiments/curves/curve_to_mesh_node.py]` |

@@ -42,6 +42,11 @@ Blender jobs sharing the machine; repeated runs moved by up to 2x, the ratios mu
 9. **Confusing Workbench with a preview of the material.** Workbench (colour type MATERIAL, the default) draws
    `material.diffuse_color`, the viewport colour, not the node tree's Base Color: a material with red nodes and green
    `diffuse_color` rendered green in Workbench and red in Cycles. `[exp: experiments/rendering/workbench.py]`
+10. **Checking a render against the viewport depsgraph.** `bpy.context.evaluated_depsgraph_get()` is the viewport one
+    (mode `VIEWPORT`): a Subdivision modifier with `levels` 1 and `render_levels` 3 had 26 vertices there, but the
+    render's outline covered 2.2557 m2, level 3's (level 1's is 2.0469). Objects hidden with `hide_viewport` or
+    `hide_set(True)` are missing from that depsgraph and still render; only `hide_render` (or a collection's
+    `hide_render` or `exclude`) keeps them out. `[exp: experiments/rendering/render_vs_viewport.py]`
 
 ## Pick an engine and a device
 
@@ -127,6 +132,43 @@ For interiors, raise `diffuse_bounces`; the cap is per type, and `max_bounces` c
 scene where only an object's rotation changed between renders, renders after the first took 0.23 s with it on and
 0.71 s on average with it off. `[exp: experiments/rendering/cycles_persistent_data.py]`
 
+## What a final render evaluates
+
+A render builds its own depsgraph in mode `RENDER`, separate from the viewport one Python reads. A 2 m cube with a
+Subdivision modifier (`levels` 1, `render_levels` 3), seen from above; the render's covered area against the outline of
+each level `[exp: experiments/rendering/render_vs_viewport.py]`:
+
+| level | vertices | outline (m2) |
+|---|---|---|
+| 0 | 8 | 4.0 |
+| 1 (`levels`, the viewport) | 26 | 2.0469 |
+| 2 | 98 | 2.2127 |
+| 3 (`render_levels`) | 386 | 2.2558 |
+
+Cycles covered 2.2557 m2, EEVEE 2.2558 and Workbench 2.2465: level 3 in all three. With `modifier.show_render = False`
+the render was the plain cube (Cycles 4.0018); with `show_viewport = False` the viewport depsgraph had 8 vertices and the
+render still showed level 3. `[exp: experiments/rendering/render_vs_viewport.py]`
+
+To read what the render evaluated, a `frame_change_post` handler with a depsgraph argument
+(`def h(scene, depsgraph)`) was called with the render's own depsgraph (mode `RENDER`, 386 vertices) during both a
+still render and `render(animation=True)`, and then once more with the viewport's (`VIEWPORT`, 26) after each.
+`[exp: experiments/rendering/render_vs_viewport.py]`
+
+Hide flags, one emissive square each; the same in Cycles, EEVEE and Workbench
+`[exp: experiments/rendering/render_vs_viewport.py]`:
+
+| flag | in the render | in the viewport depsgraph |
+|---|---|---|
+| none | yes | yes |
+| `ob.hide_viewport = True` (monitor icon) | yes | no |
+| `ob.hide_set(True)` (eye, per view layer) | yes | no |
+| `ob.hide_render = True` | no | yes |
+| `collection.hide_render = True` | no | yes |
+| `collection.hide_viewport = True` | yes | no |
+| `layer_collection.exclude = True` | no | no |
+
+`ob.visible_get()` followed the viewport column. `[exp: experiments/rendering/render_vs_viewport.py]`
+
 ## EEVEE settings that matter in 4.5
 
 | setting | default | what it does |
@@ -172,6 +214,22 @@ scene.view_settings.look = "None"
 scene.view_settings.exposure = 0.0                # stops
 scene.render.dither_intensity = 0                 # default 1.0 adds noise to 8-bit output
 ```
+
+Cycles has a second exposure, `scene.cycles.film_exposure` (default 1.0), a multiplier on the rendered values
+themselves. An emission of 0.125 under Standard, dither off `[exp: experiments/rendering/film_exposure.py]`:
+
+| `film_exposure`, `view_settings.exposure` | EXR value | PNG byte |
+|---|---|---|
+| 1.0, 0 EV | 0.125 | 99 |
+| 2.0, 0 EV | 0.25 | 137 |
+| 0.5, 0 EV | 0.0625 | 71 |
+| 1.0, +1 EV | 0.125 | 137 |
+| 1.0, -1 EV | 0.125 | 71 |
+| 2.0, +1 EV | 0.25 | 188 |
+
+So `film_exposure` reaches the float EXR, while the view's exposure changes only the display-referred file; the two
+multiply. EEVEE ignores `film_exposure` (0.125 and 99 at 2.0).
+`[exp: experiments/rendering/film_exposure.py]`
 
 ## Writing files
 
@@ -229,6 +287,11 @@ A new scene renders frames 1-250 at 24 fps to `/tmp/`. With no `#` in the path a
 dropped `.png`. FFMPEG defaults to container MKV, codec H264, quality MEDIUM; with MPEG4/H264 a 10-frame range wrote one
 file `clip0001-0010.mp4`. `[exp: experiments/rendering/animation_output.py]`
 
+Motion blur (one switch, `scene.render.use_motion_blur`, for Cycles and EEVEE) is measured in `animation-video.md`. Two
+things not there: `motion_blur_position = "START"` put a 0.5-frame smear's centre 0.25 m ahead of a square moving 1 m
+per frame (`END`: -0.251 m, behind it), and `object.cycles.use_motion_blur = False` switches the blur off for one
+object. `[exp: experiments/rendering/motion_blur.py]`
+
 ## Reference: render settings that matter
 
 | setting | default (new file) | note |
@@ -244,6 +307,6 @@ file `clip0001-0010.mp4`. `[exp: experiments/rendering/animation_output.py]`
 | `scene.cycles.samples`, `use_adaptive_sampling`, `adaptive_threshold` | 4096, True, 0.01 | |
 | `scene.cycles.time_limit` | 0 (off) | stops sampling after N seconds, render time only `[doc: https://docs.blender.org/manual/en/4.5/render/cycles/render_settings/sampling.html]` |
 | `scene.cycles.use_denoising`, `denoiser` | True, OPENIMAGEDENOISE | |
-| `scene.cycles.film_exposure` | 1.0 | "Image brightness scale", a multiplier, separate from the view's exposure in stops `[inv]`; not measured here |
+| `scene.cycles.film_exposure` | 1.0 | a multiplier on the rendered values: it reaches the EXR, the view's exposure does not; EEVEE ignores it `[exp: experiments/rendering/film_exposure.py]` |
 | `scene.view_settings.view_transform` | AgX | |
 | `scene.display.shading.light`, `color_type` | STUDIO, MATERIAL | Workbench `[exp: experiments/rendering/workbench.py]` |

@@ -1,0 +1,161 @@
+{
+ "experiment": "experiments/compositing/cryptomatte.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 1.77,
+ "facts": [
+  {
+   "fact": "Rendering with view_layer.use_pass_cryptomatte_object on writes CryptoObject00-02 layers and adds those outputs to the Render Layers node; a new Cryptomatte node starts with these settings",
+   "render_layers_outputs": [
+    "CryptoObject00",
+    "CryptoObject01",
+    "CryptoObject02",
+    "CryptoMaterial00",
+    "CryptoMaterial01",
+    "CryptoMaterial02"
+   ],
+   "view_layer": {
+    "depth": 6,
+    "accurate": true
+   },
+   "new_node": {
+    "source": "RENDER",
+    "scene": "Scene",
+    "layer_name": "ViewLayer.CryptoObject",
+    "matte_id": "",
+    "inputs": [
+     "Image"
+    ],
+    "outputs": [
+     "Image",
+     "Matte",
+     "Pick"
+    ],
+    "layer_names": [
+     "CryptoObject",
+     "CryptoMaterial",
+     "CryptoAsset"
+    ]
+   }
+  },
+  {
+   "fact": "layer_name is a dynamic enum: the registered items say 'CryptoObject', 'CryptoMaterial', 'CryptoAsset', but the node only takes '<view layer>.CryptoObject' and so on; the plain name raises TypeError",
+   "error": "bpy_struct: item.attr = val: enum \"CryptoObject\" not found in ('ViewLayer.CryptoObject', 'ViewLayer.CryptoMaterial')",
+   "registered": [
+    "CryptoObject",
+    "CryptoMaterial",
+    "CryptoAsset"
+   ],
+   "default": "ViewLayer.CryptoObject"
+  },
+  {
+   "fact": "cm.matte_id = 'CubeB' (the object's name) pulled CubeB's matte in a background render: 1.0 inside the object, 0 outside; thresholded at 0.5 it agreed with the Object Index pass on every pixel, and edge pixels just outside the index mask held partial coverage (anti-aliasing, up to 0.375). The node's Image output is the render with alpha multiplied by the matte; cm.entries lists the names",
+   "files": [
+    "image_0001.exr",
+    "matte_0001.exr",
+    "render.exr"
+   ],
+   "entries": [
+    "CubeB"
+   ],
+   "score": {
+    "mask_px": 900,
+    "matte_sum": 940.9,
+    "interior_min": 1.0,
+    "interior_mean": 1.0,
+    "outside_max": 0.375,
+    "agree_at_0_5": 1.0
+   },
+   "image_alpha_vs_matte_max_diff": 0.0
+  },
+  {
+   "fact": "Several objects: matte_id is a comma-separated list; 'CubeA,CubeC' and 'CubeA, CubeC' gave the same matte",
+   "files": [
+    "image_0001.exr",
+    "matte_0001.exr",
+    "render.exr"
+   ],
+   "entries": [
+    "CubeA",
+    "CubeC"
+   ],
+   "score": {
+    "mask_px": 1800,
+    "matte_sum": 1880.7,
+    "interior_min": 1.0,
+    "interior_mean": 1.0,
+    "outside_max": 0.4375,
+    "agree_at_0_5": 1.0
+   },
+   "with_space": {
+    "mask_px": 1800,
+    "matte_sum": 1880.7,
+    "interior_min": 1.0,
+    "interior_mean": 1.0,
+    "outside_max": 0.4375,
+    "agree_at_0_5": 1.0
+   },
+   "entries_with_space": [
+    "CubeA",
+    "CubeC"
+   ]
+  },
+  {
+   "fact": "A name that matches no object gives an all-zero matte and no error",
+   "files": [
+    "image_0001.exr",
+    "matte_0001.exr",
+    "render.exr"
+   ],
+   "entries": [
+    "CubeX"
+   ],
+   "matte_max": 0.0
+  },
+  {
+   "fact": "layer_name = 'ViewLayer.CryptoMaterial' with a material name pulls the objects using that material",
+   "files": [
+    "image_0001.exr",
+    "matte_0001.exr",
+    "render.exr"
+   ],
+   "entries": [
+    "MatB"
+   ],
+   "score": {
+    "mask_px": 900,
+    "matte_sum": 940.9,
+    "interior_min": 1.0,
+    "interior_mean": 1.0,
+    "outside_max": 0.375,
+    "agree_at_0_5": 1.0
+   }
+  },
+  {
+   "fact": "The same node pulls the matte from an EEVEE render; EEVEE writes no Object Index pass, so the check uses the Cycles render's index",
+   "files": [
+    "image_0001.exr",
+    "matte_0001.exr",
+    "render.exr"
+   ],
+   "entries": [
+    "CubeB"
+   ],
+   "eevee_index_pass": false,
+   "score": {
+    "mask_px": 900,
+    "matte_sum": 943.3,
+    "interior_min": 1.0,
+    "interior_mean": 1.0,
+    "outside_max": 0.3998,
+    "agree_at_0_5": 1.0
+   }
+  }
+ ],
+ "data": {
+  "device": "METAL",
+  "resolution": 128
+ },
+ "args": []
+}

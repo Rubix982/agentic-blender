@@ -31,6 +31,10 @@ Round trips used each exporter's and importer's defaults unless a parameter is s
    object with no material picked up the previous object's material ("Red"). `[exp: experiments/export/formats_roundtrip.py]`
 7. **STL and PLY merge everything.** Both imported as one object named after the file (`scene`), holding both meshes.
    `[exp: experiments/export/formats_roundtrip.py]`
+8. **An extra bone per chain after an FBX round trip.** `export_scene.fbx` adds a leaf bone at the end of every chain
+   (`add_leaf_bones` True by default): a two-bone rig came back with `root`, `arm` and `arm_end`. Export with
+   `add_leaf_bones=False`, or import with `ignore_leaf_bones=True`. There is no `wm.fbx_export`; the FBX exporter is
+   still the add-on's. `[exp: experiments/export/fbx_roundtrip.py]`
 
 ## glTF 2.0
 
@@ -158,6 +162,36 @@ Source: a box (2 x 2 x 2 m cube at (1, 2, 3), rotated 30 degrees about Z, scale 
 
 `[exp: experiments/export/formats_roundtrip.py]`
 
+## FBX: a skinned mesh and its armature
+
+4.5 has two FBX importers: the add-on's `import_scene.fbx` ("Import FBX") and the new C++ `wm.fbx_import` ("Import FBX
+(experimental)"). The only exporter is `export_scene.fbx`. `[exp: experiments/export/fbx_roundtrip.py]`
+
+```python
+bpy.ops.export_scene.fbx(filepath=path)                  # defaults: axis_forward -Z, axis_up Y, global_scale 1.0
+bpy.ops.import_scene.fbx(filepath=path)                  # or bpy.ops.wm.fbx_import(filepath=path)
+```
+
+Source: an armature at (1, 2, 0) rotated 30 degrees about Z, two connected bones (the second rolled 30 degrees), and a
+336-point tube skinned to it with automatic weights and a material "Red" (base colour 0.8, 0.05, 0.05, roughness 0.3,
+metallic 0.5). Exported with the defaults and imported into an empty scene, both importers gave the same result
+`[exp: experiments/export/fbx_roundtrip.py]`:
+
+| what | came back |
+|---|---|
+| objects | `Rig` (ARMATURE) at (1, 2, 0), rotation (0, 0, 30), scale 1; `Body` (MESH) parented to it |
+| mesh | 336 points, each 0.0 m from its source point in world space; `Body`'s own location became (0, 0, 0) under the rig |
+| weights | groups `arm`, `root`, 0 unweighted points, an Armature modifier on `Rig` |
+| material | `Red`, Principled BSDF, base colour (0.8, 0.05, 0.05), roughness 0.3, metallic 0.5 |
+| bones | `root`, `arm` and an added `arm_end`; heads and tails 0.0 m off in world space, roll 0.0 degrees off |
+| posed | `arm` rotated 60 degrees on both rigs: the deformed meshes 0.0 m apart |
+
+`[exp: experiments/export/fbx_roundtrip.py]` So a Blender-to-Blender FBX round trip kept scale, axes, materials and
+bones here; what it adds is the leaf bone (trap 8). Files from other programs were not tried.
+
+On a 160,801-point grid, `export_scene.fbx` took 0.114 s (a 3.2 MB file); `import_scene.fbx` took 0.235 s and
+`wm.fbx_import` 0.092 s. `[exp: experiments/export/fbx_roundtrip.py]`
+
 ## Reference: exporter defaults that bite
 
 | operator | parameter | default | `[inv]` |
@@ -174,7 +208,9 @@ Source: a box (2 x 2 x 2 m cube at (1, 2, 3), rotated 30 degrees about Z, scale 
 | `wm.usd_export` | `export_materials`, `generate_preview_surface`, `export_textures` | True, True, False | |
 | `wm.usd_export` | `rename_uvmaps`, `evaluation_mode`, `root_prim_path` | True, RENDER, /root | |
 | `wm.usd_export` | `convert_orientation` | False | |
-| `export_scene.fbx` | parameters | `kb.py op export_scene.fbx` | |
+| `export_scene.fbx` | `add_leaf_bones`, `primary_bone_axis`, `secondary_bone_axis` | True, Y, X | an extra `_end` bone per chain |
+| `export_scene.fbx` | `axis_forward`, `axis_up`, `apply_scale_options`, `bake_anim` | -Z, Y, FBX_SCALE_NONE, True | |
+| `export_scene.fbx` | all parameters | `kb.py op export_scene.fbx` | |
 
 Full parameter lists: `kb.py op wm.obj_export` and so on. `[inv]` Format pages in the manual:
 `[doc: https://docs.blender.org/manual/en/4.5/files/import_export/obj.html]`,

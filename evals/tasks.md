@@ -72,3 +72,12 @@ So the comparison runs on two sets, reported separately:
 
 The card's claim rests on the independent set: at least 3 more of its 10 tasks right first time with the skill than
 without. This set's numbers are reported beside it, task 1 marked as closest to an experiment.
+
+## The independent set arrived (2026-11-23)
+
+The fresh agent's set (`evals/independent/`: ten tasks, checks, a reference and a wrong solution per task, all ten
+references passing and all ten wrong solutions failing, in `validation.md`) was committed without the guide's writer
+reading it. Its writer's report did name the ten tasks and the mistake each wrong solution makes, so from that point the
+guide's writer made no content change to the guide; the one change still merged after it is a worker's, briefed before
+the set existed (gaps in rendering, materials, compositing, export, meshes, rigging and modifiers). The guide is frozen
+as v1 (git tag `v1`) after that merge, and before any run.

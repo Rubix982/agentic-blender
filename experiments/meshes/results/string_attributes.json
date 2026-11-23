@@ -1,0 +1,150 @@
+{
+ "experiment": "experiments/meshes/string_attributes.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.06,
+ "facts": [
+  {
+   "fact": "attributes.new(name, 'STRING', domain) works on every mesh domain; each element's .value is bytes (not str), b'' to start",
+   "POINT": {
+    "ok": true,
+    "length": 8,
+    "item_type": "StringAttributeValue",
+    "value_type": "bytes",
+    "default": "b''"
+   },
+   "EDGE": {
+    "ok": true,
+    "length": 12,
+    "item_type": "StringAttributeValue",
+    "value_type": "bytes",
+    "default": "b''"
+   },
+   "FACE": {
+    "ok": true,
+    "length": 6,
+    "item_type": "StringAttributeValue",
+    "value_type": "bytes",
+    "default": "b''"
+   },
+   "CORNER": {
+    "ok": true,
+    "length": 24,
+    "item_type": "StringAttributeValue",
+    "value_type": "bytes",
+    "default": "b''"
+   }
+  },
+  {
+   "fact": "foreach_set and foreach_get do not work on a STRING attribute: every form raised RuntimeError 'internal error setting the array', and the log says 'Only boolean, int, float, and enum properties supported'",
+   "foreach_set": {
+    "list of str": "RuntimeError: internal error setting the array",
+    "list of bytes": "RuntimeError: internal error setting the array",
+    "numpy object array": "RuntimeError: internal error setting the array",
+    "numpy bytes array": "RuntimeError: internal error setting the array"
+   },
+   "foreach_get": {
+    "list": "RuntimeError: internal error setting the array",
+    "list of None": "RuntimeError: internal error setting the array",
+    "numpy object": "RuntimeError: internal error setting the array"
+   }
+  },
+  {
+   "fact": "Element by element works with bytes: data[i].value = 'text'.encode() and data[i].value.decode(); assigning a str raises TypeError. UTF-8 text came back as written; a 1,000-byte string came back shortened",
+   "str_assignment": "bpy_struct: item.attr = val: StringAttributeValue.value expected a bytes type, not str",
+   "loop_read": [
+    "v0",
+    "v1",
+    "v2",
+    "v3",
+    "v4",
+    "v5",
+    "v6",
+    "v7"
+   ],
+   "unicode_back": "h\u00e9llo \u2713 \u65e5\u672c",
+   "unicode_equal": true,
+   "long_written": 1000,
+   "long_read": 254
+  },
+  {
+   "fact": "bmesh sees the attribute as bm.verts.layers.string['s_POINT'], its values bytes too; writing bytes through bmesh reaches the mesh; writing a str",
+   "layer_found": true,
+   "bmesh_value": "b'h\\xc3\\xa9llo \\xe2\\x9c\\x93 \\xe6\\x97\\xa5\\xe6\\x9c\\xac'",
+   "after_to_mesh": "b'from bmesh'",
+   "bmesh_str_assignment": "TypeError: expected bytes, not a str"
+  },
+  {
+   "fact": "STRING attributes are saved in the .blend and read back",
+   "values_after_reload": [
+    "h\u00e9llo \u2713 \u65e5\u672c",
+    "v1",
+    "v2",
+    "from bmesh",
+    "v4",
+    "v5",
+    "v6",
+    "v7"
+   ],
+   "unicode_after_reload": true
+  },
+  {
+   "fact": "A STRING attribute reaches the evaluated mesh through modifiers: the original points keep their text, the 18 points a level-1 Subdivision adds to a cube get an empty string (no interpolation), and Mirror copies the text to the mirrored points",
+   "SUBSURF": {
+    "present": true,
+    "data_type": "STRING",
+    "points": 26,
+    "first_values": [
+     "h\u00e9llo \u2713 \u65e5\u672c",
+     "v1",
+     "v2",
+     "from bmesh",
+     "v4",
+     "v5",
+     "v6",
+     "v7",
+     "",
+     ""
+    ],
+    "empty": 18
+   },
+   "TRIANGULATE": {
+    "present": true,
+    "data_type": "STRING",
+    "points": 8,
+    "first_values": [
+     "h\u00e9llo \u2713 \u65e5\u672c",
+     "v1",
+     "v2",
+     "from bmesh",
+     "v4",
+     "v5",
+     "v6",
+     "v7"
+    ],
+    "empty": 0
+   },
+   "MIRROR": {
+    "present": true,
+    "data_type": "STRING",
+    "points": 16,
+    "first_values": [
+     "h\u00e9llo \u2713 \u65e5\u672c",
+     "v1",
+     "v2",
+     "from bmesh",
+     "v4",
+     "v5",
+     "v6",
+     "v7",
+     "h\u00e9llo \u2713 \u65e5\u672c",
+     "v1"
+    ],
+    "empty": 0
+   }
+  }
+ ],
+ "data": {},
+ "args": []
+}
