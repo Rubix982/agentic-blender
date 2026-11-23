@@ -44,4 +44,10 @@ then briefed the guide's workers knowing them, so the guide's coverage leans tow
 The claim in field 5 is tested on an independent set of ten tasks written by a fresh agent that had not seen the guide
 (`evals/independent/`); the writer's set is reported beside it.
 
+**Status (2026-11-23, end of the build):** the guide is frozen as git tag `v1`: 22 area pages, a generated reference
+(every node, modifier, constraint and setting of 4.5), 121 experiments with 884 recorded facts, 168 lessons, and the
+audit finding 1,812 of 1,859 cited numbers in the results they cite. Both task sets and the harness are validated
+(`evals/harness_check.md`: right solutions 10 of 10 and wrong ones 0 of 10, in each set). Not run yet: the with and
+without comparison itself, 20 Claude sessions per set on the user's account, which waits for the user's yes.
+
 **Result:** —
