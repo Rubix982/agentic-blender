@@ -8,7 +8,7 @@
   docs.py page URL-OR-PATH [--section HEADING]
                                 a page as plain text (or one section of it)
 
-The copies and the index live in $BFG_DOCS, else ~/.cache/blender-field-guide/docs-4.5. Nothing is bundled with this
+The copies and the index live in $AGENTIC_BLENDER_DOCS, else ~/.cache/agentic-blender/docs-4.5. Nothing is bundled with this
 skill: the manual is CC-BY-SA 4.0 and the reference is Blender's; cite the public URL this prints.
 """
 import gzip
@@ -24,7 +24,7 @@ VERSION = "4.5"
 ZIPS = {"api": f"https://docs.blender.org/api/{VERSION}/blender_python_reference_{VERSION.replace('.', '_')}.zip",
         "manual": f"https://docs.blender.org/manual/en/{VERSION}/blender_manual_html.zip"}
 BASES = {"api": f"https://docs.blender.org/api/{VERSION}/", "manual": f"https://docs.blender.org/manual/en/{VERSION}/"}
-HOME = os.environ.get("BFG_DOCS") or os.path.expanduser(f"~/.cache/blender-field-guide/docs-{VERSION}")
+HOME = os.environ.get("AGENTIC_BLENDER_DOCS") or os.path.expanduser(f"~/.cache/agentic-blender/docs-{VERSION}")
 INDEX = os.path.join(HOME, "index.jsonl.gz")
 
 

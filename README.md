@@ -1,6 +1,7 @@
-# blender-field-guide
+# agentic-blender
 
-A field guide to Blender 4.5 for coding agents, packaged as a Claude Code skill.
+Blender for AI agents: a field guide to Blender 4.5, read from Blender itself and checked by experiment,
+packaged as a Claude Code skill with the tools it uses.
 
 An agent's memory of Blender mixes every version from 2.7 to 4.x, so it writes property names that were renamed years
 ago, operators that need a window it doesn't have, and scripts that fail while reporting success. This guide replaces
@@ -49,8 +50,9 @@ python3 skills/blender/scripts/assets.py search hdri sunny field   # free CC0 as
 Install as a plugin (this repository is its own marketplace):
 
 ```
-/plugin marketplace add /path/to/blender-field-guide
-/plugin install blender-field-guide@blender-field-guide
+/plugin marketplace add /path/to/agentic-blender      # from a clone
+/plugin marketplace add OWNER/agentic-blender         # or from GitHub (OWNER as in this repository's URL)
+/plugin install agentic-blender@agentic-blender
 ```
 
 ## How it is built

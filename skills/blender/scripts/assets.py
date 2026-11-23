@@ -5,14 +5,14 @@
   assets.py get SOURCE ID [--res 1k|2k|4k|8k] [--format jpg|png|exr|hdr] [--quality LQ|SQ|HQ]
   assets.py cache                     where downloads are kept, and what is there
 
-KIND is hdri, texture or model. `get` downloads once into ~/.cache/blender-field-guide/assets/<source>/<id>/<res>/
-(later calls reuse it; $BFG_ASSET_CACHE moves it), checks each file against the size (and md5, for Poly Haven) the
+KIND is hdri, texture or model. `get` downloads once into ~/.cache/agentic-blender/assets/<source>/<id>/<res>/
+(later calls reuse it; $AGENTIC_BLENDER_ASSET_CACHE moves it), checks each file against the size (and md5, for Poly Haven) the
 source lists, and prints a manifest, also saved there as manifest.json. Inside Blender, asset_import.py turns a manifest
 into a world, a material or imported objects.
 
 Licence: everything on both sites is CC0 1.0, free for any use, no account; the assets need no credit. Poly Haven's API
 terms (github.com/Poly-Haven/Public-API/blob/master/ToS.md) ask software using the live API to send its own
-User-Agent and to say where the content comes from: this script sends "blender-field-guide/<version>" and names the
+User-Agent and to say where the content comes from: this script sends "agentic-blender/<version>" and names the
 source in every line and manifest ("Powered by Poly Haven"). ambientCG (its v3 API) is run by one person: the
 script caches search results for a day and never downloads the same file twice. --quality picks an ambientCG model's
 mesh (LQ, SQ or HQ: 7, 20 and 133 MB for one tree stump at 1K).
@@ -32,9 +32,9 @@ import urllib.parse
 import urllib.request
 import zipfile
 
-VERSION = "0.2"
-UA = f"blender-field-guide/{VERSION}"
-CACHE = os.path.expanduser(os.environ.get("BFG_ASSET_CACHE", "~/.cache/blender-field-guide/assets"))
+VERSION = "0.4"
+UA = f"agentic-blender/{VERSION}"
+CACHE = os.path.expanduser(os.environ.get("AGENTIC_BLENDER_ASSET_CACHE", "~/.cache/agentic-blender/assets"))
 CREDIT = {"polyhaven": "Powered by Poly Haven (polyhaven.com), CC0", "ambientcg": "ambientCG (ambientcg.com), CC0"}
 PH_TYPES = {"hdri": "hdris", "texture": "textures", "model": "models"}
 ACG_TYPES = {"hdri": "hdri", "texture": "material", "model": "3d-model"}

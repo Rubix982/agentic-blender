@@ -1,9 +1,9 @@
 {
-  "name": "blender-field-guide",
-  "owner": { "name": "blender-field-guide" },
+  "name": "agentic-blender",
+  "owner": { "name": "agentic-blender" },
   "plugins": [
     {
-      "name": "blender-field-guide",
+      "name": "agentic-blender",
       "source": "./",
       "description": "A field guide to Blender 4.5 for coding agents."
     }

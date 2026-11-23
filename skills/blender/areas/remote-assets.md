@@ -7,7 +7,7 @@ what was fetched (inside Blender). Experiments: `experiments/assets/remote_asset
 
 Both sources are CC0: free for any use, commercial included, with no account and no credit needed for the assets.
 Poly Haven's API terms ask that software calling the live API send its own User-Agent and say where the content comes
-from; `assets.py` sends `blender-field-guide/<version>` and prints the source with every result and in every manifest.
+from; `assets.py` sends `agentic-blender/<version>` and prints the source with every result and in every manifest.
 ambientCG is run by one person, so `assets.py` caches searches for a day and never fetches a file twice.
 `[doc: https://github.com/Poly-Haven/Public-API/blob/master/ToS.md]` `[doc: https://docs.ambientcg.com/license/]`
 
@@ -53,7 +53,7 @@ python3 scripts/assets.py cache                            # what has been fetch
 `roughness`, `metallic`, `displacement`, `ao`, `arm`, `opacity`), or the `hdri`, or the `model` path; `size_m` and where
 it came from; the credit. Each Poly Haven file is checked against the size and md5 the API lists, each ambientCG zip
 against its size, and zip members that would land outside the asset's folder are refused. Downloads live in
-`~/.cache/blender-field-guide/assets/` (`$BFG_ASSET_CACHE` moves it); the ten assets below took 38.9 MB at 1k.
+`~/.cache/agentic-blender/assets/` (`$AGENTIC_BLENDER_ASSET_CACHE` moves it); the ten assets below took 38.9 MB at 1k.
 `[exp: experiments/assets/api_probe.py]`
 
 Sizes at 1k: a Poly Haven HDRI 1.44 MB as `.hdr` (5.5 MB as `.exr`; 20.67 MB at 4k); an ambientCG material 7.9 MB

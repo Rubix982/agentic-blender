@@ -101,7 +101,7 @@ def transcript_facts(lines):
                 inp = json.dumps(part.get("input", {}))
                 if part.get("name") == "Skill" or "SKILL.md" in inp or "kb.py" in inp:
                     skill_used = True
-                if ROOT in inp or "code/blender-field-guide" in inp:
+                if ROOT in inp or ROOT.replace(os.path.expanduser("~"), "~") in inp:
                     touched_repo = True
                 if part.get("name") == "Bash" and re.search(r"Blender(\.app)?/Contents/MacOS/Blender|\bblender\b.*-b", inp):
                     blender_called = True

@@ -2,14 +2,14 @@
 """Fail if anything about to be committed holds a machine's home path or a name that must not appear here.
 
   python3 tools/check_private.py          checks every tracked or staged file (gzip files decompressed)
-Names come from $BFG_PRIVATE_WORDS (comma-separated, kept out of the repository) plus the home folder's path.
+Names come from $AGENTIC_BLENDER_PRIVATE_WORDS (comma-separated, kept out of the repository) plus the home folder's path.
 """
 import gzip
 import os
 import subprocess
 import sys
 
-words = [os.path.expanduser("~")] + [w for w in os.environ.get("BFG_PRIVATE_WORDS", "").split(",") if w]
+words = [os.path.expanduser("~")] + [w for w in os.environ.get("AGENTIC_BLENDER_PRIVATE_WORDS", "").split(",") if w]
 files = subprocess.run(["git", "ls-files", "--cached", "--others", "--exclude-standard"], capture_output=True,
                        text=True).stdout.split()
 bad = 0

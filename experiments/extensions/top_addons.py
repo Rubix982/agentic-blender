@@ -3,7 +3,7 @@ What each declares and contains, what it registers, and which of its operators r
 change the scene.
 
 Run with the system Python (network, for the listing and the packages):  python3 experiments/extensions/top_addons.py
-Writes experiments/extensions/results/top_addons.json; packages are cached in ~/.cache/blender-field-guide/extensions/.
+Writes experiments/extensions/results/top_addons.json; packages are cached in ~/.cache/agentic-blender/extensions/.
 
 Containment. Each package is checked against the listing's sha256 and scanned before anything runs: declared
 permissions, and every network, subprocess, exec/eval and native-library call. It is installed into a throwaway
@@ -29,9 +29,9 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), 
 sys.path.insert(0, os.path.join(ROOT, "tools"))
 from run import blender  # noqa: E402
 
-UA = "blender-field-guide/0.3"
+UA = "agentic-blender/0.4"
 TOP = 20
-CACHE = os.path.expanduser("~/.cache/blender-field-guide/extensions")
+CACHE = os.path.expanduser("~/.cache/agentic-blender/extensions")
 PROBE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "probe", "addon_probe.py")
 B = os.path.realpath(blender())
 APP = B.split("/Contents/MacOS/")[0]

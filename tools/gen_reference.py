@@ -18,7 +18,7 @@ from collections import defaultdict
 ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 INV = os.path.join(ROOT, "skills", "blender", "inventory")
 OUT = os.path.join(ROOT, "kb", "reference")
-DOCS = os.path.expanduser("~/.cache/blender-field-guide/docs-4.5/index.jsonl.gz")
+DOCS = os.path.expanduser("~/.cache/agentic-blender/docs-4.5/index.jsonl.gz")
 MANUAL = "https://docs.blender.org/manual/en/4.5/"
 API = "https://docs.blender.org/api/4.5/"
 

@@ -20,7 +20,7 @@ import os
 
 import bpy
 
-CACHE = os.path.expanduser(os.environ.get("BFG_ASSET_CACHE", "~/.cache/blender-field-guide/assets"))
+CACHE = os.path.expanduser(os.environ.get("AGENTIC_BLENDER_ASSET_CACHE", "~/.cache/agentic-blender/assets"))
 DATA_MAPS = ("roughness", "metallic", "normal", "displacement", "opacity", "arm", "ao")
 
 
