@@ -39,6 +39,9 @@ memory with things that can be checked. Paths below are relative to this file's 
 6. **Need an add-on?** Most former bundled ones (LoopTools, Extra Objects, A.N.T. Landscape, Sapling...) are
    extensions now: install into a throwaway profile, never the user's, and check the scene after each call: many
    operators finish and change nothing. → `areas/extensions.md`
+7. **Planning a shot or an animation?** Read how studio films and contest entries were built before building: camera
+   and light before detail, detail only where the camera looks, what juries rewarded and what lost entries, and
+   tricks with their 4.5 settings. → `areas/production.md`
 
 ## How to work
 
@@ -106,6 +109,7 @@ rendering it raises, and a failed render sets the exit code to 1 even if caught.
 | `areas/geometry-nodes.md` | node groups built from Python with the 4.x interface API, modifier inputs, reading results |
 | `areas/curves-text.md` | Bezier and poly curves, bevels, curve to mesh, text |
 | `areas/remote-assets.md` | free CC0 HDRIs, textures and models from Poly Haven and ambientCG: `assets.py` to search and fetch (cached, checked), `asset_import.py` for a world (and its sun), a material at real-world size, an imported model |
+| `areas/production.md` | how 49 studio films and contest entries (2014–2026) were built, as ordered steps with their 4.5 settings: camera first, splitting the render, volume cubes, scatter, blocking animation, light rigs, faked effects; what juries rewarded; tricks; flicker; what a frame costs |
 | `areas/realism.md` | what 17 published realistic Blender scenes have in common, as settings a script can make, each measured: colour temperature, portals, hidden shadow casters, fog (volume, mist), material masks (noise, AO, pointiness, facing up, height, painted), density-painted scattering, glow, chromatic aberration, vignette, grain, grading |
 | `areas/extensions.md` | the 20 most-downloaded add-ons on extensions.blender.org (LoopTools, Extra Objects, Bool Tool, A.N.T. Landscape, Archimesh, Sapling, MPFB...): which operators run headless and change the scene, how to install one into a throwaway profile, what each declares and contains |
 | `areas/instancing-assets.md` | full copies, linked duplicates, collection and vertex instancing, particle systems (costs measured); hair curves; assets and Blender's bundled ones |
