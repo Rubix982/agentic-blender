@@ -61,7 +61,10 @@ def output_ext(n, text, which):
     if which == "writer":
         return OUT_EXT.get(n, ".blend")
     m = EXT.search(text)
-    return "." + m.group(1).lower() if m else ".blend"
+    if m:
+        return "." + m.group(1).lower()
+    w = re.search(r"\b(PNG|OpenEXR|EXR|JPEG|JPG|TIFF|glTF|GLB|STL|OBJ|FBX|PLY)\b", text)   # a format named as a word
+    return {"openexr": ".exr", "jpeg": ".jpg", "gltf": ".glb"}.get(w.group(1).lower(), "." + w.group(1).lower()) if w else ".blend"
 
 
 def plugin_copy(dest):
