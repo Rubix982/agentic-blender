@@ -7,7 +7,7 @@
   {
    "fact": "Peak memory (resident) of a headless Blender job, in MB",
    "empty script, factory file": 172,
-   "1M-vertex grid mesh": 1057,
+   "1M-vertex grid mesh": 1053,
    "Cycles render 512 px, 64 samples, CPU": 482
   },
   {
@@ -46,8 +46,8 @@
     "# Blender 4.5.14, Commit date: 2026-09-14 14:54, Hash 62c1db4208e8",
     "",
     "# backtrace",
-    "0   Blender                             0x0000000104ccd534 _Z33BLI_system_backtrace_with_os_infoP7__sFILEPKv + 56",
-    "1   Blender                             0x00000001043c94a4 _ZL19sig_handle_crash_fni + 264",
+    "0   Blender                             0x0000000103759534 _Z33BLI_system_backtrace_with_os_infoP7__sFILEPKv + 56",
+    "1   Blender                             0x0000000102e554a4 _ZL19sig_handle_crash_fni + 264",
     "2   libsystem_platform.dylib            0x00000001856816a4 _sigtramp + 56"
    ],
    "stderr_tail": [],

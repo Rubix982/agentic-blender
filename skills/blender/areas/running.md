@@ -65,7 +65,7 @@ Blender -b --factory-startup --python-exit-code 1 \
 
 - `-b` first. A `.blend` to open goes before `--python` (`Blender -b scene.blend --python s.py`).
 - `--factory-startup` ignores the user's preferences and add-ons: the run is the same on every machine. Without it,
-  user add-ons and extensions load (startup 0.66 to 0.80 s instead of 0.37 to 0.40 s here).
+  user add-ons and extensions load (startup 0.61 to 0.71 s instead of 0.35 s here, on a quiet machine).
   `[exp: experiments/running/cli_behaviour.py]`
 - Arguments are applied in order. `--python-expr` placed before `-f 1` changed the scene before the frame rendered
   (the PNG came out at the size the expression set). `[exp: experiments/running/cli_behaviour.py]`
@@ -83,7 +83,7 @@ Blender -b scene.blend -E CYCLES -o /tmp/frame_ -F PNG -x 1 -f 1 -- --cycles-dev
   appears only with the Hydra Storm add-on on (`kb.py enums`). The EEVEE id changed in 4.2; code written for older
   versions that sets `'BLENDER_EEVEE'` fails. `[inv]` `[exp: experiments/rendering/eevee_background.py]`
 - `-- --cycles-device METAL` renders on the GPU without changing `scene.cycles.device` (it still read `CPU`): the same
-  320 px, 512-sample frame took 1.8 s on the CPU and 1.1 s with the flag. To choose the device inside a script instead,
+  320 px, 512-sample frame took 1.8 s on the CPU and 1.4 s with the flag. To choose the device inside a script instead,
   see `rendering.md`. `[exp: experiments/running/cli_behaviour.py]`
 - `-a` renders the animation; `-s`/`-e` set the frame range; `-o` takes `#` as frame-number placeholders.
   [doc: https://docs.blender.org/manual/en/4.5/advanced/command_line/render.html]
@@ -92,11 +92,11 @@ Blender -b scene.blend -E CYCLES -o /tmp/frame_ -F PNG -x 1 -f 1 -- --cycles-dev
 
 | Job, headless | Peak memory |
 |---|---|
-| an empty script, factory file | 175 to 177 MB |
-| a 1,000,000-vertex grid | 1,041 to 1,059 MB |
-| a Cycles render, 512 px, 64 samples, CPU | 422 to 482 MB |
+| an empty script, factory file | 172 MB |
+| a 1,000,000-vertex grid | 1,053 MB |
+| a Cycles render, 512 px, 64 samples, CPU | 482 MB |
 
-`[exp: experiments/running/process.py]`. Starting Blender costs about 0.4 s `[exp: experiments/running/cli_behaviour.py]`, so many small headless runs are cheap; a
+`[exp: experiments/running/process.py]`. Starting Blender costs about 0.35 s `[exp: experiments/running/cli_behaviour.py]`, so many small headless runs are cheap; a
 heavy scene rebuilt on every run is what costs. A cloth simulation on a figure took about 2 GB a job, and more than four
 such jobs at once on 16 GB swapped and slowed every job. `[lesson]`
 
