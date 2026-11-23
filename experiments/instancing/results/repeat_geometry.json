@@ -1,0 +1,154 @@
+{
+ "experiment": "experiments/instancing/repeat_geometry.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.87,
+ "facts": [
+  {
+   "fact": "object.duplicates_make_real works headless on the selected instancers; the objects it makes share one mesh (linked duplicates)",
+   "result": "{'FINISHED'}",
+   "seconds": 0.273,
+   "mesh_objects": 2000,
+   "meshes": 1
+  },
+  {
+   "fact": "Five ways to put 2000 copies of a 32 x 16 sphere in a scene: creation time from Python, meshes in the file, uncompressed .blend size, and what the depsgraph reports (instances are not objects)",
+   "full copies": {
+    "create_s": 0.13,
+    "meshes": 2001,
+    "mb": 69.23
+   },
+   "linked duplicates (shared mesh)": {
+    "create_s": 0.081,
+    "meshes": 1,
+    "mb": 2.91
+   },
+   "collection instances (empties)": {
+    "create_s": 0.068,
+    "meshes": 1,
+    "mb": 2.91,
+    "depsgraph_instances": 2000,
+    "depsgraph_objects": 2000
+   },
+   "vertex instancing (one parent mesh)": {
+    "create_s": 0.001,
+    "meshes": 2,
+    "mb": 0.42,
+    "depsgraph_instances": 2000,
+    "depsgraph_objects": 2,
+    "child_drawn_itself": true
+   },
+   "particle system (hair, render as object)": {
+    "create_s": 0.019,
+    "meshes": 2,
+    "mb": 0.4,
+    "depsgraph_instances": 2000,
+    "depsgraph_objects": 2,
+    "particles": 2000
+   }
+  },
+  {
+   "fact": "A legacy particle system's particles are read from the evaluated object (obj.evaluated_get(depsgraph).particle_systems[0].particles). For hair, particle.location is the strand's tip (z = 1.0 on a plane at z = 0, hair_length 1.0); hair_keys[0].co is its root and hair_keys[-1].co the tip",
+   "location": [
+    [
+     -6.209,
+     -6.528,
+     1.0
+    ],
+    [
+     -6.904,
+     -6.2,
+     1.0
+    ],
+    [
+     -7.013,
+     -6.856,
+     1.0
+    ]
+   ],
+   "hair_key_root": [
+    [
+     -6.209,
+     -6.528,
+     0.0
+    ],
+    [
+     -6.904,
+     -6.2,
+     0.0
+    ],
+    [
+     -7.013,
+     -6.856,
+     0.0
+    ]
+   ],
+   "hair_key_tip": [
+    [
+     -6.209,
+     -6.528,
+     1.0
+    ],
+    [
+     -6.904,
+     -6.2,
+     1.0
+    ],
+    [
+     -7.013,
+     -6.856,
+     1.0
+    ]
+   ]
+  },
+  {
+   "fact": "Hair curves (the Curves object type) can be built from Python: hair_curves.new, add_curves(sizes), then the 'position' attribute set with foreach_set",
+   "result": {
+    "curves": 100,
+    "points": 400,
+    "object_type": "CURVES",
+    "attributes": [
+     "position"
+    ]
+   }
+  },
+  {
+   "fact": "Point cloud data-blocks in 4.5 from Python",
+   "result": {
+    "created": true,
+    "points": 0,
+    "has_add": false
+   }
+  },
+  {
+   "fact": "save_as_mainfile makes the saved file the open one, and libraries.load refuses to load from the open file; save_as_mainfile(filepath=..., copy=True) writes a copy and leaves the open file as it was",
+   "result": "ERROR Cannot load from the current blend file."
+  },
+  {
+   "fact": "ID.asset_mark() marks a data-block as an asset (tags and description in asset_data), and libraries.load(path, assets_only=True) lists only assets. Blender's own node-group assets live in <datafiles>/assets/geometry_nodes/ (smooth_by_angle.blend, procedural_hair_node_assets.blend) and are appended the same way. After the with-block, the list given to data_to holds the loaded data-blocks, not names",
+   "marked_found": [
+    "Asset"
+   ],
+   "bundled_node_groups": [
+    "Smooth by Angle"
+   ],
+   "smooth_by_angle_inputs": [
+    [
+     "Mesh",
+     "NodeSocketGeometry"
+    ],
+    [
+     "Angle",
+     "NodeSocketFloat"
+    ],
+    [
+     "Ignore Sharpness",
+     "NodeSocketBool"
+    ]
+   ]
+  }
+ ],
+ "data": {},
+ "args": []
+}

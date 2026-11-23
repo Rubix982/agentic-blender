@@ -80,6 +80,8 @@ E.fact("mod['Size'] (the socket name) is not the input", result=by_name)
 if "Size" in mod.keys():
     del mod["Size"]
 
+ids = {i.name: i.identifier for i in ng.interface.items_tree if i.item_type == "SOCKET" and i.in_out == "INPUT"}
+E.fact("name -> identifier map read from ng.interface.items_tree (item_type 'SOCKET', in_out 'INPUT')", ids=ids)
 dg = bpy.context.evaluated_depsgraph_get()
 v0 = len(ob.evaluated_get(dg).data.vertices)
 mod[res.identifier] = 20

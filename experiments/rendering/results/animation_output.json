@@ -3,17 +3,14 @@
  "blender": "4.5.14 LTS",
  "machine": "Darwin arm64",
  "date": "2026-11-23",
- "seconds": 0.26,
+ "seconds": 0.22,
  "facts": [
   {
-   "fact": "a new scene's frame range, fps and output path",
+   "fact": "a new scene renders frames 1-250 at 24 fps to render.filepath '/tmp/'",
    "frame_start": 1,
    "frame_end": 250,
    "fps": 24,
-   "filepath_default": "/tmp/",
-   "read": {
-    "fps": 24
-   }
+   "filepath": "/tmp/"
   },
   {
    "fact": "render(animation=True) names files from render.filepath: no '#' appends a 4-digit frame number; a run of '#' is replaced by the zero-padded frame number at that place; use_file_extension adds .png",
@@ -51,7 +48,7 @@
    "bytes": [
     2035
    ],
-   "seconds": 0.05
+   "seconds": 0.04
   }
  ],
  "data": {

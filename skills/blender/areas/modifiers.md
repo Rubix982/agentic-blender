@@ -86,7 +86,7 @@ otherwise skips (UV maps, vertex groups) and needs the depsgraph.
 
 ## Apply a modifier headless
 
-Two ways, both measured on a level-3 subsurf (31,746 vertices): 29 ms and 31 ms, the same mesh.
+Two ways, both measured on a level-3 subsurf (31,746 vertices): 26-29 ms and 28-31 ms over two runs, the same mesh.
 `[exp: experiments/modifiers/evaluate_and_apply.py]`
 
 ```python
@@ -101,9 +101,9 @@ with bpy.context.temp_override(object=b, active_object=b):
     bpy.ops.object.modifier_apply(modifier="Sub")
 ```
 
-The data route applies everything up to the end of the stack; the operator applies one modifier (the first in the
-stack applies cleanly; applying one further down is what the UI warns about). The data route also works on a mesh
-with shape keys or other users, but the shape keys are lost (untested here).
+The data route applies the whole stack; the operator applies one modifier. The data route also worked on the two
+meshes the operator refused: on a mesh shared with another object (that object kept the old 482-vertex mesh) and on a
+mesh with shape keys, whose new mesh has no shape keys. `[exp: experiments/modifiers/evaluate_and_apply.py]`
 
 ## Boolean
 
@@ -154,8 +154,9 @@ A new Solidify has thickness 0.01, offset -1, rim on, even thickness off, mode `
 | `use_rim = True` | closed and manifold (8 vertices, 6 faces) |
 | `use_rim = False` | two loose shells (2 faces), not manifold |
 
-On an open box, the walls came out 0.1155 thick at the corners without even thickness (inner wall at x 0.8845) and
-exactly 0.2 with `use_even_offset = True` (thickness 0.2, inner wall at x 0.8). `[exp: experiments/modifiers/solidify_bevel.py]`
+On an open box with thickness 0.2, the inner corner vertex moved 0.2 along the corner's averaged normal, which left it
+only 0.1155 (0.2 / sqrt 3) in from each wall; with `use_even_offset = True` it sat the full 0.2 in.
+`[exp: experiments/modifiers/solidify_bevel.py]`
 
 ## Bevel
 
@@ -246,7 +247,7 @@ what a new modifier gets: it lists the Bevel's `edge_weight` default as "" while
 | modifier | defaults |
 |---|---|
 | BEVEL | width 0.1, segments 1, affect EDGES, limit ANGLE 30 deg, clamp on, profile 0.5, edge_weight `bevel_weight_edge`, vertex_weight `bevel_weight_vert` |
-| BOOLEAN | operation DIFFERENCE, solver EXACT, operand OBJECT |
+| BOOLEAN | operation DIFFERENCE, solver EXACT, operand OBJECT (`[inv]`) |
 | SOLIDIFY | thickness 0.01, offset -1, rim on, even off, EXTRUDE |
 | SUBSURF | levels 1, render_levels 2, CATMULL_CLARK, quality 3, use_limit_surface on |
 | ARRAY | count 2, FIXED_COUNT, relative (1, 0, 0), merge off (threshold 0.01) |

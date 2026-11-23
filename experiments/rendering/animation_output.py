@@ -9,6 +9,8 @@ import exp
 
 E = exp.Experiment(__file__)
 scene = bpy.context.scene
+E.fact("a new scene renders frames 1-250 at 24 fps to render.filepath '/tmp/'", frame_start=scene.frame_start,
+       frame_end=scene.frame_end, fps=scene.render.fps, filepath=scene.render.filepath)
 bpy.ops.mesh.primitive_cube_add()
 cube = bpy.context.object
 cube.keyframe_insert("location", frame=1)
@@ -22,8 +24,6 @@ scene.camera = cam
 scene.render.engine = "BLENDER_WORKBENCH"
 scene.render.resolution_x = scene.render.resolution_y = 64
 scene.frame_start, scene.frame_end = 1, 10
-E.fact("a new scene's frame range, fps and output path", frame_start=1, frame_end=250, fps=scene.render.fps,
-       filepath_default="/tmp/", read=dict(fps=scene.render.fps))
 d = E.out("anim")
 os.makedirs(d, exist_ok=True)
 names = {}

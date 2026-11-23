@@ -3,7 +3,7 @@
  "blender": "4.5.14 LTS",
  "machine": "Darwin arm64",
  "date": "2026-11-23",
- "seconds": 0.06,
+ "seconds": 0.05,
  "facts": [
   {
    "fact": "a new GeometryNodeTree has no nodes and an empty interface; is_modifier is False",
@@ -130,6 +130,15 @@
    "result": "accepted (but it is a new unrelated ID property)"
   },
   {
+   "fact": "name -> identifier map read from ng.interface.items_tree (item_type 'SOCKET', in_out 'INPUT')",
+   "ids": {
+    "Size": "Socket_1",
+    "Resolution": "Socket_2",
+    "Amplitude": "Socket_3",
+    "Material": "Socket_4"
+   }
+  },
+  {
    "fact": "setting mod[identifier] = value needs ob.update_tag() before the next evaluation picks it up",
    "verts_default": 100,
    "verts_after_set": 100,
@@ -178,5 +187,6 @@
    ]
   }
  ],
- "data": {}
+ "data": {},
+ "args": []
 }
