@@ -132,3 +132,29 @@ add-ons the input they are made for was written and not run, because it runs the
 counts were wrong (an icon's width, 100, read as the count) and were re-read from the website afterwards; the parser
 is fixed.
 
+---
+
+### C-004 · What realistic Blender environments are made of, as settings a script can make
+
+**Opened:** 2026-11-23
+
+1. **WHERE WE ARE.** The guide makes a script do what it is asked (C-001: 10 of 10), fetches free assets (C-002) and
+   knows which add-ons run headless (C-003). It says nothing about what makes an image look real. 17 published
+   breakdowns of realistic Blender environments (three contest winners) are collected and checked
+   (`kb/research/realism-breakdowns.md`).
+2. **WHAT WE ARE DOING.** For each technique that at least 4 of the 17 used and that is a setting in Blender rather than
+   judgement or hand-modelling (twelve: HDRI lighting, a sun with it, materials blended through masks, weathering
+   layers, procedural main surfaces, displacement, fog, density-painted scattering, grain, glow, grading, denoising),
+   find the Blender 4.5 recipe, run it headless, and measure what it changes in the render. Write `areas/realism.md`.
+3. **WHY.** Unknown now: whether everything those artists did with settings can be done from a script on this
+   machine, and what each step changes, in numbers; and so what is left that is judgement.
+4. **WHAT IS AFFECTED.** New files (experiments under `experiments/realism/`, the page); `SKILL.md`'s areas table. The
+   photo match (the next card) is designed from this page.
+5. **CONCLUSION.** If all twelve have a recipe that runs headless with a measured effect, the photo match is built
+   from this page alone and tests the judgement left over; for each that does not, the page names the gap, and the
+   photo match either works around it or tests it.
+6. **CONSEQUENCE OF NOT DOING IT.** A realism attempt starts from an agent's guesses about grain and fog values, and
+   any failure cannot be told apart from a missing technique.
+
+**Result:** —
+
