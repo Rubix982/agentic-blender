@@ -97,14 +97,36 @@ E.fact("in 4.5 the F-curve is reachable through action.fcurves (one slot), anim_
 prefs = bpy.context.preferences.edit
 old = prefs.keyframe_new_interpolation_type
 prefs.keyframe_new_interpolation_type = "LINEAR"
+pref_read = prefs.keyframe_new_interpolation_type
 p2 = bpy.data.objects.new("Pivot2", None)
 scene.collection.objects.link(p2)
 p2.rotation_euler.z = 0; p2.keyframe_insert("rotation_euler", index=2, frame=1)
 p2.rotation_euler.z = 2 * math.pi; p2.keyframe_insert("rotation_euler", index=2, frame=N + 1)
 pref_interp = [k.interpolation for k in channelbag(p2).fcurves.find("rotation_euler", index=2).keyframe_points]
 prefs.keyframe_new_interpolation_type = old
-E.fact("setting preferences.edit.keyframe_new_interpolation_type = 'LINEAR' before keyframe_insert makes linear keys",
-       interpolations=pref_interp, default_pref=old)
+# And through the operator, on the active object.
+p3 = bpy.data.objects.new("Pivot3", None)
+scene.collection.objects.link(p3)
+bpy.context.view_layer.objects.active = p3
+p3.select_set(True)
+prefs.keyframe_new_interpolation_type = "LINEAR"
+scene.frame_set(1)
+op_plain = err(lambda: bpy.ops.anim.keyframe_insert(type="Rotation"))
+win = bpy.context.window_manager.windows[0]
+area = next(a for a in win.screen.areas if a.type == "VIEW_3D")
+region = next(r for r in area.regions if r.type == "WINDOW")
+if not (p3.animation_data and p3.animation_data.action):
+    with bpy.context.temp_override(window=win, area=area, region=region):
+        op = err(lambda: bpy.ops.anim.keyframe_insert(type="Rotation"))
+else:
+    op = "not needed"
+op_interp = ([k.interpolation for k in channelbag(p3).fcurves[0].keyframe_points]
+             if p3.animation_data and p3.animation_data.action else None)
+prefs.keyframe_new_interpolation_type = old
+E.fact("preferences.edit.keyframe_new_interpolation_type = 'LINEAR' (read back as set) does not reach Python's "
+       "keyframe_insert: its keys are still BEZIER; the anim.keyframe_insert operator (type='Rotation') does use it",
+       pref_read_back=pref_read, keyframe_insert_interpolations=pref_interp, default_pref=old,
+       operator_plain=op_plain, operator_in_view3d_override=op, operator_interpolations=op_interp)
 
 # Keep turning past N + 1: extrapolation.
 scene.frame_set(N * 2 + 1)
@@ -152,8 +174,8 @@ target = bpy.data.objects.new("Target", None)
 scene.collection.objects.link(target)
 tt.target = target
 followpath = measure(camB)
-E.fact("Follow Path on a 16-point NURBS circle with eval_time keyed linearly 0 -> path_duration: steps vary with the "
-       "curve's parametrisation and the radius wobbles", **followpath)
+E.fact("Follow Path on a 16-point NURBS circle with eval_time keyed linearly 0 -> path_duration (and Track To for "
+       "aim) gives even steps (15 degrees to 0.001) on a radius within a millimetre of the circle's", **followpath)
 # Bezier circle instead.
 cu2 = bpy.data.curves.new("BCircle", "CURVE"); cu2.dimensions = "3D"
 bz = cu2.splines.new("BEZIER"); bz.bezier_points.add(3)
@@ -174,8 +196,8 @@ cb2 = anim_utils.action_get_channelbag_for_slot(cu2.animation_data.action, cu2.a
 for kk in cb2.fcurves.find("eval_time").keyframe_points:
     kk.interpolation = "LINEAR"
 fp_bez = measure(camB)
-E.fact("Follow Path on a 4-point Bezier circle, eval_time linear: the step is even only to within the Bezier's speed "
-       "variation", **fp_bez)
+E.fact("Follow Path on a 4-point Bezier circle, eval_time linear: steps even to 0.002 degrees, radius within 1.3 mm",
+       **fp_bez)
 
 # ---- 3. Track To alone, defaults: what a new constraint aims with.
 camC = camera("CamC")

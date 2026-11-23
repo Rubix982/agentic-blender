@@ -1,0 +1,68 @@
+{
+ "experiment": "experiments/extending/extension_package.py",
+ "blender": "Blender 4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "facts": [
+  {
+   "fact": "A manifest with schema_version, id, version, name, tagline, maintainer, type, blender_version_min and license (an SPDX list) validates in 4.5 with `blender --command extension validate DIR` (fields were not removed one by one, except the tagline below)",
+   "exit": 0,
+   "output": [
+    "Success parsing TOML in \"/var/folders/l4/m2hkdpt50bj34vq1pb4_82jc0000gn/T/bfg-ext-w3z4vxw5\""
+   ]
+  },
+  {
+   "fact": "`extension build` writes <id>-<version>.zip holding the source files at the zip's top level",
+   "exit": 0,
+   "zips": [
+    "bfg_probe-0.1.0.zip"
+   ],
+   "members": [
+    "__init__.py",
+    "blender_manifest.toml"
+   ]
+  },
+  {
+   "fact": "What `extension validate` says about common mistakes (exit 0 = accepted): it refuses a missing tagline, a tagline ending in punctuation, an id with a hyphen and a missing __init__.py, but accepts a leftover bl_info and a licence without the 'SPDX:' prefix",
+   "bl_info left in __init__.py": {
+    "exit": 0,
+    "message": [
+     "Success parsing TOML in \"/var/folders/l4/m2hkdpt50bj34vq1pb4_82jc0000gn/T/bfg-ext-qlbwteu4\""
+    ]
+   },
+   "no tagline": {
+    "exit": 1,
+    "message": [
+     "Error parsing TOML \"/var/folders/l4/m2hkdpt50bj34vq1pb4_82jc0000gn/T/bfg-ext-kc0axcrd/blender_manifest.toml\"",
+     "missing \"tagline\""
+    ]
+   },
+   "tagline ending with a full stop": {
+    "exit": 1,
+    "message": [
+     "Error parsing TOML \"/var/folders/l4/m2hkdpt50bj34vq1pb4_82jc0000gn/T/bfg-ext-nqgtrd6y/blender_manifest.toml\"",
+     "key \"tagline\" invalid: alpha-numeric suffix expected, the string must not end with punctuation"
+    ]
+   },
+   "id with a hyphen": {
+    "exit": 1,
+    "message": [
+     "Error parsing TOML \"/var/folders/l4/m2hkdpt50bj34vq1pb4_82jc0000gn/T/bfg-ext-iofxm1wh/blender_manifest.toml\"",
+     "key \"id\" invalid: Not a valid identifier"
+    ]
+   },
+   "licence not SPDX-prefixed": {
+    "exit": 0,
+    "message": [
+     "Success parsing TOML in \"/var/folders/l4/m2hkdpt50bj34vq1pb4_82jc0000gn/T/bfg-ext-vggirgnb\""
+    ]
+   },
+   "no __init__.py": {
+    "exit": 1,
+    "message": [
+     "Error, file missing from add-on: \"__init__.py\""
+    ]
+   }
+  }
+ ]
+}

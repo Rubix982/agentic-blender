@@ -1,0 +1,150 @@
+{
+ "experiment": "experiments/animation/motion_blur.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 1.79,
+ "facts": [
+  {
+   "fact": "motion blur is one switch for EEVEE and Cycles in 4.5, render.use_motion_blur (off by default), shutter 0.5 frames centred on the frame; EEVEE adds motion_blur_steps (1) and motion_blur_max (32 px)",
+   "use_motion_blur": false,
+   "shutter": 0.5,
+   "position": "CENTER",
+   "eevee_steps": 1,
+   "eevee_max_px": 32
+  },
+  {
+   "fact": "without motion blur the 1 m square is about 32 px wide in every engine",
+   "BLENDER_WORKBENCH off": {
+    "seconds": 0.114,
+    "extent_px": 34,
+    "partial_px": 4,
+    "full_px": 30
+   },
+   "BLENDER_EEVEE_NEXT off": {
+    "seconds": 0.152,
+    "extent_px": 34,
+    "partial_px": 4,
+    "full_px": 30
+   },
+   "CYCLES off": {
+    "seconds": 0.397,
+    "extent_px": 34,
+    "partial_px": 4,
+    "full_px": 30
+   }
+  },
+  {
+   "fact": "with motion blur, shutter 0.5 widens it by about 16 px (half a frame of travel) and shutter 1.0 by about 32 px in EEVEE and Cycles; Workbench ignores the switch",
+   "BLENDER_WORKBENCH 0.5": {
+    "seconds": 0.005,
+    "extent_px": 34,
+    "partial_px": 4,
+    "full_px": 30
+   },
+   "BLENDER_WORKBENCH 1.0": {
+    "seconds": 0.005,
+    "extent_px": 34,
+    "partial_px": 4,
+    "full_px": 30
+   },
+   "BLENDER_EEVEE_NEXT 0.5": {
+    "seconds": 0.169,
+    "extent_px": 50,
+    "partial_px": 32,
+    "full_px": 18
+   },
+   "BLENDER_EEVEE_NEXT 1.0": {
+    "seconds": 0.166,
+    "extent_px": 65,
+    "partial_px": 63,
+    "full_px": 2
+   },
+   "BLENDER_EEVEE_NEXT 0.5 steps4": {
+    "seconds": 0.09,
+    "extent_px": 50,
+    "partial_px": 32,
+    "full_px": 18
+   },
+   "CYCLES 0.5": {
+    "seconds": 0.329,
+    "extent_px": 48,
+    "partial_px": 30,
+    "full_px": 18
+   },
+   "CYCLES 1.0": {
+    "seconds": 0.275,
+    "extent_px": 63,
+    "partial_px": 59,
+    "full_px": 4
+   }
+  }
+ ],
+ "data": {
+  "results": {
+   "BLENDER_WORKBENCH off": {
+    "seconds": 0.114,
+    "extent_px": 34,
+    "partial_px": 4,
+    "full_px": 30
+   },
+   "BLENDER_WORKBENCH 0.5": {
+    "seconds": 0.005,
+    "extent_px": 34,
+    "partial_px": 4,
+    "full_px": 30
+   },
+   "BLENDER_WORKBENCH 1.0": {
+    "seconds": 0.005,
+    "extent_px": 34,
+    "partial_px": 4,
+    "full_px": 30
+   },
+   "BLENDER_EEVEE_NEXT off": {
+    "seconds": 0.152,
+    "extent_px": 34,
+    "partial_px": 4,
+    "full_px": 30
+   },
+   "BLENDER_EEVEE_NEXT 0.5": {
+    "seconds": 0.169,
+    "extent_px": 50,
+    "partial_px": 32,
+    "full_px": 18
+   },
+   "BLENDER_EEVEE_NEXT 1.0": {
+    "seconds": 0.166,
+    "extent_px": 65,
+    "partial_px": 63,
+    "full_px": 2
+   },
+   "BLENDER_EEVEE_NEXT 0.5 steps4": {
+    "seconds": 0.09,
+    "extent_px": 50,
+    "partial_px": 32,
+    "full_px": 18
+   },
+   "CYCLES off": {
+    "seconds": 0.397,
+    "extent_px": 34,
+    "partial_px": 4,
+    "full_px": 30
+   },
+   "CYCLES 0.5": {
+    "seconds": 0.329,
+    "extent_px": 48,
+    "partial_px": 30,
+    "full_px": 18
+   },
+   "CYCLES 1.0": {
+    "seconds": 0.275,
+    "extent_px": 63,
+    "partial_px": 59,
+    "full_px": 4
+   }
+  },
+  "cycles_device": "METAL",
+  "px_per_m": 32.0
+ },
+ "args": []
+}

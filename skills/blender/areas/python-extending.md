@@ -101,3 +101,32 @@ bpy.app.handlers.frame_change_post.append(on_frame)
 Blender (a live session, an add-on): neither ran in a background script. `[exp: experiments/extending/python_extending.py]`
 In a live Blender, a timer is the safe way to run work on the main thread, including work handed over from another
 thread through a queue. [doc: https://docs.blender.org/api/4.5/bpy.app.timers.html]
+
+## Packaging as an extension (4.2+)
+
+Since 4.2 an add-on is distributed as an extension: a folder with `blender_manifest.toml` beside `__init__.py`
+(`register()`/`unregister()` as before; `bl_info` is no longer needed), built into a zip with Blender's own command.
+
+```toml
+schema_version = "1.0.0"
+id = "bfg_probe"                      # an identifier: letters, digits, underscores (a hyphen is refused)
+version = "0.1.0"
+name = "Field Guide Probe"
+tagline = "A probe extension for the field guide"   # required; must not end with punctuation
+maintainer = "Field Guide"
+type = "add-on"
+blender_version_min = "4.2.0"
+license = ["SPDX:GPL-3.0-or-later"]
+```
+
+```bash
+Blender --factory-startup --command extension validate ./my_ext
+Blender --factory-startup --command extension build --source-dir ./my_ext --output-dir ./dist   # -> bfg_probe-0.1.0.zip
+```
+
+This manifest validated; `build` wrote `bfg_probe-0.1.0.zip` with `__init__.py` and `blender_manifest.toml` at the zip's
+top level. `validate` refused a missing tagline ("missing \"tagline\""), a tagline ending in a full stop ("the string
+must not end with punctuation"), an id with a hyphen ("Not a valid identifier") and a missing `__init__.py`; it accepted
+a leftover `bl_info` and a licence without the `SPDX:` prefix. Fields were not removed one by one, so this is a manifest
+that works, not the smallest one. `[exp: experiments/extending/extension_package.py]` Installing
+(`extension install-file`) changes the user's Blender and was not tried here.
