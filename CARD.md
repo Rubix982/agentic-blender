@@ -62,3 +62,39 @@ the skill's session looked up with `kb.py`. Limits: one session per task and arm
 one way would happen about one time in 16 if the skill made no difference); the agents wrote blind, so this measures
 first attempts, not finished work; the skill's sessions took 12.5 turns on average against 2.8 and cost about a
 quarter more; the writer's set was not run.
+
+---
+
+### C-002 · Free remote assets into a headless scene
+
+**Opened:** 2026-11-23
+
+1. **WHERE WE ARE.** v2 knows only the assets that ship with Blender; it names no outside source. Poly Haven and
+   ambientCG are free (CC0) and need no account; both have APIs (Poly Haven's terms: a User-Agent naming the software,
+   and a credit).
+2. **WHAT WE ARE DOING.** Write `scripts/assets.py` (search and fetch, cached and checked) and `scripts/asset_import.py`
+   (inside Blender: a world from an HDRI, a material from texture maps at real-world size, a model imported), then run
+   ten assets through them headless: three HDRIs, four textures, three models, from both sources.
+3. **WHY.** Unknown now: whether a script can go from a search word to a correctly lit, textured, correctly sized scene
+   element with no person in the loop, or where that breaks.
+4. **WHAT IS AFFECTED.** New files only (the two scripts, an area page, an experiment); `SKILL.md`'s areas table and
+   `instancing-assets.md` gain a pointer.
+5. **CONCLUSION.** An asset passes if it arrives checked against the source's size (and md5), builds without error,
+   and passes its kind's check: an HDRI lights a grey sphere and rotating it by 180 degrees moves the lit side; a
+   texture's maps are all connected in the right colour space and repeat at the stated real-world size; a model's
+   imported size is within 2 % of the stated one (or is reported, where the source states none). If at least 9 of 10
+   pass, `assets.py` is how the skill gets assets; if fewer, the page records what fails, by source and kind.
+6. **CONSEQUENCE OF NOT DOING IT.** Every realism task (T-003) starts with grey boxes, or an agent hand-rolls downloads
+   each time, unchecked.
+
+**Closed:** 2026-11-23
+
+**Result:** 10 of the 10 assets passed (`experiments/assets/remote_assets.py`), so `assets.py` is how the skill gets
+assets (`areas/remote-assets.md`). The three HDRIs lit the sphere and their lit side moved when turned; the four
+textures repeated within 0.1 % of their stated size (179.16 px against 179.2 for a 1.4 m brick); the two Poly Haven
+models came in within 1.42 % of their stated size, and the ambientCG model, which states none, at 0.97 x 1.40 x 0.22 m.
+The first run scored the models 0 of 3: its check read `has_data`, which is False on every freshly imported texture
+until its pixels are used, so the check was wrong, not the models; it now looks at the file and touches the pixels,
+and that trap is on the page. Found on the way: where an HDRI's sun is (`asset_import.hdri_sun`, within 0.8 degrees),
+and that ambientCG's v2 API ignores its type filter.
+

@@ -4,12 +4,13 @@ Open questions that surfaced while C-001 is open. One card at a time: these wait
 
 ### T-001 · Which free remote asset sources can a headless script pull from, and how?
 
-**Status:** open
+**Status:** answered
 **Parent:** C-001
 **Opened:** 2026-11-23
 **Question:** v1 knows only the assets bundled with Blender; it names no remote source. Candidates: Poly Haven and
 ambientCG (CC0, no account), Megascans (reported free again in November 2026, needs an Epic account: the user's call).
-**Answer:** —
+**Answer:** C-002 (CARD.md): Poly Haven and ambientCG through `scripts/assets.py` and `scripts/asset_import.py`, 10 of
+10 test assets right (`areas/remote-assets.md`). Megascans not used (account).
 
 ### T-002 · What do the most-used community extensions add, read in a throwaway profile?
 

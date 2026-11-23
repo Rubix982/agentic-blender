@@ -1,0 +1,163 @@
+{
+ "experiment": "experiments/assets/api_probe.py",
+ "blender": null,
+ "user_agent": "blender-field-guide/0.2",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "facts": [
+  {
+   "fact": "Poly Haven's API lists three asset types",
+   "types": [
+    "hdris",
+    "textures",
+    "models"
+   ]
+  },
+  {
+   "fact": "Poly Haven asset counts, and how many state real-world dimensions (millimetres)",
+   "hdris": 999,
+   "textures": 871,
+   "models": 522,
+   "textures_with_dimensions": 871,
+   "models_with_dimensions": 522,
+   "red_brick_dimensions": [
+    1399.999976158142,
+    1399.999976158142
+   ],
+   "armchair_dimensions": [
+    848.4309017658234,
+    765.7602727413177,
+    1065.087635157397
+   ]
+  },
+  {
+   "fact": "a Poly Haven texture's file tree: one key per map, then resolution, then format, each file with size and md5",
+   "keys": [
+    "AO",
+    "Diffuse",
+    "Displacement",
+    "Rough",
+    "arm",
+    "blend",
+    "gltf",
+    "mtlx",
+    "nor_dx",
+    "nor_gl"
+   ],
+   "resolutions": [
+    "16k",
+    "1k",
+    "2k",
+    "4k",
+    "8k"
+   ],
+   "formats_1k": [
+    "exr",
+    "jpg",
+    "png"
+   ],
+   "entry_fields": [
+    "md5",
+    "size",
+    "url"
+   ],
+   "normal_keys": [
+    "nor_dx",
+    "nor_gl"
+   ]
+  },
+  {
+   "fact": "a Poly Haven HDRI's sizes (MB) by resolution and format",
+   "sizes": {
+    "1k": {
+     "hdr": 1.44,
+     "exr": 5.5
+    },
+    "2k": {
+     "hdr": 5.45,
+     "exr": 20.06
+    },
+    "4k": {
+     "hdr": 20.67,
+     "exr": 75.64
+    },
+    "8k": {
+     "hdr": 74.84,
+     "exr": 290.87
+    }
+   }
+  },
+  {
+   "fact": "ambientCG's v2 API ignores its type filter (type=3DModel returns materials); v3 applies it (no rock models)",
+   "v2_results": 82,
+   "v2_types": [
+    "Material"
+   ],
+   "v3_results": 0,
+   "v3_models_in_total": 34
+  },
+  {
+   "fact": "ambientCG v3 downloads are zips named by attributes: resolution and format for materials, resolution for HDRIs, mesh quality (LQ, SQ, HQ), resolution and format for models",
+   "DaySkyHDRI072B": {
+    "type": "hdri",
+    "dimensions": {
+     "width": 0,
+     "height": 0,
+     "depth": 0
+    },
+    "downloads_mb": {
+     "1K": 2.5
+    }
+   },
+   "Bricks060": {
+    "type": "material",
+    "dimensions": {
+     "width": 105,
+     "height": 105,
+     "depth": 0
+    },
+    "downloads_mb": {
+     "1K-JPG": 7.9,
+     "1K-PNG": 16.8
+    }
+   },
+   "3DTreeStump001": {
+    "type": "3d-model",
+    "dimensions": {
+     "width": 0,
+     "height": 0,
+     "depth": 0
+    },
+    "downloads_mb": {
+     "LQ-1K-JPG": 7.4,
+     "LQ-1K-PNG": 12.3,
+     "SQ-1K-JPG": 19.9,
+     "SQ-1K-PNG": 27.1,
+     "HQ-1K-JPG": 133.1,
+     "HQ-1K-PNG": 140.7
+    }
+   }
+  },
+  {
+   "fact": "files in the cache after `assets.py get` on the C-002 assets: both sources ship an OpenGL and a DirectX normal map (assets.py takes the GL one), and ambientCG's zips also hold .blend files",
+   "normal_files": [
+    "3DTreeStump001_LQ-1K-JPG_NormalDX.jpg",
+    "3DTreeStump001_LQ-1K-JPG_NormalGL.jpg",
+    "Bricks060_1K-JPG_NormalDX.jpg",
+    "Bricks060_1K-JPG_NormalGL.jpg",
+    "WoodFloor043_1K-JPG_NormalDX.jpg",
+    "WoodFloor043_1K-JPG_NormalGL.jpg",
+    "metal_plate_nor_gl_1k.jpg",
+    "red_brick_nor_gl_1k.jpg"
+   ],
+   "blend_files": [
+    "3DTreeStump001_LQ-1K-JPG.blend",
+    "Bricks060_1K-JPG.blend",
+    "DaySkyHDRI072B_1K.blend",
+    "WoodFloor043_1K-JPG.blend"
+   ],
+   "cache_mb": 38.9
+  }
+ ],
+ "data": {}
+}

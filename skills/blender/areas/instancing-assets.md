@@ -2,7 +2,8 @@
 
 Blender 4.5.14 LTS. Tags: `[inv]` read from Blender (`scripts/kb.py`), `[exp: path]` measured here, `[doc: link]`
 Blender's documentation. Experiment: `experiments/instancing/repeat_geometry.py` in the source repository. Geometry
-nodes' own instancing (Instance on Points, Realize Instances) is in `geometry-nodes.md`.
+nodes' own instancing (Instance on Points, Realize Instances) is in `geometry-nodes.md`. Assets from outside
+Blender (free HDRIs, textures and models from Poly Haven and ambientCG) are in `remote-assets.md`.
 
 ## What goes wrong most often
 

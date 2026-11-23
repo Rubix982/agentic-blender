@@ -1,0 +1,438 @@
+{
+ "experiment": "experiments/assets/remote_assets.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 11.37,
+ "facts": [
+  {
+   "fact": "assets that passed their kind's check (C-002 bar: 9 of 10)",
+   "passed": 10,
+   "of": 10,
+   "failed": []
+  },
+  {
+   "fact": "polyhaven kloofendal_48d_partly_cloudy_puresky (hdri)",
+   "res": "1k",
+   "credit": "Powered by Poly Haven (polyhaven.com), CC0",
+   "left_right_0": [
+    0.3297,
+    0.6359
+   ],
+   "left_right_180": [
+    0.2828,
+    0.1415
+   ],
+   "brightest_rot0": [
+    47.5,
+    124.5
+   ],
+   "brightest_rot90": [
+    47.5,
+    213.5
+   ],
+   "image_brightest_uv": [
+    0.5952,
+    0.7666
+   ],
+   "hdri_sun_rot0": [
+    48.0,
+    124.3
+   ],
+   "hdri_sun_rot90": [
+    48.0,
+    214.3
+   ],
+   "hdri_sun_error_deg": 0.8000000000000114,
+   "passed": true,
+   "why": []
+  },
+  {
+   "fact": "polyhaven brown_photostudio_02 (hdri)",
+   "res": "1k",
+   "credit": "Powered by Poly Haven (polyhaven.com), CC0",
+   "left_right_0": [
+    0.4067,
+    0.6917
+   ],
+   "left_right_180": [
+    0.2413,
+    0.1507
+   ],
+   "brightest_rot0": [
+    42.5,
+    130.5
+   ],
+   "brightest_rot90": [
+    42.5,
+    220.5
+   ],
+   "image_brightest_uv": [
+    0.6128,
+    0.7393
+   ],
+   "hdri_sun_rot0": [
+    43.1,
+    130.6
+   ],
+   "hdri_sun_rot90": [
+    43.1,
+    220.6
+   ],
+   "hdri_sun_error_deg": 0.6000000000000014,
+   "passed": true,
+   "why": []
+  },
+  {
+   "fact": "ambientcg DaySkyHDRI072B (hdri)",
+   "res": "1K",
+   "credit": "ambientCG (ambientcg.com), CC0",
+   "left_right_0": [
+    0.1658,
+    0.2488
+   ],
+   "left_right_180": [
+    0.246,
+    0.1663
+   ],
+   "brightest_rot0": [
+    5.5,
+    89.5
+   ],
+   "brightest_rot90": [
+    5.5,
+    179.5
+   ],
+   "image_brightest_uv": [
+    0.5005,
+    0.5283
+   ],
+   "hdri_sun_rot0": [
+    5.1,
+    90.2
+   ],
+   "hdri_sun_rot90": [
+    5.1,
+    180.2
+   ],
+   "hdri_sun_error_deg": 0.6999999999999886,
+   "passed": true,
+   "why": []
+  },
+  {
+   "fact": "polyhaven red_brick (texture)",
+   "res": "1k",
+   "credit": "Powered by Poly Haven (polyhaven.com), CC0",
+   "size_m": [
+    1.4,
+    1.4
+   ],
+   "maps": [
+    "ao",
+    "arm",
+    "color",
+    "displacement",
+    "normal",
+    "roughness"
+   ],
+   "colour_spaces": {
+    "color": "sRGB",
+    "arm": "Non-Color",
+    "roughness": "Non-Color",
+    "normal": "Non-Color",
+    "displacement": "Non-Color"
+   },
+   "unused": [
+    "ao"
+   ],
+   "uv_max": [
+    2.8571,
+    2.8571
+   ],
+   "uv_max_expected": [
+    2.8571,
+    2.8571
+   ],
+   "tile_px_expected": [
+    179.2,
+    179.2
+   ],
+   "tile_px_measured": [
+    179.16,
+    179.15
+   ],
+   "autocorr_peak": [
+    0.65,
+    0.642
+   ],
+   "passed": true,
+   "why": []
+  },
+  {
+   "fact": "polyhaven metal_plate (texture)",
+   "res": "1k",
+   "credit": "Powered by Poly Haven (polyhaven.com), CC0",
+   "size_m": [
+    0.5,
+    0.5
+   ],
+   "maps": [
+    "ao",
+    "arm",
+    "color",
+    "displacement",
+    "metallic",
+    "normal",
+    "roughness"
+   ],
+   "colour_spaces": {
+    "color": "sRGB",
+    "roughness": "Non-Color",
+    "metallic": "Non-Color",
+    "normal": "Non-Color",
+    "displacement": "Non-Color"
+   },
+   "unused": [
+    "ao",
+    "arm"
+   ],
+   "uv_max": [
+    8.0,
+    8.0
+   ],
+   "uv_max_expected": [
+    8.0,
+    8.0
+   ],
+   "tile_px_expected": [
+    64.0,
+    64.0
+   ],
+   "tile_px_measured": [
+    64.0,
+    64.0
+   ],
+   "autocorr_peak": [
+    0.859,
+    0.863
+   ],
+   "passed": true,
+   "why": []
+  },
+  {
+   "fact": "ambientcg Bricks060 (texture)",
+   "res": "1K-JPG",
+   "credit": "ambientCG (ambientcg.com), CC0",
+   "size_m": [
+    1.05,
+    1.05
+   ],
+   "maps": [
+    "ao",
+    "color",
+    "displacement",
+    "normal",
+    "roughness"
+   ],
+   "colour_spaces": {
+    "color": "sRGB",
+    "roughness": "Non-Color",
+    "normal": "Non-Color",
+    "displacement": "Non-Color"
+   },
+   "unused": [
+    "ao"
+   ],
+   "uv_max": [
+    3.8095,
+    3.8095
+   ],
+   "uv_max_expected": [
+    3.8095,
+    3.8095
+   ],
+   "tile_px_expected": [
+    134.4,
+    134.4
+   ],
+   "tile_px_measured": [
+    134.27,
+    134.32
+   ],
+   "autocorr_peak": [
+    0.646,
+    0.609
+   ],
+   "passed": true,
+   "why": []
+  },
+  {
+   "fact": "ambientcg WoodFloor043 (texture)",
+   "res": "1K-JPG",
+   "credit": "ambientCG (ambientcg.com), CC0",
+   "size_m": [
+    1.3,
+    0.65
+   ],
+   "maps": [
+    "ao",
+    "color",
+    "displacement",
+    "metallic",
+    "normal",
+    "roughness"
+   ],
+   "colour_spaces": {
+    "color": "sRGB",
+    "roughness": "Non-Color",
+    "metallic": "Non-Color",
+    "normal": "Non-Color",
+    "displacement": "Non-Color"
+   },
+   "unused": [
+    "ao"
+   ],
+   "uv_max": [
+    3.0769,
+    6.1538
+   ],
+   "uv_max_expected": [
+    3.0769,
+    6.1538
+   ],
+   "tile_px_expected": [
+    166.4,
+    83.2
+   ],
+   "tile_px_measured": [
+    166.37,
+    83.12
+   ],
+   "autocorr_peak": [
+    0.601,
+    0.8
+   ],
+   "passed": true,
+   "why": []
+  },
+  {
+   "fact": "polyhaven ArmChair_01 (model)",
+   "res": "1k",
+   "credit": "Powered by Poly Haven (polyhaven.com), CC0",
+   "has_data_before_use": {
+    "Armchair_01_diff": false,
+    "Armchair_01_arm": false,
+    "Armchair_01_nor_gl": false
+   },
+   "materials": [
+    "Armchair_01"
+   ],
+   "maps_applied_by_import_model": false,
+   "objects": 1,
+   "meshes": 1,
+   "size_m": [
+    0.8484,
+    0.7658,
+    1.0651
+   ],
+   "stated_size_m": [
+    0.8484,
+    0.7658,
+    1.0651
+   ],
+   "images_loaded": {
+    "Armchair_01_diff": true,
+    "Armchair_01_arm": true,
+    "Armchair_01_nor_gl": true
+   },
+   "triangles": 5626,
+   "stated_polycount": 5626,
+   "model_file": "ArmChair_01_1k.gltf",
+   "size_error": 0.0001,
+   "passed": true,
+   "why": []
+  },
+  {
+   "fact": "polyhaven potted_plant_04 (model)",
+   "res": "1k",
+   "credit": "Powered by Poly Haven (polyhaven.com), CC0",
+   "has_data_before_use": {
+    "potted_plant_04_diff": false,
+    "potted_plant_04_nor_gl": false,
+    "potted_plant_04_rough": false
+   },
+   "materials": [
+    "potted_plant_04"
+   ],
+   "maps_applied_by_import_model": false,
+   "objects": 4,
+   "meshes": 4,
+   "size_m": [
+    0.1679,
+    0.1848,
+    0.2675
+   ],
+   "stated_size_m": [
+    0.1703,
+    0.1859,
+    0.2676
+   ],
+   "images_loaded": {
+    "potted_plant_04_diff": true,
+    "potted_plant_04_nor_gl": true,
+    "potted_plant_04_rough": true
+   },
+   "triangles": 8929,
+   "stated_polycount": 6097,
+   "model_file": "potted_plant_04_1k.gltf",
+   "size_error": 0.0142,
+   "passed": true,
+   "why": []
+  },
+  {
+   "fact": "ambientcg 3DTreeStump001 (model)",
+   "res": "LQ-1K-JPG",
+   "credit": "ambientCG (ambientcg.com), CC0",
+   "has_data_before_use": {
+    "3DTreeStump001_LQ-1K-JPG_Color.jpg": false,
+    "3DTreeStump001_LQ-1K-JPG_NormalGL.jpg": false
+   },
+   "materials": [
+    "3DTreeStump001_LQ-1K-JPG"
+   ],
+   "maps_applied_by_import_model": false,
+   "objects": 1,
+   "meshes": 1,
+   "size_m": [
+    0.9732,
+    1.3983,
+    0.2178
+   ],
+   "stated_size_m": null,
+   "images_loaded": {
+    "3DTreeStump001_LQ-1K-JPG_Color.jpg": true,
+    "3DTreeStump001_LQ-1K-JPG_NormalGL.jpg": true
+   },
+   "triangles": 4999,
+   "stated_polycount": null,
+   "model_file": "3DTreeStump001_LQ-1K-JPG.obj",
+   "passed": true,
+   "why": []
+  }
+ ],
+ "data": {
+  "order": [
+   "kloofendal_48d_partly_cloudy_puresky",
+   "brown_photostudio_02",
+   "DaySkyHDRI072B",
+   "red_brick",
+   "metal_plate",
+   "Bricks060",
+   "WoodFloor043",
+   "ArmChair_01",
+   "potted_plant_04",
+   "3DTreeStump001"
+  ]
+ },
+ "args": []
+}

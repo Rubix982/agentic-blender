@@ -32,6 +32,10 @@ memory with things that can be checked. Paths below are relative to this file's 
    comes back, search `areas/errors.md` for its words first.
 4. **For anything the pages don't cover**, search Blender's own manual and Python reference offline:
    `python3 scripts/docs.py search TERM...` (run `docs.py fetch` once; it prints public URLs to cite).
+5. **Need an HDRI, a texture or a model?** Fetch a free (CC0) one instead of modelling a stand-in:
+   `python3 scripts/assets.py search texture brick wall`, then `assets.py get polyhaven red_brick`, and build it in
+   Blender with `scripts/asset_import.py` (a world, a material at real-world size, an imported model).
+   → `areas/remote-assets.md`
 
 ## How to work
 
@@ -98,6 +102,7 @@ rendering it raises, and a failed render sets the exit code to 1 even if caught.
 | `areas/modifiers.md` | adding, ordering, evaluating and applying modifiers; Boolean solvers; the common modifiers |
 | `areas/geometry-nodes.md` | node groups built from Python with the 4.x interface API, modifier inputs, reading results |
 | `areas/curves-text.md` | Bezier and poly curves, bevels, curve to mesh, text |
+| `areas/remote-assets.md` | free CC0 HDRIs, textures and models from Poly Haven and ambientCG: `assets.py` to search and fetch (cached, checked), `asset_import.py` for a world (and its sun), a material at real-world size, an imported model |
 | `areas/instancing-assets.md` | full copies, linked duplicates, collection and vertex instancing, particle systems (costs measured); hair curves; assets and Blender's bundled ones |
 | `areas/uv-images.md` | UV maps (from arrays, bmesh, unwrap operators headless, packing); images: colour spaces, pixels, saving, packing |
 | `areas/materials.md` | Principled BSDF in 4.5, textures, bump and normal maps, displacement, colour spaces |
