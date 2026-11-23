@@ -70,7 +70,7 @@ E.fact("a weight outside 0..1 is clamped on add (1.7 -> 1, -0.3 -> 0, the point 
        not_member=err(lambda: vg2.weight(10)))
 vg2.remove([0])
 E.fact("vg.remove([i]) takes a point out of the group", after_remove=err(lambda: vg2.weight(0)))
-E.fact("vertex groups are not listed in mesh.attributes in 4.5 (they live in the mesh's deform layer)",
+E.fact("vertex groups are not listed in mesh.attributes in 4.5",
        in_attributes="ramp" in me.attributes, attribute_names=[a.name for a in me.attributes if not a.name.startswith(".")])
 
 # Does the shader's Attribute node read a vertex group by name?

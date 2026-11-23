@@ -3,16 +3,17 @@
  "blender": "4.5.14 LTS",
  "machine": "Darwin arm64",
  "date": "2026-11-23",
- "seconds": 7.08,
+ "seconds": 6.93,
  "facts": [
   {
-   "fact": "Image.save() of a float image made with images.new(float_buffer=True), file_format OPEN_EXR, wrote sRGB-encoded values into the EXR (0.5 -> 0.735, 2.0 -> 1.353, 0.18 -> 0.461) although the image's colour space reads Linear Rec.709; image.save_render(path) with the scene's format set to OPEN_EXR wrote them unchanged",
+   "fact": "Image.save() of a float image made with images.new(float_buffer=True), file_format OPEN_EXR, wrote sRGB-encoded values into the EXR (0.5 -> 0.735, 2.0 -> 1.353, 0.18 -> 0.461), and the image's colour space read Linear Rec.709 before the save and sRGB after it; image.save_render(path) with the scene's format set to OPEN_EXR wrote the values unchanged",
    "written": [
     0.5,
     2.0,
     0.18000000715255737
    ],
-   "colorspace": "sRGB",
+   "colorspace_before_save": "Linear Rec.709",
+   "colorspace_after_save": "sRGB",
    "read_back_save": [
     0.7354,
     1.3533,
@@ -198,7 +199,7 @@
    ]
   },
   {
-   "fact": "Normal Map's Strength scales the tilt away from the surface normal (2.0 tilts further than the map)",
+   "fact": "Normal Map's Strength changes the tilt away from the surface normal: for a map tilted 26.57 degrees, Strength 0.5 gave 13.29 degrees (the same as Bump's blend) and 2.0 gave 45.0 degrees",
    "strength 1.0": {
     "normal": [
      -0.4472,
@@ -280,13 +281,22 @@
    ]
   },
   {
-   "fact": "On a mesh with no UV map the tangent-space Normal Map still renders without an error but its normal is not the encoded one; Bump needs no UVs (here driven by Object coordinates: h = x, 1 per metre)",
-   "normal_map_no_uv": [
+   "fact": "A tangent-space Normal Map on a quad with no UV map rendered without an error and gave the encoded normal, with the tangent along the object's local +x: rotating the object 90 degrees about z turned the tilt from world -x to world -y, as it did for the UV-mapped plane; Bump needs no UVs at all (here Object coordinates: h = x, 1 per metre)",
+   "no_uv": [
     -0.4472,
     0.0,
     0.8944
    ],
-   "normal_map_no_uv_tilt": 26.57,
+   "no_uv_rotated_90": [
+    0.0,
+    -0.4472,
+    0.8944
+   ],
+   "uv_plane_rotated_90": [
+    0.0,
+    -0.4472,
+    0.8944
+   ],
    "expected": [
     -0.4472,
     0.0,

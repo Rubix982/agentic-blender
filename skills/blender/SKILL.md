@@ -28,7 +28,8 @@ memory with things that can be checked. Paths below are relative to this file's 
    python3 scripts/kb.py enums                         # machine-dependent enums: engines, view transforms, colour spaces, GPU
    python3 scripts/kb.py factory render                # what a fresh file starts with
    ```
-3. **Read the area page** for the task (below). Each opens with what agents most often get wrong there.
+3. **Read the area page** for the task (below). Each opens with what agents most often get wrong there. When an error
+   comes back, search `areas/errors.md` for its words first.
 4. **For anything the pages don't cover**, search Blender's own manual and Python reference offline:
    `python3 scripts/docs.py search TERM...` (run `docs.py fetch` once; it prints public URLs to cite).
 
@@ -89,6 +90,7 @@ rendering it raises, and a failed render sets the exit code to 1 even if caught.
 
 | Page | What it covers |
 |---|---|
+| `areas/errors.md` | error messages met in 4.5, each with its cause, fix and page: search it for the words of your error |
 | `areas/glossary.md` | Blender's words (data-block, original vs evaluated, depsgraph, RNA, poll, context, attribute domains, view transform, slots...), each pointing to where it is measured |
 | `areas/running.md` | running headless, exit codes, output, arguments, background context, drivers, command-line rendering, memory, crashes, add-ons and extensions, bpy as a module, a live Blender |
 | `areas/data-model.md` | objects, data and the evaluated depsgraph; context and `temp_override`; collections; files, append and link; `mathutils` |

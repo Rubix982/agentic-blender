@@ -240,8 +240,8 @@ n_nouv_bump, _ = read_normal(material(bump(distance=1.0, coord="Object")), ob=no
 plane.hide_render = False
 nouv.hide_render = True
 E.fact("A tangent-space Normal Map on a quad with no UV map rendered without an error and gave the encoded normal, "
-       "with the tangent along the object's local +x (rotating the object 90 degrees about z turned the tilt to world "
-       "+y-or-minus-y with it, as it did for the UV-mapped plane); Bump needs no UVs at all (here Object coordinates: "
+       "with the tangent along the object's local +x: rotating the object 90 degrees about z turned the tilt from world "
+       "-x to world -y, as it did for the UV-mapped plane; Bump needs no UVs at all (here Object coordinates: "
        "h = x, 1 per metre)", no_uv=n_nouv, no_uv_rotated_90=n_nouv_rot, uv_plane_rotated_90=n_uv_rot,
        expected=list(target), bump_object_coords=n_nouv_bump, bump_object_expected=expected(1.0, grad=1.0))
 
