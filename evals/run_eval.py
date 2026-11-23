@@ -49,7 +49,7 @@ TASKS_MD, CHECKS = SETS["writer"]
 
 def tasks():
     text = open(TASKS_MD).read().split("## Order of work")[0]
-    items = re.split(r"(?m)^(\d+)\. ", text)[1:]
+    items = re.split(r"(?m)^(?:\*\*)?(\d+)\. ", text)[1:]   # "1. **Title.**" or "**1. Title.**"
     return {int(items[i]): re.sub(r"\s+", " ", items[i + 1]).strip() for i in range(0, len(items), 2)}
 
 
