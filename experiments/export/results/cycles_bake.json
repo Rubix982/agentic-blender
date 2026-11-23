@@ -3,7 +3,7 @@
  "blender": "4.5.14 LTS",
  "machine": "Darwin arm64",
  "date": "2026-11-23",
- "seconds": 1.96,
+ "seconds": 2.3,
  "facts": [
   {
    "fact": "bake settings: bake type is scene.cycles.bake_type (the op's type= overrides it); margin and other options are on scene.render.bake; defaults",
@@ -18,6 +18,7 @@
   {
    "fact": "bpy.ops.object.bake raises RuntimeError when the mesh has no UV map ('No active UV layer found') or the engine is not Cycles ('Current render engine does not support baking'); with no Image Texture node in the material it does not raise: it returns {'CANCELLED'} and bakes nothing, so check the return value",
    "errors": {
+    "no active object": "Operator bpy.ops.object.bake.poll() failed, context is incorrect",
     "no image node": "{'CANCELLED'} in 0.00 s",
     "no UV map": "Error: No active UV layer found in the object \"Plane\"",
     "engine EEVEE": "Error: Current render engine does not support baking"
@@ -25,7 +26,7 @@
   },
   {
    "fact": "DIFFUSE with pass_filter={'COLOR'} writes the diffuse albedo alone, linear, in a float image: Base Color (0.8, 0.2, 0.1) bakes as about 0.96 of itself, because the Principled specular layer takes its share; with Specular IOR Level 0 it bakes as the Base Color itself",
-   "result": "{'FINISHED'} in 0.33 s",
+   "result": "{'FINISHED'} in 0.52 s",
    "texel": [
     0.77,
     0.193,
@@ -66,11 +67,11 @@
   {
    "fact": "bake times on Metal at 128 px, 32 samples",
    "times": {
-    "DIFFUSE color only": "{'FINISHED'} in 0.33 s",
-    "DIFFUSE direct+indirect+color": "{'FINISHED'} in 0.36 s",
+    "DIFFUSE color only": "{'FINISHED'} in 0.52 s",
+    "DIFFUSE direct+indirect+color": "{'FINISHED'} in 0.43 s",
     "NORMAL tangent": "{'FINISHED'} in 0.23 s",
-    "AO": "{'FINISHED'} in 0.29 s",
-    "COMBINED": "{'FINISHED'} in 0.39 s"
+    "AO": "{'FINISHED'} in 0.31 s",
+    "COMBINED": "{'FINISHED'} in 0.45 s"
    }
   },
   {
@@ -85,11 +86,11 @@
  ],
  "data": {
   "times": {
-   "DIFFUSE color only": "{'FINISHED'} in 0.33 s",
-   "DIFFUSE direct+indirect+color": "{'FINISHED'} in 0.36 s",
+   "DIFFUSE color only": "{'FINISHED'} in 0.52 s",
+   "DIFFUSE direct+indirect+color": "{'FINISHED'} in 0.43 s",
    "NORMAL tangent": "{'FINISHED'} in 0.23 s",
-   "AO": "{'FINISHED'} in 0.29 s",
-   "COMBINED": "{'FINISHED'} in 0.39 s"
+   "AO": "{'FINISHED'} in 0.31 s",
+   "COMBINED": "{'FINISHED'} in 0.45 s"
   }
  },
  "args": []

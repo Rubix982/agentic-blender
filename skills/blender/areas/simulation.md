@@ -396,4 +396,4 @@ A collider (`obj.collision`, from a Collision modifier): `thickness_outer` 0.02,
 | simulation zone | the Nodes modifier's `bakes` | `object.simulation_nodes_cache_bake(selected=False)` or `object.geometry_node_bake_single(...)` |
 
 All: frames are simulated in order only; a jump does not fill the gap. Lessons behind this page, with the project's
-numbers: `kb/lessons/cloth.md` (40), `kb/lessons/physics-other.md` (10).
+numbers: `kb/lessons/cloth.md` (40), `kb/lessons/physics-other.md` (9).

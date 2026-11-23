@@ -51,7 +51,14 @@ def bake(kind, **kw):
         return str(e).strip()
 
 
-errors = {"no image node": bake("DIFFUSE")}
+bpy.ops.object.select_all(action="DESELECT")
+bpy.context.view_layer.objects.active = None
+try:
+    bpy.ops.object.bake(type="DIFFUSE")
+    no_active = "ran"
+except RuntimeError as e:
+    no_active = str(e).strip()
+errors = {"no active object": no_active, "no image node": bake("DIFFUSE")}
 img = bpy.data.images.new("baked", 128, 128, float_buffer=True)
 node = nt.nodes.new("ShaderNodeTexImage")
 node.image = img
