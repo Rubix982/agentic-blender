@@ -30,6 +30,11 @@ Blender 4.5.14 LTS on Apple Silicon. Tags: `[inv]` read from Blender (`scripts/k
 8. **Weighting to bones that do not deform, or with stray weights.** A bone with `use_deform = False` moves nothing
    `[exp: experiments/rigging/pose_eval.py]`; automatic weights on a real figure leaked onto other limbs and onto a root
    bone that never moves (14,110 points carried root weight) `[lesson]`.
+9. **Waiting for bone heat to report the points it left empty.** It did not: loose parts beside a closed tube lost all
+   their weight with `FINISHED` and no message (a sphere 1.5 m away, 62 of 62 points; a small cube 10 m away, 8 of 8).
+   None of the classic causes tried printed "Bone Heat Weighting: failed to find solution for one or more bones"
+   (table below). Count the unweighted points after every `parent_set`.
+   `[exp: experiments/rigging/auto_weights_fail.py]`
 
 ## Build an armature
 
@@ -86,6 +91,36 @@ bone" `[doc: https://docs.blender.org/manual/en/4.5/animation/armatures/skinning
 project welded seam splits first (heat spreads only over connected surface), turned `use_deform` off on face, toe and
 finger helpers, and afterwards stripped weight from points more than 7-8.5 cm from a limb's bones and all root weight
 `[lesson]`. Any vertex group whose name matches a bone deforms, so clear an imported mesh's groups first `[lesson]`.
+
+### When bone heat leaves points without weight
+
+The same 336-point tube (2 m, closed) and two-bone rig, changed one way at a time; every case returned `FINISHED`, and
+Blender's console output during the call was captured (it does carry operator reports: a bake run the same way printed
+its "Info: Baking map saved ..." line) `[exp: experiments/rigging/auto_weights_fail.py]`:
+
+| change | points | unweighted |
+|---|---|---|
+| none | 336 | 0 |
+| size applied to the data: 0.0001, 0.001, 0.01, 100, 1000 (0.2 mm to 2 km tall) | 336 | 0 |
+| caps removed (open tube) | 336 | 0 |
+| a fin: one edge with 3 faces | 338 | 0 |
+| a second tube crossing through it, not joined | 672 | 0 |
+| every face split apart (duplicate vertices) | 1312 | 0 |
+| a coincident duplicate of the whole surface | 672 | 0 |
+| one ring moved onto the next (zero-area faces) | 336 | 0 |
+| a loose 0.2 m cube 3 m away, at the tube's base | 344 | 0 |
+| the same cube 10, 20, 30 or 50 m away | 344 | 8 (the whole cube) |
+| a loose box shell beside the tube (x 1 to 2 m) | 344 | 8 (the whole box) |
+| a loose sphere there | 398 | 62 (the whole sphere) |
+| the sphere inside the box | 406 | 70 (both) |
+| an open strip beside the bones instead of the tube, plus the same sphere, or the cube at 10 or 50 m | 125, 71, 71 | 0 |
+
+None printed "Bone Heat Weighting: failed to find solution for one or more bones", and the tube itself was always fully
+weighted. What emptied the loose parts was the closed tube standing between them and the bones: with an open strip in
+its place even the cube 50 m away was weighted. On a figure, separate pieces outside a closed body (buttons, straps)
+probably come back the same way, with no weight. The 3 m cube kept its weight, probably because its line to the root
+bone's head, which sits on the tube's base, does not cross the wall (not tested further).
+`[exp: experiments/rigging/auto_weights_fail.py]`
 
 Read the result from the evaluated mesh; the mesh data never moves (top ring at (0, 0, 2) in the data, (0, -1, 1)
 evaluated after a 90-degree pose) `[exp: experiments/rigging/auto_weights.py]`:

@@ -3,14 +3,25 @@
  "blender": "4.5.14 LTS",
  "machine": "Darwin arm64",
  "date": "2026-11-23",
- "seconds": 0.45,
+ "seconds": 0.67,
  "facts": [
   {
-   "fact": "Which classic causes make bone heat fail on a tube that weights cleanly: the cases that printed 'Bone Heat Weighting: failed to find solution for one or more bones', and the cases that left points with no weight. parent_set returned FINISHED in every case",
+   "fact": "The capture of Blender's console works: a bake run inside it printed its report there",
+   "report": [
+    "Info: Baking map saved to internal image, save it externally or pack it"
+   ]
+  },
+  {
+   "fact": "None of these classic causes printed 'Bone Heat Weighting: failed to find solution for one or more bones' on this tube, and parent_set returned FINISHED every time; points were left with no weight, silently, only on loose parts: a small cube 10 m or more away, and a separate box shell or sphere 1-2 m beside the tube. With an open strip in place of the tube (nothing between the loose part and the bones) the same loose parts, even the cube 50 m away, were all weighted: what left them empty was the tube's wall between them and the bones",
    "failed": [],
    "unweighted_cases": [
+    "loose cube 10 m away",
+    "loose cube 20 m away",
+    "loose cube 30 m away",
     "loose cube 50 m away",
-    "sphere enclosed in a box shell"
+    "loose box shell 1-2 m away",
+    "loose sphere 1.5 m away",
+    "sphere enclosed in that box shell"
    ],
    "all_finished": true,
    "cases": {
@@ -20,6 +31,8 @@
      ],
      "points": 336,
      "unweighted": 0,
+     "unweighted_base": 0,
+     "unweighted_added": 0,
      "groups": [
       "lower",
       "upper"
@@ -32,6 +45,8 @@
      ],
      "points": 336,
      "unweighted": 0,
+     "unweighted_base": 0,
+     "unweighted_added": 0,
      "groups": [
       "lower",
       "upper"
@@ -44,6 +59,8 @@
      ],
      "points": 336,
      "unweighted": 0,
+     "unweighted_base": 0,
+     "unweighted_added": 0,
      "groups": [
       "lower",
       "upper"
@@ -56,6 +73,8 @@
      ],
      "points": 336,
      "unweighted": 0,
+     "unweighted_base": 0,
+     "unweighted_added": 0,
      "groups": [
       "lower",
       "upper"
@@ -68,6 +87,8 @@
      ],
      "points": 336,
      "unweighted": 0,
+     "unweighted_base": 0,
+     "unweighted_added": 0,
      "groups": [
       "lower",
       "upper"
@@ -80,6 +101,8 @@
      ],
      "points": 336,
      "unweighted": 0,
+     "unweighted_base": 0,
+     "unweighted_added": 0,
      "groups": [
       "lower",
       "upper"
@@ -92,6 +115,8 @@
      ],
      "points": 336,
      "unweighted": 0,
+     "unweighted_base": 0,
+     "unweighted_added": 0,
      "groups": [
       "lower",
       "upper"
@@ -104,6 +129,8 @@
      ],
      "points": 338,
      "unweighted": 0,
+     "unweighted_base": 0,
+     "unweighted_added": 0,
      "groups": [
       "lower",
       "upper"
@@ -116,6 +143,8 @@
      ],
      "points": 672,
      "unweighted": 0,
+     "unweighted_base": 0,
+     "unweighted_added": 0,
      "groups": [
       "lower",
       "upper"
@@ -128,6 +157,50 @@
      ],
      "points": 344,
      "unweighted": 0,
+     "unweighted_base": 0,
+     "unweighted_added": 0,
+     "groups": [
+      "lower",
+      "upper"
+     ],
+     "log": []
+    },
+    "loose cube 10 m away": {
+     "result": [
+      "FINISHED"
+     ],
+     "points": 344,
+     "unweighted": 8,
+     "unweighted_base": 0,
+     "unweighted_added": 8,
+     "groups": [
+      "lower",
+      "upper"
+     ],
+     "log": []
+    },
+    "loose cube 20 m away": {
+     "result": [
+      "FINISHED"
+     ],
+     "points": 344,
+     "unweighted": 8,
+     "unweighted_base": 0,
+     "unweighted_added": 8,
+     "groups": [
+      "lower",
+      "upper"
+     ],
+     "log": []
+    },
+    "loose cube 30 m away": {
+     "result": [
+      "FINISHED"
+     ],
+     "points": 344,
+     "unweighted": 8,
+     "unweighted_base": 0,
+     "unweighted_added": 8,
      "groups": [
       "lower",
       "upper"
@@ -140,18 +213,106 @@
      ],
      "points": 344,
      "unweighted": 8,
+     "unweighted_base": 0,
+     "unweighted_added": 8,
      "groups": [
       "lower",
       "upper"
      ],
      "log": []
     },
-    "sphere enclosed in a box shell": {
+    "loose box shell 1-2 m away": {
+     "result": [
+      "FINISHED"
+     ],
+     "points": 344,
+     "unweighted": 8,
+     "unweighted_base": 0,
+     "unweighted_added": 8,
+     "groups": [
+      "lower",
+      "upper"
+     ],
+     "log": []
+    },
+    "loose sphere 1.5 m away": {
+     "result": [
+      "FINISHED"
+     ],
+     "points": 398,
+     "unweighted": 62,
+     "unweighted_base": 0,
+     "unweighted_added": 62,
+     "groups": [
+      "lower",
+      "upper"
+     ],
+     "log": []
+    },
+    "sphere enclosed in that box shell": {
      "result": [
       "FINISHED"
      ],
      "points": 406,
      "unweighted": 70,
+     "unweighted_base": 0,
+     "unweighted_added": 70,
+     "groups": [
+      "lower",
+      "upper"
+     ],
+     "log": []
+    },
+    "open strip beside the bones (no tube), alone": {
+     "result": [
+      "FINISHED"
+     ],
+     "points": 63,
+     "unweighted": 0,
+     "unweighted_base": 0,
+     "unweighted_added": 0,
+     "groups": [
+      "lower",
+      "upper"
+     ],
+     "log": []
+    },
+    "open strip + loose sphere 1.5 m away": {
+     "result": [
+      "FINISHED"
+     ],
+     "points": 125,
+     "unweighted": 0,
+     "unweighted_base": 0,
+     "unweighted_added": 0,
+     "groups": [
+      "lower",
+      "upper"
+     ],
+     "log": []
+    },
+    "open strip + loose cube 10 m away": {
+     "result": [
+      "FINISHED"
+     ],
+     "points": 71,
+     "unweighted": 0,
+     "unweighted_base": 0,
+     "unweighted_added": 0,
+     "groups": [
+      "lower",
+      "upper"
+     ],
+     "log": []
+    },
+    "open strip + loose cube 50 m away": {
+     "result": [
+      "FINISHED"
+     ],
+     "points": 71,
+     "unweighted": 0,
+     "unweighted_base": 0,
+     "unweighted_added": 0,
      "groups": [
       "lower",
       "upper"
@@ -164,6 +325,8 @@
      ],
      "points": 1312,
      "unweighted": 0,
+     "unweighted_base": 0,
+     "unweighted_added": 0,
      "groups": [
       "lower",
       "upper"
@@ -176,6 +339,8 @@
      ],
      "points": 672,
      "unweighted": 0,
+     "unweighted_base": 0,
+     "unweighted_added": 0,
      "groups": [
       "lower",
       "upper"
@@ -188,6 +353,8 @@
      ],
      "points": 336,
      "unweighted": 0,
+     "unweighted_base": 0,
+     "unweighted_added": 0,
      "groups": [
       "lower",
       "upper"

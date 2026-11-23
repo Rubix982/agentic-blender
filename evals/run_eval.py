@@ -133,6 +133,9 @@ def main():
                 if arm in ("reference", "wrong"):
                     ref = os.path.join(os.path.dirname(TASKS_MD), "reference", f"{'task' if arm == 'reference' else 'wrong'}{n}.py")
                     shutil.copy(ref, os.path.join(work, "task.py"))
+                    common = os.path.join(os.path.dirname(ref), "_common.py")
+                    if os.path.exists(common):
+                        shutil.copy(common, work)
                     info = dict(skill_used=False, agent_ran_blender=False, cost_usd=0, turns=0, output_tokens=0)
                 else:
                     p = subprocess.run(cmd, cwd=work, capture_output=True, text=True, timeout=1800)

@@ -1,0 +1,326 @@
+{
+ "experiment": "experiments/modifiers/remesh_order.py",
+ "blender": "Blender 4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "facts": [
+  {
+   "fact": "Voxel Remesh output order across separate Blender processes and thread counts, and within one process: for each voxel size, every run compared with the first run at -t 1 (identical arrays, indices holding a different point, and whether the same set of points came back)",
+   "any_run_reordered": false,
+   "threads_default": 12,
+   "threads_t1": 1,
+   "voxel 0.05": {
+    "mod points": 9358,
+    "mod -t 1 run 2 vs -t 1 run 1": {
+     "same_count": true,
+     "identical": true,
+     "points": 9358,
+     "indices_differing": 0,
+     "same_set": true,
+     "max_sorted_diff": 0.0
+    },
+    "mod -t 1 run 3 vs -t 1 run 1": {
+     "same_count": true,
+     "identical": true,
+     "points": 9358,
+     "indices_differing": 0,
+     "same_set": true,
+     "max_sorted_diff": 0.0
+    },
+    "mod -t default run 1 vs -t 1 run 1": {
+     "same_count": true,
+     "identical": true,
+     "points": 9358,
+     "indices_differing": 0,
+     "same_set": true,
+     "max_sorted_diff": 0.0
+    },
+    "mod -t default run 2 vs -t 1 run 1": {
+     "same_count": true,
+     "identical": true,
+     "points": 9358,
+     "indices_differing": 0,
+     "same_set": true,
+     "max_sorted_diff": 0.0
+    },
+    "mod -t default run 3 vs -t 1 run 1": {
+     "same_count": true,
+     "identical": true,
+     "points": 9358,
+     "indices_differing": 0,
+     "same_set": true,
+     "max_sorted_diff": 0.0
+    },
+    "op points": 9944,
+    "op -t 1 run 2 vs -t 1 run 1": {
+     "same_count": true,
+     "identical": true,
+     "points": 9944,
+     "indices_differing": 0,
+     "same_set": true,
+     "max_sorted_diff": 0.0
+    },
+    "op -t 1 run 3 vs -t 1 run 1": {
+     "same_count": true,
+     "identical": true,
+     "points": 9944,
+     "indices_differing": 0,
+     "same_set": true,
+     "max_sorted_diff": 0.0
+    },
+    "op -t default run 1 vs -t 1 run 1": {
+     "same_count": true,
+     "identical": true,
+     "points": 9944,
+     "indices_differing": 0,
+     "same_set": true,
+     "max_sorted_diff": 0.0
+    },
+    "op -t default run 2 vs -t 1 run 1": {
+     "same_count": true,
+     "identical": true,
+     "points": 9944,
+     "indices_differing": 0,
+     "same_set": true,
+     "max_sorted_diff": 0.0
+    },
+    "op -t default run 3 vs -t 1 run 1": {
+     "same_count": true,
+     "identical": true,
+     "points": 9944,
+     "indices_differing": 0,
+     "same_set": true,
+     "max_sorted_diff": 0.0
+    },
+    "mod, same process, evaluated twice (-t 1 run 1)": {
+     "same_count": true,
+     "identical": true,
+     "points": 9358,
+     "indices_differing": 0,
+     "same_set": true,
+     "max_sorted_diff": 0.0
+    },
+    "mod, same process, evaluated twice (default run 1)": {
+     "same_count": true,
+     "identical": true,
+     "points": 9358,
+     "indices_differing": 0,
+     "same_set": true,
+     "max_sorted_diff": 0.0
+    },
+    "seconds (-t 1, default)": [
+     0.041,
+     0.012
+    ]
+   },
+   "voxel 0.02": {
+    "mod points": 60010,
+    "mod -t 1 run 2 vs -t 1 run 1": {
+     "same_count": true,
+     "identical": true,
+     "points": 60010,
+     "indices_differing": 0,
+     "same_set": true,
+     "max_sorted_diff": 0.0
+    },
+    "mod -t 1 run 3 vs -t 1 run 1": {
+     "same_count": true,
+     "identical": true,
+     "points": 60010,
+     "indices_differing": 0,
+     "same_set": true,
+     "max_sorted_diff": 0.0
+    },
+    "mod -t default run 1 vs -t 1 run 1": {
+     "same_count": true,
+     "identical": true,
+     "points": 60010,
+     "indices_differing": 0,
+     "same_set": true,
+     "max_sorted_diff": 0.0
+    },
+    "mod -t default run 2 vs -t 1 run 1": {
+     "same_count": true,
+     "identical": true,
+     "points": 60010,
+     "indices_differing": 0,
+     "same_set": true,
+     "max_sorted_diff": 0.0
+    },
+    "mod -t default run 3 vs -t 1 run 1": {
+     "same_count": true,
+     "identical": true,
+     "points": 60010,
+     "indices_differing": 0,
+     "same_set": true,
+     "max_sorted_diff": 0.0
+    },
+    "op points": 61368,
+    "op -t 1 run 2 vs -t 1 run 1": {
+     "same_count": true,
+     "identical": true,
+     "points": 61368,
+     "indices_differing": 0,
+     "same_set": true,
+     "max_sorted_diff": 0.0
+    },
+    "op -t 1 run 3 vs -t 1 run 1": {
+     "same_count": true,
+     "identical": true,
+     "points": 61368,
+     "indices_differing": 0,
+     "same_set": true,
+     "max_sorted_diff": 0.0
+    },
+    "op -t default run 1 vs -t 1 run 1": {
+     "same_count": true,
+     "identical": true,
+     "points": 61368,
+     "indices_differing": 0,
+     "same_set": true,
+     "max_sorted_diff": 0.0
+    },
+    "op -t default run 2 vs -t 1 run 1": {
+     "same_count": true,
+     "identical": true,
+     "points": 61368,
+     "indices_differing": 0,
+     "same_set": true,
+     "max_sorted_diff": 0.0
+    },
+    "op -t default run 3 vs -t 1 run 1": {
+     "same_count": true,
+     "identical": true,
+     "points": 61368,
+     "indices_differing": 0,
+     "same_set": true,
+     "max_sorted_diff": 0.0
+    },
+    "mod, same process, evaluated twice (-t 1 run 1)": {
+     "same_count": true,
+     "identical": true,
+     "points": 60010,
+     "indices_differing": 0,
+     "same_set": true,
+     "max_sorted_diff": 0.0
+    },
+    "mod, same process, evaluated twice (default run 1)": {
+     "same_count": true,
+     "identical": true,
+     "points": 60010,
+     "indices_differing": 0,
+     "same_set": true,
+     "max_sorted_diff": 0.0
+    },
+    "seconds (-t 1, default)": [
+     0.095,
+     0.025
+    ]
+   },
+   "voxel 0.01": {
+    "mod points": 242820,
+    "mod -t 1 run 2 vs -t 1 run 1": {
+     "same_count": true,
+     "identical": true,
+     "points": 242820,
+     "indices_differing": 0,
+     "same_set": true,
+     "max_sorted_diff": 0.0
+    },
+    "mod -t 1 run 3 vs -t 1 run 1": {
+     "same_count": true,
+     "identical": true,
+     "points": 242820,
+     "indices_differing": 0,
+     "same_set": true,
+     "max_sorted_diff": 0.0
+    },
+    "mod -t default run 1 vs -t 1 run 1": {
+     "same_count": true,
+     "identical": true,
+     "points": 242820,
+     "indices_differing": 0,
+     "same_set": true,
+     "max_sorted_diff": 0.0
+    },
+    "mod -t default run 2 vs -t 1 run 1": {
+     "same_count": true,
+     "identical": true,
+     "points": 242820,
+     "indices_differing": 0,
+     "same_set": true,
+     "max_sorted_diff": 0.0
+    },
+    "mod -t default run 3 vs -t 1 run 1": {
+     "same_count": true,
+     "identical": true,
+     "points": 242820,
+     "indices_differing": 0,
+     "same_set": true,
+     "max_sorted_diff": 0.0
+    },
+    "op points": 245146,
+    "op -t 1 run 2 vs -t 1 run 1": {
+     "same_count": true,
+     "identical": true,
+     "points": 245146,
+     "indices_differing": 0,
+     "same_set": true,
+     "max_sorted_diff": 0.0
+    },
+    "op -t 1 run 3 vs -t 1 run 1": {
+     "same_count": true,
+     "identical": true,
+     "points": 245146,
+     "indices_differing": 0,
+     "same_set": true,
+     "max_sorted_diff": 0.0
+    },
+    "op -t default run 1 vs -t 1 run 1": {
+     "same_count": true,
+     "identical": true,
+     "points": 245146,
+     "indices_differing": 0,
+     "same_set": true,
+     "max_sorted_diff": 0.0
+    },
+    "op -t default run 2 vs -t 1 run 1": {
+     "same_count": true,
+     "identical": true,
+     "points": 245146,
+     "indices_differing": 0,
+     "same_set": true,
+     "max_sorted_diff": 0.0
+    },
+    "op -t default run 3 vs -t 1 run 1": {
+     "same_count": true,
+     "identical": true,
+     "points": 245146,
+     "indices_differing": 0,
+     "same_set": true,
+     "max_sorted_diff": 0.0
+    },
+    "mod, same process, evaluated twice (-t 1 run 1)": {
+     "same_count": true,
+     "identical": true,
+     "points": 242820,
+     "indices_differing": 0,
+     "same_set": true,
+     "max_sorted_diff": 0.0
+    },
+    "mod, same process, evaluated twice (default run 1)": {
+     "same_count": true,
+     "identical": true,
+     "points": 242820,
+     "indices_differing": 0,
+     "same_set": true,
+     "max_sorted_diff": 0.0
+    },
+    "seconds (-t 1, default)": [
+     0.308,
+     0.075
+    ]
+   }
+  }
+ ]
+}
