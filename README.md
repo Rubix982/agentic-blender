@@ -56,9 +56,9 @@ Install as a plugin (this repository is its own marketplace):
 
 `METHOD.md` sets the rules: every fact carries its evidence (`[inv]` read from Blender, `[exp: path]` measured here,
 `[lesson]` from a project, `[doc: link]` from Blender's documentation), experiments record facts as sentences that
-could come out false, and no project, client or person is named. `CARD.md` holds the open question: whether the guide
-makes an agent's Blender scripts right the first time more often, tested on ten tasks written before the guide
-(`evals/tasks.md`).
+could come out false, and no project, client or person is named. `CARD.md` holds the question it was built to answer:
+whether the guide makes an agent's Blender scripts right the first time more often. On ten tasks written by an agent
+that never saw the guide, a fresh agent got 10 right with the skill and 6 without (`evals/results.md`).
 
 Requirements: Blender 4.5 (found at `$BLENDER`, `~/Applications/Blender.app`, `/Applications/Blender.app` or on
 `PATH`) and Python 3.9 or later. Everything here was read and measured on Blender 4.5.14 LTS, Apple Silicon (M2 Pro,

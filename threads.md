@@ -28,3 +28,13 @@ ambientCG (CC0, no account), Megascans (reported free again in November 2026, ne
 **Question:** the guide checks that a script did what was asked, never whether the image looks real. Proposed test: a
 photo match (one real photograph rebuilt in Blender, compared in the same frame, then shuffled pairs judged blind).
 **Answer:** —
+
+### T-004 · v2: the lessons the comparison found
+
+**Status:** open
+**Parent:** C-001
+**Opened:** 2026-11-23
+**Question:** add to the guide the view-layer trap (`None` in `view_layer.objects` after `bpy.data.objects.remove`,
+until `view_layer.update()`; `evals/results/stale_view_layer.py`), which crashed 3 of the 10 scripts written without
+it, and the sun-elevation rule held back from v1.
+**Answer:** —

@@ -19,7 +19,7 @@ have come out the other way.
 
 ### C-001 · A field guide to Blender 4.5, read from Blender itself, and a skill made from it
 
-**Opened:** 2026-11-23
+**Opened:** 2026-11-23 · **Closed:** 2026-11-23
 
 1. **WHERE WE ARE.** Blender has come up in two projects. What we learned is spread over one 371-line feature map and
    dozens of lessons scattered through another project's logs, and none of it reaches an agent working somewhere else.
@@ -50,4 +50,15 @@ audit finding 1,812 of 1,859 cited numbers in the results they cite. Both task s
 (`evals/harness_check.md`: right solutions 10 of 10 and wrong ones 0 of 10, in each set). Not run yet: the with and
 without comparison itself, 20 Claude sessions per set on the user's account, which waits for the user's yes.
 
-**Result:** —
+**Result:** with the skill, 10 of the 10 independent tasks were right the first time; without it, 6 of 10 (one
+session per task and arm, claude-opus-5-5; `evals/results.md`). The gap of 4 meets the bar of 3 in field 5, so the
+first branch holds: Blender work starts from this skill, and new Blender lessons are written here.
+
+What the 4 is made of: every script without the skill that ran was right (6 of 6), and all four failures crashed
+before saving anything. Three hit one trap the guide does not describe (deleting the default objects with
+`bpy.data.objects.remove` leaves `None` in `view_layer.objects` until `view_layer.update()`); the skill's sessions
+avoided it by starting from the empty file in its skeleton (9 of 10). The fourth guessed a light-linking name that
+the skill's session looked up with `kb.py`. Limits: one session per task and arm (the four differing tasks all going
+one way would happen about one time in 16 if the skill made no difference); the agents wrote blind, so this measures
+first attempts, not finished work; the skill's sessions took 12.5 turns on average against 2.8 and cost about a
+quarter more; the writer's set was not run.
