@@ -10,12 +10,25 @@ memory with three things that can be checked:
   node and Python function it has: 3,944 types, 10,477 properties, 2,482 operators, 523 node types with their 2,246
   sockets, and 611 members of `bmesh`, `mathutils` and the other modules around `bpy`. `kb.py` searches it.
 - **What happens when you try.** Small headless experiments, one question each, whose results are kept
-  (`experiments/<area>/results/*.json`) and can be run again on another version to see which facts changed.
+  (`experiments/<area>/results/*.json`) and can be run again on another version to see which facts changed
+  (`tools/recheck.py`). On 2026-11-23: 109 experiments, 829 recorded facts.
 - **What real projects learned.** Lessons from weeks of building cloth garments on animated figures in Blender, with
   the numbers that were measured, rewritten without the project's specifics (`kb/lessons/`).
 
 Blender's own manual and Python reference (4,120 pages) can be searched offline with `docs.py`; they are downloaded on
 first use, not bundled.
+
+What is in it:
+
+| | |
+|---|---|
+| `skills/blender/SKILL.md` | the front page an agent reads first: how to work, a headless script's skeleton, the version traps, the map |
+| `skills/blender/areas/` | 20 guides by area (running, data model, meshes, modifiers, geometry nodes, curves and text, materials, light and camera, rendering, compositing, export and baking, UVs and images, instancing and assets, lines, simulation, rigging and animation, extending, errors, glossary, and more), each opening with what agents get wrong |
+| `kb/reference/` | generated, exact for 4.5: every node with every socket, every modifier and constraint setting, scene and render settings against the factory file, all 2,482 operators, bmesh and mathutils (about 16,000 lines) |
+| `kb/lessons/` | 168 lessons from real projects, 56 of them re-run here |
+| `experiments/` | the evidence: one question per script, results as JSON |
+| `tools/` | `audit_pages.py` (every number on a page against the result it cites), `recheck.py`, `gen_reference.py`, `check_private.py` |
+| `evals/` | the test of whether the skill helps: two sets of ten tasks (one written by the guide's writer, one by an agent that never saw the guide), checks, and the runner |
 
 ## Use
 
