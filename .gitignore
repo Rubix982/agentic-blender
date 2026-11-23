@@ -4,3 +4,4 @@ __pycache__/
 *.blend1
 *.crash.txt
 .DS_Store
+evals/runs/

@@ -2,7 +2,8 @@
 
 Written on 2026-11-23, before any of the guide. The guide is not written from these: no area page names them, and no
 experiment reproduces one. Each task is given to a fresh agent as written here, once with the skill and once without; it
-writes one Python script, run headless on Blender 4.5.14 by `tools/run.py`. A task counts as right first time when that
+writes one Python script without running Blender, and that script is run once, headless, on Blender 4.5.14 with factory
+settings and `--python-exit-code 1` (`evals/run_eval.py`). A task counts as right first time when that
 first script runs without an error and its output passes the check (`evals/checks.py`, written after the tasks and before
 any run).
 

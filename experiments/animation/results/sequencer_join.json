@@ -1,0 +1,137 @@
+{
+ "experiment": "experiments/animation/sequencer_join.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.24,
+ "facts": [
+  {
+   "fact": "4.5 names the sequencer's types Strip, ImageStrip, MovieStrip, StripsTopLevel, StripElement; the pre-4.4 Sequence names are gone from bpy.types",
+   "Sequence": false,
+   "Strip": true,
+   "ImageSequence": false,
+   "ImageStrip": true,
+   "MovieSequence": false,
+   "MovieStrip": true,
+   "SequencesTopLevel": false,
+   "StripsTopLevel": true,
+   "SequenceElement": false,
+   "StripElement": true
+  },
+  {
+   "fact": "a scene made with bpy.data.scenes.new has no sequence editor (None) until sequence_editor_create(); the factory scene already has one",
+   "factory_scene": true,
+   "new_scene": "None"
+  },
+  {
+   "fact": "sequence_editor_create() returns the editor; .strips and the deprecated .sequences both exist",
+   "has_strips": true,
+   "has_sequences": true
+  },
+  {
+   "fact": "strips.new_image(name, filepath, channel, frame_start) makes a 1-frame image strip; elements.append(filename) adds frames from the same directory, and the strip lengthens to match",
+   "at_creation": {
+    "len_elements": 1,
+    "duration": 1,
+    "type": "IMAGE",
+    "cls": "ImageStrip",
+    "directory": "sequencer_join-seq"
+   },
+   "after_append": {
+    "len_elements": 12,
+    "duration": 12,
+    "end": 13
+   }
+  },
+  {
+   "fact": "fit_method is only an argument of new_image/new_movie (no strip property); a 128 x 96 image in a 256 x 192 scene gets transform.scale 1 with ORIGINAL (the default: drawn at its pixel size, a quarter of the frame) and 2 with FIT",
+   "has_strip_property": false,
+   "scales": {
+    "ORIGINAL": [
+     1.0,
+     1.0
+    ],
+    "FIT": [
+     2.0,
+     2.0
+    ],
+    "FILL": [
+     2.0,
+     2.0
+    ],
+    "STRETCH": [
+     2.0,
+     2.0
+    ],
+    "default": [
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "fact": "the deprecated sequence_editor.sequences still works in 4.5 and warns nothing through Python's warnings",
+   "sequences": [
+    "ok",
+    1
+   ],
+   "sequences_all": [
+    "ok",
+    1
+   ],
+   "python_warnings": []
+  },
+  {
+   "fact": "bpy.ops.sequencer.image_strip_add in background mode, without an override",
+   "result": [
+    "error",
+    "RuntimeError: Operator bpy.ops.sequencer.image_strip_add.poll() failed, context is incorrect"
+   ]
+  },
+  {
+   "fact": "rendering the strips scene writes one MP4 with every frame (12), read back by movieclips.load",
+   "render": "('ok', {'FINISHED'})",
+   "files": [
+    "joined0001-0012.mp4"
+   ],
+   "frames": 12,
+   "seconds": 0.011,
+   "use_sequencer": true
+  },
+  {
+   "fact": "strips.new_movie reads the clip's length into frame_final_duration (12 here)",
+   "duration": 12,
+   "cls": "MovieStrip",
+   "fps": 24.0
+  },
+  {
+   "fact": "in a scene that has strips, a frame no strip covers renders black, not the 3D view",
+   "mean_rgb": 0.0003,
+   "max_rgb": 0.0039,
+   "max_diff_to_3d_frame6": 0.9961
+  },
+  {
+   "fact": "a scene that has strips renders the strips, not its 3D view (frame 12 rendered as the strip's image, frame 1); with render.use_sequencer = False it renders the 3D scene again",
+   "max_diff_to_strip_image": 0.0392,
+   "max_diff_to_3d_frame12": 0.9961,
+   "use_sequencer_off_diff_to_3d": 0.0
+  }
+ ],
+ "data": {
+  "frames": [
+   "f_0001.png",
+   "f_0002.png",
+   "f_0003.png",
+   "f_0004.png",
+   "f_0005.png",
+   "f_0006.png",
+   "f_0007.png",
+   "f_0008.png",
+   "f_0009.png",
+   "f_0010.png",
+   "f_0011.png",
+   "f_0012.png"
+  ]
+ },
+ "args": []
+}
