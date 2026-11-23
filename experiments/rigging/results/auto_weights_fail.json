@@ -1,0 +1,202 @@
+{
+ "experiment": "experiments/rigging/auto_weights_fail.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.45,
+ "facts": [
+  {
+   "fact": "Which classic causes make bone heat fail on a tube that weights cleanly: the cases that printed 'Bone Heat Weighting: failed to find solution for one or more bones', and the cases that left points with no weight. parent_set returned FINISHED in every case",
+   "failed": [],
+   "unweighted_cases": [
+    "loose cube 50 m away",
+    "sphere enclosed in a box shell"
+   ],
+   "all_finished": true,
+   "cases": {
+    "as built (2 m)": {
+     "result": [
+      "FINISHED"
+     ],
+     "points": 336,
+     "unweighted": 0,
+     "groups": [
+      "lower",
+      "upper"
+     ],
+     "log": []
+    },
+    "size 0.01 applied (2 cm)": {
+     "result": [
+      "FINISHED"
+     ],
+     "points": 336,
+     "unweighted": 0,
+     "groups": [
+      "lower",
+      "upper"
+     ],
+     "log": []
+    },
+    "size 0.001 applied (2 mm)": {
+     "result": [
+      "FINISHED"
+     ],
+     "points": 336,
+     "unweighted": 0,
+     "groups": [
+      "lower",
+      "upper"
+     ],
+     "log": []
+    },
+    "size 0.0001 applied (0.2 mm)": {
+     "result": [
+      "FINISHED"
+     ],
+     "points": 336,
+     "unweighted": 0,
+     "groups": [
+      "lower",
+      "upper"
+     ],
+     "log": []
+    },
+    "size 100 applied (200 m)": {
+     "result": [
+      "FINISHED"
+     ],
+     "points": 336,
+     "unweighted": 0,
+     "groups": [
+      "lower",
+      "upper"
+     ],
+     "log": []
+    },
+    "size 1000 applied (2 km)": {
+     "result": [
+      "FINISHED"
+     ],
+     "points": 336,
+     "unweighted": 0,
+     "groups": [
+      "lower",
+      "upper"
+     ],
+     "log": []
+    },
+    "open tube (no caps)": {
+     "result": [
+      "FINISHED"
+     ],
+     "points": 336,
+     "unweighted": 0,
+     "groups": [
+      "lower",
+      "upper"
+     ],
+     "log": []
+    },
+    "a fin: one edge with 3 faces": {
+     "result": [
+      "FINISHED"
+     ],
+     "points": 338,
+     "unweighted": 0,
+     "groups": [
+      "lower",
+      "upper"
+     ],
+     "log": []
+    },
+    "a second tube crossing through": {
+     "result": [
+      "FINISHED"
+     ],
+     "points": 672,
+     "unweighted": 0,
+     "groups": [
+      "lower",
+      "upper"
+     ],
+     "log": []
+    },
+    "loose cube 3 m away": {
+     "result": [
+      "FINISHED"
+     ],
+     "points": 344,
+     "unweighted": 0,
+     "groups": [
+      "lower",
+      "upper"
+     ],
+     "log": []
+    },
+    "loose cube 50 m away": {
+     "result": [
+      "FINISHED"
+     ],
+     "points": 344,
+     "unweighted": 8,
+     "groups": [
+      "lower",
+      "upper"
+     ],
+     "log": []
+    },
+    "sphere enclosed in a box shell": {
+     "result": [
+      "FINISHED"
+     ],
+     "points": 406,
+     "unweighted": 70,
+     "groups": [
+      "lower",
+      "upper"
+     ],
+     "log": []
+    },
+    "all faces split apart (duplicate vertices)": {
+     "result": [
+      "FINISHED"
+     ],
+     "points": 1312,
+     "unweighted": 0,
+     "groups": [
+      "lower",
+      "upper"
+     ],
+     "log": []
+    },
+    "a coincident duplicate surface": {
+     "result": [
+      "FINISHED"
+     ],
+     "points": 672,
+     "unweighted": 0,
+     "groups": [
+      "lower",
+      "upper"
+     ],
+     "log": []
+    },
+    "a ring collapsed onto the next (zero-area faces)": {
+     "result": [
+      "FINISHED"
+     ],
+     "points": 336,
+     "unweighted": 0,
+     "groups": [
+      "lower",
+      "upper"
+     ],
+     "log": []
+    }
+   }
+  }
+ ],
+ "data": {},
+ "args": []
+}

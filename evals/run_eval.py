@@ -6,6 +6,8 @@
 
 --set writer (default) uses evals/tasks.md and evals/checks.py; --set independent uses evals/independent/tasks.md and
 evals/independent/checks.py, written by an agent that never saw the guide. The card's claim rests on the independent set.
+--arms reference (or wrong) runs the set's reference (or deliberately wrong) solutions, <set>/reference/taskN.py or
+wrongN.py, in place of an agent: no Claude session; a test of the harness and the checks.
 
 For each task, arm and run: a fresh `claude -p` session in an empty folder gets the task. The "with" arm loads this
 plugin through --plugin-dir (a copy without evals/, so the checks can't be read); the "without" arm loads nothing.
@@ -111,6 +113,8 @@ def main():
     base = os.path.join(HERE, "runs", f"{stamp}-{which}")
     os.makedirs(base)
     plugin = plugin_copy(os.path.join(base, "plugin")) if "with" in arms else None
+    if "reference" in arms and which == "writer" and not os.path.isdir(os.path.join(HERE, "reference")):
+        sys.exit("the writer's set has no reference solutions yet")
     B = blender()
     T = tasks()
     results = []
@@ -126,9 +130,14 @@ def main():
                 if arm == "with":
                     cmd += ["--plugin-dir", plugin]
                 t = time.time()
-                p = subprocess.run(cmd, cwd=work, capture_output=True, text=True, timeout=1800)
-                open(os.path.join(work, "transcript.jsonl"), "w").write(p.stdout)
-                info = transcript_facts(p.stdout.splitlines())
+                if arm in ("reference", "wrong"):
+                    ref = os.path.join(os.path.dirname(TASKS_MD), "reference", f"{'task' if arm == 'reference' else 'wrong'}{n}.py")
+                    shutil.copy(ref, os.path.join(work, "task.py"))
+                    info = dict(skill_used=False, agent_ran_blender=False, cost_usd=0, turns=0, output_tokens=0)
+                else:
+                    p = subprocess.run(cmd, cwd=work, capture_output=True, text=True, timeout=1800)
+                    open(os.path.join(work, "transcript.jsonl"), "w").write(p.stdout)
+                    info = transcript_facts(p.stdout.splitlines())
                 rec = dict(task=n, arm=arm, run=r, agent_seconds=round(time.time() - t, 1), **info)
                 script = os.path.join(work, "task.py")
                 out = os.path.join(work, f"out{output_ext(n, T[n], which)}")
