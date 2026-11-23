@@ -53,11 +53,17 @@ def summary():
         for s in o.material_slots:
             if s.material and s.material.node_tree:
                 b = next((n for n in s.material.node_tree.nodes if n.type == "BSDF_PRINCIPLED"), None)
-                mats.append((s.material.name, [round(v, 3) for v in b.inputs["Base Color"].default_value[:3]] if b else None))
+                bc = b.inputs["Base Color"] if b else None
+                if bc is not None and bc.is_linked:
+                    mats.append((s.material.name, "linked from " + bc.links[0].from_node.type))
+                else:
+                    mats.append((s.material.name, [round(v, 3) for v in bc.default_value[:3]] if bc else None))
             elif s.material:
                 mats.append((s.material.name, [round(v, 3) for v in s.material.diffuse_color[:3]]))
         out[o.name] = dict(verts=len(me.vertices), faces=len(me.polygons), centre=[round(v, 3) for v in centre],
                            size=[round(v, 3) for v in o.dimensions], scale=[round(v, 3) for v in o.scale],
+                           rot_deg=[round(math.degrees(v), 1) for v in o.matrix_world.to_euler()],
+                           parent=o.parent.name if o.parent else None, mesh_name=me.name,
                            uv=[u.name for u in me.uv_layers], materials=mats,
                            colors=[c.name for c in me.color_attributes])
     return out
@@ -93,17 +99,20 @@ for ext, (ex, im) in fmts.items():
     print(ext, results[ext])
 os.rmdir(d)
 
-E.fact("OBJ (wm.obj_export defaults) writes .obj + .mtl; on import: names kept (Box, Ball), world positions and sizes kept, "
-       "but the object's rotation and scale are baked into the vertices (scale reads 1), UVs kept, material and its base "
-       "colour kept through MTL Kd; colour attributes are not exported (export_colors False)", obj=results["obj"])
-E.fact("STL keeps only triangles: one object per file by default (both merged), no UVs, no materials, no colours, and the "
-       "vertex count is per-triangle-corner unless merged", stl=results["stl"])
-E.fact("PLY (wm.ply_export defaults) merges everything into one object, keeps UVs and colour attributes, drops materials",
-       ply=results["ply"])
-E.fact("FBX (export_scene.fbx defaults) keeps names, transforms (rotation and scale stay on the object), UVs, material and "
-       "base colour, colour attribute", fbx=results["fbx"])
-E.fact("USD (wm.usd_export defaults, .usdc) keeps names, transforms, UVs, material with base colour (UsdPreviewSurface), "
-       "colour attribute", usd=results["usdc"])
-E.fact("glTF (GLB defaults) keeps names, transforms, UVs, material and base colour; the colour attribute comes back as "
-       "'Color' (glTF COLOR_0)", gltf=results["glb"])
+E.fact("OBJ (wm.obj_export defaults) writes .obj + .mtl. On import: names kept; world positions kept; each object gets "
+       "rotation (90, 0, 0) with its own rotation and scale baked into the vertices (Box reads scale 1); UVs kept; base colour "
+       "kept through MTL Kd; colour attributes are dropped (export_colors defaults False); and Ball, which had no material, "
+       "comes back with Box's material 'Red' (the last usemtl carries over)", obj=results["obj"])
+E.fact("STL import gives one object named after the file, holding both meshes as triangles with shared vertices merged "
+       "(122 vertices, 236 triangles); no UVs, materials or colours", stl=results["stl"])
+E.fact("PLY (defaults) also merges everything into one object named after the file; it keeps quads (134 faces), UVs (with "
+       "vertices split at UV seams: 165) and the colour attribute; materials are dropped", ply=results["ply"])
+E.fact("FBX (export_scene.fbx / import_scene.fbx defaults) keeps object names, rotation and scale as transforms, UVs, the "
+       "material with its base colour, and the colour attribute; nothing is triangulated", fbx=results["fbx"])
+E.fact("USD (.usdc defaults) keeps transforms, UVs (renamed 'st'), the material with base colour and the colour attribute, "
+       "but objects come back named after their mesh data (BoxMesh, Sphere), and an extra empty object appears",
+       usd=results["usdc"])
+E.fact("glTF (GLB defaults) keeps names and transforms (as quaternions), triangulates and splits vertices (Box 24 vertices, "
+       "12 triangles), keeps UVs; the material's base colour comes back linked from a MIX node that multiplies the factor by "
+       "the imported colour attribute (now 'Color' plus 'Color.001')", gltf=results["glb"])
 E.save(original=orig, results=results)

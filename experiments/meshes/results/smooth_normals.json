@@ -3,7 +3,7 @@
  "blender": "4.5.14 LTS",
  "machine": "Darwin arm64",
  "date": "2026-11-23",
- "seconds": 1.57,
+ "seconds": 1.58,
  "facts": [
   {
    "fact": "use_auto_smooth, auto_smooth_angle, calc_normals_split, free_normals_split and create_normals_split no longer exist on Mesh",
@@ -42,6 +42,10 @@
   {
    "fact": "mesh.shade_flat() writes sharp_face True on every face",
    "sharp_face_true": 18
+  },
+  {
+   "fact": "polygon.use_smooth = False on a smooth mesh writes sharp_face (True on that one face)",
+   "sharp_face_true": 1
   },
   {
    "fact": "Mesh.shade_smooth and set_sharp_from_angle parameters in 4.5",

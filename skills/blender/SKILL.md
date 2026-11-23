@@ -59,6 +59,7 @@ memory with things that can be checked. Paths below are relative to this file's 
 | `areas/modifiers.md` | adding, ordering, evaluating and applying modifiers; Boolean solvers; the common modifiers |
 | `areas/geometry-nodes.md` | node groups built from Python with the 4.x interface API, modifier inputs, reading results |
 | `areas/curves-text.md` | Bezier and poly curves, bevels, curve to mesh, text |
+| `areas/uv-images.md` | UV maps (from arrays, bmesh, unwrap operators headless, packing); images: colour spaces, pixels, saving, packing |
 | `areas/materials.md` | Principled BSDF in 4.5, textures, bump and normal maps, displacement, colour spaces |
 | `areas/light-world-camera.md` | light types and units, sky and HDRI worlds, shadow catcher, camera lens and framing |
 | `areas/rendering.md` | Cycles on Metal and CPU, samples, denoising, EEVEE in 4.5, view transforms, output |

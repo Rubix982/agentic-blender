@@ -31,6 +31,26 @@ for t, d in [("FLOAT", "POINT"), ("INT", "FACE"), ("FLOAT_VECTOR", "POINT"), ("F
         probe[t] = f"{type(e).__name__}: {e}"
 E.fact("the property to read/write per attribute type with foreach_get/set", per_type=probe)
 
+# round trip each numeric type through foreach_set/foreach_get with a numpy array of a given dtype
+rt = {}
+for t, prop, dt, k in [("FLOAT", "value", np.float32, 1), ("INT", "value", np.int32, 1), ("INT8", "value", np.int8, 1),
+                       ("BOOLEAN", "value", bool, 1), ("FLOAT2", "vector", np.float32, 2), ("FLOAT_VECTOR", "vector", np.float32, 3),
+                       ("FLOAT_COLOR", "color", np.float32, 4), ("BYTE_COLOR", "color", np.float32, 4), ("INT16_2D", "value", np.int16, 2),
+                       ("INT16_2D", "value", np.int32, 2), ("INT32_2D", "value", np.int32, 2), ("QUATERNION", "value", np.float32, 4),
+                       ("FLOAT4X4", "value", np.float32, 16)]:
+    a = me.attributes[f"t_{t}"]
+    n = len(a.data) * k
+    src = (np.arange(n) % 2).astype(dt) if dt is bool else (np.arange(n) % 7).astype(dt)
+    if t in ("FLOAT_COLOR", "BYTE_COLOR"):
+        src = (np.arange(n) % 2).astype(dt)
+    try:
+        a.data.foreach_set(prop, src)
+        back = np.empty(n, dt); a.data.foreach_get(prop, back)
+        rt[f"{t}/{np.dtype(dt).name}"] = bool(np.array_equal(back, src))
+    except Exception as e:
+        rt[f"{t}/{np.dtype(dt).name}"] = f"{type(e).__name__}: {str(e)[:80]}"
+E.fact("foreach_set then foreach_get round trip per attribute type, with the numpy dtype named (True = identical)", round_trip=rt)
+
 # FLOAT_COLOR via foreach_set 'color'; also color_srgb
 a = me.attributes["t_FLOAT_COLOR"]
 cols = np.tile(np.array([1.0, 0.5, 0.0, 1.0], np.float32), len(a.data))

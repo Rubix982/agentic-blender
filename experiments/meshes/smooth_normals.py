@@ -49,6 +49,10 @@ E.fact("mesh.shade_smooth() removes the sharp_face attribute (all faces smooth)"
        sharp_face_true=count_true(me, "sharp_face"), use_smooth_face0=me.polygons[0].use_smooth)
 me.shade_flat()
 E.fact("mesh.shade_flat() writes sharp_face True on every face", sharp_face_true=count_true(me, "sharp_face"))
+me.shade_smooth()
+me.polygons[0].use_smooth = False
+E.fact("polygon.use_smooth = False on a smooth mesh writes sharp_face (True on that one face)", sharp_face_true=count_true(me, "sharp_face"))
+me.shade_flat()
 import inspect
 def sig(f):
     try:
