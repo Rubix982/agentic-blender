@@ -41,6 +41,10 @@ Blender 4.5.14 LTS on Apple Silicon. Tags: `[inv]` read from Blender (`scripts/k
     `[exp: experiments/geonodes/bundled_assets.py]`
 11. **A misspelt attribute name in a shader.** The Attribute node rendered black with no error. Read the evaluated
     mesh's `attributes` to check the name. `[exp: experiments/geonodes/named_attribute_to_shader.py]`
+12. **The Closure zone from Python crashes Blender.** In 4.5.14, reading `paired_output` on an unpaired Closure Input
+    node, and calling `pair_with_output` on one, both ended Blender with a segfault (exit -11). The Repeat, Simulation
+    and For Each Element inputs behave: `paired_output` is `None` until paired, then the output node.
+    `[exp: experiments/geonodes/zone_paired_output.py]`
 
 ## Build a node group
 

@@ -1,0 +1,122 @@
+{
+ "experiment": "experiments/volumes/vdb_roundtrip.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.07,
+ "facts": [
+  {
+   "fact": "VolumeGrids.save(filepath) writes a .vdb from the evaluated volume (the modifier's result); on the original data-block it also returns True and writes a file, but one with no grids in it",
+   "evaluated": [
+    "ok",
+    true
+   ],
+   "evaluated_bytes": 88845,
+   "original": [
+    "ok",
+    true
+   ],
+   "original_file": true,
+   "original_file_grids": 0
+  },
+  {
+   "fact": "the bundled openvdb module reads the saved file: one FloatGrid 'density', its active voxel count, value range, voxel size, and 1.0 at the sphere's centre",
+   "grids": [
+    [
+     "density",
+     "FloatGrid"
+    ]
+   ],
+   "active_voxels": 3240,
+   "min_max": [
+    0.0037,
+    1.0
+   ],
+   "voxel_size": [
+    0.10825,
+    0.10825,
+    0.10825
+   ],
+   "centre_value": 1.0,
+   "grid_class": "fog volume",
+   "file_metadata": []
+  },
+  {
+   "fact": "bpy.ops.object.volume_import runs headless (no override) and makes a Volume object whose grids load from the file",
+   "result": [
+    "ok",
+    "{'FINISHED'}"
+   ],
+   "objects_added": 1,
+   "grids": [
+    [
+     "density",
+     "FLOAT"
+    ]
+   ],
+   "is_sequence": false,
+   "filepath": "sphere.vdb"
+  },
+  {
+   "fact": "the data API route: volumes.new + volume.filepath; the grids are listed only after grids.load(); grid.load() returns True, yet that grid's is_loaded still reads False on the original data-block",
+   "before_load": [
+    false,
+    0
+   ],
+   "load_ok": true,
+   "after": [
+    [
+     "density",
+     "FLOAT",
+     false
+    ]
+   ],
+   "grid_load": [
+    "ok",
+    true
+   ],
+   "grid_loaded_after": false,
+   "error_message": ""
+  },
+  {
+   "fact": "a missing file does not raise: grids.load() returns False and grids.error_message says why",
+   "load": false,
+   "error_message": "missing.vdb not found"
+  },
+  {
+   "fact": "a level set written with openvdb (grid 'surface', radius 0.8) loads in Blender; Volume to Mesh reads the grid named in grid_name ('density' by default), so it returns nothing until grid_name is set; at threshold 0 the surface sits at the level set's radius (0.800), at the default 0.1 it sits 0.1 m further out (0.900)",
+   "grid_names": [],
+   "default_grid_name": "density",
+   "default": {
+    "verts": 0
+   },
+   "named_threshold_0_1": {
+    "verts": 9584,
+    "r_mean": 0.9003
+   },
+   "named_threshold_0": {
+    "verts": 7472,
+    "r_mean": 0.8
+   }
+  },
+  {
+   "fact": "importing numbered files (seq_0001..0003.vdb) as one selection makes one Volume object that is a sequence of 3 frames; each frame loads its own file, and past the end (frame 5) none loads (sequence_mode CLIP)",
+   "result": [
+    "ok",
+    "{'FINISHED'}"
+   ],
+   "objects": 1,
+   "is_sequence": true,
+   "frame_duration": 3,
+   "sequence_mode": "CLIP",
+   "frame_files": {
+    "1": "seq_0001.vdb",
+    "2": "seq_0002.vdb",
+    "3": "seq_0003.vdb",
+    "5": ""
+   }
+  }
+ ],
+ "data": {},
+ "args": []
+}

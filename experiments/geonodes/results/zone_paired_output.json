@@ -1,0 +1,87 @@
+{
+ "experiment": "experiments/geonodes/zone_paired_output.py",
+ "blender": "Blender 4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "facts": [
+  {
+   "fact": "Reading node.paired_output on a zone's input node in 4.5.14 (exit -11 is a segfault): for the Repeat, Simulation and For Each Element inputs it returns None unpaired and the output node once paired; for the Closure Input, Blender crashed in both cases: reading paired_output on an unpaired one (the backtrace names GeometryNodeClosureInput_paired_output_get), and calling pair_with_output (both nodes were made, then the crash). From Python, leave the Closure zone alone in 4.5.14",
+   "GeometryNodeRepeatInput unpaired": {
+    "exit": 0,
+    "read": "None",
+    "paired_ok": null,
+    "steps_done": [
+     "made input"
+    ],
+    "error": null
+   },
+   "GeometryNodeRepeatInput paired": {
+    "exit": 0,
+    "read": "GeometryNodeRepeatOutput",
+    "paired_ok": "True",
+    "steps_done": [
+     "made input",
+     "made output"
+    ],
+    "error": null
+   },
+   "GeometryNodeSimulationInput unpaired": {
+    "exit": 0,
+    "read": "None",
+    "paired_ok": null,
+    "steps_done": [
+     "made input"
+    ],
+    "error": null
+   },
+   "GeometryNodeSimulationInput paired": {
+    "exit": 0,
+    "read": "GeometryNodeSimulationOutput",
+    "paired_ok": "True",
+    "steps_done": [
+     "made input",
+     "made output"
+    ],
+    "error": null
+   },
+   "GeometryNodeForeachGeometryElementInput unpaired": {
+    "exit": 0,
+    "read": "None",
+    "paired_ok": null,
+    "steps_done": [
+     "made input"
+    ],
+    "error": null
+   },
+   "GeometryNodeForeachGeometryElementInput paired": {
+    "exit": 0,
+    "read": "GeometryNodeForeachGeometryElementOutput",
+    "paired_ok": "True",
+    "steps_done": [
+     "made input",
+     "made output"
+    ],
+    "error": null
+   },
+   "GeometryNodeClosureInput unpaired": {
+    "exit": -11,
+    "read": null,
+    "paired_ok": null,
+    "steps_done": [
+     "made input"
+    ],
+    "error": null
+   },
+   "GeometryNodeClosureInput paired": {
+    "exit": -11,
+    "read": null,
+    "paired_ok": null,
+    "steps_done": [
+     "made input",
+     "made output"
+    ],
+    "error": null
+   }
+  }
+ ]
+}
