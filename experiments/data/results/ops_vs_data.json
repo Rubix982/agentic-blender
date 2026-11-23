@@ -1,0 +1,44 @@
+{
+ "experiment": "experiments/data/ops_vs_data.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 30.52,
+ "facts": [
+  {
+   "fact": "1000 x bpy.ops.mesh.primitive_cube_add takes 15.17 s and makes 1000 separate meshes",
+   "seconds": 15.167,
+   "meshes": 1000
+  },
+  {
+   "fact": "operator cost per 250 cubes as the scene fills",
+   "laps_s": [
+    1.16,
+    3.394,
+    3.982,
+    6.396
+   ]
+  },
+  {
+   "fact": "1000 objects sharing one mesh via bpy.data.objects.new + link takes 0.009 s",
+   "seconds": 0.0093
+  },
+  {
+   "fact": "1000 objects each with its own bmesh-built mesh takes 0.051 s",
+   "seconds": 0.0514,
+   "speedup_vs_ops": 295.4
+  },
+  {
+   "fact": "moving 1000 selected objects: one transform.translate call 37.2 ms, a Python loop over location 1.4 ms",
+   "translate_ms": 37.17,
+   "loop_ms": 1.38,
+   "z": 2.0
+  },
+  {
+   "fact": "bpy.data.objects.foreach_get('location', array) reads all object locations in one call",
+   "result": "works, 0.15 ms"
+  }
+ ],
+ "data": {},
+ "args": []
+}

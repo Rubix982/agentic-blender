@@ -19,11 +19,7 @@
   }
  ],
  "data": {
-  "args_after_dashdash": [
-   "x"
-  ]
+  "args_after_dashdash": []
  },
- "args": [
-  "x"
- ]
+ "args": []
 }

@@ -1,0 +1,177 @@
+{
+ "experiment": "experiments/data/mathutils_basics.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.1,
+ "facts": [
+  {
+   "fact": "matrix * vector raises in 2.8+; use matrix @ vector",
+   "star": "TypeError: Element-wise multiplication: not supported between 'Matrix' and 'Vector' types",
+   "at": [
+    2.0,
+    2.0,
+    3.0
+   ]
+  },
+  {
+   "fact": "vector * vector is element-wise; dot and cross are methods",
+   "elementwise": [
+    2.0,
+    4.0,
+    6.0
+   ],
+   "dot": 12.0,
+   "cross": [
+    0.0,
+    0.0,
+    1.0
+   ]
+  },
+  {
+   "fact": "T @ R @ S applies scale first, then rotation, then translation",
+   "point": [
+    1.0,
+    4.0,
+    3.0
+   ]
+  },
+  {
+   "fact": "Matrix.LocRotScale(loc, rot, scale) builds the same matrix",
+   "same": true
+  },
+  {
+   "fact": "matrix.decompose() returns (Vector, Quaternion, Vector)",
+   "loc": [
+    1.0,
+    2.0,
+    3.0
+   ],
+   "rot_euler_deg": [
+    0.0,
+    -0.0,
+    90.0
+   ],
+   "scale": [
+    2.0,
+    2.0,
+    2.0
+   ],
+   "types": [
+    "Vector",
+    "Quaternion",
+    "Vector"
+   ]
+  },
+  {
+   "fact": "a direction must be transformed by matrix.to_3x3() (a 4x4 @ 3D vector also translates it)",
+   "with_4x4": [
+    1.0,
+    4.0,
+    3.0
+   ],
+   "with_3x3": [
+    0.0,
+    2.0,
+    0.0
+   ]
+  },
+  {
+   "fact": "under non-uniform scale, normals must use the inverse-transpose; the plain 3x3 gives a different (wrong) normal",
+   "plain": [
+    0.2425,
+    0.9701,
+    0.0
+   ],
+   "inverse_transpose": [
+    0.9701,
+    0.2425,
+    0.0
+   ]
+  },
+  {
+   "fact": "Euler defaults to order XYZ; to_quaternion / to_matrix convert",
+   "order": "XYZ",
+   "quat": [
+    0.5,
+    0.5,
+    0.5,
+    0.5
+   ]
+  },
+  {
+   "fact": "Quaternion(axis, angle) and slerp",
+   "half": [
+    0.0,
+    -0.0,
+    45.0
+   ]
+  },
+  {
+   "fact": "a new object uses rotation_mode XYZ; setting rotation_quaternion has no effect until rotation_mode='QUATERNION'",
+   "rotation_mode": "XYZ"
+  },
+  {
+   "fact": "rotation_quaternion is ignored under XYZ mode; switching rotation_mode converts the CURRENT rotation into the new mode, overwriting the quaternion you set before; set rotation_mode first, then the value",
+   "under_xyz": [
+    0.0,
+    -0.0,
+    0.0
+   ],
+   "after_switch": [
+    0.0,
+    -0.0,
+    0.0
+   ],
+   "quaternion_after_switch": [
+    1.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "after_setting_again": [
+    0.0,
+    -0.0,
+    1.571
+   ]
+  },
+  {
+   "fact": "assigning obj.matrix_world sets location/rotation/scale from it",
+   "location": [
+    1.0,
+    2.0,
+    3.0
+   ],
+   "scale": [
+    2.0,
+    2.0,
+    2.0
+   ]
+  },
+  {
+   "fact": "direction.to_track_quat('-Z', 'Y') aims an object's -Z axis (a camera's view axis) along direction",
+   "check": [
+    -0.5774,
+    0.5774,
+    -0.5774
+   ],
+   "direction_normalized": [
+    -0.5774,
+    0.5774,
+    -0.5774
+   ]
+  },
+  {
+   "fact": "obj.location returns a live wrapper; keep .copy() if you need the old value",
+   "ref_x": 42.0,
+   "copy_x": 1.0
+  },
+  {
+   "fact": "a Vector is not hashable until .freeze()",
+   "plain": "TypeError: Vector is not frozen (mutable), call freeze first",
+   "frozen": true
+  }
+ ],
+ "data": {},
+ "args": []
+}

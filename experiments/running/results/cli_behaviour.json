@@ -36,14 +36,14 @@
   {
    "fact": "Starting headless Blender, running an empty script and quitting takes about this long (3 runs each)",
    "factory": [
-    0.37,
-    0.37,
-    0.37
+    0.48,
+    0.51,
+    0.77
    ],
    "user_prefs_and_addons": [
-    0.66,
-    0.65,
-    0.65
+    1.68,
+    0.75,
+    0.72
    ]
   },
   {
@@ -74,8 +74,8 @@
   },
   {
    "fact": "'-- --cycles-device METAL' changes the device used without changing scene.cycles.device; timed on the factory cube at 320 px with 512 samples, adaptive sampling off",
-   "cpu_s": 1.8,
-   "metal_flag_s": 1.1,
+   "cpu_s": 1.9,
+   "metal_flag_s": 1.2,
    "scene_device_property_with_flag": [
     "DEVICE CPU"
    ]
@@ -101,29 +101,29 @@
  ],
  "data": {
   "output: plain print": {
-   "first": 3.36,
-   "second": 3.36,
-   "exit": 3.41
+   "first": 3.37,
+   "second": 3.37,
+   "exit": 3.4
   },
   "output: PYTHONUNBUFFERED=1": {
    "first": 3.35,
    "second": 3.35,
-   "exit": 3.4
+   "exit": 3.38
   },
   "output: PYTHONUNBUFFERED=1 with --python-use-system-env": {
-   "first": 0.37,
-   "second": 3.38,
-   "exit": 3.42
+   "first": 0.39,
+   "second": 3.39,
+   "exit": 3.46
   },
   "output: print(..., flush=True)": {
-   "first": 0.36,
-   "second": 3.36,
-   "exit": 3.43
+   "first": 0.34,
+   "second": 3.35,
+   "exit": 3.41
   },
   "output: sys.stdout.reconfigure(line_buffering=True) first": {
-   "first": 0.35,
-   "second": 3.35,
-   "exit": 3.42
+   "first": 0.34,
+   "second": 3.34,
+   "exit": 3.38
   },
   "drivers": {
    "default": {
@@ -150,7 +150,7 @@
   },
   "cli_render": {
    "cpu": {
-    "seconds": 1.8,
+    "seconds": 1.9,
     "size": [
      320,
      320
@@ -164,7 +164,7 @@
     ]
    },
    "metal_flag": {
-    "seconds": 1.1,
+    "seconds": 1.2,
     "size": [
      320,
      320

@@ -1,0 +1,74 @@
+{
+ "experiment": "experiments/data/bvh_kdtree.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.29,
+ "facts": [
+  {
+   "fact": "BVHTree.FromObject(obj, depsgraph) is built in the object's LOCAL space, from the evaluated mesh: a world-space ray misses or hits the wrong place",
+   "world_ray_result": null,
+   "build_ms": 151.36
+  },
+  {
+   "fact": "transforming the ray into local space (matrix_world.inverted()) gives the right hit; map it back with matrix_world",
+   "hit_world": [
+    5.0,
+    0.0,
+    1.9993
+   ],
+   "local_dist": 4.0003,
+   "face_index": 6049
+  },
+  {
+   "fact": "FromObject signature",
+   "doc": ".. classmethod:: FromObject(object, depsgraph, deform=True, render=False, cage=False, epsilon=0.0)  BVH tree based on :class:`Object` data."
+  },
+  {
+   "fact": "BVHTree.FromPolygons on world-space vertices (here: loop_triangles) answers world-space queries directly",
+   "hit": [
+    5.0,
+    0.0,
+    1.9993
+   ],
+   "build_ms": 4.31,
+   "tris": 16128
+  },
+  {
+   "fact": "ray_cast(origin, direction, distance) returns (None, None, None, None) when nothing is within distance",
+   "result": "(None, None, None, None)"
+  },
+  {
+   "fact": "find_nearest from the centre returns a point at about radius 2 (scaled sphere)",
+   "dist": 1.9924
+  },
+  {
+   "fact": "find_nearest(point, distance) returns all None beyond distance",
+   "result": "(None, None, None, None)"
+  },
+  {
+   "fact": "overlap() needs both trees in the same space: two FromObject trees (each local) find no overlap here, world-space trees do",
+   "local_pairs": 0,
+   "world_pairs": 90
+  },
+  {
+   "fact": "KDTree of 100k points: build+balance 0.03 s, find() 0.5 us; find_n returns (co, index, dist) sorted by distance",
+   "build_s": 0.026,
+   "find_us": 0.5,
+   "find_n_dists": [
+    0.0079,
+    0.0114,
+    0.0221,
+    0.0223,
+    0.023
+   ],
+   "in_range": 45
+  },
+  {
+   "fact": "querying a KDTree before balance() raises",
+   "error": "RuntimeError: KDTree must be balanced before calling find()"
+  }
+ ],
+ "data": {},
+ "args": []
+}

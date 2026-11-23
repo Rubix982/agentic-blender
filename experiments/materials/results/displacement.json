@@ -1,0 +1,133 @@
+{
+ "experiment": "experiments/materials/displacement.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 3.92,
+ "facts": [
+  {
+   "fact": "displacement_method lives on the Material in 4.5 (material.displacement_method), not on material.cycles",
+   "on_material": true,
+   "on_cycles": false,
+   "default": "BUMP",
+   "items": [
+    "BUMP",
+    "DISPLACEMENT",
+    "BOTH"
+   ]
+  },
+  {
+   "fact": "Displacement node sockets and space; the Material Output's Displacement input takes its output",
+   "inputs": [
+    "Height",
+    "Midlevel",
+    "Scale",
+    "Normal"
+   ],
+   "space": "OBJECT",
+   "defaults": {
+    "midlevel_new": 0.5,
+    "scale_new": 1.0
+   },
+   "output_inputs": [
+    "Surface",
+    "Volume",
+    "Displacement",
+    "Thickness"
+   ]
+  },
+  {
+   "fact": "Bump and Normal Map nodes in 4.5: their inputs and defaults; Normal Map's space defaults to TANGENT and needs a UV map",
+   "bump_inputs": {
+    "Strength": 1.0,
+    "Distance": 0.001,
+    "Filter Width": 0.1,
+    "Height": 1.0,
+    "Normal": null
+   },
+   "bump_invert": false,
+   "normal_map_inputs": [
+    "Strength",
+    "Color"
+   ],
+   "normal_map_space": "TANGENT",
+   "normal_map_space_items": [
+    "TANGENT",
+    "OBJECT",
+    "WORLD",
+    "BLENDER_OBJECT",
+    "BLENDER_WORLD"
+   ]
+  },
+  {
+   "fact": "with displacement_method BUMP (the default) the grid's silhouette stays flat (shading only); DISPLACEMENT and BOTH move the vertices up to the 0.2 m the node asks for, in Cycles and in EEVEE. Displacement moves existing vertices: the mesh must be dense (here 200x200)",
+   "rows": [
+    {
+     "method": "BUMP",
+     "engine": "CYCLES",
+     "silhouette_top_mm": 0
+    },
+    {
+     "method": "BUMP",
+     "engine": "BLENDER_EEVEE_NEXT",
+     "silhouette_top_mm": 0
+    },
+    {
+     "method": "DISPLACEMENT",
+     "engine": "CYCLES",
+     "silhouette_top_mm": 200
+    },
+    {
+     "method": "DISPLACEMENT",
+     "engine": "BLENDER_EEVEE_NEXT",
+     "silhouette_top_mm": 200
+    },
+    {
+     "method": "BOTH",
+     "engine": "CYCLES",
+     "silhouette_top_mm": 200
+    },
+    {
+     "method": "BOTH",
+     "engine": "BLENDER_EEVEE_NEXT",
+     "silhouette_top_mm": 200
+    }
+   ]
+  }
+ ],
+ "data": {
+  "rows": [
+   {
+    "method": "BUMP",
+    "engine": "CYCLES",
+    "silhouette_top_mm": 0
+   },
+   {
+    "method": "BUMP",
+    "engine": "BLENDER_EEVEE_NEXT",
+    "silhouette_top_mm": 0
+   },
+   {
+    "method": "DISPLACEMENT",
+    "engine": "CYCLES",
+    "silhouette_top_mm": 200
+   },
+   {
+    "method": "DISPLACEMENT",
+    "engine": "BLENDER_EEVEE_NEXT",
+    "silhouette_top_mm": 200
+   },
+   {
+    "method": "BOTH",
+    "engine": "CYCLES",
+    "silhouette_top_mm": 200
+   },
+   {
+    "method": "BOTH",
+    "engine": "BLENDER_EEVEE_NEXT",
+    "silhouette_top_mm": 200
+   }
+  ]
+ },
+ "args": []
+}
