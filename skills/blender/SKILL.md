@@ -36,6 +36,9 @@ memory with things that can be checked. Paths below are relative to this file's 
    `python3 scripts/assets.py search texture brick wall`, then `assets.py get polyhaven red_brick`, and build it in
    Blender with `scripts/asset_import.py` (a world, a material at real-world size, an imported model).
    → `areas/remote-assets.md`
+6. **Need an add-on?** Most former bundled ones (LoopTools, Extra Objects, A.N.T. Landscape, Sapling...) are
+   extensions now: install into a throwaway profile, never the user's, and check the scene after each call: many
+   operators finish and change nothing. → `areas/extensions.md`
 
 ## How to work
 
@@ -103,6 +106,7 @@ rendering it raises, and a failed render sets the exit code to 1 even if caught.
 | `areas/geometry-nodes.md` | node groups built from Python with the 4.x interface API, modifier inputs, reading results |
 | `areas/curves-text.md` | Bezier and poly curves, bevels, curve to mesh, text |
 | `areas/remote-assets.md` | free CC0 HDRIs, textures and models from Poly Haven and ambientCG: `assets.py` to search and fetch (cached, checked), `asset_import.py` for a world (and its sun), a material at real-world size, an imported model |
+| `areas/extensions.md` | the 20 most-downloaded add-ons on extensions.blender.org (LoopTools, Extra Objects, Bool Tool, A.N.T. Landscape, Archimesh, Sapling, MPFB...): which operators run headless and change the scene, how to install one into a throwaway profile, what each declares and contains |
 | `areas/instancing-assets.md` | full copies, linked duplicates, collection and vertex instancing, particle systems (costs measured); hair curves; assets and Blender's bundled ones |
 | `areas/uv-images.md` | UV maps (from arrays, bmesh, unwrap operators headless, packing); images: colour spaces, pixels, saving, packing |
 | `areas/materials.md` | Principled BSDF in 4.5, textures, bump and normal maps, displacement, colour spaces |

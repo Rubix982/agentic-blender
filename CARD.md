@@ -98,3 +98,37 @@ until its pixels are used, so the check was wrong, not the models; it now looks 
 and that trap is on the page. Found on the way: where an HDRI's sun is (`asset_import.hdri_sun`, within 0.8 degrees),
 and that ambientCG's v2 API ignores its type filter.
 
+---
+
+### C-003 · The community's most-downloaded add-ons, headless
+
+**Opened:** 2026-11-23
+
+1. **WHERE WE ARE.** The guide catalogues the 14 add-ons that ship with Blender 4.5. extensions.blender.org lists 1,062
+   add-ons for 4.5 on this Mac; the most downloaded are mostly ones that shipped with Blender before 4.2 (LoopTools,
+   2.36 million downloads). None is catalogued.
+2. **WHAT WE ARE DOING.** Install the top 20 by downloads into a throwaway profile inside a macOS sandbox (no network,
+   no writes under the home folder, no launching programs), record what each declares, contains and registers, and
+   call each of its operators headless with default settings on a fresh cube.
+3. **WHY.** Unknown now: which of the community's everyday add-ons a headless script can use at all, and which are
+   tools for a person at the screen.
+4. **WHAT IS AFFECTED.** New files (an experiment, an area page); `running.md`'s extensions section and `SKILL.md`'s
+   areas table gain a pointer.
+5. **CONCLUSION.** If at least 10 of the 20 have an operator that finishes headless with default settings and changes
+   the scene, the page lists them as tools a script can call, with those operators; if fewer, the page says the
+   popular add-ons are mostly interactive tools and names the few that work.
+6. **CONSEQUENCE OF NOT DOING IT.** Agents rebuild what an add-on already does, or reach for an add-on that only works
+   with a person at the screen.
+
+**Closed:** 2026-11-23
+
+**Result:** 13 of the 20 had an operator that finished headless with default settings and changed the scene
+(`experiments/extensions/top_addons.py`), so `areas/extensions.md` lists them as tools a script can call, with those
+operators. All 20 installed and enabled in the throwaway profile; none crashed or hung; the whole probe took 73.7 s.
+The seven with none are mostly built for a selection a person makes (Bool Tool, F2, Copy Attributes Menu, Auto
+Mirror, MeasureIt) or a flag their panel sets (A.N.T. Landscape returned `PASS_THROUGH`); the importer takes a file.
+Limits: one cube and default settings for every operator, so these are lower bounds; a second pass giving those
+add-ons the input they are made for was written and not run, because it runs their code again. The run's download
+counts were wrong (an icon's width, 100, read as the count) and were re-read from the website afterwards; the parser
+is fixed.
+

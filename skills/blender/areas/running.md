@@ -121,6 +121,8 @@ A segmentation fault ends Blender with a negative return code (−11 here), with
 - Since 4.2 most add-ons are extensions, managed with `blender --command extension {list, sync, install,
   install-file, remove, update, repo-list, repo-add, repo-remove, build, validate, server-generate}`. `--command` is
   the only subcommand family 4.5 lists. `[exp: experiments/running/process.py]`
+- The community's 20 most-downloaded add-ons, installed into a throwaway profile (`BLENDER_USER_RESOURCES`), scanned,
+  sandboxed and run headless operator by operator: `extensions.md`.
 
 ## Blender as a Python module
 
