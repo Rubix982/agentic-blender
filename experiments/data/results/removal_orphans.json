@@ -1,0 +1,85 @@
+{
+ "experiment": "experiments/data/removal_orphans.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.27,
+ "facts": [
+  {
+   "fact": "removing an object leaves its mesh (and the mesh's material) in bpy.data with 0 users: an orphan",
+   "mesh_left": true,
+   "mesh_users": 0,
+   "mat_users": 1
+  },
+  {
+   "fact": "a Python reference to a removed object raises ReferenceError when touched",
+   "error": "ReferenceError: StructRNA of type Object has been removed"
+  },
+  {
+   "fact": "bpy.data.meshes.remove(mesh) on a mesh an object uses also deletes that object (objects without their obdata cannot exist)",
+   "object_reference_alive": false,
+   "object_in_data": false,
+   "objects_before": 1,
+   "objects_after": 0
+  },
+  {
+   "fact": "BlendDataMeshes.remove parameters",
+   "params": [
+    [
+     "mesh",
+     null
+    ],
+    [
+     "do_unlink",
+     true
+    ],
+    [
+     "do_id_user",
+     true
+    ],
+    [
+     "do_ui_user",
+     true
+    ]
+   ]
+  },
+  {
+   "fact": "bpy.data.orphans_purge() removes 0-user data; with do_recursive=False a material used only by an orphan mesh survives the first pass; do_recursive=True gets it",
+   "meshes_before": 6,
+   "materials_before": 1,
+   "after_non_recursive": [
+    0,
+    1
+   ],
+   "removed_first": 6,
+   "after_recursive": [
+    0,
+    0
+   ],
+   "removed_second": 1
+  },
+  {
+   "fact": "use_fake_user = True protects a 0-user datablock from purge (and from not being saved)",
+   "kept": true,
+   "users": 1
+  },
+  {
+   "fact": "a 0-user datablock is not written when the file is saved",
+   "saved_meshes": [
+    "keep"
+   ]
+  },
+  {
+   "fact": "removing 2000 linked empties: a loop of objects.remove takes 0.17 s, bpy.data.batch_remove takes 0.006 s",
+   "loop_s": 0.172,
+   "batch_s": 0.0059
+  },
+  {
+   "fact": "a linked object's users count: 1 per collection it is in",
+   "users": 1,
+   "collections": 1
+  }
+ ],
+ "data": {},
+ "args": []
+}

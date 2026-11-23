@@ -1,0 +1,714 @@
+{
+ "experiment": "experiments/materials/procedural_textures.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 3.07,
+ "facts": [
+  {
+   "fact": "shader texture node types in 4.5 (Gabor is new in 4.3; there is no ShaderNodeTexMusgrave)",
+   "types": [
+    "ShaderNodeTexBrick",
+    "ShaderNodeTexChecker",
+    "ShaderNodeTexCoord",
+    "ShaderNodeTexEnvironment",
+    "ShaderNodeTexGabor",
+    "ShaderNodeTexGradient",
+    "ShaderNodeTexIES",
+    "ShaderNodeTexImage",
+    "ShaderNodeTexMagic",
+    "ShaderNodeTexNoise",
+    "ShaderNodeTexPointDensity",
+    "ShaderNodeTexSky",
+    "ShaderNodeTexVoronoi",
+    "ShaderNodeTexWave",
+    "ShaderNodeTexWhiteNoise"
+   ]
+  },
+  {
+   "fact": "nodes.new('ShaderNodeTexMusgrave') raises RuntimeError in 4.5",
+   "error": "Error: Node type ShaderNodeTexMusgrave undefined"
+  },
+  {
+   "fact": "Noise Texture in 4.5 carries the old Musgrave types: noise_type FBM (default), MULTIFRACTAL, RIDGED_MULTIFRACTAL, HYBRID_MULTIFRACTAL, HETERO_TERRAIN, with a Lacunarity input (Offset and Gain appear only for the multifractal types that use them) and a normalize switch",
+   "noise": {
+    "inputs": [
+     "Vector",
+     "Scale",
+     "Detail",
+     "Roughness",
+     "Lacunarity",
+     "Distortion"
+    ],
+    "outputs": [
+     "Fac",
+     "Color"
+    ],
+    "props": {
+     "noise_dimensions": {
+      "value": "3D",
+      "items": [
+       "1D",
+       "2D",
+       "3D",
+       "4D"
+      ]
+     },
+     "noise_type": {
+      "value": "FBM",
+      "items": [
+       "MULTIFRACTAL",
+       "RIDGED_MULTIFRACTAL",
+       "HYBRID_MULTIFRACTAL",
+       "FBM",
+       "HETERO_TERRAIN"
+      ]
+     },
+     "normalize": true
+    }
+   },
+   "hidden_inputs_fbm": [
+    "W",
+    "Offset",
+    "Gain"
+   ]
+  },
+  {
+   "fact": "Voronoi Texture in 4.5 has fractal Detail/Roughness/Lacunarity inputs and a normalize switch",
+   "voronoi": {
+    "inputs": [
+     "Vector",
+     "Scale",
+     "Detail",
+     "Roughness",
+     "Lacunarity",
+     "Randomness"
+    ],
+    "outputs": [
+     "Distance",
+     "Color",
+     "Position"
+    ],
+    "props": {
+     "voronoi_dimensions": {
+      "value": "3D",
+      "items": [
+       "1D",
+       "2D",
+       "3D",
+       "4D"
+      ]
+     },
+     "distance": {
+      "value": "EUCLIDEAN",
+      "items": [
+       "EUCLIDEAN",
+       "MANHATTAN",
+       "CHEBYCHEV",
+       "MINKOWSKI"
+      ]
+     },
+     "feature": {
+      "value": "F1",
+      "items": [
+       "F1",
+       "F2",
+       "SMOOTH_F1",
+       "DISTANCE_TO_EDGE",
+       "N_SPHERE_RADIUS"
+      ]
+     },
+     "normalize": false
+    }
+   }
+  },
+  {
+   "fact": "Wave, Gabor, Magic, Brick, Checker, Gradient, White Noise: modes and sockets",
+   "wave": {
+    "inputs": [
+     "Vector",
+     "Scale",
+     "Distortion",
+     "Detail",
+     "Detail Scale",
+     "Detail Roughness",
+     "Phase Offset"
+    ],
+    "outputs": [
+     "Color",
+     "Fac"
+    ],
+    "props": {
+     "wave_type": {
+      "value": "BANDS",
+      "items": [
+       "BANDS",
+       "RINGS"
+      ]
+     },
+     "bands_direction": {
+      "value": "X",
+      "items": [
+       "X",
+       "Y",
+       "Z",
+       "DIAGONAL"
+      ]
+     },
+     "rings_direction": {
+      "value": "X",
+      "items": [
+       "X",
+       "Y",
+       "Z",
+       "SPHERICAL"
+      ]
+     },
+     "wave_profile": {
+      "value": "SIN",
+      "items": [
+       "SIN",
+       "SAW",
+       "TRI"
+      ]
+     }
+    }
+   },
+   "gabor": {
+    "inputs": [
+     "Vector",
+     "Scale",
+     "Frequency",
+     "Anisotropy",
+     "Orientation"
+    ],
+    "outputs": [
+     "Value",
+     "Phase",
+     "Intensity"
+    ],
+    "props": {
+     "gabor_type": {
+      "value": "2D",
+      "items": [
+       "2D",
+       "3D"
+      ]
+     }
+    }
+   },
+   "magic": {
+    "inputs": [
+     "Vector",
+     "Scale",
+     "Distortion"
+    ],
+    "outputs": [
+     "Color",
+     "Fac"
+    ],
+    "props": {}
+   },
+   "brick": {
+    "inputs": [
+     "Vector",
+     "Color1",
+     "Color2",
+     "Mortar",
+     "Scale",
+     "Mortar Size",
+     "Mortar Smooth",
+     "Bias",
+     "Brick Width",
+     "Row Height"
+    ],
+    "outputs": [
+     "Color",
+     "Fac"
+    ],
+    "props": {}
+   },
+   "checker": {
+    "inputs": [
+     "Vector",
+     "Color1",
+     "Color2",
+     "Scale"
+    ],
+    "outputs": [
+     "Color",
+     "Fac"
+    ],
+    "props": {}
+   },
+   "gradient": {
+    "inputs": [
+     "Vector"
+    ],
+    "outputs": [
+     "Color",
+     "Fac"
+    ],
+    "props": {
+     "gradient_type": {
+      "value": "LINEAR",
+      "items": [
+       "LINEAR",
+       "QUADRATIC",
+       "EASING",
+       "DIAGONAL",
+       "SPHERICAL",
+       "QUADRATIC_SPHERE",
+       "RADIAL"
+      ]
+     }
+    }
+   },
+   "whitenoise": {
+    "inputs": [
+     "Vector"
+    ],
+    "outputs": [
+     "Value",
+     "Color"
+    ],
+    "props": {
+     "noise_dimensions": {
+      "value": "3D",
+      "items": [
+       "1D",
+       "2D",
+       "3D",
+       "4D"
+      ]
+     }
+    }
+   }
+  },
+  {
+   "fact": "the range each texture's scalar output covers over a 2 m plane (Object coordinates, default settings): Noise FBM Fac stays in about 0.25-0.75 around 0.5; RIDGED_MULTIFRACTAL sits near 0; HETERO_TERRAIN goes negative (-0.73..0.73); Voronoi F1 Distance passes 1; the rest stay in 0..1",
+   "rows": [
+    {
+     "texture": "Noise FBM",
+     "output": "Fac",
+     "min": 0.251,
+     "mean": 0.497,
+     "max": 0.744
+    },
+    {
+     "texture": "Noise RIDGED_MULTIFRACTAL",
+     "output": "Fac",
+     "min": 0.0,
+     "mean": 0.055,
+     "max": 0.575
+    },
+    {
+     "texture": "Noise HETERO_TERRAIN",
+     "output": "Fac",
+     "min": -0.734,
+     "mean": -0.006,
+     "max": 0.728
+    },
+    {
+     "texture": "Voronoi F1 Distance",
+     "output": "Distance",
+     "min": 0.044,
+     "mean": 0.533,
+     "max": 1.121
+    },
+    {
+     "texture": "Wave bands",
+     "output": "Fac",
+     "min": 0.013,
+     "mean": 0.502,
+     "max": 0.986
+    },
+    {
+     "texture": "Gabor",
+     "output": "Value",
+     "min": 0.114,
+     "mean": 0.499,
+     "max": 0.893
+    },
+    {
+     "texture": "Magic",
+     "output": "Fac",
+     "min": 0.102,
+     "mean": 0.497,
+     "max": 0.928
+    },
+    {
+     "texture": "Brick",
+     "output": "Fac",
+     "min": 0.0,
+     "mean": 0.206,
+     "max": 1.0
+    },
+    {
+     "texture": "Checker",
+     "output": "Fac",
+     "min": 0.0,
+     "mean": 0.499,
+     "max": 1.0
+    },
+    {
+     "texture": "Gradient linear",
+     "output": "Fac",
+     "min": 0.0,
+     "mean": 0.249,
+     "max": 0.994
+    },
+    {
+     "texture": "White Noise",
+     "output": "Value",
+     "min": 0.02,
+     "mean": 0.498,
+     "max": 0.96
+    }
+   ]
+  },
+  {
+   "fact": "contact sheet saved (row-major, in the order of the rows above)",
+   "file": "procedural_textures-sheet.png",
+   "order": [
+    "Noise FBM",
+    "Noise RIDGED_MULTIFRACTAL",
+    "Noise HETERO_TERRAIN",
+    "Voronoi F1 Distance",
+    "Wave bands",
+    "Gabor",
+    "Magic",
+    "Brick",
+    "Checker",
+    "Gradient linear",
+    "White Noise"
+   ]
+  }
+ ],
+ "data": {
+  "info": {
+   "ShaderNodeTexNoise": {
+    "inputs": [
+     "Vector",
+     "Scale",
+     "Detail",
+     "Roughness",
+     "Lacunarity",
+     "Distortion"
+    ],
+    "outputs": [
+     "Fac",
+     "Color"
+    ],
+    "props": {
+     "noise_dimensions": {
+      "value": "3D",
+      "items": [
+       "1D",
+       "2D",
+       "3D",
+       "4D"
+      ]
+     },
+     "noise_type": {
+      "value": "FBM",
+      "items": [
+       "MULTIFRACTAL",
+       "RIDGED_MULTIFRACTAL",
+       "HYBRID_MULTIFRACTAL",
+       "FBM",
+       "HETERO_TERRAIN"
+      ]
+     },
+     "normalize": true
+    }
+   },
+   "ShaderNodeTexVoronoi": {
+    "inputs": [
+     "Vector",
+     "Scale",
+     "Detail",
+     "Roughness",
+     "Lacunarity",
+     "Randomness"
+    ],
+    "outputs": [
+     "Distance",
+     "Color",
+     "Position"
+    ],
+    "props": {
+     "voronoi_dimensions": {
+      "value": "3D",
+      "items": [
+       "1D",
+       "2D",
+       "3D",
+       "4D"
+      ]
+     },
+     "distance": {
+      "value": "EUCLIDEAN",
+      "items": [
+       "EUCLIDEAN",
+       "MANHATTAN",
+       "CHEBYCHEV",
+       "MINKOWSKI"
+      ]
+     },
+     "feature": {
+      "value": "F1",
+      "items": [
+       "F1",
+       "F2",
+       "SMOOTH_F1",
+       "DISTANCE_TO_EDGE",
+       "N_SPHERE_RADIUS"
+      ]
+     },
+     "normalize": false
+    }
+   },
+   "ShaderNodeTexWave": {
+    "inputs": [
+     "Vector",
+     "Scale",
+     "Distortion",
+     "Detail",
+     "Detail Scale",
+     "Detail Roughness",
+     "Phase Offset"
+    ],
+    "outputs": [
+     "Color",
+     "Fac"
+    ],
+    "props": {
+     "wave_type": {
+      "value": "BANDS",
+      "items": [
+       "BANDS",
+       "RINGS"
+      ]
+     },
+     "bands_direction": {
+      "value": "X",
+      "items": [
+       "X",
+       "Y",
+       "Z",
+       "DIAGONAL"
+      ]
+     },
+     "rings_direction": {
+      "value": "X",
+      "items": [
+       "X",
+       "Y",
+       "Z",
+       "SPHERICAL"
+      ]
+     },
+     "wave_profile": {
+      "value": "SIN",
+      "items": [
+       "SIN",
+       "SAW",
+       "TRI"
+      ]
+     }
+    }
+   },
+   "ShaderNodeTexGabor": {
+    "inputs": [
+     "Vector",
+     "Scale",
+     "Frequency",
+     "Anisotropy",
+     "Orientation"
+    ],
+    "outputs": [
+     "Value",
+     "Phase",
+     "Intensity"
+    ],
+    "props": {
+     "gabor_type": {
+      "value": "2D",
+      "items": [
+       "2D",
+       "3D"
+      ]
+     }
+    }
+   },
+   "ShaderNodeTexMagic": {
+    "inputs": [
+     "Vector",
+     "Scale",
+     "Distortion"
+    ],
+    "outputs": [
+     "Color",
+     "Fac"
+    ],
+    "props": {}
+   },
+   "ShaderNodeTexBrick": {
+    "inputs": [
+     "Vector",
+     "Color1",
+     "Color2",
+     "Mortar",
+     "Scale",
+     "Mortar Size",
+     "Mortar Smooth",
+     "Bias",
+     "Brick Width",
+     "Row Height"
+    ],
+    "outputs": [
+     "Color",
+     "Fac"
+    ],
+    "props": {}
+   },
+   "ShaderNodeTexChecker": {
+    "inputs": [
+     "Vector",
+     "Color1",
+     "Color2",
+     "Scale"
+    ],
+    "outputs": [
+     "Color",
+     "Fac"
+    ],
+    "props": {}
+   },
+   "ShaderNodeTexGradient": {
+    "inputs": [
+     "Vector"
+    ],
+    "outputs": [
+     "Color",
+     "Fac"
+    ],
+    "props": {
+     "gradient_type": {
+      "value": "LINEAR",
+      "items": [
+       "LINEAR",
+       "QUADRATIC",
+       "EASING",
+       "DIAGONAL",
+       "SPHERICAL",
+       "QUADRATIC_SPHERE",
+       "RADIAL"
+      ]
+     }
+    }
+   },
+   "ShaderNodeTexWhiteNoise": {
+    "inputs": [
+     "Vector"
+    ],
+    "outputs": [
+     "Value",
+     "Color"
+    ],
+    "props": {
+     "noise_dimensions": {
+      "value": "3D",
+      "items": [
+       "1D",
+       "2D",
+       "3D",
+       "4D"
+      ]
+     }
+    }
+   }
+  },
+  "rows": [
+   {
+    "texture": "Noise FBM",
+    "output": "Fac",
+    "min": 0.251,
+    "mean": 0.497,
+    "max": 0.744
+   },
+   {
+    "texture": "Noise RIDGED_MULTIFRACTAL",
+    "output": "Fac",
+    "min": 0.0,
+    "mean": 0.055,
+    "max": 0.575
+   },
+   {
+    "texture": "Noise HETERO_TERRAIN",
+    "output": "Fac",
+    "min": -0.734,
+    "mean": -0.006,
+    "max": 0.728
+   },
+   {
+    "texture": "Voronoi F1 Distance",
+    "output": "Distance",
+    "min": 0.044,
+    "mean": 0.533,
+    "max": 1.121
+   },
+   {
+    "texture": "Wave bands",
+    "output": "Fac",
+    "min": 0.013,
+    "mean": 0.502,
+    "max": 0.986
+   },
+   {
+    "texture": "Gabor",
+    "output": "Value",
+    "min": 0.114,
+    "mean": 0.499,
+    "max": 0.893
+   },
+   {
+    "texture": "Magic",
+    "output": "Fac",
+    "min": 0.102,
+    "mean": 0.497,
+    "max": 0.928
+   },
+   {
+    "texture": "Brick",
+    "output": "Fac",
+    "min": 0.0,
+    "mean": 0.206,
+    "max": 1.0
+   },
+   {
+    "texture": "Checker",
+    "output": "Fac",
+    "min": 0.0,
+    "mean": 0.499,
+    "max": 1.0
+   },
+   {
+    "texture": "Gradient linear",
+    "output": "Fac",
+    "min": 0.0,
+    "mean": 0.249,
+    "max": 0.994
+   },
+   {
+    "texture": "White Noise",
+    "output": "Value",
+    "min": 0.02,
+    "mean": 0.498,
+    "max": 0.96
+   }
+  ]
+ },
+ "args": []
+}

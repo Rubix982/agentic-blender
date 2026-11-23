@@ -102,6 +102,13 @@
    "is_legacy": false
   },
   {
+   "fact": "an action made through action.fcurves.new(), assigned to an object: which slot the object gets and whether it moves",
+   "slot": "OBLegacy Slot",
+   "z_at_25": 2.0,
+   "slot_after": "OBLegacy Slot",
+   "target_id_type": "OBJECT"
+  },
+  {
    "fact": "an action built by hand (slots.new, layers.new, strips.new, channelbag(slot, ensure=True), fcurves.new) drives the object once assigned; assigning the action picks its slot automatically when there is one",
    "slot_identifier": "OBCube",
    "auto_assigned_slot": "OBCube",
@@ -123,12 +130,21 @@
    ]
   },
   {
+   "fact": "setting B.animation_data.action_slot to A's slot makes B follow A's curves (to the same absolute location)",
+   "B_slot": "OBA",
+   "B_location": [
+    0.0,
+    0.0,
+    2.0
+   ]
+  },
+  {
    "fact": "keying B afterwards adds a second slot to the shared action",
    "slots": [
     "OBA",
-    "OBB"
+    "OBA.001"
    ],
-   "B_slot": "OBB",
+   "B_slot": "OBA.001",
    "legacy_fcurves": [
     "ok",
     3

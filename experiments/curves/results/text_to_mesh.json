@@ -1,0 +1,124 @@
+{
+ "experiment": "experiments/curves/text_to_mesh.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.07,
+ "facts": [
+  {
+   "fact": "bpy.data.curves.new(name, 'FONT') gives a TextCurve; the default font is the built-in Bfont",
+   "type": "TextCurve",
+   "font": "Bfont Regular",
+   "size": 1.0,
+   "align_x": "LEFT",
+   "align_y": "TOP_BASELINE",
+   "fonts": [
+    "Bfont Regular"
+   ]
+  },
+  {
+   "fact": "flat text 'Hello' evaluates to filled faces, no depth",
+   "verts": 215,
+   "faces": 209,
+   "width": 2.087,
+   "depth": 0.0,
+   "manifold": false
+  },
+  {
+   "fact": "extrude 0.05 gives depth 0.1 (extrude goes both ways)",
+   "verts": 860,
+   "faces": 633,
+   "width": 2.087,
+   "depth": 0.1,
+   "manifold": false
+  },
+  {
+   "fact": "bevel_depth 0.01 rounds the edges and adds to the size",
+   "verts": 2150,
+   "faces": 1923,
+   "width": 2.107,
+   "depth": 0.12,
+   "manifold": false
+  },
+  {
+   "fact": "size 2 doubles the width",
+   "verts": 215,
+   "faces": 209,
+   "width": 4.174,
+   "depth": 0.0,
+   "manifold": false
+  },
+  {
+   "fact": "align_x CENTER centres the text on the origin",
+   "x_min": -1.024,
+   "x_max": 1.063,
+   "aligns": [
+    "LEFT",
+    "CENTER",
+    "RIGHT",
+    "JUSTIFY",
+    "FLUSH"
+   ]
+  },
+  {
+   "fact": "a newline in body makes a second line",
+   "verts": 117,
+   "faces": 119,
+   "width": 0.667,
+   "depth": 0.0,
+   "manifold": false
+  },
+  {
+   "fact": "non-ASCII characters missing from Bfont produce no geometry for that glyph (no error)",
+   "verts": 225,
+   "faces": 215,
+   "width": 3.195,
+   "depth": 0.0,
+   "manifold": false
+  },
+  {
+   "fact": "font files shipped in datafiles/fonts",
+   "files": [
+    "DejaVuSansMono.woff2",
+    "Inter.woff2",
+    "Noto Sans CJK Regular.woff2",
+    "NotoEmoji-VariableFont_wght.woff2",
+    "NotoSansArabic-VariableFont_wdth,wght.woff2",
+    "NotoSansArmenian-VariableFont_wdth,wght.woff2",
+    "NotoSansBengali-VariableFont_wdth,wght.woff2",
+    "NotoSansDevanagari-Regular.woff2",
+    "NotoSansEthiopic-Regular.woff2",
+    "NotoSansGeorgian-VariableFont_wdth,wght.woff2",
+    "NotoSansGujarati-Regular.woff2",
+    "NotoSansGurmukhi-VariableFont_wdth,wght.woff2",
+    "NotoSansHebrew-Regular.woff2",
+    "NotoSansJavanese-Regular.woff2",
+    "NotoSansKannada-VariableFont_wdth,wght.woff2",
+    "NotoSansKhmer-VariableFont_wdth,wght.woff2",
+    "NotoSansMalayalam-VariableFont_wdth,wght.woff2",
+    "NotoSansMath-Regular.woff2",
+    "NotoSansMyanmar-Regular.woff2",
+    "NotoSansSymbols-VariableFont_wght.woff2",
+    "NotoSansSymbols2-Regular.woff2",
+    "NotoSansTamil-VariableFont_wdth,wght.woff2",
+    "NotoSansTelugu-VariableFont_wdth,wght.woff2",
+    "NotoSansThai-VariableFont_wdth,wght.woff2",
+    "lastresort.woff2"
+   ]
+  },
+  {
+   "fact": "extruded text converted with new_from_object: (verts, manifold) before and after remove_doubles, and the number of n-gons",
+   "before": [
+    860,
+    false
+   ],
+   "after_remove_doubles": [
+    430,
+    true
+   ],
+   "ngons": 0
+  }
+ ],
+ "data": {},
+ "args": []
+}

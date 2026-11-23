@@ -56,6 +56,18 @@ E.fact("action.fcurves.new() on a new, empty action in 4.5",
        result=r_legacy_new, layers_after=len(a2.layers), slots_after=[s.identifier for s in a2.slots],
        is_layered=a2.is_action_layered, is_legacy=a2.is_action_legacy)
 
+fz = a2.fcurves[0]
+fz.keyframe_points.insert(1, 0.0); fz.keyframe_points.insert(25, 2.0)
+bpy.ops.mesh.primitive_cube_add(location=(0, 0, 0)); obL = bpy.context.object
+obL.animation_data_create()
+obL.animation_data.action = a2
+slotL = obL.animation_data.action_slot
+bpy.context.scene.frame_set(25)
+E.fact("an action made through action.fcurves.new(), assigned to an object: which slot the object gets and whether it moves",
+       slot=slotL.identifier if slotL else None, z_at_25=round(obL.location.z, 4),
+       slot_after=a2.slots[0].identifier, target_id_type=a2.slots[0].target_id_type)
+bpy.context.scene.frame_set(1)
+
 a3 = bpy.data.actions.new("MadeLayered")
 s3 = a3.slots.new(id_type="OBJECT", name="Cube")
 lay = a3.layers.new("Layer")
@@ -90,6 +102,11 @@ E.fact("assigning A's action to B: which slot B gets, and whether B moves",
        slots=[s.identifier for s in act.slots], B_slot=sB.identifier if sB else None,
        B_suitable=[s.identifier for s in B.animation_data.action_suitable_slots],
        B_location=[round(x, 3) for x in B.location])
+B.animation_data.action_slot = act.slots["OBA"]
+bpy.context.scene.frame_set(1); bpy.context.scene.frame_set(10)
+E.fact("setting B.animation_data.action_slot to A's slot makes B follow A's curves (to the same absolute location)",
+       B_slot=B.animation_data.action_slot.identifier, B_location=[round(x, 3) for x in B.location])
+B.animation_data.action_slot = None
 B.keyframe_insert("location", frame=1)
 E.fact("keying B afterwards adds a second slot to the shared action",
        slots=[s.identifier for s in act.slots], B_slot=B.animation_data.action_slot.identifier,

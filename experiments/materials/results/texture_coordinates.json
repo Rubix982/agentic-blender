@@ -1,0 +1,189 @@
+{
+ "experiment": "experiments/materials/texture_coordinates.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.12,
+ "facts": [
+  {
+   "fact": "Texture Coordinate outputs and Mapping node types in 4.5",
+   "outputs": [
+    "Generated",
+    "Normal",
+    "UV",
+    "Object",
+    "Camera",
+    "Window",
+    "Reflection"
+   ],
+   "mapping_types": [
+    "POINT",
+    "TEXTURE",
+    "VECTOR",
+    "NORMAL"
+   ],
+   "mapping_inputs": [
+    "Vector",
+    "Location",
+    "Rotation",
+    "Scale"
+   ],
+   "mapping_default": "POINT"
+  },
+  {
+   "fact": "on a 2 m plane scaled (3, 1.5, 1) without applying, away from the origin: Generated runs 0..1 over the bounding box, Object gives local coordinates -1..1 (object scale and location ignored), UV runs 0..1; so a texture on Object or Generated stretches with an unapplied scale",
+   "Generated": {
+    "bottom_left": [
+     0.01,
+     0.03,
+     0.5
+    ],
+    "top_right": [
+     0.99,
+     0.98,
+     0.5
+    ]
+   },
+   "Object": {
+    "bottom_left": [
+     -0.97,
+     -0.95,
+     0.0
+    ],
+    "top_right": [
+     0.98,
+     0.95,
+     0.0
+    ]
+   },
+   "UV": {
+    "bottom_left": [
+     0.01,
+     0.03,
+     0.0
+    ],
+    "top_right": [
+     0.99,
+     0.98,
+     0.0
+    ]
+   },
+   "UV through Mapping (POINT, Scale 2)": {
+    "bottom_left": [
+     0.03,
+     0.05,
+     0.0
+    ],
+    "top_right": [
+     1.98,
+     1.95,
+     0.0
+    ]
+   },
+   "UV through Mapping (TEXTURE, Scale 2)": {
+    "bottom_left": [
+     0.01,
+     0.01,
+     0.0
+    ],
+    "top_right": [
+     0.49,
+     0.49,
+     0.0
+    ]
+   }
+  },
+  {
+   "fact": "Mapping type POINT multiplies the coordinate by Scale (texture looks smaller, repeats more); type TEXTURE divides (the inverse transform: texture looks bigger)",
+   "point": {
+    "bottom_left": [
+     0.03,
+     0.05,
+     0.0
+    ],
+    "top_right": [
+     1.98,
+     1.95,
+     0.0
+    ]
+   },
+   "texture": {
+    "bottom_left": [
+     0.01,
+     0.01,
+     0.0
+    ],
+    "top_right": [
+     0.49,
+     0.49,
+     0.0
+    ]
+   }
+  }
+ ],
+ "data": {
+  "results": {
+   "Generated": {
+    "bottom_left": [
+     0.01,
+     0.03,
+     0.5
+    ],
+    "top_right": [
+     0.99,
+     0.98,
+     0.5
+    ]
+   },
+   "Object": {
+    "bottom_left": [
+     -0.97,
+     -0.95,
+     0.0
+    ],
+    "top_right": [
+     0.98,
+     0.95,
+     0.0
+    ]
+   },
+   "UV": {
+    "bottom_left": [
+     0.01,
+     0.03,
+     0.0
+    ],
+    "top_right": [
+     0.99,
+     0.98,
+     0.0
+    ]
+   },
+   "UV through Mapping (POINT, Scale 2)": {
+    "bottom_left": [
+     0.03,
+     0.05,
+     0.0
+    ],
+    "top_right": [
+     1.98,
+     1.95,
+     0.0
+    ]
+   },
+   "UV through Mapping (TEXTURE, Scale 2)": {
+    "bottom_left": [
+     0.01,
+     0.01,
+     0.0
+    ],
+    "top_right": [
+     0.49,
+     0.49,
+     0.0
+    ]
+   }
+  }
+ },
+ "args": []
+}

@@ -1,0 +1,104 @@
+{
+ "experiment": "experiments/curves/hair_curves.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.16,
+ "facts": [
+  {
+   "fact": "the new curves type lives in bpy.data.hair_curves (type Curves), separate from bpy.data.curves (type Curve)",
+   "has_hair_curves": true,
+   "curves_type": "Curves"
+  },
+  {
+   "fact": "a new Curves datablock is empty",
+   "curves": 0,
+   "points": 0,
+   "attrs": [
+    "position"
+   ]
+  },
+  {
+   "fact": "Curves functions in 4.5",
+   "functions": [
+    "rename",
+    "evaluated_get",
+    "copy",
+    "asset_mark",
+    "asset_clear",
+    "asset_generate_preview",
+    "override_create",
+    "override_hierarchy_create",
+    "user_clear",
+    "user_remap",
+    "make_local",
+    "user_of_id",
+    "animation_data_create",
+    "animation_data_clear",
+    "update_tag",
+    "preview_ensure",
+    "add_curves",
+    "remove_curves",
+    "resize_curves",
+    "reorder_curves",
+    "set_types",
+    "unit_test_compare"
+   ]
+  },
+  {
+   "fact": "add_curves([sizes]) adds curves with the given point counts",
+   "curves": 3,
+   "points": 12,
+   "attrs": [
+    [
+     "position",
+     "POINT",
+     "FLOAT_VECTOR"
+    ]
+   ]
+  },
+  {
+   "fact": "positions are the 'position' POINT attribute; curve offsets give each curve's first point",
+   "offsets": [
+    0,
+    4,
+    8
+   ],
+   "z_last": 1.0
+  },
+  {
+   "fact": "an object made from it has type CURVES",
+   "type": "CURVES"
+  },
+  {
+   "fact": "radius is a FLOAT POINT attribute",
+   "radius0": 0.009999999776482582
+  },
+  {
+   "fact": "there is no curve_type attribute until set_types(type=...) writes one (absent means Catmull-Rom)",
+   "attrs_before": [
+    "radius",
+    "position"
+   ],
+   "set_types_params": [
+    "type",
+    "indices"
+   ],
+   "after": [
+    "CURVE",
+    "INT8",
+    1
+   ]
+  },
+  {
+   "fact": "new_from_object on a Curves object",
+   "result": "RuntimeError: Error: Object does not have geometry data\n"
+  },
+  {
+   "fact": "bpy.ops.object.convert(target='MESH') on a Curves object",
+   "result": "['FINISHED'], type now MESH, 12 verts, 9 edges"
+  }
+ ],
+ "data": {},
+ "args": []
+}

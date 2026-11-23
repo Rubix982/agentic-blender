@@ -1,0 +1,137 @@
+{
+ "experiment": "experiments/data/context_background.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.06,
+ "facts": [
+  {
+   "fact": "in -b mode there is a window manager and a window, but screen/area/region availability is what matters",
+   "window": "<bpy_struct, Window at 0x110e8b6d0>",
+   "screen": "<bpy_struct, Screen(\"Layout\") at 0x110e6dc10>",
+   "area": "None",
+   "region": "None",
+   "windows": 1,
+   "background": true
+  },
+  {
+   "fact": "in -b mode the data context is there",
+   "scene": "Scene",
+   "view_layer": "ViewLayer",
+   "collection": "Scene Collection",
+   "active_object": "None",
+   "object": "None",
+   "mode": "OBJECT",
+   "selected_objects": 0
+  },
+  {
+   "fact": "primitive add operators work headless; the new object is active and selected",
+   "result": [
+    "FINISHED"
+   ],
+   "active": "Cube",
+   "selected": [
+    "Cube"
+   ]
+  },
+  {
+   "fact": "which common operators run in -b without any override, with the cube selected and active (FINISHED / CANCELLED / error)",
+   "results": {
+    "mesh.primitive_cube_add": [
+     "FINISHED"
+    ],
+    "object.select_all": [
+     "FINISHED"
+    ],
+    "object.mode_set EDIT": [
+     "FINISHED"
+    ],
+    "mesh.select_all": [
+     "FINISHED"
+    ],
+    "mesh.subdivide": [
+     "FINISHED"
+    ],
+    "mesh.extrude_region_move": [
+     "FINISHED"
+    ],
+    "object.mode_set OBJECT": [
+     "FINISHED"
+    ],
+    "selected after mode round trip": [],
+    "view3d.snap_cursor_to_center": "RuntimeError: Operator bpy.ops.view3d.snap_cursor_to_center.poll() failed, context is incorrect",
+    "view3d.view_all": "RuntimeError: Operator bpy.ops.view3d.view_all.poll() expected a view3d region",
+    "transform.translate": [
+     "FINISHED"
+    ],
+    "object.origin_set": [
+     "FINISHED"
+    ],
+    "object.join (one selected)": [
+     "CANCELLED"
+    ],
+    "object.duplicate": [
+     "FINISHED"
+    ],
+    "object.delete": [
+     "FINISHED"
+    ],
+    "mesh.primitive_uv_sphere_add": [
+     "FINISHED"
+    ],
+    "uv.smart_project (object mode)": "RuntimeError: Operator bpy.ops.uv.smart_project.poll() failed, context is incorrect"
+   }
+  },
+  {
+   "fact": "with nothing selected, object operators return CANCELLED rather than raising",
+   "delete": [
+    "CANCELLED"
+   ],
+   "translate": [
+    "CANCELLED"
+   ]
+  },
+  {
+   "fact": "object.join with temp_override(active_object, selected_editable_objects) joins the listed objects",
+   "result": {
+    "object.join with selected_editable_objects": [
+     "FINISHED"
+    ]
+   },
+   "objects": 2
+  },
+  {
+   "fact": "the background window's screen areas",
+   "areas": [
+    "PROPERTIES",
+    "OUTLINER",
+    "DOPESHEET_EDITOR",
+    "VIEW_3D"
+   ]
+  },
+  {
+   "fact": "the -b window's screen ('Layout') has a VIEW_3D area; passing it (window, area, region) to temp_override lets view3d operators run",
+   "snap_cursor_to_center": [
+    "FINISHED"
+   ],
+   "cursor_after": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "view_all": [
+    "FINISHED"
+   ]
+  },
+  {
+   "fact": "temp_override with an unknown keyword",
+   "result": "accepted"
+  },
+  {
+   "fact": "bpy.context.copy() still exists (returns a dict) but passing it to an operator positionally fails (see modifiers/evaluate_and_apply)",
+   "copy_type": "dict"
+  }
+ ],
+ "data": {},
+ "args": []
+}

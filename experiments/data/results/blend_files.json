@@ -1,0 +1,163 @@
+{
+ "experiment": "experiments/data/blend_files.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.11,
+ "facts": [
+  {
+   "fact": "a fresh session has no file path",
+   "filepath": "''"
+  },
+  {
+   "fact": "save_as_mainfile(copy=True) writes the file but keeps the session's own file path unchanged",
+   "result": [
+    "FINISHED"
+   ],
+   "filepath": "''",
+   "size_kb": 417.9
+  },
+  {
+   "fact": "save_as_mainfile without copy makes the saved file the current one (bpy.data.filepath)",
+   "filepath": "blend_files-main.blend",
+   "is_dirty_after_save": true
+  },
+  {
+   "fact": "save_as_mainfile options",
+   "props": [
+    "filepath",
+    "hide_props_region",
+    "check_existing",
+    "filter_blender",
+    "filter_backup",
+    "filter_image",
+    "filter_movie",
+    "filter_python",
+    "filter_font",
+    "filter_sound",
+    "filter_text",
+    "filter_archive",
+    "filter_btx",
+    "filter_collada",
+    "filter_alembic",
+    "filter_usd",
+    "filter_obj",
+    "filter_volume",
+    "filter_folder",
+    "filter_blenlib",
+    "filemode",
+    "display_type",
+    "sort_method",
+    "compress",
+    "relative_remap",
+    "copy"
+   ]
+  },
+  {
+   "fact": "libraries.load lists names in the source file inside the with block; assigning names to dst appends them",
+   "listing": {
+    "objects": [
+     "Suzanne"
+    ],
+    "meshes": [
+     "Suzanne"
+    ],
+    "materials": [
+     "Skin"
+    ],
+    "collections": [
+     "Heads"
+    ]
+   }
+  },
+  {
+   "fact": "an appended object comes with its mesh and material but is NOT linked into the scene",
+   "in_scene": false,
+   "mesh": "Suzanne",
+   "materials": [
+    "Skin"
+   ],
+   "library": null
+  },
+  {
+   "fact": "appending the same object again makes a second copy with a .001 name",
+   "objects": [
+    "Suzanne",
+    "Suzanne.001"
+   ]
+  },
+  {
+   "fact": "after the with block, dst.<type> holds the loaded datablocks (not names)",
+   "loaded": [
+    "Material:Skin.002"
+   ]
+  },
+  {
+   "fact": "link=True gives library data (its .library is set); a linked collection is placed in the scene through an Empty that instances it",
+   "library": "blend_files-library.blend",
+   "objects_in_linked": [
+    "Suzanne"
+   ],
+   "linked_object_library": true
+  },
+  {
+   "fact": "writing a linked object's property from Python raises no error (is_editable is False)",
+   "result": "accepted",
+   "is_editable": false
+  },
+  {
+   "fact": "the library's filepath is stored as given to libraries.load (absolute here)",
+   "is_abs": true
+  },
+  {
+   "fact": "wm.open_mainfile works inside a running -b script, the script keeps running, and every old Python reference to data is invalid",
+   "result": [
+    "FINISHED"
+   ],
+   "old_reference": "ReferenceError: StructRNA of type Object has been removed",
+   "objects_now": [
+    "Suzanne"
+   ],
+   "filepath": "blend_files-main.blend"
+  },
+  {
+   "fact": "after open_mainfile, re-fetch through bpy.context/bpy.data: context.scene is the loaded scene",
+   "scene": "Scene",
+   "objects": 1
+  },
+  {
+   "fact": "open_mainfile options",
+   "props": [
+    "filepath",
+    "hide_props_region",
+    "check_existing",
+    "filter_blender",
+    "filter_backup",
+    "filter_image",
+    "filter_movie",
+    "filter_python",
+    "filter_font",
+    "filter_sound",
+    "filter_text",
+    "filter_archive",
+    "filter_btx",
+    "filter_collada",
+    "filter_alembic",
+    "filter_usd",
+    "filter_obj",
+    "filter_volume",
+    "filter_folder",
+    "filter_blenlib",
+    "filemode",
+    "display_type",
+    "sort_method",
+    "load_ui",
+    "use_scripts",
+    "display_file_selector",
+    "state"
+   ]
+  }
+ ],
+ "data": {},
+ "args": []
+}

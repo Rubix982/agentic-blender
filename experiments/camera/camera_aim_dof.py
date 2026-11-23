@@ -65,7 +65,7 @@ nt = mat.node_tree
 nt.nodes.remove(next(n for n in nt.nodes if n.type == "BSDF_PRINCIPLED"))
 em = nt.nodes.new("ShaderNodeEmission")
 chk = nt.nodes.new("ShaderNodeTexChecker")
-chk.inputs["Scale"].default_value = 1.0
+chk.inputs["Scale"].default_value = 2.0  # scale 1 over 0..1 Generated coords is a single square (all Color2): no edge
 chk.inputs["Color1"].default_value = (1, 1, 1, 1)
 chk.inputs["Color2"].default_value = (0, 0, 0, 1)
 nt.links.new(chk.outputs["Color"], em.inputs["Color"])
@@ -117,7 +117,15 @@ near_focus = edge_widths()
 cam.data.dof.focus_object = None
 cam.data.dof.focus_distance = 6.0
 far_focus = edge_widths()
-E.fact("with camera.data.dof.use_dof and f/1.4, the card at the focus stays sharp and the other blurs (edge width in px, "
-       "10-90 %, [near card at 2 m, far card at 6 m]); focus_object overrides focus_distance",
-       dof_off=sharp, focus_near=near_focus, focus_far_distance_6=far_focus)
+
+def coc_px(focus, d, f=50.0, N=1.4, sensor=36.0, W=256):
+    """Thin-lens blur circle on the sensor, in pixels: aperture (f/N) * f/(s - f) * |d - s| / d, all in mm."""
+    s, d = focus * 1000, d * 1000
+    return round((f / N) * f / (s - f) * abs(d - s) / d / sensor * W, 1)
+
+
+E.fact("with camera.data.dof.use_dof and f/1.4 (50 mm), the card at the focus stays as sharp as without DOF and the other "
+       "blurs by about the thin-lens circle of confusion (edge width in px, 10-90 %, [near card at 2 m, far card at 6 m])",
+       dof_off=sharp, focus_object_near=near_focus, focus_distance_6=far_focus,
+       predicted_coc_px_far_when_focus_near=coc_px(2, 6), predicted_coc_px_near_when_focus_far=coc_px(6, 2))
 E.save()

@@ -1,0 +1,85 @@
+{
+ "experiment": "experiments/data/collections.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.05,
+ "facts": [
+  {
+   "fact": "bpy.data.objects.new does not put the object in any scene",
+   "in_scene": false,
+   "users_collection": []
+  },
+  {
+   "fact": "an unlinked object is not evaluated (not in the depsgraph)",
+   "in_depsgraph": false
+  },
+  {
+   "fact": "scene.collection.objects.link(obj) puts it in the scene's master collection",
+   "in_scene": true,
+   "users_collection": [
+    "Scene Collection"
+   ]
+  },
+  {
+   "fact": "with factory empty startup, bpy.context.collection is the scene collection",
+   "context_collection": "Scene Collection",
+   "is_master": true
+  },
+  {
+   "fact": "linking the same object twice into one collection raises",
+   "error": "RuntimeError: Error: Object 'lonely' already in collection 'Scene Collection'\n"
+  },
+  {
+   "fact": "a new collection is not in the scene until linked under scene.collection.children",
+   "in_scene": false
+  },
+  {
+   "fact": "an object can be in several collections at once",
+   "users_collection": [
+    "Scene Collection",
+    "Sub"
+   ]
+  },
+  {
+   "fact": "unlinking from one collection leaves it in the others",
+   "users_collection": [
+    "Sub"
+   ],
+   "in_scene": true
+  },
+  {
+   "fact": "scene.objects lists objects from all nested collections",
+   "count": 1,
+   "all_objects_in_sub": 1
+  },
+  {
+   "fact": "in the viewport depsgraph (what evaluated_depsgraph_get() returns in -b): layer_collection.exclude removes it, collection.hide_viewport removes it, collection.hide_render keeps it, obj.hide_set(True) removes it",
+   "in_depsgraph_when_excluded": false,
+   "when_hide_viewport": false,
+   "when_hide_render": true,
+   "when_hide_set": false
+  },
+  {
+   "fact": "obj.hide_get()/hide_set() are per view layer; obj.hide_viewport and obj.hide_render are global flags",
+   "has": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "fact": "move = unlink from every users_collection, then link to the target",
+   "users_collection": [
+    "Parts"
+   ]
+  },
+  {
+   "fact": "an Empty with instance_type COLLECTION instances that collection's objects (seen in depsgraph.object_instances)",
+   "instances": 1
+  }
+ ],
+ "data": {},
+ "args": []
+}
