@@ -28,8 +28,11 @@ E.fact(f"the Principled BSDF has {len(rows)} inputs in 4.5, two of them hidden (
        f"{'equals' if all(r['name'] == r['identifier'] for r in rows) else 'does not always equal'} its identifier",
        n=len(rows), inputs=rows,
        name_ne_identifier=[(r["name"], r["identifier"]) for r in rows if r["name"] != r["identifier"]])
-E.fact("node properties of a new Principled BSDF in a material made with use_nodes",
-       distribution=b.distribution, subsurface_method=b.subsurface_method)
+fresh = nodes.new("ShaderNodeBsdfPrincipled")
+E.fact("node properties of a new Principled BSDF: MULTI_GGX and RANDOM_WALK both in a use_nodes material and from nodes.new",
+       use_nodes_distribution=b.distribution, use_nodes_subsurface_method=b.subsurface_method,
+       nodes_new_distribution=fresh.distribution, nodes_new_subsurface_method=fresh.subsurface_method)
+nodes.remove(fresh)
 
 old = ["Subsurface", "Subsurface Color", "Specular", "Specular Tint", "Sheen", "Sheen Tint", "Clearcoat",
        "Clearcoat Roughness", "Clearcoat Normal", "Transmission", "Transmission Roughness", "Emission",

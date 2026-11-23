@@ -3,7 +3,7 @@
  "blender": "4.5.14 LTS",
  "machine": "Darwin arm64",
  "date": "2026-11-23",
- "seconds": 0.21,
+ "seconds": 0.19,
  "facts": [
   {
    "fact": "bpy.data.materials.new gives use_nodes False and no node tree in 4.5; setting use_nodes = True creates a Principled BSDF wired to a Material Output",
@@ -329,9 +329,11 @@
    "name_ne_identifier": []
   },
   {
-   "fact": "node properties of a new Principled BSDF in a material made with use_nodes",
-   "distribution": "MULTI_GGX",
-   "subsurface_method": "RANDOM_WALK"
+   "fact": "node properties of a new Principled BSDF: MULTI_GGX and RANDOM_WALK both in a use_nodes material and from nodes.new",
+   "use_nodes_distribution": "MULTI_GGX",
+   "use_nodes_subsurface_method": "RANDOM_WALK",
+   "nodes_new_distribution": "MULTI_GGX",
+   "nodes_new_subsurface_method": "RANDOM_WALK"
   },
   {
    "fact": "3.x input names that raise KeyError in 4.5: Subsurface, Subsurface Color, Specular, Sheen, Clearcoat*, Transmission, Transmission Roughness, Emission. 'Specular Tint' and 'Sheen Tint' still exist but are now colours",

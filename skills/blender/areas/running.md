@@ -26,12 +26,14 @@ real project, `[doc: link]` Blender's own documentation. Command-line reference:
                                                         # closes Blender at once [doc: info_gotchas_crashes, sys.exit]
    ```
 4. **Assuming background mode has no context at all, or a full one.** In `-b` mode `bpy.context` has a window and a
-   screen (from the file), the scene, view layer, active object and selection, but **no area, region or space**.
-   Object, mesh and edit-mode operators work (`object.select_all`, `mesh.primitive_uv_sphere_add`,
-   `object.shade_smooth`, `object.mode_set`, `mesh.subdivide` all returned FINISHED); operators that need a 3D view
-   or a screen area fail their poll (`view3d.snap_cursor_to_center`, `screen.screenshot`: "poll() failed, context is
-   incorrect"). Prefer the data API; see `data-model.md` for `bpy.context.temp_override`.
-   `[exp: experiments/running/cli_behaviour.py]`
+   screen (from the file), the scene, view layer, active object and selection, but `bpy.context.area`, `region` and
+   `space_data` are `None`. Object, mesh and edit-mode operators work (`object.select_all`,
+   `mesh.primitive_uv_sphere_add`, `object.shade_smooth`, `object.mode_set`, `mesh.subdivide` all returned FINISHED);
+   operators that need a 3D view or a screen area fail their poll as called (`view3d.snap_cursor_to_center`,
+   `screen.screenshot`: "poll() failed, context is incorrect"). `[exp: experiments/running/cli_behaviour.py]` The
+   screen does hold areas, though: the factory file's "Layout" screen has a 3D View, and passing its window, area and
+   region to `bpy.context.temp_override(window=..., area=..., region=...)` made view3d operators run
+   (`data-model.md`). `[exp: experiments/data/context_background.py]` Prefer the data API where there is one.
 5. **Python drivers silently stay at 0.** A driver whose expression needs Python (`__import__("math").pi`) is not
    evaluated in a file opened headless: it read 0.0. With `-y` (allow auto-run of scripts) it read 3.1416. A simple
    expression (`frame * 2`) is evaluated either way, by Blender's own evaluator. `[exp: experiments/running/cli_behaviour.py]`
@@ -136,30 +138,30 @@ laptop, and kept one Blender open as a live server. Each is `[lesson]` unless ma
 
 - **Snapshot the scripts before a batch.** Each job imports the script files as they are when it starts, so editing
   them mid-batch mixed two code versions in one study (three times). Copy the script tree at batch start and run every
-  job from the copy.
+  job from the copy. `[lesson]`
 - **Rendering, not simulation, sets a job's peak memory.** A pose job with its own render peaked at 3.25 GB, its
   simulation at 0.44 to 0.85 GB; without the render it peaked at 0.88 GB with a bit-identical result. Four jobs that
   each started with over 25 % memory free reached their renders together (4 x 3.6 GB) and crashed the machine. Split
-  simulation and rendering into separate jobs, and gate each start on that kind's peak against free memory.
+  simulation and rendering into separate jobs, and gate each start on that kind's peak against free memory. `[lesson]`
 - **Parallel jobs slow each other far more than their count suggests.** A render pass took 7 s alone and about 3 min
-  with four jobs on 12 cores. Time a job alone before planning a batch.
+  with four jobs on 12 cores. Time a job alone before planning a batch. `[lesson]`
 - **Count only background jobs.** `pgrep -x Blender` also matches the user's open Blender and a live server; count
-  processes whose command line contains ` -b `.
+  processes whose command line contains ` -b `. `[lesson]`
 - **Check every render's output exists.** Cycles on the Apple GPU sometimes aborted while compiling Metal kernels (log
   stopped at "Updating Meshes"), and renders crashed with about five GPU renders at once. Check the image exists and is
-  not empty; retry. For emission-only bakes the CPU avoids the Metal compile.
+  not empty; retry. For emission-only bakes the CPU avoids the Metal compile. `[lesson]`
 - **Fix the thread count for reproducible simulations.** The same cloth job at the same thread count gave identical
   vertices; at `-t 3` one drape differed by up to 0.10 m. A voxel remesh returned its points in a different order from
   run to run (15,184 of 41,244 moved), which changed collisions by 2 to 6 cm until the points were re-sorted by
-  position.
+  position. `[lesson]`
 - **In a live session, tag what you create.** Reloading a module forgets its lists, so objects from earlier runs stayed
   in the scene (32 meshes) and rendered over new ones. Mark created objects (`o["made_by"] = "fit"`) and clean up by
-  the tag.
+  the tag. `[lesson]`
 - **A live server turned a 30 to 60 s look into about a second:** a query 0.2 s, a preview about 3 s. Bind it to
-  127.0.0.1, run received code in a namespace kept between sends, run it on the main thread.
+  127.0.0.1, run received code in a namespace kept between sends, run it on the main thread. `[lesson]`
 - **User add-ons can start servers in batch jobs.** Without `--factory-startup` every enabled add-on registers in every
   `-b` job, including one that opens a socket that runs any Python sent to it. In an add-on, return early from
-  `register()` when `bpy.app.background` is true.
+  `register()` when `bpy.app.background` is true. `[lesson]`
 - **No Pillow inside Blender.** Re-checked: Blender 4.5's Python has no `PIL` (nor `cv2`, `scipy`, `imageio`), but has
   `numpy` 1.26.4, `OpenImageIO`, `MaterialX` 1.39.2 and `requests`. Draw with numpy into `Image.pixels`, or write data
   out and draw in another Python. `[exp: experiments/running/lesson_checks.py]`

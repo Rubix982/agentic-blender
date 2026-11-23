@@ -38,8 +38,12 @@ memory with things that can be checked. Paths below are relative to this file's 
   Python error fail the run (without `--python-exit-code 1` Blender exits 0 after a traceback), and streams printed
   lines (a plain `print()` inside Blender is otherwise held until the end). See `areas/running.md`.
 - **Data API first, operators second.** Most operators assume a window, an area or a selection; in background mode
-  there is no area, so view-dependent operators fail their poll. Where an operator is the only way, give it the context
-  it needs with `bpy.context.temp_override(...)` (`areas/data-model.md`).
+  `bpy.context.area` is `None`, so view-dependent operators fail their poll as called. Where an operator is the only
+  way, give it the context it needs with `bpy.context.temp_override(...)`: the screen's own 3D View area works headless
+  (`areas/data-model.md`). Creating 1,000 cubes took 15.2 s with `primitive_cube_add` and 0.05 s through the data API.
+- **`kb.py` shows registered defaults; a new thing may start elsewhere.** The Mesh Boolean node's operation reads
+  `INTERSECT` in the inventory but a node made with `nodes.new` starts at `DIFFERENCE`. Read the value from the object
+  you made when it matters.
 - **Check with numbers, not by eye.** Read back what you made: vertex and face counts, bounding boxes, the evaluated
   mesh (`obj.evaluated_get(depsgraph)`), distances with `mathutils.bvhtree`, a light's rotation, a node's links.
   Save the `.blend`, open it again, and read the values from the file.
