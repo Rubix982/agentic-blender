@@ -29,7 +29,8 @@ settings (`areas/extensions.md`). Open: the targeted pass (each add-on given the
 **Opened:** 2026-11-23
 **Question:** the guide checks that a script did what was asked, never whether the image looks real. Proposed test: a
 photo match (one real photograph rebuilt in Blender, compared in the same frame, then shuffled pairs judged blind).
-**Answer:** —
+**Answer:** in part, C-004 (CARD.md): from 17 published breakdowns, every setting-level technique 4 or more used runs
+headless with a measured effect (`areas/realism.md`). Still open: the photo match, which tests the judgement left over.
 
 ### T-004 · v2: the lessons the comparison found
 

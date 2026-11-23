@@ -106,6 +106,7 @@ rendering it raises, and a failed render sets the exit code to 1 even if caught.
 | `areas/geometry-nodes.md` | node groups built from Python with the 4.x interface API, modifier inputs, reading results |
 | `areas/curves-text.md` | Bezier and poly curves, bevels, curve to mesh, text |
 | `areas/remote-assets.md` | free CC0 HDRIs, textures and models from Poly Haven and ambientCG: `assets.py` to search and fetch (cached, checked), `asset_import.py` for a world (and its sun), a material at real-world size, an imported model |
+| `areas/realism.md` | what 17 published realistic Blender scenes have in common, as settings a script can make, each measured: colour temperature, portals, hidden shadow casters, fog (volume, mist), material masks (noise, AO, pointiness, facing up, height, painted), density-painted scattering, glow, chromatic aberration, vignette, grain, grading |
 | `areas/extensions.md` | the 20 most-downloaded add-ons on extensions.blender.org (LoopTools, Extra Objects, Bool Tool, A.N.T. Landscape, Archimesh, Sapling, MPFB...): which operators run headless and change the scene, how to install one into a throwaway profile, what each declares and contains |
 | `areas/instancing-assets.md` | full copies, linked duplicates, collection and vertex instancing, particle systems (costs measured); hair curves; assets and Blender's bundled ones |
 | `areas/uv-images.md` | UV maps (from arrays, bmesh, unwrap operators headless, packing); images: colour spaces, pixels, saving, packing |
@@ -170,6 +171,9 @@ What an agent's memory most often gets wrong in 4.5, one line each; the page has
   radians(180 - b))`; a Nishita sky's `sun_rotation` is the bearing. Light linking is on the light's object
   (`light_linking.receiver_collection`, `blocker_collection`); each entry's `link_state` is on
   `collection.collection_objects[i].light_linking`, which has no `.object`. → `light-world-camera.md`
+- A world volume blacks out a sunlit scene; EEVEE volumes end at `scene.eevee.volumetric_end` (100 m) and do not shadow
+  the sun unless `use_volumetric_shadows`; pointiness is Cycles only; a new Glare node starts as STREAKS; lights have
+  `use_temperature` and `temperature` in 4.5. → `realism.md`
 
 **UVs, images, lines**
 - Smart UV Project's angle is in radians and silently clamped (passing 66 means 90°); `pack_islands` needs

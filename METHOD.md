@@ -8,6 +8,7 @@ marked with that version. Every fact carries its evidence, as one of four tags:
 | `[inv]` | read from Blender itself: a type, property, default, range, enum, operator or node socket | `skills/blender/scripts/inventory.py`, run headless; the output is `skills/blender/inventory/` and `skills/blender/scripts/kb.py` searches it |
 | `[exp: path]` | measured here, by a script anyone can run again | `experiments/<area>/<name>.py`, result in `experiments/<area>/results/<name>.json` |
 | `[lesson]` | learned on a real project, with what was measured there | `kb/lessons/`; the projects are described, not named |
+| `[study: S5]` | from a published account by the artist of a realistic Blender scene | `kb/research/realism-breakdowns.md`: 17 breakdowns with their links (S1 to S17) and a tally; quotes and numbers spot-checked against the pages |
 | `[doc: link]` | from Blender's manual or Python reference for 4.5 | `docs.blender.org/manual/en/4.5/`, `docs.blender.org/api/4.5/` (local copies and a search index in `~/.cache/agentic-blender/docs-4.5/`, made by `skills/blender/scripts/docs.py fetch`) |
 
 A fact with no tag is a guess and is written as one ("probably", "untested").

@@ -1,0 +1,35 @@
+{
+ "experiment": "experiments/realism/scatter_density.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.11,
+ "facts": [
+  {
+   "fact": "points from Distribute Points on Faces on a 10 x 10 m grid whose vertex group 'density' is 1.0 on the left half and 0.25 on the right: RANDOM with Density = 20 x weight, POISSON with Density Max 20, Distance Min 0.15 m and Density Factor = weight (the vertex group read with a Named Attribute node)",
+   "rows": {
+    "RANDOM": {
+     "points": 1237,
+     "left_weight_1": 977,
+     "right_weight_0_25": 260,
+     "left_over_right": 3.758,
+     "closest_pair_m": 0.0156
+    },
+    "POISSON": {
+     "points": 821,
+     "left_weight_1": 650,
+     "right_weight_0_25": 171,
+     "left_over_right": 3.801,
+     "closest_pair_m": 0.1506
+    }
+   }
+  },
+  {
+   "fact": "Instance on Points with an ico sphere on the RANDOM points: instances the depsgraph lists for the grid",
+   "instances": 1237,
+   "points": 1237
+  }
+ ],
+ "data": {},
+ "args": []
+}

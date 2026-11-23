@@ -156,5 +156,18 @@ is fixed.
 6. **CONSEQUENCE OF NOT DOING IT.** A realism attempt starts from an agent's guesses about grain and fog values, and
    any failure cannot be told apart from a missing technique.
 
-**Result:** —
+**Closed:** 2026-11-23
+
+**Result:** all twelve have a recipe that runs headless with a measured effect, so the photo match is built from
+`areas/realism.md` alone and tests the judgement left over. Five were measured before (HDRI lighting and its sun in
+`remote-assets.md` and `light-world-camera.md`; procedural surfaces and displacement in `materials.md`; denoising in
+`rendering.md`); seven here (`experiments/realism/`): masks through noise, ambient occlusion, pointiness, facing up,
+height and painted attributes; fog as a ground layer and as the Mist pass; scattering whose density follows a painted
+vertex group (left over right 3.758 random, 3.801 Poisson, for weights 1.0 and 0.25); glow, chromatic aberration,
+vignette, grain and a grade in the compositor. The first runs had two faulty tests (an edge at the frame's centre,
+where radial dispersion moves nothing; a fog volume 150 m tall that dimmed the sun) and one guessed pointiness ramp;
+each was redone, and the traps they exposed are on the page: a world volume blacks out a sunlit scene, EEVEE volumes
+end at 100 m and do not shadow the sun by default, pointiness is Cycles only and narrow, EEVEE's AO is about half of
+Cycles'. What the settings leave out is what 14 and 13 of the 17 artists did: work from photographs of a real place,
+and model the main objects themselves.
 

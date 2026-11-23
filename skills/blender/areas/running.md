@@ -122,7 +122,7 @@ A segmentation fault ends Blender with a negative return code (−11 here), with
   install-file, remove, update, repo-list, repo-add, repo-remove, build, validate, server-generate}`. `--command` is
   the only subcommand family 4.5 lists. `[exp: experiments/running/process.py]`
 - The community's 20 most-downloaded add-ons, installed into a throwaway profile (`BLENDER_USER_RESOURCES`), scanned,
-  sandboxed and run headless operator by operator: `extensions.md`.
+  sandboxed and run headless operator by operator: `extensions.md`. `[exp: experiments/extensions/top_addons.py]`
 
 ## Blender as a Python module
 

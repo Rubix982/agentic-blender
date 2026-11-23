@@ -12,7 +12,7 @@ memory with three things that can be checked:
   sockets, and 611 members of `bmesh`, `mathutils` and the other modules around `bpy`. `kb.py` searches it.
 - **What happens when you try.** Small headless experiments, one question each, whose results are kept
   (`experiments/<area>/results/*.json`) and can be run again on another version to see which facts changed
-  (`tools/recheck.py`). On 2026-11-23 (v4): 128 experiments, 953 recorded facts.
+  (`tools/recheck.py`). On 2026-11-23 (v5): 132 experiments, 964 recorded facts.
 - **What real projects learned.** Lessons from weeks of building cloth garments on animated figures in Blender, with
   the numbers that were measured, rewritten without the project's specifics (`kb/lessons/`).
 
@@ -24,7 +24,7 @@ What is in it:
 | | |
 |---|---|
 | `skills/blender/SKILL.md` | the front page an agent reads first: how to work, a headless script's skeleton, the version traps, the map |
-| `skills/blender/areas/` | 24 guides by area (running, data model, meshes, modifiers, geometry nodes, curves and text, materials, light and camera, rendering, compositing, export and baking, UVs and images, instancing and assets, remote assets, community extensions, lines, simulation, rigging and animation, extending, errors, glossary, and more), each opening with what agents get wrong |
+| `skills/blender/areas/` | 25 guides by area (running, data model, meshes, modifiers, geometry nodes, curves and text, materials, light and camera, rendering, compositing, export and baking, UVs and images, instancing and assets, remote assets, community extensions, realism, lines, simulation, rigging and animation, extending, errors, glossary, and more), each opening with what agents get wrong |
 | `kb/reference/` | generated, exact for 4.5: every node with every socket, every modifier and constraint setting, scene and render settings against the factory file, all 2,482 operators, bmesh and mathutils (about 16,000 lines) |
 | `kb/lessons/` | 168 lessons from real projects, 56 of them re-run here |
 | `experiments/` | the evidence: one question per script, results as JSON |

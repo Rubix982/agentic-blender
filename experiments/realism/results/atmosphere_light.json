@@ -1,0 +1,280 @@
+{
+ "experiment": "experiments/realism/atmosphere_light.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 3.38,
+ "facts": [
+  {
+   "fact": "a black post's brightness at 5, 20, 50, 100 and 200 m, against a sky of this brightness, for each kind of fog (the farther a post, the closer to the sky it should read)",
+   "sky": 0.5191,
+   "distances_m": [
+    5,
+    20,
+    50,
+    100,
+    200
+   ],
+   "rows": {
+    "none": {
+     "posts": [
+      0.0475,
+      0.0472,
+      0.0466,
+      0.0469,
+      0.047
+     ],
+     "seconds": 0.14
+    },
+    "volume cube 150 m tall, density 0.01, CYCLES": {
+     "posts": [
+      0.0063,
+      0.0096,
+      0.0161,
+      0.0218,
+      0.0291
+     ],
+     "seconds": 0.39
+    },
+    "volume cube 150 m tall, density 0.01, BLENDER_EEVEE_NEXT": {
+     "posts": [
+      0.0573,
+      0.08,
+      0.1195,
+      0.1623,
+      0.1659
+     ],
+     "seconds": 0.33
+    },
+    "ground layer 20 m deep, density 0.01, CYCLES": {
+     "posts": [
+      0.0519,
+      0.086,
+      0.1488,
+      0.2165,
+      0.2872
+     ],
+     "seconds": 0.37
+    },
+    "ground layer 20 m deep, density 0.01, BLENDER_EEVEE_NEXT, use_volumetric_shadows=False": {
+     "posts": [
+      0.0573,
+      0.08,
+      0.1195,
+      0.1626,
+      0.1662
+     ],
+     "seconds": 0.28
+    },
+    "ground layer 20 m deep, density 0.01, BLENDER_EEVEE_NEXT, use_volumetric_shadows=True": {
+     "posts": [
+      0.0572,
+      0.0788,
+      0.1126,
+      0.1441,
+      0.147
+     ],
+     "seconds": 0.33
+    },
+    "ground layer 20 m deep, density 0.01, BLENDER_EEVEE_NEXT, volumetric_end=400": {
+     "posts": [
+      0.0566,
+      0.0777,
+      0.1171,
+      0.1616,
+      0.1908
+     ],
+     "seconds": 0.31
+    },
+    "world volume, density 0.01, CYCLES": {
+     "posts": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "seconds": 0.3
+    },
+    "world volume, density 0.01, BLENDER_EEVEE_NEXT": {
+     "posts": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "seconds": 0.14
+    },
+    "mist pass (linear, 0 to 200 m) mixed to the sky colour": {
+     "posts": [
+      0.06,
+      0.0961,
+      0.1683,
+      0.2918,
+      0.5432
+     ],
+     "seconds": 0.13
+    }
+   },
+   "eevee_volumetric_end_default": 100.0
+  },
+  {
+   "fact": "a white plate under an area light with use_temperature at each colour temperature: rendered RGB, red over blue, and the light's temperature_color",
+   "rows": {
+    "2250": {
+     "rgb": [
+      7.9374,
+      2.5059,
+      0.2705
+     ],
+     "r_over_b": 29.348,
+     "temperature_color": [
+      2.2679,
+      0.716,
+      0.0773
+     ]
+    },
+    "2700": {
+     "rgb": [
+      6.7725,
+      2.8123,
+      0.671
+     ],
+     "r_over_b": 10.093,
+     "temperature_color": [
+      1.9351,
+      0.8035,
+      0.1917
+     ]
+    },
+    "4000": {
+     "rgb": [
+      4.9492,
+      3.2326,
+      1.8678
+     ],
+     "r_over_b": 2.65,
+     "temperature_color": [
+      1.4141,
+      0.9236,
+      0.5337
+     ]
+    },
+    "5200": {
+     "rgb": [
+      4.1421,
+      3.3791,
+      2.8119
+     ],
+     "r_over_b": 1.473,
+     "temperature_color": [
+      1.1835,
+      0.9655,
+      0.8034
+     ]
+    },
+    "6500": {
+     "rgb": [
+      3.6488,
+      3.4441,
+      3.6233
+     ],
+     "r_over_b": 1.007,
+     "temperature_color": [
+      1.0425,
+      0.9841,
+      1.0353
+     ]
+    },
+    "9000": {
+     "rgb": [
+      3.1642,
+      3.4787,
+      4.7003
+     ],
+     "r_over_b": 0.673,
+     "temperature_color": [
+      0.9041,
+      0.994,
+      1.343
+     ]
+    }
+   },
+   "default": {
+    "use_temperature": false,
+    "temperature": 6500.0
+   }
+  },
+  {
+   "fact": "a closed 4 x 4 x 3 m room lit only through a 1 x 1 m window, Cycles at 16 samples, no denoising: the back wall's mean and noise (standard deviation) without and with a portal (an area light with cycles.is_portal)",
+   "rows": {
+    "without": {
+     "mean": 0.004,
+     "std": 0.0045,
+     "seconds": 0.05
+    },
+    "with portal": {
+     "mean": 0.004,
+     "std": 0.001,
+     "seconds": 0.21
+    }
+   }
+  },
+  {
+   "fact": "a red plate 3 m above the ground, seen from straight above, sun straight down: the centre of the frame (the plate, or the ground in its shadow) and open ground, with the plate visible to the camera and not",
+   "rows": {
+    "CYCLES, visible_camera=True": {
+     "centre_rgb": [
+      0.765,
+      0.062,
+      0.062
+     ],
+     "open_ground_rgb": [
+      0.487,
+      0.484,
+      0.484
+     ]
+    },
+    "CYCLES, visible_camera=False": {
+     "centre_rgb": [
+      0.022,
+      0.002,
+      0.002
+     ],
+     "open_ground_rgb": [
+      0.487,
+      0.484,
+      0.484
+     ]
+    },
+    "BLENDER_EEVEE_NEXT, visible_camera=True": {
+     "centre_rgb": [
+      0.765,
+      0.061,
+      0.061
+     ],
+     "open_ground_rgb": [
+      0.483,
+      0.483,
+      0.483
+     ]
+    },
+    "BLENDER_EEVEE_NEXT, visible_camera=False": {
+     "centre_rgb": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "open_ground_rgb": [
+      0.483,
+      0.483,
+      0.483
+     ]
+    }
+   }
+  }
+ ],
+ "data": {},
+ "args": []
+}
