@@ -95,3 +95,15 @@ modifier_name=..., bake_id=...)` all finished headless on an unsaved file; the b
 **What to do:** step or bake before reading; collisions and solver iterations are yours to build (repeat zones); the
 project judged a node solver worth it only for a constraint Blender's cloth lacks.
 **How it was found:** measured here.
+
+### A force field's strength is a force: it moves light cloth far more than heavy cloth
+**What happens:** fields push with a force, so the same field stirs a 50 g chiffon much more than a 120 g lawn; a flat
+turbulence made the lightest fabric flutter like a flag.
+**Evidence:** the project scaled field strength by the cloth's mass against a reference to get the same look across
+fabrics. Setup that worked for a weak drifting air: `bpy.ops.object.effector_add(type='TURBULENCE')`, `field.strength`
+about 0.35, `size` 0.6, `noise` 0.2, `field.strength` keyed up from 0 and the field's location keyed (linear) so the
+pattern drifts; for a local push a `FORCE` field with `shape='POINT'`, `use_2d_force`, `falloff_type='TUBE'`,
+`use_max_distance`/`distance_max`. (not re-checked here)
+**What to do:** scale field strength with the cloth's mass; remove a field before any later simulation that should not
+feel it (fields act on every simulation in the scene by default).
+**How it was found:** the lightest fabric flapping where the heavier ones barely moved.

@@ -325,9 +325,14 @@
    ]
   },
   {
-   "fact": "crease and bevel weight are attributes in 4.x (crease_edge, crease_vert, bevel_weight_edge/vert); Mesh.edge_creases is the convenience accessor",
+   "fact": "crease is stored in attributes: Mesh.edge_creases / vertex_creases return the crease_edge / crease_vert attributes",
    "has_edge_creases": true,
    "edge_creases": "crease_edge",
+   "vertex_creases": "crease_vert",
+   "bevel_modifier_weight_names": [
+    "bevel_weight_edge",
+    "bevel_weight_vert"
+   ],
    "old_use_customdata_edge_crease": false
   },
   {

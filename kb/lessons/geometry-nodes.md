@@ -38,3 +38,34 @@ are shaping tools; there is no hair or cloth solver among them in 4.5.
 **Evidence:** read from the bundled asset library on Blender 4.5.14. (not re-checked here)
 **What to do:** a solver in nodes means writing one (simulation zone plus repeat zone); 4.5 has no node solver to reuse.
 **How it was found:** surveying what could replace the cloth solver.
+
+### The bundled procedural hair node groups load from a .blend inside Blender's install
+**What happens:** the hair node-group assets ship in Blender's own datafiles, not in `bpy.data`; they need loading, and
+hair needs a UV-mapped surface to attach to.
+**Evidence:** loaded from `bpy.utils.resource_path('LOCAL') + '/datafiles/assets/geometry_nodes/procedural_hair_node_assets.blend'`
+with `bpy.data.libraries.load`; guides built with `bpy.data.hair_curves.new()`, `curves.add_curves(...)`,
+`attributes['position']`, with `curves.surface` and `curves.surface_uv_map` set; "Attach Hair Curves to Surface" first in
+the stack; `uv.smart_project` in edit mode ran headless to give the scalp its UVs. Modifier inputs set by
+`mod[item.identifier]`; attribute inputs through `mod[identifier + '_use_attribute'] = True` and
+`mod[identifier + '_attribute_name']`. (not re-checked here)
+**What to do:** as above; read the group's interface items for identifiers rather than guessing `Socket_N`.
+**How it was found:** building a figure's hair from Blender's own assets.
+
+### Closing grooves narrower than r: two SDF round trips
+**What happens:** a morphological closing (fill inside corners and grooves narrower than r) can be done with the 4.5 grid
+nodes: mesh to SDF, offset out, mesh, back to SDF, offset in.
+**Evidence:** chain `GeometryNodeMeshToSDFGrid` -> `GeometryNodeGridToMesh` (threshold +r) -> `MeshToSDFGrid` ->
+`GridToMesh` (threshold -r), with the band width at least r / voxel size + 4 so the field reaches past the offset
+surfaces; then apply the modifier. (not re-checked here)
+**What to do:** as above; too narrow a band leaves holes where the offset surface leaves the field.
+**How it was found:** smoothing a scanned surface for sculpting.
+
+### A geometry-nodes "follower" works where Surface Deform refuses to bind
+**What happens:** Surface Deform's bind fails on concave or crumpled polygons; a node setup that rebuilds each point from
+three stored triangle corners on the moving surface does the same job and always binds.
+**Evidence:** per point, store the nearest triangle's three vertex indices (INT attributes), barycentric weights and an
+offset in the triangle's frame (FLOAT_VECTOR); in nodes, Object Info (`transform_space='RELATIVE'`) of the moving surface
+-> three Sample Index (FLOAT_VECTOR, POINT domain) of Position -> rebuild the frame -> Set Position. The object input is
+set with `mod[group.interface.items_tree['Cloth'].identifier] = cloth`. (not re-checked here)
+**What to do:** use it for trims that must ride a draped cloth whose faces fold or crumple.
+**How it was found:** binds failing on draped cloth.

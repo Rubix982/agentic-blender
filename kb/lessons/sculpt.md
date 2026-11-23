@@ -24,3 +24,12 @@ kind can deepen folds a mesh already has, not make new ones. (not re-checked her
 **What to do:** for folds the solver leaves out, use the cloth solver itself, displacement, or Multires detail; or drive
 a windowed Blender.
 **How it was found:** the same probe.
+
+### The sculpt mesh filter headless also wants undo steps allowed and a start position
+**What happens:** the probe that made the mesh filter run headless set the undo stack up explicitly and passed the
+operator's mouse argument, which an interactive call fills in.
+**Evidence:** `bpy.context.preferences.edit.undo_steps = 32`, `bpy.ops.ed.undo_push()` before and after
+`mode_set(mode='SCULPT')`, and `bpy.ops.sculpt.mesh_filter(type='RANDOM', start_mouse=(0, 0))` on an 80 x 80 grid:
+FINISHED. (not re-checked here)
+**What to do:** copy that setup; check the points moved (compare `foreach_get('co')` before and after).
+**How it was found:** the same probe.

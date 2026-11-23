@@ -205,8 +205,9 @@ me.uv_layers["UVMap"].uv.foreach_get("vector", uvs)
 - A fresh cube already has `position`, `sharp_face`, `UVMap` and hidden ones whose names start with a dot:
   `.select_vert`, `.edge_verts` (INT32_2D), `.select_edge`, `.select_poly`, `.corner_vert`, `.corner_edge`.
 - `polygon.material_index`, `edge.use_edge_sharp` and `vertex.co` are views onto `material_index`, `sharp_edge` and
-  `position`. Edge creases and bevel weights are the attributes `crease_edge`, `crease_vert`, `bevel_weight_edge`,
-  `bevel_weight_vert` (`me.edge_creases` returns `crease_edge`; `use_customdata_edge_crease` is gone).
+  `position` (`vertex.co` was not tested as a view). Creases are the attributes `crease_edge` and `crease_vert`
+  (`me.edge_creases` and `me.vertex_creases` return them; `use_customdata_edge_crease` is gone); a new Bevel modifier
+  reads its weights from `bevel_weight_edge` and `bevel_weight_vert`.
 - A FLOAT2 CORNER attribute made with `attributes.new` shows up in `uv_layers` too. UV selection and pin state are
   hidden attributes `.vs.<map>`, `.es.<map>`, `.pn.<map>`, created the first time they are written.
 - `attributes.new("position", ...)` on a mesh that has one does not fail: it makes `position.001`. Removing
@@ -305,7 +306,7 @@ Look up any other op with `python3 scripts/kb.py py bmesh.ops.NAME`.
 | custom normals as hidden custom data | attribute `custom_normal`, CORNER, INT16_2D | `[exp: experiments/meshes/smooth_normals.py]` |
 | `polygon.use_smooth` as stored data | attribute `sharp_face`; `use_smooth = False` on one face wrote `sharp_face` True on it | `[exp: experiments/meshes/smooth_normals.py]` |
 | `use_customdata_edge_crease`, edge `crease` custom data | attributes `crease_edge`, `crease_vert` | `[exp: experiments/meshes/attributes.py]` |
-| `bevel_weight` custom data | attributes `bevel_weight_edge`, `bevel_weight_vert` | `[exp: experiments/meshes/solidify_bevel.py]` |
+| `bevel_weight` custom data | attributes `bevel_weight_edge`, `bevel_weight_vert` (the Bevel modifier's default `edge_weight`, `vertex_weight`) | `[exp: experiments/modifiers/solidify_bevel.py]` `[exp: experiments/meshes/attributes.py]` |
 | `mesh.vertex_colors` | `mesh.color_attributes` (`vertex_colors` still present for BYTE_COLOR CORNER) | `[exp: experiments/meshes/attributes.py]` |
 | `polygon.loop_total` writable | read-only; set `loop_start` only | `[exp: experiments/meshes/build_from_arrays.py]` |
 | `object.shade_auto_smooth` adding a checkbox | adds the Smooth by Angle modifier (UI only; CANCELLED headless) | `[exp: experiments/meshes/smooth_normals.py]` |

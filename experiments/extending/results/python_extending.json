@@ -1,0 +1,138 @@
+{
+ "experiment": "experiments/extending/python_extending.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 1.61,
+ "facts": [
+  {
+   "fact": "Custom properties are set by subscript on any ID (obj['name'] = value): strings, numbers, lists and nested dicts are accepted; id_properties_ui(name).update(min=, max=, description=) gives a number limits",
+   "keys": [
+    "count",
+    "nested",
+    "note",
+    "weights"
+   ],
+   "weights_type": "IDPropertyArray",
+   "nested_type": "IDPropertyGroup",
+   "ui": {
+    "subtype": "NONE",
+    "description": "how many",
+    "min": 0,
+    "max": 10,
+    "soft_min": 0,
+    "soft_max": 10,
+    "step": 1,
+    "default": 0
+   }
+  },
+  {
+   "fact": "A PropertyGroup registered at runtime (bpy.utils.register_class) and attached with a PointerProperty works headless; class annotations (name: bpy.props.X(...)) declare its properties",
+   "depth": 0.08,
+   "scene_count": 11,
+   "stored_as_id_property": true
+  },
+  {
+   "fact": "An operator registered at runtime is callable headless as bpy.ops.<bl_idname>; its bl_idname must be 'category.name' in lower case",
+   "result": "{'FINISHED'}",
+   "objects_added": 3
+  },
+  {
+   "fact": "An operator whose bl_idname is not 'category.name' is refused at registration",
+   "result": "ERROR Error: Registering operator class: 'BadOp', invalid bl_idname 'BadName', at position 0"
+  },
+  {
+   "fact": "Saved and reopened in a Blender where the classes are not registered: custom properties come back, and the registered properties' values are still in the file as ID properties (obj['bfg_settings'] holds a group), but obj.bfg_settings does not exist until the classes are registered again",
+   "reopened": {
+    "keys": [
+     "bfg_settings",
+     "count",
+     "nested",
+     "note",
+     "weights"
+    ],
+    "note": "hello",
+    "group": {
+     "depth": 0.07999999821186066
+    },
+    "has_attr": false,
+    "scene_keys": [
+     "bfg_count"
+    ]
+   }
+  },
+  {
+   "fact": "Handlers fire in background mode: frame_change_post (6 calls over 3 frame_set calls and 2 render calls), depsgraph_update_post, render_post, save_post. Opening a file removes every handler not marked @persistent: after open_mainfile only the persistent frame handler still fired, and the persistent load_post ran once. (render.render with no scene camera raises 'Cannot render, no camera'.)",
+   "render_without_camera": "ERROR Error: Cannot render, no camera",
+   "before_load": {
+    "frame_change_post": 6,
+    "depsgraph_update_post": 2,
+    "load_post": 0,
+    "save_post": 1,
+    "render_post": 2,
+    "plain_after_load": 6,
+    "persistent_after_load": 6
+   },
+   "after_load": {
+    "frame_change_post": 6,
+    "depsgraph_update_post": 2,
+    "load_post": 1,
+    "save_post": 1,
+    "render_post": 2,
+    "plain_after_load": 6,
+    "persistent_after_load": 8
+   },
+   "handler_names": [
+    "animation_playback_post",
+    "animation_playback_pre",
+    "annotation_post",
+    "annotation_pre",
+    "blend_import_post",
+    "blend_import_pre",
+    "composite_cancel",
+    "composite_post",
+    "composite_pre",
+    "depsgraph_update_post",
+    "depsgraph_update_pre",
+    "frame_change_post",
+    "frame_change_pre",
+    "load_factory_preferences_post",
+    "load_factory_startup_post",
+    "load_post",
+    "load_post_fail",
+    "load_pre",
+    "object_bake_cancel",
+    "object_bake_complete",
+    "object_bake_pre",
+    "redo_post",
+    "redo_pre",
+    "render_cancel",
+    "render_complete",
+    "render_init",
+    "render_post",
+    "render_pre",
+    "render_stats",
+    "render_write",
+    "save_post",
+    "save_post_fail",
+    "save_pre",
+    "translation_update_post",
+    "undo_post",
+    "undo_pre",
+    "version_update",
+    "xr_session_start_pre"
+   ]
+  },
+  {
+   "fact": "bpy.app.timers do not fire while a background script runs: a timer due after 0.1 s had not fired after the script waited 1 s (timers run from Blender's event loop, which a -b script blocks)",
+   "fired": 0,
+   "is_registered": null
+  },
+  {
+   "fact": "bpy.msgbus subscriptions are not notified in a background script (notifications are sent from the event loop, like timers)",
+   "notified": 0
+  }
+ ],
+ "data": {},
+ "args": []
+}

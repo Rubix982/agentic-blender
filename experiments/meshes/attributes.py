@@ -125,8 +125,10 @@ me.edges[0].use_edge_sharp = True
 se = np.empty(len(me.edges), bool); me.attributes["sharp_edge"].data.foreach_get("value", se)
 E.fact("polygon.material_index and edge.use_edge_sharp are views onto the material_index and sharp_edge attributes",
        material_index=mi.tolist(), sharp_edge=se.astype(int).tolist())
-E.fact("crease and bevel weight are attributes in 4.x (crease_edge, crease_vert, bevel_weight_edge/vert); Mesh.edge_creases is the convenience accessor",
+E.fact("crease is stored in attributes: Mesh.edge_creases / vertex_creases return the crease_edge / crease_vert attributes",
        has_edge_creases=hasattr(me, "edge_creases"), edge_creases=me.edge_creases.name if getattr(me, "edge_creases", None) else None,
+       vertex_creases=me.vertex_creases.name if getattr(me, "vertex_creases", None) else None,
+       bevel_modifier_weight_names=(lambda m: (m.edge_weight, m.vertex_weight))(bpy.context.object.modifiers.new("bv", "BEVEL")),
        old_use_customdata_edge_crease=hasattr(me, "use_customdata_edge_crease"))
 
 # (a reference kept across attributes.new calls: see attribute_stale_ref.py -- it can crash Blender)

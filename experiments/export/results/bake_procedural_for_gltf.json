@@ -1,0 +1,69 @@
+{
+ "experiment": "experiments/export/bake_procedural_for_gltf.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 1.13,
+ "facts": [
+  {
+   "fact": "DIFFUSE (pass_filter COLOR) and ROUGHNESS bakes of a procedural material into 256 px byte images",
+   "results": [
+    "{'FINISHED'}",
+    "{'FINISHED'}"
+   ],
+   "basecolor_std": 0.044,
+   "basecolor_mean": [
+    0.702,
+    0.651,
+    0.655
+   ]
+  },
+  {
+   "fact": "after baking and rewiring, the GLB carries baseColorTexture and a metallicRoughnessTexture (the exporter packs roughness into the green channel of a new image)",
+   "material": {
+    "doubleSided": true,
+    "name": "procedural",
+    "pbrMetallicRoughness": {
+     "baseColorTexture": {
+      "index": 0
+     },
+     "metallicFactor": 0,
+     "metallicRoughnessTexture": {
+      "index": 1
+     }
+    }
+   },
+   "images": [
+    [
+     "bake_procedural_for_gltf-basecolor",
+     "image/png"
+    ],
+    [
+     "bake_procedural_for_gltf-roughness",
+     "image/png"
+    ]
+   ],
+   "glb_bytes": 182892
+  },
+  {
+   "fact": "the baked base colour is kept as the example image (256 px)",
+   "file": "bake_procedural_for_gltf-basecolor.png"
+  }
+ ],
+ "data": {
+  "material": {
+   "doubleSided": true,
+   "name": "procedural",
+   "pbrMetallicRoughness": {
+    "baseColorTexture": {
+     "index": 0
+    },
+    "metallicFactor": 0,
+    "metallicRoughnessTexture": {
+     "index": 1
+    }
+   }
+  }
+ },
+ "args": []
+}

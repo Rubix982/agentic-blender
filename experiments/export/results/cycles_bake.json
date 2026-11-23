@@ -1,0 +1,96 @@
+{
+ "experiment": "experiments/export/cycles_bake.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 1.96,
+ "facts": [
+  {
+   "fact": "bake settings: bake type is scene.cycles.bake_type (the op's type= overrides it); margin and other options are on scene.render.bake; defaults",
+   "cycles_bake_type": "COMBINED",
+   "margin": 16,
+   "margin_type": "ADJACENT_FACES",
+   "use_clear": true,
+   "target": "IMAGE_TEXTURES",
+   "normal_space": "TANGENT",
+   "device": "METAL"
+  },
+  {
+   "fact": "bpy.ops.object.bake raises RuntimeError when the mesh has no UV map ('No active UV layer found') or the engine is not Cycles ('Current render engine does not support baking'); with no Image Texture node in the material it does not raise: it returns {'CANCELLED'} and bakes nothing, so check the return value",
+   "errors": {
+    "no image node": "{'CANCELLED'} in 0.00 s",
+    "no UV map": "Error: No active UV layer found in the object \"Plane\"",
+    "engine EEVEE": "Error: Current render engine does not support baking"
+   }
+  },
+  {
+   "fact": "DIFFUSE with pass_filter={'COLOR'} writes the diffuse albedo alone, linear, in a float image: Base Color (0.8, 0.2, 0.1) bakes as about 0.96 of itself, because the Principled specular layer takes its share; with Specular IOR Level 0 it bakes as the Base Color itself",
+   "result": "{'FINISHED'} in 0.33 s",
+   "texel": [
+    0.77,
+    0.193,
+    0.096
+   ],
+   "texel_specular_level_0": [
+    0.8,
+    0.2,
+    0.1
+   ]
+  },
+  {
+   "fact": "DIFFUSE with DIRECT+INDIRECT+COLOR bakes lighting in: the texel under the cube is darker than an open one",
+   "open_texel": [
+    0.906,
+    0.222,
+    0.111
+   ],
+   "under_cube": [
+    0.287,
+    0.024,
+    0.009
+   ]
+  },
+  {
+   "fact": "NORMAL (tangent space, the default) of a flat face is (0.5, 0.5, 1.0)",
+   "texel": [
+    0.5,
+    0.5,
+    1.0
+   ]
+  },
+  {
+   "fact": "AO is 1 on open floor and darker next to the cube",
+   "open": 0.969,
+   "near_cube": 0.469
+  },
+  {
+   "fact": "bake times on Metal at 128 px, 32 samples",
+   "times": {
+    "DIFFUSE color only": "{'FINISHED'} in 0.33 s",
+    "DIFFUSE direct+indirect+color": "{'FINISHED'} in 0.36 s",
+    "NORMAL tangent": "{'FINISHED'} in 0.23 s",
+    "AO": "{'FINISHED'} in 0.29 s",
+    "COMBINED": "{'FINISHED'} in 0.39 s"
+   }
+  },
+  {
+   "fact": "a baked image lives only in memory (is_dirty True) until it is saved: set filepath_raw and file_format, then image.save()",
+   "is_dirty": true
+  },
+  {
+   "fact": "image.save() wrote the bake to disk",
+   "exists": true,
+   "bytes": 821
+  }
+ ],
+ "data": {
+  "times": {
+   "DIFFUSE color only": "{'FINISHED'} in 0.33 s",
+   "DIFFUSE direct+indirect+color": "{'FINISHED'} in 0.36 s",
+   "NORMAL tangent": "{'FINISHED'} in 0.23 s",
+   "AO": "{'FINISHED'} in 0.29 s",
+   "COMBINED": "{'FINISHED'} in 0.39 s"
+  }
+ },
+ "args": []
+}

@@ -66,6 +66,7 @@ memory with things that can be checked. Paths below are relative to this file's 
 | `areas/compositing.md` | render passes, the compositor in background mode, multilayer EXR |
 | `areas/export-baking.md` | glTF, OBJ, USD, FBX, STL, PLY: what survives; baking textures |
 | `areas/simulation.md` | cloth, rigid bodies, soft bodies, simulation zones; baking headless; caches |
+| `areas/python-extending.md` | custom properties, property groups, operators, handlers (and @persistent), timers and msgbus (not in background mode) |
 | `areas/rigging-animation.md` | armatures from Python, automatic weights, poses, keyframes and 4.4+ actions, shape keys, drivers |
 
 Lessons from real projects, by area, with what was measured: `../../kb/lessons/` in the source repository.
