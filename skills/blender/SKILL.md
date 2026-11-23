@@ -121,4 +121,22 @@ What an agent's memory most often gets wrong in 4.5, one line each; the page has
 - Grease Pencil was rewritten in 4.3: `bpy.data.grease_pencils_v3`, `drawing.add_strokes()`; the old types remain for
   annotations, so old code runs and draws nothing. → `lines.md`
 
-<!-- simulation, rigging, compositing and export traps are added when those pages are final -->
+**Simulation**
+- Jumping frames does not simulate: from frame 1 to 60 a cloth took one solver step over the gap and fell 4.9 m
+  through its collider; a rigid body world did nothing. Step frame by frame or bake. → `simulation.md`
+- `ptcache.bake` fails its poll headless without `temp_override(point_cache=...)`; `bake_all` works. → `simulation.md`
+- Setting almost any cloth or collider property, even to the value it already has, throws away the unbaked frames
+  after the current one; a baked cache survives. → `simulation.md`
+- Cloth pins at weight 1.0 are exact and do not collide; at 0.99 they are springs that seams can pull 15 cm. A scene
+  has no rigid body world until one is added; a MESH collision shape rests 36.6 mm high at the default margin. → `simulation.md`
+
+**Rigging and animation**
+- Edit bones exist only in edit mode, and `mode_set` acts on the real active object (`temp_override(active_object=)`
+  does not redirect it); a zero-length bone is deleted silently on leaving edit mode. → `rigging-animation.md`
+- `parent_set(type="ARMATURE_AUTO")` with the mesh unselected reports FINISHED and does nothing. → `rigging-animation.md`
+- Pose bones default to QUATERNION; pose and world matrices are stale until `view_layer.update()`. → `rigging-animation.md`
+- Actions are slotted since 4.4: keyed curves live in `action.layers[...].strips[...].channelbag(slot)`; an object given
+  another object's action does not move until its slot is set; shape-key animation is on the Key data-block.
+  → `rigging-animation.md`
+
+<!-- compositing and export traps are added when those pages are final -->

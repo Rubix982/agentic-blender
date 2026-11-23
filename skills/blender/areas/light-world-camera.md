@@ -52,7 +52,7 @@ convert it to irradiance, E = pi x radiance / 0.8.
 ```python
 sun = bpy.data.objects.new("Sun", bpy.data.lights.new("Sun", "SUN"))
 sun.data.energy = 3.0                       # W/m2 on a surface facing the sun
-sun.data.angle = math.radians(2)            # angular diameter: shadow softness
+sun.data.angle = math.radians(2)            # angular diameter: shadow softness (sun_angle_soft_shadow.py)
 sun.rotation_euler = (0.7, 0.2, 0.5)        # only direction matters for a sun
 scene.collection.objects.link(sun)
 
@@ -111,9 +111,10 @@ Sky Texture:
 ```python
 sky = wnt.nodes.new("ShaderNodeTexSky")     # sky_type defaults to NISHITA
 wnt.links.new(sky.outputs["Color"], bg.inputs["Color"])
-sky.sun_elevation = math.radians(45)
-sky.sun_rotation = 0.0
-bg.inputs["Strength"].default_value = 0.02  # Nishita is in physical-ish units: scale it down
+sky.sky_type = "NISHITA"
+sky.sun_elevation = math.radians(elev)      # radians; sun_rotation turns it about Z
+# PREETHAM / HOSEK_WILKIE take a direction vector instead:
+sky.sun_direction = (0, -math.cos(math.radians(45)), math.sin(math.radians(45)))
 ```
 
 | sky_type | parameters (default) | floor E at sun 45 degrees, Cycles (R, G, B) |

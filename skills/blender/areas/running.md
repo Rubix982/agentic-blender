@@ -37,6 +37,8 @@ real project, `[doc: link]` Blender's own documentation. Command-line reference:
 5. **Python drivers silently stay at 0.** A driver whose expression needs Python (`__import__("math").pi`) is not
    evaluated in a file opened headless: it read 0.0. With `-y` (allow auto-run of scripts) it read 3.1416. A simple
    expression (`frame * 2`) is evaluated either way, by Blender's own evaluator. `[exp: experiments/running/cli_behaviour.py]`
+   The block applies to files loaded: a Python-only driver created by the script itself, in the same session, did
+   evaluate (0.4). `[exp: experiments/rigging/shapekeys_drivers.py]`
 6. **Holding on to Blender data across a change that re-allocates it.** References to a mesh's vertices, polygons or
    UVs, an armature's bones or a curve's points die when the mode switches (`object.mode_set`) or when elements are
    added; using them can crash Blender. Re-fetch after the change. Removed data must not be touched again.

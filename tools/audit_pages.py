@@ -84,9 +84,13 @@ def blocks(text):
         cur.append(line)
     if cur:
         out.append("\n".join(cur))
-    merged = []   # a table is vouched for by the tag line right under it
+    merged = []   # a table is vouched for by a tag line right under it, or by one right above it that ends in ':'
     for blk in out:
-        if merged and merged[-1].lstrip().startswith("|") and TAG.search(blk) and not blk.lstrip().startswith("|"):
+        is_table = blk.lstrip().startswith("|")
+        prev = merged[-1] if merged else ""
+        if prev.lstrip().startswith("|") and TAG.search(blk) and not is_table:
+            merged[-1] += "\n" + blk
+        elif is_table and TAG.search(prev) and prev.rstrip().endswith(":"):
             merged[-1] += "\n" + blk
         else:
             merged.append(blk)
