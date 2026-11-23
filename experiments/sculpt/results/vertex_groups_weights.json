@@ -3,12 +3,12 @@
  "blender": "4.5.14 LTS",
  "machine": "Darwin arm64",
  "date": "2026-11-23",
- "seconds": 0.72,
+ "seconds": 0.85,
  "facts": [
   {
    "fact": "vertex_groups[...].add(indices, weight, 'REPLACE') writes one weight to many points in one call; a different weight per point needs one call per point (no foreach_set for vertex groups): times for 100,489 points",
    "points": 100489,
-   "one_call_s": 0.005,
+   "one_call_s": 0.004,
    "per_point_calls_s": 0.06
   },
   {
@@ -37,7 +37,7 @@
    ]
   },
   {
-   "fact": "vertex groups are not listed in mesh.attributes in 4.5 (they live in the mesh's deform layer)",
+   "fact": "vertex groups are not listed in mesh.attributes in 4.5",
    "in_attributes": false,
    "attribute_names": [
     "position",

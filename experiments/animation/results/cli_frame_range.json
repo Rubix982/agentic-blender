@@ -3,7 +3,7 @@
  "blender": "4.5.14 LTS",
  "machine": "Darwin arm64",
  "date": "2026-11-23",
- "seconds": 5.27,
+ "seconds": 5.31,
  "facts": [
   {
    "fact": "-a renders the file's own range (frame_start..frame_end, 1-10 here) to its render.filepath, relative to the .blend",
@@ -19,7 +19,7 @@
     "out/f_0009.png",
     "out/f_0010.png"
    ],
-   "seconds": 0.49
+   "seconds": 0.52
   },
   {
    "fact": "-s and -e take effect only before -a: '-s 2 -e 4 -a' renders 2-4; '-a -s 2 -e 4' renders the file's whole range",
@@ -75,7 +75,7 @@
    ]
   },
   {
-   "fact": "-F FFMPEG on a file whose FFMPEG settings were never set: what is written",
+   "fact": "-F FFMPEG on a file whose FFMPEG settings were never set writes one MKV named with the frame range (the FFMPEG defaults fill in), exit code 0",
    "files": [
     "out/f_0001-0010.mkv"
    ],
@@ -87,7 +87,7 @@
   "cases": {
    "-a": {
     "exit": 0,
-    "seconds": 0.49,
+    "seconds": 0.52,
     "files": [
      "out/f_0001.png",
      "out/f_0002.png",
@@ -105,7 +105,7 @@
    },
    "-s 2 -e 4 -a": {
     "exit": 0,
-    "seconds": 0.47,
+    "seconds": 0.49,
     "files": [
      "out/f_0002.png",
      "out/f_0003.png",
@@ -116,7 +116,7 @@
    },
    "-a -s 2 -e 4": {
     "exit": 0,
-    "seconds": 0.49,
+    "seconds": 0.5,
     "files": [
      "out/f_0001.png",
      "out/f_0002.png",
@@ -166,7 +166,7 @@
    },
    "-f -1 (relative to end)": {
     "exit": 0,
-    "seconds": 0.46,
+    "seconds": 0.45,
     "files": [
      "out/f_0010.png"
     ],
@@ -175,7 +175,7 @@
    },
    "-o //other/g_## -F JPEG -s 1 -e 2 -a": {
     "exit": 0,
-    "seconds": 0.46,
+    "seconds": 0.45,
     "files": [
      "other/g_01.jpg",
      "other/g_02.jpg"
@@ -185,7 +185,7 @@
    },
    "-o /abs/h_ -x 0 -f 1": {
     "exit": 0,
-    "seconds": 0.46,
+    "seconds": 0.45,
     "files": [
      "abs/h_0001"
     ],
@@ -194,7 +194,7 @@
    },
    "-F FFMPEG -s 1 -e 10 -a (file never set FFMPEG)": {
     "exit": 0,
-    "seconds": 0.48,
+    "seconds": 0.49,
     "files": [
      "out/f_0001-0010.mkv"
     ],

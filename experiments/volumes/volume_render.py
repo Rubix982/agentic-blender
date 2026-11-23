@@ -141,4 +141,4 @@ E.fact("a Volume object with no material still renders in Cycles (a default grey
        no_material=nomat, volume_into_surface=wrong, volume_into_surface_eevee=wrong_eevee,
        for_reference=res[f"Cycles {dev}"])
 os.remove(path)
-E.save(results=res, device=dev, size=S)
+E.save(results=res, device=dev, size=S, voxel_amount=64, samples=32, densities=[5.0, 2.0])

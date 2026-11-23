@@ -65,7 +65,7 @@ bpy.ops.object.mode_set(mode="OBJECT")          # then read positions with forea
 | mesh filter ERASE_DISPLACEMENT (no Multires) | CANCELLED | 0 moved |
 | `sculpt.cloth_filter` | PASS_THROUGH | 0 moved |
 | `paint.mask_flood_fill(mode="VALUE", value=0.75)` | FINISHED | wrote `.sculpt_mask` (FLOAT, POINT) = 0.75 |
-| `sculpt.dynamic_topology_toggle`, then `detail_flood_fill` (constant detail 4) | FINISHED | 2048 faces became about 1,320 triangles |
+| `sculpt.dynamic_topology_toggle`, then `detail_flood_fill` (constant detail 4) | FINISHED | 2048 faces became 1324 triangles |
 | `sculpt.sample_detail_size` | CANCELLED | detail unchanged |
 | `object.voxel_remesh` (from sculpt or object mode) | FINISHED | voxel 0.05: 7830 faces; 0.1: 1998 faces |
 | `object.quadriflow_remesh(target_faces=500)` | FINISHED | 537 quads in 0.11 s |
@@ -74,8 +74,8 @@ bpy.ops.object.mode_set(mode="OBJECT")          # then read positions with forea
 | `sculpt.brush_stroke` (stroke as data) | poll fails; in the 3D View override FINISHED | 233 points moved near the stroke |
 
 `[exp: experiments/sculpt/sculpt_ops_probe.py]` The filter types ran one after another on the same sphere, so their
-sizes of movement are not comparable with each other. Dyntopo's face count varied by a few faces between runs (1322,
-1324, 1334). `[exp: experiments/sculpt/sculpt_ops_probe.py]`
+sizes of movement are not comparable with each other. Dyntopo's triangle count varied by a few faces from run to
+run; the table shows the recorded run. `[exp: experiments/sculpt/sculpt_ops_probe.py]`
 
 **Masking by data.** The sculpt mask is a FLOAT POINT attribute named `.sculpt_mask` (1 = fully masked). Written from
 Python before entering sculpt mode, it held the filter: with the top half masked, 0 of its 961 points moved and all 1025
@@ -88,6 +88,7 @@ m.data.foreach_set("value", (z > 0).astype(np.float32))      # z: each point's h
 
 **A sculpt stroke as data.** Only inside the 3D View override, and with object-space locations (the `mouse` values do
 not place it): ten stroke points at (0, -1, 0), brush size 50, moved 233 points whose centre was (0, -0.832, 0).
+`[exp: experiments/sculpt/sculpt_ops_probe.py]`
 
 ```python
 stroke = [dict(name="", location=(0, -1, 0), mouse=(100 + 5 * i, 100), mouse_event=(100 + 5 * i, 100), pressure=1.0,

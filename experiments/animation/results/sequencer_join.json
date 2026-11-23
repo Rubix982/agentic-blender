@@ -3,7 +3,7 @@
  "blender": "4.5.14 LTS",
  "machine": "Darwin arm64",
  "date": "2026-11-23",
- "seconds": 0.24,
+ "seconds": 0.23,
  "facts": [
   {
    "fact": "4.5 names the sequencer's types Strip, ImageStrip, MovieStrip, StripsTopLevel, StripElement; the pre-4.4 Sequence names are gone from bpy.types",
@@ -82,7 +82,7 @@
    "python_warnings": []
   },
   {
-   "fact": "bpy.ops.sequencer.image_strip_add in background mode, without an override",
+   "fact": "bpy.ops.sequencer.image_strip_add fails its poll in background mode without an override (use strips.new_image)",
    "result": [
     "error",
     "RuntimeError: Operator bpy.ops.sequencer.image_strip_add.poll() failed, context is incorrect"

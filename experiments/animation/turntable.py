@@ -161,7 +161,7 @@ defaults_fp = dict(use_curve_follow=fp.use_curve_follow, use_fixed_location=fp.u
 scene.frame_set(1); a1 = camB.matrix_world.translation.copy()
 scene.frame_set(50); a50 = camB.matrix_world.translation.copy()
 E.fact("a Follow Path constraint alone does not move the camera over time: the curve's eval_time is not animated "
-       "(path_duration 100) until it is keyed", moved_between_1_and_50=round((a50 - a1).length, 4), **defaults_fp)
+       "(path_duration 100) until it is keyed", frames_compared=[1, 50], moved_between=round((a50 - a1).length, 4), **defaults_fp)
 cu.path_duration = N
 cu.eval_time = 0; cu.keyframe_insert("eval_time", frame=1)
 cu.eval_time = N; cu.keyframe_insert("eval_time", frame=N + 1)

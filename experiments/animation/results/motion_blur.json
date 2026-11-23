@@ -3,7 +3,7 @@
  "blender": "4.5.14 LTS",
  "machine": "Darwin arm64",
  "date": "2026-11-23",
- "seconds": 1.79,
+ "seconds": 2.45,
  "facts": [
   {
    "fact": "motion blur is one switch for EEVEE and Cycles in 4.5, render.use_motion_blur (off by default), shutter 0.5 frames centred on the frame; EEVEE adds motion_blur_steps (1) and motion_blur_max (32 px)",
@@ -16,19 +16,19 @@
   {
    "fact": "without motion blur the 1 m square is about 32 px wide in every engine",
    "BLENDER_WORKBENCH off": {
-    "seconds": 0.114,
+    "seconds": 0.067,
     "extent_px": 34,
     "partial_px": 4,
     "full_px": 30
    },
    "BLENDER_EEVEE_NEXT off": {
-    "seconds": 0.152,
+    "seconds": 0.307,
     "extent_px": 34,
     "partial_px": 4,
     "full_px": 30
    },
    "CYCLES off": {
-    "seconds": 0.397,
+    "seconds": 0.973,
     "extent_px": 34,
     "partial_px": 4,
     "full_px": 30
@@ -43,37 +43,37 @@
     "full_px": 30
    },
    "BLENDER_WORKBENCH 1.0": {
-    "seconds": 0.005,
+    "seconds": 0.004,
     "extent_px": 34,
     "partial_px": 4,
     "full_px": 30
    },
    "BLENDER_EEVEE_NEXT 0.5": {
-    "seconds": 0.169,
+    "seconds": 0.175,
     "extent_px": 50,
     "partial_px": 32,
     "full_px": 18
    },
    "BLENDER_EEVEE_NEXT 1.0": {
-    "seconds": 0.166,
+    "seconds": 0.167,
     "extent_px": 65,
     "partial_px": 63,
     "full_px": 2
    },
    "BLENDER_EEVEE_NEXT 0.5 steps4": {
-    "seconds": 0.09,
+    "seconds": 0.091,
     "extent_px": 50,
     "partial_px": 32,
     "full_px": 18
    },
    "CYCLES 0.5": {
-    "seconds": 0.329,
+    "seconds": 0.303,
     "extent_px": 48,
     "partial_px": 30,
     "full_px": 18
    },
    "CYCLES 1.0": {
-    "seconds": 0.275,
+    "seconds": 0.279,
     "extent_px": 63,
     "partial_px": 59,
     "full_px": 4
@@ -83,7 +83,7 @@
  "data": {
   "results": {
    "BLENDER_WORKBENCH off": {
-    "seconds": 0.114,
+    "seconds": 0.067,
     "extent_px": 34,
     "partial_px": 4,
     "full_px": 30
@@ -95,56 +95,61 @@
     "full_px": 30
    },
    "BLENDER_WORKBENCH 1.0": {
-    "seconds": 0.005,
+    "seconds": 0.004,
     "extent_px": 34,
     "partial_px": 4,
     "full_px": 30
    },
    "BLENDER_EEVEE_NEXT off": {
-    "seconds": 0.152,
+    "seconds": 0.307,
     "extent_px": 34,
     "partial_px": 4,
     "full_px": 30
    },
    "BLENDER_EEVEE_NEXT 0.5": {
-    "seconds": 0.169,
+    "seconds": 0.175,
     "extent_px": 50,
     "partial_px": 32,
     "full_px": 18
    },
    "BLENDER_EEVEE_NEXT 1.0": {
-    "seconds": 0.166,
+    "seconds": 0.167,
     "extent_px": 65,
     "partial_px": 63,
     "full_px": 2
    },
    "BLENDER_EEVEE_NEXT 0.5 steps4": {
-    "seconds": 0.09,
+    "seconds": 0.091,
     "extent_px": 50,
     "partial_px": 32,
     "full_px": 18
    },
    "CYCLES off": {
-    "seconds": 0.397,
+    "seconds": 0.973,
     "extent_px": 34,
     "partial_px": 4,
     "full_px": 30
    },
    "CYCLES 0.5": {
-    "seconds": 0.329,
+    "seconds": 0.303,
     "extent_px": 48,
     "partial_px": 30,
     "full_px": 18
    },
    "CYCLES 1.0": {
-    "seconds": 0.275,
+    "seconds": 0.279,
     "extent_px": 63,
     "partial_px": 59,
     "full_px": 4
    }
   },
   "cycles_device": "METAL",
-  "px_per_m": 32.0
+  "px_per_m": 32.0,
+  "samples": 64,
+  "size": [
+   256,
+   64
+  ]
  },
  "args": []
 }

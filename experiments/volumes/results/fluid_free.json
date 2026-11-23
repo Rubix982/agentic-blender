@@ -3,13 +3,13 @@
  "blender": "4.5.14 LTS",
  "machine": "Darwin arm64",
  "date": "2026-11-23",
- "seconds": 0.46,
+ "seconds": 0.42,
  "facts": [
   {
-   "fact": "in background mode: a first bake_all writes 20 files; bake_all on an already-baked domain returns FINISHED without baking again; free_all returns at once with has_cache_baked_data still True and the files still being deleted (19 left), and both had settled (False, 0 files) after a frame_set; a bake_all then bakes all 20 again; pointing a baked domain at a new cache_directory and calling bake_all writes only 2 files there",
+   "fact": "in background mode: a first bake_all writes 20 files; bake_all on an already-baked domain returns FINISHED without baking again; free_all returns at once while has_cache_baked_data still reads True and the files are still on disk (19 or 20 of them in two runs), and both had settled (False, 0 files) after a frame_set; a bake_all then bakes all 20 again; pointing a baked domain at a new cache_directory and calling bake_all writes only 2 files there",
    "1 bake_all": {
     "ret": "{'FINISHED'}",
-    "seconds": 0.145,
+    "seconds": 0.147,
     "baked": true,
     "baking": false,
     "files_a": 20,
@@ -28,7 +28,7 @@
     "seconds": 0.0,
     "baked": true,
     "baking": false,
-    "files_a": 20,
+    "files_a": 19,
     "files_b": 0
    },
    "4 after frame_set": {
@@ -37,7 +37,7 @@
    },
    "5 bake_all after free": {
     "ret": "{'FINISHED'}",
-    "seconds": 0.168,
+    "seconds": 0.134,
     "baked": true,
     "baking": false,
     "files_a": 20,
@@ -45,7 +45,7 @@
    },
    "6 bake_all with a new cache_directory": {
     "ret": "{'FINISHED'}",
-    "seconds": 0.046,
+    "seconds": 0.05,
     "baked": true,
     "baking": false,
     "files_a": 20,

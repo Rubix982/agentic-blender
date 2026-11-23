@@ -96,4 +96,4 @@ E.fact("without motion blur the 1 m square is about 32 px wide in every engine",
 E.fact("with motion blur, shutter 0.5 widens it by about 16 px (half a frame of travel) and shutter 1.0 by about 32 px "
        "in EEVEE and Cycles; Workbench ignores the switch", **{k: v for k, v in res.items() if not k.endswith("off")})
 os.remove(path)
-E.save(results=res, cycles_device=dev, px_per_m=W / 8.0)
+E.save(results=res, cycles_device=dev, px_per_m=W / 8.0, samples=64, size=[W, Hh])

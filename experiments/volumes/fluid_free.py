@@ -60,8 +60,9 @@ steps["6 bake_all with a new cache_directory"] = op("bake_all")
 for k, v in steps.items():
     print(k, v, flush=True)
 E.fact("in background mode: a first bake_all writes 20 files; bake_all on an already-baked domain returns FINISHED "
-       "without baking again; free_all returns at once with has_cache_baked_data still True and the files still being "
-       "deleted (19 left), and both had settled (False, 0 files) after a frame_set; a bake_all then bakes all 20 again; "
+       "without baking again; free_all returns at once while has_cache_baked_data still reads True and the files are "
+       "still on disk (19 or 20 of them in two runs), and both had settled (False, 0 files) after a frame_set; a "
+       "bake_all then bakes all 20 again; "
        "pointing a baked domain at a new cache_directory and calling bake_all writes only 2 files there", **steps)
 shutil.rmtree(TMP, ignore_errors=True)
 E.save()

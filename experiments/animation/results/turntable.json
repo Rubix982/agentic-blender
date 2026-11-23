@@ -68,7 +68,11 @@
   },
   {
    "fact": "a Follow Path constraint alone does not move the camera over time: the curve's eval_time is not animated (path_duration 100) until it is keyed",
-   "moved_between_1_and_50": 0.0,
+   "frames_compared": [
+    1,
+    50
+   ],
+   "moved_between": 0.0,
    "use_curve_follow": false,
    "use_fixed_location": false,
    "forward_axis": "FORWARD_Y",

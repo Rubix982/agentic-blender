@@ -80,7 +80,7 @@ blender -b scene.blend -o //other/g_## -F JPEG -s 1 -e 2 -a   # other/g_01.jpg, 
 | `-o /abs/h_ -x 0 -f 1` | `h_0001` (no extension) |
 | `-F FFMPEG -s 1 -e 10 -a` | `out/f_0001-0010.mkv` |
 
-`[exp: experiments/animation/cli_frame_range.py]` Each run of this 64 px Workbench file took about 0.5 s, start-up
+`[exp: experiments/animation/cli_frame_range.py]` Each run of this small Workbench file took about 0.5 s, start-up
 included. `//` is the `.blend`'s folder. `-F FFMPEG` on a file that never chose FFMPEG still wrote a video, with the
 defaults of item 2 (MKV). `[exp: experiments/animation/cli_frame_range.py]`
 
@@ -146,7 +146,8 @@ the frame) and 2.0 with `FIT`, `FILL` or `STRETCH`. `[exp: experiments/animation
 
 The camera parented to an empty at the subject's centre, the empty's Z rotation keyed from 0 at frame 1 to 360
 degrees at frame N + 1, keys made LINEAR, and frames 1 to N rendered: frame N + 1 would repeat frame 1, so the loop
-closes without a doubled frame. 24 frames gave steps of exactly 15.0 degrees.
+closes without a doubled frame. 24 frames gave steps of exactly 15.0 degrees and a full 360.
+`[exp: experiments/animation/turntable.py]`
 
 ```python
 from bpy_extras import anim_utils
@@ -195,7 +196,8 @@ scene.render.motion_blur_shutter = 0.5     # in frames, centred on the frame (mo
 scene.eevee.motion_blur_steps = 1          # EEVEE only; motion_blur_max 32 px
 ```
 
-A 1 m square moving 1 m (32 px) per frame, seen from above at 32 px per metre, 64 samples:
+A 1 m square moving 1 m (32 px) per frame, seen from above at 32 px per metre, 64 samples, 256 x 64:
+`[exp: experiments/animation/motion_blur.py]`
 
 | Engine | off: lit width | shutter 0.5 | shutter 1.0 |
 |---|---|---|---|
@@ -204,13 +206,14 @@ A 1 m square moving 1 m (32 px) per frame, seen from above at 32 px per metre, 6
 | Cycles (Metal) | 34 px | 48 px | 63 px |
 
 `[exp: experiments/animation/motion_blur.py]` So the smear is about the shutter times the distance moved in a frame.
-EEVEE with `motion_blur_steps = 4` gave the same 50 px for this straight-line motion. Render time hardly changed at
-this size (EEVEE 0.152 s off, 0.169 s at 0.5). `[exp: experiments/animation/motion_blur.py]`
+EEVEE with `motion_blur_steps = 4` gave the same 50 px for this straight-line motion. Blur did not make frames slower at
+this size (EEVEE 0.175 s at shutter 0.5 and 0.167 s at 1.0; its first render, without blur, took 0.307 s). `[exp: experiments/animation/motion_blur.py]`
 
 ## Render time per frame
 
 A sphere on a plane under an area light, 256 x 256, 5 frames in one `render(animation=True)`, each frame timed between
 the `render_pre` and `render_post` handlers. No denoising, no adaptive sampling.
+`[exp: experiments/animation/engine_frame_time.py]`
 
 | Engine | first frame | median of frames 2-5 |
 |---|---|---|
@@ -229,7 +232,8 @@ EEVEE run (16 samples); that this is shader compilation was not checked. For a q
 
 ## Reference: containers and codecs, measured
 
-24 frames of a moving cube, Workbench, 128 x 128, quality MEDIUM, read back with `bpy.data.movieclips.load`:
+24 frames of a moving cube, Workbench, 128 x 128, quality MEDIUM, read back with `bpy.data.movieclips.load`.
+`[exp: experiments/animation/video_codecs.py]`
 
 | Container / codec | Extension | Bytes | Frames read back |
 |---|---|---|---|
