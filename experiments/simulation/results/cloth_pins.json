@@ -1,0 +1,429 @@
+{
+ "experiment": "experiments/simulation/cloth_pins.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 3.95,
+ "facts": [
+  {
+   "fact": "a point pinned at weight 1.0 is held exactly: the sheet does not drop at all, at any pin stiffness",
+   "drop_m": {
+    "1.0": 0.0,
+    "10.0": 0.0,
+    "50.0": 0.0
+   }
+  },
+  {
+   "fact": "below weight 1.0 a pin is a spring: at the default stiffness (1) a sheet pinned everywhere at 0.99 sags, and stiffness 50 holds it much closer",
+   "drop_w099_m": {
+    "1.0": 0.0002,
+    "10.0": 0.0,
+    "50.0": 0.0
+   },
+   "drop_w0999_m": {
+    "1.0": 0.0001,
+    "10.0": 0.0,
+    "50.0": 0.0
+   },
+   "drop_w05_m": {
+    "1.0": 0.0024,
+    "10.0": 0.0002,
+    "50.0": 0.0
+   }
+  },
+  {
+   "fact": "pinned points (weight 1) follow the object's animation exactly; at weight 0.9 they lag behind it, less at pin stiffness 50",
+   "rows": [
+    {
+     "weight": 1.0,
+     "pin_stiffness": 1.0,
+     "max_x_lag_m_by_frame": [
+      [
+       6,
+       0.0
+      ],
+      [
+       12,
+       0.0
+      ],
+      [
+       24,
+       0.0
+      ],
+      [
+       48,
+       0.0
+      ]
+     ]
+    },
+    {
+     "weight": 1.0,
+     "pin_stiffness": 50.0,
+     "max_x_lag_m_by_frame": [
+      [
+       6,
+       0.0
+      ],
+      [
+       12,
+       0.0
+      ],
+      [
+       24,
+       0.0
+      ],
+      [
+       48,
+       0.0
+      ]
+     ]
+    },
+    {
+     "weight": 0.9,
+     "pin_stiffness": 1.0,
+     "max_x_lag_m_by_frame": [
+      [
+       6,
+       0.0226
+      ],
+      [
+       12,
+       0.0045
+      ],
+      [
+       24,
+       0.0021
+      ],
+      [
+       48,
+       0.0001
+      ]
+     ]
+    },
+    {
+     "weight": 0.9,
+     "pin_stiffness": 50.0,
+     "max_x_lag_m_by_frame": [
+      [
+       6,
+       0.0136
+      ],
+      [
+       12,
+       0.0023
+      ],
+      [
+       24,
+       0.0
+      ],
+      [
+       48,
+       0.0
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "fact": "the cloth reads the pin weights every frame from the modifiers above it: a pin let go by a keyframed Vertex Weight Mix at frame 20 holds before and drops after",
+   "stack": [
+    "VERTEX_WEIGHT_MIX",
+    "CLOTH"
+   ],
+   "back_row_drop_m_by_frame": {
+    "10": 0.0,
+    "19": 0.0,
+    "21": 0.0344,
+    "30": 0.7875,
+    "48": 3.882
+   }
+  },
+  {
+   "fact": "pins below weight 1 give way to sewing springs (max force 200) at the default pin stiffness 1; stiffness 50 holds them far better; weight 1 does not move",
+   "rows": [
+    {
+     "weight": 1.0,
+     "pin_stiffness": 1.0,
+     "seam_edge_moved_max_m": 0.0,
+     "median_m": 0.0
+    },
+    {
+     "weight": 1.0,
+     "pin_stiffness": 50.0,
+     "seam_edge_moved_max_m": 0.0,
+     "median_m": 0.0
+    },
+    {
+     "weight": 0.99,
+     "pin_stiffness": 1.0,
+     "seam_edge_moved_max_m": 0.153,
+     "median_m": 0.1509
+    },
+    {
+     "weight": 0.99,
+     "pin_stiffness": 50.0,
+     "seam_edge_moved_max_m": 0.0389,
+     "median_m": 0.0379
+    },
+    {
+     "weight": 0.9,
+     "pin_stiffness": 1.0,
+     "seam_edge_moved_max_m": 0.1608,
+     "median_m": 0.1591
+    },
+    {
+     "weight": 0.9,
+     "pin_stiffness": 50.0,
+     "seam_edge_moved_max_m": 0.0493,
+     "median_m": 0.0478
+    },
+    {
+     "weight": 0.5,
+     "pin_stiffness": 1.0,
+     "seam_edge_moved_max_m": 0.1921,
+     "median_m": 0.1921
+    },
+    {
+     "weight": 0.5,
+     "pin_stiffness": 50.0,
+     "seam_edge_moved_max_m": 0.1237,
+     "median_m": 0.1206
+    }
+   ]
+  }
+ ],
+ "data": {
+  "sag": [
+   {
+    "pin_stiffness": 1.0,
+    "weight": 1.0,
+    "mean_drop_m": 0.0,
+    "max_drop_m": 0.0
+   },
+   {
+    "pin_stiffness": 1.0,
+    "weight": 0.999,
+    "mean_drop_m": 0.0001,
+    "max_drop_m": 0.0001
+   },
+   {
+    "pin_stiffness": 1.0,
+    "weight": 0.99,
+    "mean_drop_m": 0.0002,
+    "max_drop_m": 0.0002
+   },
+   {
+    "pin_stiffness": 1.0,
+    "weight": 0.9,
+    "mean_drop_m": 0.0002,
+    "max_drop_m": 0.0002
+   },
+   {
+    "pin_stiffness": 1.0,
+    "weight": 0.5,
+    "mean_drop_m": 0.0024,
+    "max_drop_m": 0.0024
+   },
+   {
+    "pin_stiffness": 10.0,
+    "weight": 1.0,
+    "mean_drop_m": 0.0,
+    "max_drop_m": 0.0
+   },
+   {
+    "pin_stiffness": 10.0,
+    "weight": 0.999,
+    "mean_drop_m": 0.0,
+    "max_drop_m": 0.0
+   },
+   {
+    "pin_stiffness": 10.0,
+    "weight": 0.99,
+    "mean_drop_m": 0.0,
+    "max_drop_m": 0.0
+   },
+   {
+    "pin_stiffness": 10.0,
+    "weight": 0.9,
+    "mean_drop_m": 0.0,
+    "max_drop_m": 0.0
+   },
+   {
+    "pin_stiffness": 10.0,
+    "weight": 0.5,
+    "mean_drop_m": 0.0002,
+    "max_drop_m": 0.0002
+   },
+   {
+    "pin_stiffness": 50.0,
+    "weight": 1.0,
+    "mean_drop_m": 0.0,
+    "max_drop_m": 0.0
+   },
+   {
+    "pin_stiffness": 50.0,
+    "weight": 0.999,
+    "mean_drop_m": 0.0,
+    "max_drop_m": 0.0
+   },
+   {
+    "pin_stiffness": 50.0,
+    "weight": 0.99,
+    "mean_drop_m": 0.0,
+    "max_drop_m": 0.0
+   },
+   {
+    "pin_stiffness": 50.0,
+    "weight": 0.9,
+    "mean_drop_m": 0.0,
+    "max_drop_m": 0.0
+   },
+   {
+    "pin_stiffness": 50.0,
+    "weight": 0.5,
+    "mean_drop_m": 0.0,
+    "max_drop_m": 0.0
+   }
+  ],
+  "follow": [
+   {
+    "weight": 1.0,
+    "pin_stiffness": 1.0,
+    "max_x_lag_m_by_frame": [
+     [
+      6,
+      0.0
+     ],
+     [
+      12,
+      0.0
+     ],
+     [
+      24,
+      0.0
+     ],
+     [
+      48,
+      0.0
+     ]
+    ]
+   },
+   {
+    "weight": 1.0,
+    "pin_stiffness": 50.0,
+    "max_x_lag_m_by_frame": [
+     [
+      6,
+      0.0
+     ],
+     [
+      12,
+      0.0
+     ],
+     [
+      24,
+      0.0
+     ],
+     [
+      48,
+      0.0
+     ]
+    ]
+   },
+   {
+    "weight": 0.9,
+    "pin_stiffness": 1.0,
+    "max_x_lag_m_by_frame": [
+     [
+      6,
+      0.0226
+     ],
+     [
+      12,
+      0.0045
+     ],
+     [
+      24,
+      0.0021
+     ],
+     [
+      48,
+      0.0001
+     ]
+    ]
+   },
+   {
+    "weight": 0.9,
+    "pin_stiffness": 50.0,
+    "max_x_lag_m_by_frame": [
+     [
+      6,
+      0.0136
+     ],
+     [
+      12,
+      0.0023
+     ],
+     [
+      24,
+      0.0
+     ],
+     [
+      48,
+      0.0
+     ]
+    ]
+   }
+  ],
+  "sewing": [
+   {
+    "weight": 1.0,
+    "pin_stiffness": 1.0,
+    "seam_edge_moved_max_m": 0.0,
+    "median_m": 0.0
+   },
+   {
+    "weight": 1.0,
+    "pin_stiffness": 50.0,
+    "seam_edge_moved_max_m": 0.0,
+    "median_m": 0.0
+   },
+   {
+    "weight": 0.99,
+    "pin_stiffness": 1.0,
+    "seam_edge_moved_max_m": 0.153,
+    "median_m": 0.1509
+   },
+   {
+    "weight": 0.99,
+    "pin_stiffness": 50.0,
+    "seam_edge_moved_max_m": 0.0389,
+    "median_m": 0.0379
+   },
+   {
+    "weight": 0.9,
+    "pin_stiffness": 1.0,
+    "seam_edge_moved_max_m": 0.1608,
+    "median_m": 0.1591
+   },
+   {
+    "weight": 0.9,
+    "pin_stiffness": 50.0,
+    "seam_edge_moved_max_m": 0.0493,
+    "median_m": 0.0478
+   },
+   {
+    "weight": 0.5,
+    "pin_stiffness": 1.0,
+    "seam_edge_moved_max_m": 0.1921,
+    "median_m": 0.1921
+   },
+   {
+    "weight": 0.5,
+    "pin_stiffness": 50.0,
+    "seam_edge_moved_max_m": 0.1237,
+    "median_m": 0.1206
+   }
+  ]
+ }
+}

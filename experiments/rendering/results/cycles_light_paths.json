@@ -1,0 +1,114 @@
+{
+ "experiment": "experiments/rendering/cycles_light_paths.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 8.09,
+ "facts": [
+  {
+   "fact": "Cycles light path defaults in 4.5",
+   "max_bounces": 12,
+   "diffuse_bounces": 4,
+   "glossy_bounces": 4,
+   "transmission_bounces": 12,
+   "volume_bounces": 0,
+   "transparent_max_bounces": 8,
+   "sample_clamp_direct": 0.0,
+   "sample_clamp_indirect": 10.0,
+   "caustics_reflective": true,
+   "caustics_refractive": true,
+   "blur_glossy": 1.0,
+   "use_fast_gi": false,
+   "use_light_tree": true
+  },
+  {
+   "fact": "in a closed white room (albedo 0.8) lit by one point light, 0 bounces gives direct light only; each bounce adds light and the image keeps brightening up to 32 bounces",
+   "rows": [
+    {
+     "bounces": 0,
+     "seconds": 0.44,
+     "mean": 0.3634
+    },
+    {
+     "bounces": 1,
+     "seconds": 0.55,
+     "mean": 0.7993
+    },
+    {
+     "bounces": 2,
+     "seconds": 0.65,
+     "mean": 1.1324
+    },
+    {
+     "bounces": 4,
+     "seconds": 0.78,
+     "mean": 1.6101
+    },
+    {
+     "bounces": 8,
+     "seconds": 0.93,
+     "mean": 2.0993
+    },
+    {
+     "bounces": 12,
+     "seconds": 1.01,
+     "mean": 2.2931
+    },
+    {
+     "bounces": 32,
+     "seconds": 1.11,
+     "mean": 2.4182
+    }
+   ],
+   "share_of_32_at_0": 0.15,
+   "share_of_32_at_4": 0.666,
+   "share_of_32_at_12": 0.948
+  },
+  {
+   "fact": "the default (max_bounces 12, diffuse_bounces 4) lands near 4 bounces of everything, a little above it, because the Principled BSDF's specular layer adds glossy bounces (glossy_bounces 4) on top of the 4 diffuse ones",
+   "mean_default": 1.6651,
+   "mean_default_with_glossy_bounces_0": 1.4527,
+   "mean_4": 1.6101,
+   "mean_32": 2.4182
+  }
+ ],
+ "data": {
+  "rows": [
+   {
+    "bounces": 0,
+    "seconds": 0.44,
+    "mean": 0.3634
+   },
+   {
+    "bounces": 1,
+    "seconds": 0.55,
+    "mean": 0.7993
+   },
+   {
+    "bounces": 2,
+    "seconds": 0.65,
+    "mean": 1.1324
+   },
+   {
+    "bounces": 4,
+    "seconds": 0.78,
+    "mean": 1.6101
+   },
+   {
+    "bounces": 8,
+    "seconds": 0.93,
+    "mean": 2.0993
+   },
+   {
+    "bounces": 12,
+    "seconds": 1.01,
+    "mean": 2.2931
+   },
+   {
+    "bounces": 32,
+    "seconds": 1.11,
+    "mean": 2.4182
+   }
+  ]
+ }
+}

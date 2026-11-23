@@ -1,0 +1,419 @@
+{
+ "experiment": "experiments/rendering/output_formats.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.41,
+ "facts": [
+  {
+   "fact": "Render Result.save_render(path, scene=scene) writes the last render in background mode, using scene.render.image_settings",
+   "ok": true
+  },
+  {
+   "fact": "over a 0..2 linear ramp 1024 px wide (Standard view; 512 px lie in 0..1), 8-bit PNG keeps about 215 distinct levels and clips at 1.0; 16-bit PNG keeps every pixel distinct and also clips at 1.0; half and full float EXR keep all 1024 and values above 1",
+   "png8": {
+    "format": "PNG",
+    "depth": "8",
+    "ext": ".png",
+    "mode": "RGBA",
+    "channels": 4,
+    "stored_type": "uint8",
+    "bytes": 4305,
+    "levels": 216,
+    "max": 1.0
+   },
+   "png16": {
+    "format": "PNG",
+    "depth": "16",
+    "ext": ".png",
+    "mode": "RGBA",
+    "channels": 4,
+    "stored_type": "uint16",
+    "bytes": 32124,
+    "levels": 513,
+    "max": 1.0
+   },
+   "exr16": {
+    "format": "OPEN_EXR",
+    "depth": "16",
+    "ext": ".exr",
+    "mode": "RGBA",
+    "channels": 4,
+    "stored_type": "half",
+    "bytes": 13021,
+    "levels": 1024,
+    "max": 1.999
+   },
+   "exr32": {
+    "format": "OPEN_EXR",
+    "depth": "32",
+    "ext": ".exr",
+    "mode": "RGBA",
+    "channels": 4,
+    "stored_type": "float",
+    "bytes": 120350,
+    "levels": 1024,
+    "max": 1.999
+   }
+  },
+  {
+   "fact": "JPEG accepts only 8-bit RGB (no alpha); the colour depths each format accepts in 4.5",
+   "jpeg": {
+    "format": "JPEG",
+    "depth": "8",
+    "ext": ".jpg",
+    "mode": "RGB",
+    "channels": 3,
+    "stored_type": "uint8",
+    "bytes": 1920,
+    "levels": 216,
+    "max": 1.0
+   },
+   "depths": {
+    "BMP": [
+     "8"
+    ],
+    "IRIS": [
+     "8"
+    ],
+    "PNG": [
+     "8",
+     "16"
+    ],
+    "JPEG": [
+     "8"
+    ],
+    "JPEG2000": [
+     "8",
+     "12",
+     "16"
+    ],
+    "TARGA": [
+     "8"
+    ],
+    "TARGA_RAW": [
+     "8"
+    ],
+    "CINEON": [
+     "10"
+    ],
+    "DPX": [
+     "8",
+     "10",
+     "12",
+     "16"
+    ],
+    "OPEN_EXR_MULTILAYER": [
+     "16",
+     "32"
+    ],
+    "OPEN_EXR": [
+     "16",
+     "32"
+    ],
+    "HDR": [
+     "32"
+    ],
+    "TIFF": [
+     "8",
+     "16"
+    ],
+    "WEBP": [
+     "8"
+    ]
+   }
+  },
+  {
+   "fact": "Radiance HDR stores values above 1 at 32-bit float, without alpha",
+   "hdr": {
+    "format": "HDR",
+    "depth": "32",
+    "ext": ".hdr",
+    "mode": "RGB",
+    "channels": 3,
+    "stored_type": "float",
+    "bytes": 75409,
+    "levels": 512,
+    "max": 1.992
+   }
+  },
+  {
+   "fact": "EXR codecs in 4.5 (image_settings.exr_codec)",
+   "codecs": [
+    "NONE",
+    "ZIP",
+    "PIZ",
+    "DWAA",
+    "DWAB",
+    "ZIPS",
+    "RLE",
+    "PXR24",
+    "B44",
+    "B44A"
+   ],
+   "default": "ZIP"
+  },
+  {
+   "fact": "JPEG 2000 fails to write an image only 8 px tall ('Could not write image: internal error'); 32 px tall works",
+   "result_8px": "Error: Could not write image: internal error, see console\nError: Image 'Render Result' could not be saved to '/Users/sai",
+   "ok_32px": true
+  }
+ ],
+ "data": {
+  "rows": [
+   {
+    "format": "BMP",
+    "depth": "8",
+    "ext": ".bmp",
+    "mode": "RGBA",
+    "channels": 4,
+    "stored_type": "uint8",
+    "bytes": 131126,
+    "levels": 216,
+    "max": 1.0
+   },
+   {
+    "format": "IRIS",
+    "depth": "8",
+    "ext": ".rgb",
+    "mode": "RGBA",
+    "channels": 4,
+    "stored_type": "uint8",
+    "bytes": 39383,
+    "levels": 216,
+    "max": 1.0
+   },
+   {
+    "format": "PNG",
+    "depth": "8",
+    "ext": ".png",
+    "mode": "RGBA",
+    "channels": 4,
+    "stored_type": "uint8",
+    "bytes": 4305,
+    "levels": 216,
+    "max": 1.0
+   },
+   {
+    "format": "PNG",
+    "depth": "16",
+    "ext": ".png",
+    "mode": "RGBA",
+    "channels": 4,
+    "stored_type": "uint16",
+    "bytes": 32124,
+    "levels": 513,
+    "max": 1.0
+   },
+   {
+    "format": "JPEG",
+    "depth": "8",
+    "ext": ".jpg",
+    "mode": "RGB",
+    "channels": 3,
+    "stored_type": "uint8",
+    "bytes": 1920,
+    "levels": 216,
+    "max": 1.0
+   },
+   {
+    "format": "JPEG2000",
+    "depth": "8",
+    "ext": ".jp2",
+    "mode": "RGBA",
+    "channels": 4,
+    "stored_type": "uint8",
+    "bytes": 3678,
+    "levels": 216,
+    "max": 1.0
+   },
+   {
+    "format": "JPEG2000",
+    "depth": "12",
+    "ext": ".jp2",
+    "mode": "RGBA",
+    "channels": 4,
+    "stored_type": "uint16",
+    "bytes": 15381,
+    "levels": 513,
+    "max": 1.0
+   },
+   {
+    "format": "JPEG2000",
+    "depth": "16",
+    "ext": ".jp2",
+    "mode": "RGBA",
+    "channels": 4,
+    "stored_type": "uint16",
+    "bytes": 21817,
+    "levels": 516,
+    "max": 1.0
+   },
+   {
+    "format": "TARGA",
+    "depth": "8",
+    "ext": ".tga",
+    "mode": "RGBA",
+    "channels": 4,
+    "stored_type": "uint8",
+    "bytes": 33985,
+    "levels": 216,
+    "max": 1.0
+   },
+   {
+    "format": "TARGA_RAW",
+    "depth": "8",
+    "ext": ".tga",
+    "mode": "RGBA",
+    "channels": 4,
+    "stored_type": "uint8",
+    "bytes": 131611,
+    "levels": 216,
+    "max": 1.0
+   },
+   {
+    "format": "CINEON",
+    "depth": "10",
+    "ext": ".cin",
+    "mode": "RGB",
+    "channels": 3,
+    "stored_type": "uint16",
+    "bytes": 133120,
+    "levels": 185,
+    "max": 0.67
+   },
+   {
+    "format": "DPX",
+    "depth": "8",
+    "ext": ".dpx",
+    "mode": "RGBA",
+    "channels": 4,
+    "stored_type": "uint8",
+    "bytes": 139264,
+    "levels": 256,
+    "max": 1.0
+   },
+   {
+    "format": "DPX",
+    "depth": "10",
+    "ext": ".dpx",
+    "mode": "RGBA",
+    "channels": 4,
+    "stored_type": "uint16",
+    "bytes": 183040,
+    "levels": 512,
+    "max": 1.0
+   },
+   {
+    "format": "DPX",
+    "depth": "12",
+    "ext": ".dpx",
+    "mode": "RGBA",
+    "channels": 4,
+    "stored_type": "uint16",
+    "bytes": 204800,
+    "levels": 513,
+    "max": 1.0
+   },
+   {
+    "format": "DPX",
+    "depth": "16",
+    "ext": ".dpx",
+    "mode": "RGBA",
+    "channels": 4,
+    "stored_type": "uint16",
+    "bytes": 270336,
+    "levels": 513,
+    "max": 1.0
+   },
+   {
+    "format": "OPEN_EXR_MULTILAYER",
+    "depth": "16",
+    "ext": ".exr",
+    "mode": "RGBA",
+    "channels": 4,
+    "stored_type": "half",
+    "bytes": 13097,
+    "levels": 1024,
+    "max": 1.999
+   },
+   {
+    "format": "OPEN_EXR_MULTILAYER",
+    "depth": "32",
+    "ext": ".exr",
+    "mode": "RGBA",
+    "channels": 4,
+    "stored_type": "float",
+    "bytes": 120426,
+    "levels": 1024,
+    "max": 1.999
+   },
+   {
+    "format": "OPEN_EXR",
+    "depth": "16",
+    "ext": ".exr",
+    "mode": "RGBA",
+    "channels": 4,
+    "stored_type": "half",
+    "bytes": 13021,
+    "levels": 1024,
+    "max": 1.999
+   },
+   {
+    "format": "OPEN_EXR",
+    "depth": "32",
+    "ext": ".exr",
+    "mode": "RGBA",
+    "channels": 4,
+    "stored_type": "float",
+    "bytes": 120350,
+    "levels": 1024,
+    "max": 1.999
+   },
+   {
+    "format": "HDR",
+    "depth": "32",
+    "ext": ".hdr",
+    "mode": "RGB",
+    "channels": 3,
+    "stored_type": "float",
+    "bytes": 75409,
+    "levels": 512,
+    "max": 1.992
+   },
+   {
+    "format": "TIFF",
+    "depth": "8",
+    "ext": ".tif",
+    "mode": "RGBA",
+    "channels": 4,
+    "stored_type": "uint8",
+    "bytes": 2963,
+    "levels": 216,
+    "max": 1.0
+   },
+   {
+    "format": "TIFF",
+    "depth": "16",
+    "ext": ".tif",
+    "mode": "RGBA",
+    "channels": 4,
+    "stored_type": "uint16",
+    "bytes": 29162,
+    "levels": 513,
+    "max": 1.0
+   },
+   {
+    "format": "WEBP",
+    "depth": "8",
+    "ext": ".webp",
+    "mode": "RGBA",
+    "channels": 3,
+    "stored_type": "uint8",
+    "bytes": 290,
+    "levels": 152,
+    "max": 1.0
+   }
+  ]
+ }
+}

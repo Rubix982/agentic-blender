@@ -1,0 +1,356 @@
+{
+ "experiment": "experiments/light/light_units.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 3.68,
+ "facts": [
+  {
+   "fact": "bpy.data.lights.new gives every light type energy 10, a sun included (10 W/m2, bright under Standard)",
+   "sun_energy": 10.0,
+   "sun_angle_deg": 0.526,
+   "point_energy": 10.0,
+   "point_radius": 0.0,
+   "spot_energy": 10.0,
+   "area_energy": 10.0,
+   "area_size": 0.25
+  },
+  {
+   "fact": "a sun's strength is its irradiance in W/m2 on a surface facing it, the same in Cycles and EEVEE; tilting 60 degrees halves it",
+   "rows": [
+    {
+     "light": "SUN",
+     "strength": 1,
+     "tilt_deg": 0,
+     "engine": "CYCLES",
+     "E": 1.0,
+     "expected": 1.0
+    },
+    {
+     "light": "SUN",
+     "strength": 1,
+     "tilt_deg": 0,
+     "engine": "BLENDER_EEVEE_NEXT",
+     "E": 0.999,
+     "expected": 1.0
+    },
+    {
+     "light": "SUN",
+     "strength": 3,
+     "tilt_deg": 0,
+     "engine": "CYCLES",
+     "E": 3.0,
+     "expected": 3.0
+    },
+    {
+     "light": "SUN",
+     "strength": 3,
+     "tilt_deg": 0,
+     "engine": "BLENDER_EEVEE_NEXT",
+     "E": 2.9989,
+     "expected": 3.0
+    },
+    {
+     "light": "SUN",
+     "strength": 3,
+     "tilt_deg": 60,
+     "engine": "CYCLES",
+     "E": 1.5,
+     "expected": 1.5
+    },
+    {
+     "light": "SUN",
+     "strength": 3,
+     "tilt_deg": 60,
+     "engine": "BLENDER_EEVEE_NEXT",
+     "E": 1.4995,
+     "expected": 1.5
+    }
+   ]
+  },
+  {
+   "fact": "a point light of power P watts gives irradiance P / (4 pi d^2) at distance d, as an isotropic emitter of P radiant watts would, in both engines; inverse-square holds (2 m -> 4 m divides by 4)",
+   "rows": [
+    {
+     "light": "POINT",
+     "power": 1000,
+     "height": 2,
+     "engine": "CYCLES",
+     "E": 19.8167,
+     "P_over_4pi_d2": 19.8944
+    },
+    {
+     "light": "POINT",
+     "power": 1000,
+     "height": 2,
+     "engine": "BLENDER_EEVEE_NEXT",
+     "E": 19.7983,
+     "P_over_4pi_d2": 19.8944
+    },
+    {
+     "light": "POINT",
+     "power": 1000,
+     "height": 4,
+     "engine": "CYCLES",
+     "E": 4.9687,
+     "P_over_4pi_d2": 4.9736
+    },
+    {
+     "light": "POINT",
+     "power": 1000,
+     "height": 4,
+     "engine": "BLENDER_EEVEE_NEXT",
+     "E": 4.9636,
+     "P_over_4pi_d2": 4.9736
+    }
+   ],
+   "ratio_to_law": 0.996,
+   "ratio_2m_over_4m": 3.988
+  },
+  {
+   "fact": "a spot light of the same power gives the same on-axis irradiance as a point light (the cone masks, it does not focus)",
+   "spot": [
+    {
+     "light": "SPOT",
+     "power": 1000,
+     "height": 2,
+     "spot_size_deg": 45,
+     "engine": "CYCLES",
+     "E": 19.8167
+    },
+    {
+     "light": "SPOT",
+     "power": 1000,
+     "height": 2,
+     "spot_size_deg": 45,
+     "engine": "BLENDER_EEVEE_NEXT",
+     "E": 19.7983
+    }
+   ],
+   "point_same_height": [
+    {
+     "light": "POINT",
+     "power": 1000,
+     "height": 2,
+     "engine": "CYCLES",
+     "E": 19.8167,
+     "P_over_4pi_d2": 19.8944
+    },
+    {
+     "light": "POINT",
+     "power": 1000,
+     "height": 2,
+     "engine": "BLENDER_EEVEE_NEXT",
+     "E": 19.7983,
+     "P_over_4pi_d2": 19.8944
+    }
+   ]
+  },
+  {
+   "fact": "an area light emits from one side only, like a Lambertian panel: on its axis the irradiance is about P / (pi d^2), four times a point light of the same power; doubling its size at the same power changes it little (power is total output)",
+   "rows": [
+    {
+     "light": "AREA",
+     "power": 1000,
+     "size": 1.0,
+     "height": 4,
+     "engine": "CYCLES",
+     "E": 19.4644,
+     "P_over_pi_d2": 19.8944,
+     "normalize": true
+    },
+    {
+     "light": "AREA",
+     "power": 1000,
+     "size": 1.0,
+     "height": 4,
+     "engine": "BLENDER_EEVEE_NEXT",
+     "E": 19.434,
+     "P_over_pi_d2": 19.8944,
+     "normalize": true
+    },
+    {
+     "light": "AREA",
+     "power": 1000,
+     "size": 2.0,
+     "height": 4,
+     "engine": "CYCLES",
+     "E": 18.3478,
+     "P_over_pi_d2": 19.8944,
+     "normalize": true
+    },
+    {
+     "light": "AREA",
+     "power": 1000,
+     "size": 2.0,
+     "height": 4,
+     "engine": "BLENDER_EEVEE_NEXT",
+     "E": 18.3272,
+     "P_over_pi_d2": 19.8944,
+     "normalize": true
+    }
+   ]
+  },
+  {
+   "fact": "Light.normalize is on by default: power stays the total output when the area light's size changes",
+   "normalize": true
+  },
+  {
+   "fact": "light.exposure (new in 4.x) multiplies the power by 2**exposure",
+   "row": {
+    "light": "SUN",
+    "strength": 1,
+    "exposure": 1.0,
+    "engine": "CYCLES",
+    "E": 2.0
+   }
+  }
+ ],
+ "data": {
+  "rows": [
+   {
+    "light": "SUN",
+    "strength": 1,
+    "tilt_deg": 0,
+    "engine": "CYCLES",
+    "E": 1.0,
+    "expected": 1.0
+   },
+   {
+    "light": "SUN",
+    "strength": 1,
+    "tilt_deg": 0,
+    "engine": "BLENDER_EEVEE_NEXT",
+    "E": 0.999,
+    "expected": 1.0
+   },
+   {
+    "light": "SUN",
+    "strength": 3,
+    "tilt_deg": 0,
+    "engine": "CYCLES",
+    "E": 3.0,
+    "expected": 3.0
+   },
+   {
+    "light": "SUN",
+    "strength": 3,
+    "tilt_deg": 0,
+    "engine": "BLENDER_EEVEE_NEXT",
+    "E": 2.9989,
+    "expected": 3.0
+   },
+   {
+    "light": "SUN",
+    "strength": 3,
+    "tilt_deg": 60,
+    "engine": "CYCLES",
+    "E": 1.5,
+    "expected": 1.5
+   },
+   {
+    "light": "SUN",
+    "strength": 3,
+    "tilt_deg": 60,
+    "engine": "BLENDER_EEVEE_NEXT",
+    "E": 1.4995,
+    "expected": 1.5
+   },
+   {
+    "light": "POINT",
+    "power": 1000,
+    "height": 2,
+    "engine": "CYCLES",
+    "E": 19.8167,
+    "P_over_4pi_d2": 19.8944
+   },
+   {
+    "light": "POINT",
+    "power": 1000,
+    "height": 2,
+    "engine": "BLENDER_EEVEE_NEXT",
+    "E": 19.7983,
+    "P_over_4pi_d2": 19.8944
+   },
+   {
+    "light": "POINT",
+    "power": 1000,
+    "height": 4,
+    "engine": "CYCLES",
+    "E": 4.9687,
+    "P_over_4pi_d2": 4.9736
+   },
+   {
+    "light": "POINT",
+    "power": 1000,
+    "height": 4,
+    "engine": "BLENDER_EEVEE_NEXT",
+    "E": 4.9636,
+    "P_over_4pi_d2": 4.9736
+   },
+   {
+    "light": "SPOT",
+    "power": 1000,
+    "height": 2,
+    "spot_size_deg": 45,
+    "engine": "CYCLES",
+    "E": 19.8167
+   },
+   {
+    "light": "SPOT",
+    "power": 1000,
+    "height": 2,
+    "spot_size_deg": 45,
+    "engine": "BLENDER_EEVEE_NEXT",
+    "E": 19.7983
+   },
+   {
+    "light": "AREA",
+    "power": 1000,
+    "size": 1.0,
+    "height": 4,
+    "engine": "CYCLES",
+    "E": 19.4644,
+    "P_over_pi_d2": 19.8944,
+    "normalize": true
+   },
+   {
+    "light": "AREA",
+    "power": 1000,
+    "size": 1.0,
+    "height": 4,
+    "engine": "BLENDER_EEVEE_NEXT",
+    "E": 19.434,
+    "P_over_pi_d2": 19.8944,
+    "normalize": true
+   },
+   {
+    "light": "AREA",
+    "power": 1000,
+    "size": 2.0,
+    "height": 4,
+    "engine": "CYCLES",
+    "E": 18.3478,
+    "P_over_pi_d2": 19.8944,
+    "normalize": true
+   },
+   {
+    "light": "AREA",
+    "power": 1000,
+    "size": 2.0,
+    "height": 4,
+    "engine": "BLENDER_EEVEE_NEXT",
+    "E": 18.3272,
+    "P_over_pi_d2": 19.8944,
+    "normalize": true
+   },
+   {
+    "light": "SUN",
+    "strength": 1,
+    "exposure": 1.0,
+    "engine": "CYCLES",
+    "E": 2.0
+   }
+  ]
+ }
+}

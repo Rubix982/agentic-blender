@@ -1,0 +1,70 @@
+{
+ "experiment": "experiments/simulation/cloth_rest_shape.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 1.14,
+ "facts": [
+  {
+   "fact": "shrink_min 0.5 halves the cloth's rest: a 1 m sheet with no gravity ends 0.5 m wide",
+   "width_m": 0.5,
+   "control_m": 1.0
+  },
+  {
+   "fact": "rest_shape_key pointing at a half-size key does not change the rest: the sheet stays 1 m wide, with or without a third key or Dynamic Mesh (and a mesh with keys reports Basis as its rest key by default)",
+   "width_m": 1.0,
+   "with_third_key_m": 1.0,
+   "rest_key_double_m": 1.0,
+   "with_dynamic_mesh_m": 1.0
+  },
+  {
+   "fact": "with use_dynamic_mesh the rest follows the shape-key mix as it is animated (the stack above the cloth); without it the animated key does not change the rest",
+   "dynamic_m": 0.5,
+   "not_dynamic_m": 1.0
+  }
+ ],
+ "data": {
+  "rows": [
+   {
+    "case": "control: nothing set",
+    "width_m": 1.0,
+    "rest_shape_key": "Basis"
+   },
+   {
+    "case": "shrink_min 0.5",
+    "width_m": 0.5,
+    "rest_shape_key": "Basis"
+   },
+   {
+    "case": "rest_shape_key = half",
+    "width_m": 1.0,
+    "rest_shape_key": "half"
+   },
+   {
+    "case": "rest_shape_key = half, a third key 'double' after it",
+    "width_m": 1.0,
+    "rest_shape_key": "half"
+   },
+   {
+    "case": "rest_shape_key = double (the third key)",
+    "width_m": 1.0,
+    "rest_shape_key": "double"
+   },
+   {
+    "case": "rest_shape_key = half + use_dynamic_mesh",
+    "width_m": 1.0,
+    "rest_shape_key": "half"
+   },
+   {
+    "case": "use_dynamic_mesh, 'half' keyed 0 -> 1 over frames 1-30",
+    "width_m": 0.5,
+    "rest_shape_key": "Basis"
+   },
+   {
+    "case": "no dynamic mesh, 'half' keyed 0 -> 1 over frames 1-30",
+    "width_m": 1.0,
+    "rest_shape_key": "Basis"
+   }
+  ]
+ }
+}

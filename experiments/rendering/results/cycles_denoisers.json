@@ -1,0 +1,262 @@
+{
+ "experiment": "experiments/rendering/cycles_denoisers.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 36.7,
+ "facts": [
+  {
+   "fact": "cycles.denoiser is a dynamic enum: bl_rna enum_items lists nothing, while a bad assignment's TypeError lists the valid ones",
+   "static_items": [],
+   "type_error": "('OPENIMAGEDENOISE')"
+  },
+  {
+   "fact": "Cycles denoiser defaults in 4.5",
+   "denoiser": "OPENIMAGEDENOISE",
+   "use_gpu": false,
+   "input_passes": "RGB_ALBEDO_NORMAL",
+   "prefilter": "ACCURATE",
+   "quality": "HIGH",
+   "input_passes_items": [
+    "RGB",
+    "RGB_ALBEDO",
+    "RGB_ALBEDO_NORMAL"
+   ],
+   "prefilter_items": [
+    "NONE",
+    "FAST",
+    "ACCURATE"
+   ],
+   "quality_items": [
+    "HIGH",
+    "BALANCED",
+    "FAST"
+   ]
+  },
+  {
+   "fact": "assigning denoiser OPTIX on this Mac",
+   "result": "bpy_struct: item.attr = val: enum \"OPTIX\" not found in ('OPENIMAGEDENOISE')"
+  },
+  {
+   "fact": "in display terms, OIDN at 16 samples does not beat 1024 un-denoised samples (0.00393 vs 0.00247), in 0.65 s vs 1.68 s; in linear RMSE the fireflies it smears keep it behind",
+   "raw16": {
+    "samples": 16,
+    "denoise": false,
+    "oidn_gpu": null,
+    "quality": null,
+    "seconds": 0.32,
+    "rmse_linear": 0.12612,
+    "rmse_display": 0.02064
+   },
+   "denoised16": {
+    "samples": 16,
+    "denoise": true,
+    "oidn_gpu": true,
+    "quality": "HIGH",
+    "seconds": 0.65,
+    "rmse_linear": 0.09036,
+    "rmse_display": 0.00393
+   },
+   "raw1024": {
+    "samples": 1024,
+    "denoise": false,
+    "oidn_gpu": null,
+    "quality": null,
+    "seconds": 1.68,
+    "rmse_linear": 0.01689,
+    "rmse_display": 0.00247
+   }
+  },
+  {
+   "fact": "OIDN on the GPU (denoising_use_gpu=True) vs on the CPU, and its quality settings, at 256 px",
+   "rows": [
+    {
+     "samples": 16,
+     "denoise": true,
+     "oidn_gpu": true,
+     "quality": "HIGH",
+     "seconds": 0.65,
+     "rmse_linear": 0.09036,
+     "rmse_display": 0.00393
+    },
+    {
+     "samples": 16,
+     "denoise": true,
+     "oidn_gpu": false,
+     "quality": "HIGH",
+     "seconds": 0.45,
+     "rmse_linear": 0.0904,
+     "rmse_display": 0.00392
+    },
+    {
+     "samples": 16,
+     "denoise": true,
+     "oidn_gpu": true,
+     "quality": "FAST",
+     "seconds": 0.59,
+     "rmse_linear": 0.10516,
+     "rmse_display": 0.00493
+    },
+    {
+     "samples": 16,
+     "denoise": true,
+     "oidn_gpu": true,
+     "quality": "BALANCED",
+     "seconds": 0.59,
+     "rmse_linear": 0.09074,
+     "rmse_display": 0.00445
+    },
+    {
+     "samples": 64,
+     "denoise": true,
+     "oidn_gpu": true,
+     "quality": "HIGH",
+     "seconds": 0.76,
+     "rmse_linear": 0.05338,
+     "rmse_display": 0.00265
+    },
+    {
+     "samples": 64,
+     "denoise": true,
+     "oidn_gpu": false,
+     "quality": "HIGH",
+     "seconds": 0.51,
+     "rmse_linear": 0.05343,
+     "rmse_display": 0.00263
+    },
+    {
+     "samples": 64,
+     "denoise": true,
+     "oidn_gpu": true,
+     "quality": "FAST",
+     "seconds": 0.64,
+     "rmse_linear": 0.05308,
+     "rmse_display": 0.00325
+    },
+    {
+     "samples": 64,
+     "denoise": true,
+     "oidn_gpu": true,
+     "quality": "BALANCED",
+     "seconds": 0.7,
+     "rmse_linear": 0.05244,
+     "rmse_display": 0.00296
+    }
+   ]
+  },
+  {
+   "fact": "at 512 px, 16 samples: seconds with OIDN on GPU, with OIDN on CPU, and without denoising",
+   "oidn_gpu_s": 0.73,
+   "oidn_cpu_s": 0.85,
+   "no_denoise_s": 0.38
+  }
+ ],
+ "data": {
+  "rows": [
+   {
+    "samples": 16,
+    "denoise": false,
+    "oidn_gpu": null,
+    "quality": null,
+    "seconds": 0.32,
+    "rmse_linear": 0.12612,
+    "rmse_display": 0.02064
+   },
+   {
+    "samples": 16,
+    "denoise": true,
+    "oidn_gpu": true,
+    "quality": "HIGH",
+    "seconds": 0.65,
+    "rmse_linear": 0.09036,
+    "rmse_display": 0.00393
+   },
+   {
+    "samples": 16,
+    "denoise": true,
+    "oidn_gpu": false,
+    "quality": "HIGH",
+    "seconds": 0.45,
+    "rmse_linear": 0.0904,
+    "rmse_display": 0.00392
+   },
+   {
+    "samples": 16,
+    "denoise": true,
+    "oidn_gpu": true,
+    "quality": "FAST",
+    "seconds": 0.59,
+    "rmse_linear": 0.10516,
+    "rmse_display": 0.00493
+   },
+   {
+    "samples": 16,
+    "denoise": true,
+    "oidn_gpu": true,
+    "quality": "BALANCED",
+    "seconds": 0.59,
+    "rmse_linear": 0.09074,
+    "rmse_display": 0.00445
+   },
+   {
+    "samples": 64,
+    "denoise": false,
+    "oidn_gpu": null,
+    "quality": null,
+    "seconds": 0.39,
+    "rmse_linear": 0.05528,
+    "rmse_display": 0.00997
+   },
+   {
+    "samples": 64,
+    "denoise": true,
+    "oidn_gpu": true,
+    "quality": "HIGH",
+    "seconds": 0.76,
+    "rmse_linear": 0.05338,
+    "rmse_display": 0.00265
+   },
+   {
+    "samples": 64,
+    "denoise": true,
+    "oidn_gpu": false,
+    "quality": "HIGH",
+    "seconds": 0.51,
+    "rmse_linear": 0.05343,
+    "rmse_display": 0.00263
+   },
+   {
+    "samples": 64,
+    "denoise": true,
+    "oidn_gpu": true,
+    "quality": "FAST",
+    "seconds": 0.64,
+    "rmse_linear": 0.05308,
+    "rmse_display": 0.00325
+   },
+   {
+    "samples": 64,
+    "denoise": true,
+    "oidn_gpu": true,
+    "quality": "BALANCED",
+    "seconds": 0.7,
+    "rmse_linear": 0.05244,
+    "rmse_display": 0.00296
+   },
+   {
+    "samples": 1024,
+    "denoise": false,
+    "oidn_gpu": null,
+    "quality": null,
+    "seconds": 1.68,
+    "rmse_linear": 0.01689,
+    "rmse_display": 0.00247
+   }
+  ],
+  "res512": {
+   "oidn_gpu": 0.73,
+   "oidn_cpu": 0.85,
+   "none": 0.38
+  }
+ }
+}

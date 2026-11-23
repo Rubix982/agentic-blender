@@ -1,0 +1,11 @@
+{
+  "name": "blender-field-guide",
+  "owner": { "name": "blender-field-guide" },
+  "plugins": [
+    {
+      "name": "blender-field-guide",
+      "source": "./",
+      "description": "A field guide to Blender 4.5 for coding agents."
+    }
+  ]
+}

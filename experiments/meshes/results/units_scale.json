@@ -1,0 +1,79 @@
+{
+ "experiment": "experiments/meshes/units_scale.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.05,
+ "facts": [
+  {
+   "fact": "a fresh scene is metric, scale_length 1.0, lengths in metres: one Blender unit is one metre",
+   "system": "METRIC",
+   "scale_length": 1.0,
+   "length_unit": "METERS",
+   "mass_unit": "KILOGRAMS",
+   "rotation": "DEGREES"
+  },
+  {
+   "fact": "primitive_cube_add() default size is 2 (spans -1..1)",
+   "dimensions": [
+    2.0,
+    2.0,
+    2.0
+   ]
+  },
+  {
+   "fact": "object.dimensions includes object scale but is stale right after setting scale: it reads (2,2,2) until view_layer.update(), then (4,2,2); the mesh coordinates do not change",
+   "before_update": [
+    2.0,
+    2.0,
+    2.0
+   ],
+   "after_update": [
+    4.0,
+    2.0,
+    2.0
+   ],
+   "mesh_max_x": 1.0
+  },
+  {
+   "fact": "mesh.transform(Matrix.Diagonal(scale)) then scale=(1,1,1) applies scale with the data API",
+   "mesh_max_x": 2.0,
+   "dimensions_after_update": [
+    4.0,
+    2.0,
+    2.0
+   ]
+  },
+  {
+   "fact": "bpy.ops.object.transform_apply(scale=True) works headless on the selected objects",
+   "result": [
+    "FINISHED"
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "mesh_max_x": 3.0
+  },
+  {
+   "fact": "transform_apply on an object whose mesh has 2 users fails",
+   "result": "RuntimeError: Error: Cannot apply to a multi user: Object \"Cube.002\", Mesh \"Cube.002\", aborting",
+   "users": 2
+  },
+  {
+   "fact": "a Solidify of thickness 0.1 on an object scaled 3x is 0.3 thick in the world (modifier values are in object space)",
+   "world_thickness_scale1": 0.1,
+   "world_thickness_scale3": 0.3
+  },
+  {
+   "fact": "scene unit scale_length 0.01 does not change the size of new primitives (it changes only displayed units)",
+   "dimensions": [
+    2.0,
+    2.0,
+    2.0
+   ]
+  }
+ ],
+ "data": {}
+}

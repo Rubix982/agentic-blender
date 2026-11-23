@@ -1,0 +1,136 @@
+{
+ "experiment": "experiments/simulation/rigid_chain.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.25,
+ "facts": [
+  {
+   "fact": "a POINT constraint's disable_collisions is on by default: the two bodies it joins never collide with each other",
+   "disable_collisions": true
+  },
+  {
+   "fact": "a hanging chain of 2.5-5 cm convex-hull pieces swung by its anchor: the swing (degrees from straight down) at the default margin, a 1 mm margin, each piece in its own collision collection, and both; and with MESH shapes",
+   "rows": [
+    [
+     "CONVEX_HULL",
+     "default 0.04 (use_margin off)",
+     false,
+     4.5,
+     8.0,
+     9.0,
+     0.0
+    ],
+    [
+     "CONVEX_HULL",
+     0.001,
+     false,
+     4.3,
+     8.0,
+     9.0,
+     0.0
+    ],
+    [
+     "CONVEX_HULL",
+     "default 0.04 (use_margin off)",
+     true,
+     4.5,
+     8.0,
+     9.0,
+     0.0
+    ],
+    [
+     "CONVEX_HULL",
+     0.001,
+     true,
+     4.3,
+     8.0,
+     9.0,
+     0.0
+    ],
+    [
+     "MESH",
+     "default 0.04 (use_margin off)",
+     false,
+     4.4,
+     7.9,
+     8.8,
+     0.0
+    ],
+    [
+     "MESH",
+     0.001,
+     false,
+     4.4,
+     7.9,
+     8.8,
+     0.0
+    ]
+   ]
+  }
+ ],
+ "data": {
+  "rows": [
+   {
+    "margin": "default 0.04 (use_margin off)",
+    "own_collections": false,
+    "shape": "CONVEX_HULL",
+    "disable_collisions": true,
+    "swing_p50_deg": 4.5,
+    "swing_p95_deg": 8.0,
+    "swing_max_deg": 9.0,
+    "tassel_rise_m": 0.0
+   },
+   {
+    "margin": 0.001,
+    "own_collections": false,
+    "shape": "CONVEX_HULL",
+    "disable_collisions": true,
+    "swing_p50_deg": 4.3,
+    "swing_p95_deg": 8.0,
+    "swing_max_deg": 9.0,
+    "tassel_rise_m": 0.0
+   },
+   {
+    "margin": "default 0.04 (use_margin off)",
+    "own_collections": true,
+    "shape": "CONVEX_HULL",
+    "disable_collisions": true,
+    "swing_p50_deg": 4.5,
+    "swing_p95_deg": 8.0,
+    "swing_max_deg": 9.0,
+    "tassel_rise_m": 0.0
+   },
+   {
+    "margin": 0.001,
+    "own_collections": true,
+    "shape": "CONVEX_HULL",
+    "disable_collisions": true,
+    "swing_p50_deg": 4.3,
+    "swing_p95_deg": 8.0,
+    "swing_max_deg": 9.0,
+    "tassel_rise_m": 0.0
+   },
+   {
+    "margin": "default 0.04 (use_margin off)",
+    "own_collections": false,
+    "shape": "MESH",
+    "disable_collisions": true,
+    "swing_p50_deg": 4.4,
+    "swing_p95_deg": 7.9,
+    "swing_max_deg": 8.8,
+    "tassel_rise_m": 0.0
+   },
+   {
+    "margin": 0.001,
+    "own_collections": false,
+    "shape": "MESH",
+    "disable_collisions": true,
+    "swing_p50_deg": 4.4,
+    "swing_p95_deg": 7.9,
+    "swing_max_deg": 8.8,
+    "tassel_rise_m": 0.0
+   }
+  ]
+ }
+}

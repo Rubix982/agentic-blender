@@ -1,0 +1,705 @@
+{
+ "experiment": "experiments/meshes/bmesh_ops.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.06,
+ "facts": [
+  {
+   "fact": "create_cube(size=2) spans -1..1 (size is the edge length) but create_grid(size=1) also spans -1..1 (size is half the width)",
+   "cube_max_x": 1.0,
+   "grid_max_x": 1.0
+  },
+  {
+   "fact": "extrude_face_region leaves the original face in place; deleting it (context='FACES') is what makes the result manifold",
+   "kept": false,
+   "deleted": true
+  },
+  {
+   "fact": "bmesh.ops.create_cube",
+   "args": "size=2.0",
+   "counts": [
+    8,
+    12,
+    6
+   ],
+   "max_x": 1.0
+  },
+  {
+   "fact": "bmesh.ops.create_grid",
+   "args": "x_segments=4, y_segments=4, size=1.0",
+   "counts": [
+    25,
+    40,
+    16
+   ],
+   "max_x": 1.0
+  },
+  {
+   "fact": "bmesh.ops.create_uvsphere",
+   "args": "u_segments=16, v_segments=8, radius=1.0",
+   "counts": [
+    114,
+    240,
+    128
+   ]
+  },
+  {
+   "fact": "bmesh.ops.create_icosphere",
+   "args": "subdivisions=2, radius=1.0",
+   "counts": [
+    42,
+    120,
+    80
+   ]
+  },
+  {
+   "fact": "bmesh.ops.create_circle",
+   "args": "cap_ends=True, segments=12, radius=1.0",
+   "counts": [
+    12,
+    12,
+    1
+   ]
+  },
+  {
+   "fact": "bmesh.ops.create_cone",
+   "args": "cap_ends=True, segments=12, radius1=1.0, radius2=0.0, depth=2.0",
+   "counts": [
+    13,
+    24,
+    13
+   ]
+  },
+  {
+   "fact": "bmesh.ops.extrude_face_region",
+   "args": "geom=[top face]; then translate(verts=new verts, vec=(0,0,1))",
+   "counts": [
+    12,
+    20,
+    11
+   ],
+   "returned_keys": [
+    "geom"
+   ],
+   "new_verts": 4,
+   "max_z": 2.0,
+   "manifold": false,
+   "original_face_kept": true
+  },
+  {
+   "fact": "bmesh.ops.extrude_face_region+delete_old",
+   "counts": [
+    12,
+    20,
+    10
+   ],
+   "manifold": true
+  },
+  {
+   "fact": "bmesh.ops.extrude_discrete_faces",
+   "args": "faces=all 6",
+   "counts": [
+    32,
+    60,
+    30
+   ],
+   "returned_keys": [
+    "faces"
+   ],
+   "new_faces": 6
+  },
+  {
+   "fact": "bmesh.ops.inset_region",
+   "args": "faces=[top], thickness=0.2, depth=0.0",
+   "counts": [
+    12,
+    20,
+    10
+   ],
+   "returned_faces": 4
+  },
+  {
+   "fact": "bmesh.ops.inset_individual",
+   "args": "faces=all, thickness=0.2, depth=-0.1",
+   "counts": [
+    32,
+    60,
+    30
+   ],
+   "returned_faces": 24
+  },
+  {
+   "fact": "bmesh.ops.bevel_edges_geom_edges_affect_EDGES",
+   "args": "offset=0.1, segments=3, profile=0.5, clamp_overlap=True, {'affect': 'EDGES'}",
+   "counts": [
+    96,
+    192,
+    98
+   ],
+   "manifold": true,
+   "returned": {
+    "faces": 92,
+    "edges": 192,
+    "verts": 96
+   }
+  },
+  {
+   "fact": "bmesh.ops.bevel_edges_geom_edges+verts_affect_EDGES",
+   "args": "offset=0.1, segments=3, profile=0.5, clamp_overlap=True, {'affect': 'EDGES'}",
+   "counts": [
+    96,
+    192,
+    98
+   ],
+   "manifold": true,
+   "returned": {
+    "faces": 92,
+    "edges": 192,
+    "verts": 96
+   }
+  },
+  {
+   "fact": "bmesh.ops.bevel_edges_geom_edges_default_affect",
+   "args": "offset=0.1, segments=3, profile=0.5, clamp_overlap=True, {}",
+   "counts": [
+    96,
+    156,
+    62
+   ],
+   "manifold": true,
+   "returned": {
+    "faces": 56,
+    "edges": 156,
+    "verts": 96
+   }
+  },
+  {
+   "fact": "bmesh.ops.bevel_verts_geom_verts_affect_VERTICES",
+   "args": "offset=0.1, segments=3, profile=0.5, clamp_overlap=True, {'affect': 'VERTICES'}",
+   "counts": [
+    96,
+    156,
+    62
+   ],
+   "manifold": true,
+   "returned": {
+    "faces": 56,
+    "edges": 144,
+    "verts": 96
+   }
+  },
+  {
+   "fact": "bmesh.ops.bisect_plane",
+   "args": "geom=all, plane_co=(0,0,0.3), plane_no=(0,0,1), clear_outer=True",
+   "counts": [
+    8,
+    12,
+    5
+   ],
+   "max_z": 0.3,
+   "cut": 8,
+   "manifold": false
+  },
+  {
+   "fact": "bmesh.ops.holes_fill_after_bisect",
+   "args": "edges=boundary edges, sides=0",
+   "new_faces": 1,
+   "counts": [
+    8,
+    12,
+    6
+   ],
+   "manifold": true
+  },
+  {
+   "fact": "bmesh.ops.holes_fill_closed",
+   "new_faces": 0
+  },
+  {
+   "fact": "bmesh.ops.triangulate",
+   "args": "faces=all, quad_method='BEAUTY', ngon_method='BEAUTY'",
+   "counts": [
+    8,
+    18,
+    12
+   ],
+   "returned": [
+    "edges",
+    "faces",
+    "face_map",
+    "face_map_double"
+   ],
+   "quad_methods": null
+  },
+  {
+   "fact": "bmesh.ops.remove_doubles",
+   "args": "verts=all, dist=1e-4",
+   "before": [
+    16,
+    24,
+    12
+   ],
+   "after": [
+    8,
+    12,
+    6
+   ]
+  },
+  {
+   "fact": "bmesh.ops.find_doubles+weld_verts",
+   "pairs": 8,
+   "after": [
+    8,
+    12,
+    6
+   ]
+  },
+  {
+   "fact": "bmesh.ops.convex_hull",
+   "args": "input=verts",
+   "counts_with_interior": [
+    200,
+    129,
+    86
+   ],
+   "interior_verts": 155,
+   "returned": [
+    "geom",
+    "geom_interior",
+    "geom_unused",
+    "geom_holes"
+   ],
+   "after_deleting_interior": [
+    45,
+    129,
+    86
+   ],
+   "manifold": true
+  },
+  {
+   "fact": "bmesh.ops.delete_FACES_ONLY",
+   "counts": [
+    8,
+    12,
+    5
+   ]
+  },
+  {
+   "fact": "bmesh.ops.delete_FACES",
+   "counts": [
+    8,
+    12,
+    5
+   ]
+  },
+  {
+   "fact": "bmesh.ops.delete_VERTS",
+   "counts": [
+    7,
+    9,
+    3
+   ]
+  },
+  {
+   "fact": "bmesh.ops.delete_bad_context",
+   "result": "ValueError: context: 'FACE' not found in (['VERTS', 'EDGES', 'FACES_ONLY', 'EDGES_FACES', 'FACES', 'FACES_KEEP_BOUNDARY', 'TAGGED_ONLY'])"
+  },
+  {
+   "fact": "bmesh.ops.subdivide_edges",
+   "args": "edges=all, cuts=2, use_grid_fill=True",
+   "counts": [
+    56,
+    108,
+    54
+   ]
+  },
+  {
+   "fact": "bmesh.ops.dissolve_limit_after",
+   "args": "angle_limit=radians(5), verts=all, edges=all",
+   "counts": [
+    8,
+    12,
+    6
+   ]
+  },
+  {
+   "fact": "bmesh.ops.reverse_then_recalc_normals",
+   "inward_after_reverse": 6,
+   "outward_after_recalc": 6
+  },
+  {
+   "fact": "bmesh.ops.solidify",
+   "args": "geom=faces, thickness=0.1",
+   "counts": [
+    18,
+    32,
+    16
+   ],
+   "manifold": true
+  },
+  {
+   "fact": "bmesh.ops.spin",
+   "args": "geom=verts+edges, cent=(0,0,0), axis=(0,0,1), angle=2pi, steps=12, use_merge=True",
+   "counts": [
+    24,
+    36,
+    12
+   ]
+  },
+  {
+   "fact": "bmesh.ops.bridge_loops",
+   "args": "edges=both circles' edges",
+   "counts": [
+    16,
+    24,
+    8
+   ],
+   "new_faces": 8
+  },
+  {
+   "fact": "bmesh.ops.poke",
+   "counts": [
+    14,
+    36,
+    24
+   ]
+  },
+  {
+   "fact": "bmesh.ops.wireframe",
+   "args": "faces=all, thickness=0.05, use_replace=True",
+   "counts": [
+    40,
+    96,
+    48
+   ]
+  }
+ ],
+ "data": {
+  "results": {
+   "create_cube": {
+    "args": "size=2.0",
+    "counts": [
+     8,
+     12,
+     6
+    ],
+    "max_x": 1.0
+   },
+   "create_grid": {
+    "args": "x_segments=4, y_segments=4, size=1.0",
+    "counts": [
+     25,
+     40,
+     16
+    ],
+    "max_x": 1.0
+   },
+   "create_uvsphere": {
+    "args": "u_segments=16, v_segments=8, radius=1.0",
+    "counts": [
+     114,
+     240,
+     128
+    ]
+   },
+   "create_icosphere": {
+    "args": "subdivisions=2, radius=1.0",
+    "counts": [
+     42,
+     120,
+     80
+    ]
+   },
+   "create_circle": {
+    "args": "cap_ends=True, segments=12, radius=1.0",
+    "counts": [
+     12,
+     12,
+     1
+    ]
+   },
+   "create_cone": {
+    "args": "cap_ends=True, segments=12, radius1=1.0, radius2=0.0, depth=2.0",
+    "counts": [
+     13,
+     24,
+     13
+    ]
+   },
+   "extrude_face_region": {
+    "args": "geom=[top face]; then translate(verts=new verts, vec=(0,0,1))",
+    "counts": [
+     12,
+     20,
+     11
+    ],
+    "returned_keys": [
+     "geom"
+    ],
+    "new_verts": 4,
+    "max_z": 2.0,
+    "manifold": false,
+    "original_face_kept": true
+   },
+   "extrude_face_region+delete_old": {
+    "counts": [
+     12,
+     20,
+     10
+    ],
+    "manifold": true
+   },
+   "extrude_discrete_faces": {
+    "args": "faces=all 6",
+    "counts": [
+     32,
+     60,
+     30
+    ],
+    "returned_keys": [
+     "faces"
+    ],
+    "new_faces": 6
+   },
+   "inset_region": {
+    "args": "faces=[top], thickness=0.2, depth=0.0",
+    "counts": [
+     12,
+     20,
+     10
+    ],
+    "returned_faces": 4
+   },
+   "inset_individual": {
+    "args": "faces=all, thickness=0.2, depth=-0.1",
+    "counts": [
+     32,
+     60,
+     30
+    ],
+    "returned_faces": 24
+   },
+   "bevel_edges_geom_edges_affect_EDGES": {
+    "args": "offset=0.1, segments=3, profile=0.5, clamp_overlap=True, {'affect': 'EDGES'}",
+    "counts": [
+     96,
+     192,
+     98
+    ],
+    "manifold": true,
+    "returned": {
+     "faces": 92,
+     "edges": 192,
+     "verts": 96
+    }
+   },
+   "bevel_edges_geom_edges+verts_affect_EDGES": {
+    "args": "offset=0.1, segments=3, profile=0.5, clamp_overlap=True, {'affect': 'EDGES'}",
+    "counts": [
+     96,
+     192,
+     98
+    ],
+    "manifold": true,
+    "returned": {
+     "faces": 92,
+     "edges": 192,
+     "verts": 96
+    }
+   },
+   "bevel_edges_geom_edges_default_affect": {
+    "args": "offset=0.1, segments=3, profile=0.5, clamp_overlap=True, {}",
+    "counts": [
+     96,
+     156,
+     62
+    ],
+    "manifold": true,
+    "returned": {
+     "faces": 56,
+     "edges": 156,
+     "verts": 96
+    }
+   },
+   "bevel_verts_geom_verts_affect_VERTICES": {
+    "args": "offset=0.1, segments=3, profile=0.5, clamp_overlap=True, {'affect': 'VERTICES'}",
+    "counts": [
+     96,
+     156,
+     62
+    ],
+    "manifold": true,
+    "returned": {
+     "faces": 56,
+     "edges": 144,
+     "verts": 96
+    }
+   },
+   "bisect_plane": {
+    "args": "geom=all, plane_co=(0,0,0.3), plane_no=(0,0,1), clear_outer=True",
+    "counts": [
+     8,
+     12,
+     5
+    ],
+    "max_z": 0.3,
+    "cut": 8,
+    "manifold": false
+   },
+   "holes_fill_after_bisect": {
+    "args": "edges=boundary edges, sides=0",
+    "new_faces": 1,
+    "counts": [
+     8,
+     12,
+     6
+    ],
+    "manifold": true
+   },
+   "holes_fill_closed": {
+    "new_faces": 0
+   },
+   "triangulate": {
+    "args": "faces=all, quad_method='BEAUTY', ngon_method='BEAUTY'",
+    "counts": [
+     8,
+     18,
+     12
+    ],
+    "returned": [
+     "edges",
+     "faces",
+     "face_map",
+     "face_map_double"
+    ],
+    "quad_methods": null
+   },
+   "remove_doubles": {
+    "args": "verts=all, dist=1e-4",
+    "before": [
+     16,
+     24,
+     12
+    ],
+    "after": [
+     8,
+     12,
+     6
+    ]
+   },
+   "find_doubles+weld_verts": {
+    "pairs": 8,
+    "after": [
+     8,
+     12,
+     6
+    ]
+   },
+   "convex_hull": {
+    "args": "input=verts",
+    "counts_with_interior": [
+     200,
+     129,
+     86
+    ],
+    "interior_verts": 155,
+    "returned": [
+     "geom",
+     "geom_interior",
+     "geom_unused",
+     "geom_holes"
+    ],
+    "after_deleting_interior": [
+     45,
+     129,
+     86
+    ],
+    "manifold": true
+   },
+   "delete_FACES_ONLY": {
+    "counts": [
+     8,
+     12,
+     5
+    ]
+   },
+   "delete_FACES": {
+    "counts": [
+     8,
+     12,
+     5
+    ]
+   },
+   "delete_VERTS": {
+    "counts": [
+     7,
+     9,
+     3
+    ]
+   },
+   "delete_bad_context": "ValueError: context: 'FACE' not found in (['VERTS', 'EDGES', 'FACES_ONLY', 'EDGES_FACES', 'FACES', 'FACES_KEEP_BOUNDARY', 'TAGGED_ONLY'])",
+   "subdivide_edges": {
+    "args": "edges=all, cuts=2, use_grid_fill=True",
+    "counts": [
+     56,
+     108,
+     54
+    ]
+   },
+   "dissolve_limit_after": {
+    "args": "angle_limit=radians(5), verts=all, edges=all",
+    "counts": [
+     8,
+     12,
+     6
+    ]
+   },
+   "reverse_then_recalc_normals": {
+    "inward_after_reverse": 6,
+    "outward_after_recalc": 6
+   },
+   "solidify": {
+    "args": "geom=faces, thickness=0.1",
+    "counts": [
+     18,
+     32,
+     16
+    ],
+    "manifold": true
+   },
+   "spin": {
+    "args": "geom=verts+edges, cent=(0,0,0), axis=(0,0,1), angle=2pi, steps=12, use_merge=True",
+    "counts": [
+     24,
+     36,
+     12
+    ]
+   },
+   "bridge_loops": {
+    "args": "edges=both circles' edges",
+    "counts": [
+     16,
+     24,
+     8
+    ],
+    "new_faces": 8
+   },
+   "poke": {
+    "counts": [
+     14,
+     36,
+     24
+    ]
+   },
+   "wireframe": {
+    "args": "faces=all, thickness=0.05, use_replace=True",
+    "counts": [
+     40,
+     96,
+     48
+    ]
+   }
+  }
+ }
+}

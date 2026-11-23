@@ -1,0 +1,97 @@
+{
+ "experiment": "experiments/light/shadow_catcher.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 1.08,
+ "facts": [
+  {
+   "fact": "Cycles shadow catcher with film_transparent and the Shadow Catcher pass OFF: the Combined pass carries the shadow as black with alpha = shadow density; lit floor is alpha 0; the floor's own colour never shows",
+   "combined_in_shadow": [
+    0.0,
+    0.0,
+    0.0,
+    0.77
+   ],
+   "combined_open_floor": [
+    0.0,
+    0.0,
+    0.0,
+    0.001
+   ],
+   "combined_on_cube": [
+    0.822,
+    0.822,
+    0.822,
+    1.0
+   ]
+  },
+  {
+   "fact": "with view_layer.cycles.use_pass_shadow_catcher ON, the Combined pass no longer carries the shadow (alpha 0 there); the shadow goes to the 'Shadow Catcher' pass as a multiplier (1 = no shadow, lower = shadow), to multiply over the backplate",
+   "combined_in_shadow": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "combined_open_floor": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "combined_on_cube": [
+    0.822,
+    0.822,
+    0.822,
+    1.0
+   ],
+   "catcher_pass_in_shadow": [
+    0.23,
+    0.23,
+    0.23
+   ],
+   "catcher_pass_open_floor": [
+    1.008,
+    1.008,
+    1.008
+   ],
+   "channels": [
+    "ViewLayer.Combined.R",
+    "ViewLayer.Combined.G",
+    "ViewLayer.Combined.B",
+    "ViewLayer.Combined.A",
+    "ViewLayer.Shadow Catcher.R",
+    "ViewLayer.Shadow Catcher.G",
+    "ViewLayer.Shadow Catcher.B"
+   ]
+  },
+  {
+   "fact": "EEVEE (4.5) has no shadow catcher: an is_shadow_catcher floor renders as a normal opaque floor",
+   "combined_in_shadow": [
+    0.161,
+    0.161,
+    0.161,
+    1.0
+   ],
+   "combined_open_floor": [
+    0.835,
+    0.835,
+    0.835,
+    1.0
+   ],
+   "combined_on_cube": [
+    0.835,
+    0.835,
+    0.835,
+    1.0
+   ]
+  },
+  {
+   "fact": "the property is Object.is_shadow_catcher (and Object.is_holdout); the matching pass is view_layer.cycles.use_pass_shadow_catcher",
+   "has_object_prop": true,
+   "has_cycles_object_prop": false
+  }
+ ],
+ "data": {}
+}

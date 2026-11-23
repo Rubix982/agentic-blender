@@ -1,0 +1,40 @@
+{
+ "experiment": "experiments/modifiers/boolean_coplanar.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.74,
+ "facts": [
+  {
+   "fact": "coplanar caps, 10x10 holes, FAST: genus 0.0 (expected 100), 3184 non-manifold edges, volume 12.6800 (expected 14.4894), 0.02 s",
+   "solver": "FAST",
+   "genus": 0.0,
+   "non_manifold_edges": 3184,
+   "volume": 12.68,
+   "expected_volume": 14.4894,
+   "seconds": 0.015,
+   "correct": false
+  },
+  {
+   "fact": "coplanar caps, 10x10 holes, EXACT: genus 100.0 (expected 100), 0 non-manifold edges, volume 14.4894 (expected 14.4894), 0.48 s",
+   "solver": "EXACT",
+   "genus": 100.0,
+   "non_manifold_edges": 0,
+   "volume": 14.4894,
+   "expected_volume": 14.4894,
+   "seconds": 0.478,
+   "correct": true
+  },
+  {
+   "fact": "coplanar caps, 10x10 holes, MANIFOLD: genus 100.0 (expected 100), 0 non-manifold edges, volume 14.4894 (expected 14.4894), 0.02 s",
+   "solver": "MANIFOLD",
+   "genus": 100.0,
+   "non_manifold_edges": 0,
+   "volume": 14.4894,
+   "expected_volume": 14.4894,
+   "seconds": 0.022,
+   "correct": true
+  }
+ ],
+ "data": {}
+}

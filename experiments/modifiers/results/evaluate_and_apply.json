@@ -1,0 +1,102 @@
+{
+ "experiment": "experiments/modifiers/evaluate_and_apply.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.3,
+ "facts": [
+  {
+   "fact": "obj.evaluated_get(depsgraph).data is the evaluated mesh (modifiers applied); obj.data stays the base mesh",
+   "base_verts": 482,
+   "evaluated_verts": 7938,
+   "same_object": false,
+   "ev_is_evaluated": true
+  },
+  {
+   "fact": "evaluated.to_mesh() gives a temporary mesh not in bpy.data; release it with to_mesh_clear()",
+   "verts": 7938,
+   "in_bpy_data": false,
+   "ms": 0.04
+  },
+  {
+   "fact": "bpy.data.meshes.new_from_object(evaluated_obj) gives a real mesh datablock with modifiers applied (0 users until assigned)",
+   "verts": 7938,
+   "in_bpy_data": true,
+   "users": 0,
+   "ms": 0.1
+  },
+  {
+   "fact": "new_from_object(original object) returns the BASE mesh without modifiers: pass the evaluated object",
+   "verts_from_original": 482,
+   "verts_from_evaluated": 7938
+  },
+  {
+   "fact": "new_from_object accepts preserve_all_data_layers and depsgraph keywords",
+   "params": [
+    "object",
+    "preserve_all_data_layers",
+    "depsgraph",
+    "mesh"
+   ]
+  },
+  {
+   "fact": "swapping obj.data for the new_from_object mesh and clearing the modifiers is an apply that needs no context",
+   "verts": 7938,
+   "modifiers": 0,
+   "old_mesh_users": 0
+  },
+  {
+   "fact": "bpy.ops.object.modifier_apply(modifier=name) works headless without any override when the object is the active one",
+   "result": [
+    "FINISHED"
+   ],
+   "error": null,
+   "verts": 7938,
+   "ms": 27.77
+  },
+  {
+   "fact": "without an override, modifier_apply acts on the ACTIVE object, not the one you meant",
+   "result": [
+    "FINISHED"
+   ],
+   "error": null,
+   "intended_verts": 482,
+   "active_verts": 7938
+  },
+  {
+   "fact": "with bpy.context.temp_override(object=ob, active_object=ob), modifier_apply applies on ob even when another object is active",
+   "result": [
+    "FINISHED"
+   ],
+   "error": null,
+   "verts": 7938,
+   "modifiers_left": []
+  },
+  {
+   "fact": "the pre-3.2 style override (a context dict as the first positional argument) fails in 4.5",
+   "result": null,
+   "error": "ValueError: 1-2 args execution context is supported"
+  },
+  {
+   "fact": "modifier_apply on an object whose mesh is shared by another object",
+   "result": null,
+   "error": "RuntimeError: Error: Modifiers cannot be applied to multi-user data",
+   "verts": 482,
+   "shared_after": true
+  },
+  {
+   "fact": "modifier_apply on a mesh with shape keys",
+   "result": null,
+   "error": "RuntimeError: Error: Modifier cannot be applied to a mesh with shape keys",
+   "verts": 482
+  },
+  {
+   "fact": "applying a level-3 subsurf (31746 verts): new_from_object + swap 28 ms, modifier_apply 30 ms (depsgraph already evaluated for the first)",
+   "data_route_ms": 27.9,
+   "operator_ms": 30.3,
+   "verts": 31746,
+   "same": true
+  }
+ ],
+ "data": {}
+}

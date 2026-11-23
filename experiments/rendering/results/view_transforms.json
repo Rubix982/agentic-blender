@@ -1,0 +1,533 @@
+{
+ "experiment": "experiments/rendering/view_transforms.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.24,
+ "facts": [
+  {
+   "fact": "a new scene's colour management in 4.5: view transform AgX, look None, exposure 0, gamma 1, display sRGB",
+   "view_transform": "AgX",
+   "look": "None",
+   "exposure": 0.0,
+   "gamma": 1.0,
+   "display": "sRGB",
+   "sequencer": "sRGB"
+  },
+  {
+   "fact": "view_transform is a dynamic enum; the TypeError for a bad value lists the valid ones",
+   "type_error": "bpy_struct: item.attr = val: enum \"__nope__\" not found in ('Standard', 'Khronos PBR Neutral', 'AgX', 'Filmic', 'Filmic Log', 'False Color', 'Raw')"
+  },
+  {
+   "fact": "Standard maps scene-linear to sRGB bytes with the plain sRGB curve: 0.18 -> 118, 0.5 -> 188, 1.0 -> 255, 4.0 clips to 255",
+   "standard": {
+    "black": [
+     0,
+     0,
+     0
+    ],
+    "mid grey 0.18": [
+     118,
+     118,
+     118
+    ],
+    "grey 0.5": [
+     188,
+     188,
+     188
+    ],
+    "white 1.0": [
+     255,
+     255,
+     255
+    ],
+    "over-white 4.0": [
+     255,
+     255,
+     255
+    ],
+    "pure red 1,0,0": [
+     255,
+     0,
+     0
+    ],
+    "orange 0.8,0.3,0.05": [
+     231,
+     149,
+     63
+    ]
+   }
+  },
+  {
+   "fact": "AgX (the default) keeps mid grey 0.18 at the same byte as Standard (118) but maps linear 1.0 white to 197, not 255, keeps 4.0 below clipping (233), and desaturates pure red 1,0,0 to 219,57,33",
+   "agx": {
+    "black": [
+     0,
+     0,
+     0
+    ],
+    "mid grey 0.18": [
+     118,
+     118,
+     118
+    ],
+    "grey 0.5": [
+     170,
+     170,
+     170
+    ],
+    "white 1.0": [
+     197,
+     197,
+     197
+    ],
+    "over-white 4.0": [
+     233,
+     233,
+     233
+    ],
+    "pure red 1,0,0": [
+     219,
+     57,
+     33
+    ],
+    "orange 0.8,0.3,0.05": [
+     197,
+     140,
+     82
+    ]
+   }
+  },
+  {
+   "fact": "Filmic and Khronos PBR Neutral values for the same colours",
+   "filmic": {
+    "black": [
+     0,
+     0,
+     0
+    ],
+    "mid grey 0.18": [
+     128,
+     128,
+     128
+    ],
+    "grey 0.5": [
+     177,
+     177,
+     177
+    ],
+    "white 1.0": [
+     206,
+     206,
+     206
+    ],
+    "over-white 4.0": [
+     242,
+     242,
+     242
+    ],
+    "pure red 1,0,0": [
+     206,
+     0,
+     0
+    ],
+    "orange 0.8,0.3,0.05": [
+     197,
+     153,
+     70
+    ]
+   },
+   "khronos_pbr_neutral": {
+    "black": [
+     0,
+     0,
+     0
+    ],
+    "mid grey 0.18": [
+     105,
+     105,
+     105
+    ],
+    "grey 0.5": [
+     181,
+     181,
+     181
+    ],
+    "white 1.0": [
+     239,
+     239,
+     239
+    ],
+    "over-white 4.0": [
+     253,
+     253,
+     253
+    ],
+    "pure red 1,0,0": [
+     240,
+     35,
+     35
+    ],
+    "orange 0.8,0.3,0.05": [
+     226,
+     140,
+     36
+    ]
+   }
+  },
+  {
+   "fact": "Raw writes the linear value straight to bytes (0.18 -> 46, 0.5 -> 128)",
+   "raw": {
+    "black": [
+     0,
+     0,
+     0
+    ],
+    "mid grey 0.18": [
+     46,
+     46,
+     46
+    ],
+    "grey 0.5": [
+     128,
+     128,
+     128
+    ],
+    "white 1.0": [
+     255,
+     255,
+     255
+    ],
+    "over-white 4.0": [
+     255,
+     255,
+     255
+    ],
+    "pure red 1,0,0": [
+     255,
+     0,
+     0
+    ],
+    "orange 0.8,0.3,0.05": [
+     204,
+     77,
+     13
+    ]
+   }
+  },
+  {
+   "fact": "view_settings.exposure +1 under Standard gives the same bytes as doubling the linear colour (0.18 at +1 EV == 0.36)",
+   "by_ev": {
+    "-1": [
+     85,
+     85,
+     85
+    ],
+    "0": [
+     118,
+     118,
+     118
+    ],
+    "1": [
+     162,
+     162,
+     162
+    ],
+    "2": [
+     221,
+     221,
+     221
+    ]
+   },
+   "linear_036": [
+    162,
+    162,
+    162
+   ]
+  },
+  {
+   "fact": "AgX contrast looks pivot on mid grey (0.18 stays 118); Punchy darkens it",
+   "mid_grey_by_look": {
+    "None": [
+     118,
+     118,
+     118
+    ],
+    "AgX - Punchy": [
+     88,
+     88,
+     88
+    ],
+    "AgX - High Contrast": [
+     118,
+     118,
+     118
+    ],
+    "AgX - Base Contrast": [
+     118,
+     118,
+     118
+    ]
+   }
+  },
+  {
+   "fact": "a rendered EXR stores scene-linear values: neither the view transform (AgX) nor exposure (+1) is applied",
+   "written": [
+    0.5,
+    0.25,
+    4.0
+   ],
+   "linear_in": [
+    0.5,
+    0.25,
+    4.0
+   ]
+  },
+  {
+   "fact": "bpy Image.pixels of a loaded 8-bit PNG are its bytes / 255, still display-encoded (not linearised); colorspace sRGB",
+   "pixels_x255": [
+    118,
+    118,
+    118
+   ],
+   "colorspace": "sRGB"
+  },
+  {
+   "fact": "in background mode the Render Result image has no readable pixels: save to a file and load it instead",
+   "render_result_pixels": 0
+  }
+ ],
+ "data": {
+  "table": {
+   "Standard": {
+    "black": [
+     0,
+     0,
+     0
+    ],
+    "mid grey 0.18": [
+     118,
+     118,
+     118
+    ],
+    "grey 0.5": [
+     188,
+     188,
+     188
+    ],
+    "white 1.0": [
+     255,
+     255,
+     255
+    ],
+    "over-white 4.0": [
+     255,
+     255,
+     255
+    ],
+    "pure red 1,0,0": [
+     255,
+     0,
+     0
+    ],
+    "orange 0.8,0.3,0.05": [
+     231,
+     149,
+     63
+    ]
+   },
+   "AgX": {
+    "black": [
+     0,
+     0,
+     0
+    ],
+    "mid grey 0.18": [
+     118,
+     118,
+     118
+    ],
+    "grey 0.5": [
+     170,
+     170,
+     170
+    ],
+    "white 1.0": [
+     197,
+     197,
+     197
+    ],
+    "over-white 4.0": [
+     233,
+     233,
+     233
+    ],
+    "pure red 1,0,0": [
+     219,
+     57,
+     33
+    ],
+    "orange 0.8,0.3,0.05": [
+     197,
+     140,
+     82
+    ]
+   },
+   "Filmic": {
+    "black": [
+     0,
+     0,
+     0
+    ],
+    "mid grey 0.18": [
+     128,
+     128,
+     128
+    ],
+    "grey 0.5": [
+     177,
+     177,
+     177
+    ],
+    "white 1.0": [
+     206,
+     206,
+     206
+    ],
+    "over-white 4.0": [
+     242,
+     242,
+     242
+    ],
+    "pure red 1,0,0": [
+     206,
+     0,
+     0
+    ],
+    "orange 0.8,0.3,0.05": [
+     197,
+     153,
+     70
+    ]
+   },
+   "Khronos PBR Neutral": {
+    "black": [
+     0,
+     0,
+     0
+    ],
+    "mid grey 0.18": [
+     105,
+     105,
+     105
+    ],
+    "grey 0.5": [
+     181,
+     181,
+     181
+    ],
+    "white 1.0": [
+     239,
+     239,
+     239
+    ],
+    "over-white 4.0": [
+     253,
+     253,
+     253
+    ],
+    "pure red 1,0,0": [
+     240,
+     35,
+     35
+    ],
+    "orange 0.8,0.3,0.05": [
+     226,
+     140,
+     36
+    ]
+   },
+   "Raw": {
+    "black": [
+     0,
+     0,
+     0
+    ],
+    "mid grey 0.18": [
+     46,
+     46,
+     46
+    ],
+    "grey 0.5": [
+     128,
+     128,
+     128
+    ],
+    "white 1.0": [
+     255,
+     255,
+     255
+    ],
+    "over-white 4.0": [
+     255,
+     255,
+     255
+    ],
+    "pure red 1,0,0": [
+     255,
+     0,
+     0
+    ],
+    "orange 0.8,0.3,0.05": [
+     204,
+     77,
+     13
+    ]
+   }
+  },
+  "exposure": {
+   "-1": [
+    85,
+    85,
+    85
+   ],
+   "0": [
+    118,
+    118,
+    118
+   ],
+   "1": [
+    162,
+    162,
+    162
+   ],
+   "2": [
+    221,
+    221,
+    221
+   ]
+  },
+  "looks": {
+   "None": [
+    118,
+    118,
+    118
+   ],
+   "AgX - Punchy": [
+    88,
+    88,
+    88
+   ],
+   "AgX - High Contrast": [
+    118,
+    118,
+    118
+   ],
+   "AgX - Base Contrast": [
+    118,
+    118,
+    118
+   ]
+  }
+ }
+}

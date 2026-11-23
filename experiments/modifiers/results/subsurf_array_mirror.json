@@ -1,0 +1,172 @@
+{
+ "experiment": "experiments/modifiers/subsurf_array_mirror.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.14,
+ "facts": [
+  {
+   "fact": "a new Subdivision Surface modifier: levels 1 (viewport), render_levels 2, Catmull-Clark, quality 3",
+   "levels": 1,
+   "render_levels": 2,
+   "subdivision_type": "CATMULL_CLARK",
+   "quality": 3,
+   "uv_smooth": "PRESERVE_BOUNDARIES",
+   "boundary_smooth": "ALL",
+   "use_limit_surface": true
+  },
+  {
+   "fact": "Catmull-Clark on a size-2 cube: faces x4 per level (6, 24, 96, 384, 1536); with use_limit_surface on, x_max is 0.8395 at every level 1-4 (vertices sit on the limit surface)",
+   "by_level": {
+    "0": {
+     "verts": 8,
+     "faces": 6,
+     "x_min": -1.0,
+     "x_max": 1.0
+    },
+    "1": {
+     "verts": 26,
+     "faces": 24,
+     "x_min": -0.8395,
+     "x_max": 0.8395
+    },
+    "2": {
+     "verts": 98,
+     "faces": 96,
+     "x_min": -0.8395,
+     "x_max": 0.8395
+    },
+    "3": {
+     "verts": 386,
+     "faces": 384,
+     "x_min": -0.8395,
+     "x_max": 0.8395
+    },
+    "4": {
+     "verts": 1538,
+     "faces": 1536,
+     "x_min": -0.8395,
+     "x_max": 0.8395
+    }
+   }
+  },
+  {
+   "fact": "SIMPLE subdivision keeps the cube's shape (x_max stays 1)",
+   "verts": 98,
+   "faces": 96,
+   "x_min": -1.0,
+   "x_max": 1.0
+  },
+  {
+   "fact": "with crease_edge = 1.0 on every edge, Catmull-Clark keeps the cube's corners (x_max back to 1)",
+   "verts": 98,
+   "faces": 96,
+   "x_min": -1.0,
+   "x_max": 1.0
+  },
+  {
+   "fact": "a new Array modifier: count 2, fit_type FIXED_COUNT, relative offset (1,0,0), merge off",
+   "count": 2,
+   "fit_type": "FIXED_COUNT",
+   "use_relative_offset": true,
+   "relative_offset": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "use_constant_offset": false,
+   "use_merge_vertices": false,
+   "merge_threshold": 0.009999999776482582
+  },
+  {
+   "fact": "Array count 5 with relative offset 1: copies touch, 5x the verts (no merge)",
+   "verts": 40,
+   "faces": 30,
+   "x_min": -1.0,
+   "x_max": 9.0
+  },
+  {
+   "fact": "with use_merge_vertices, touching copies share their faces' vertices",
+   "verts": 24,
+   "faces": 26,
+   "x_min": -1.0,
+   "x_max": 9.0
+  },
+  {
+   "fact": "constant offset 3 on a size-2 cube leaves gaps of 1",
+   "verts": 40,
+   "faces": 30,
+   "x_min": -1.0,
+   "x_max": 13.0
+  },
+  {
+   "fact": "fit_type FIT_LENGTH 20 with constant offset 3 picks the count that fits",
+   "count_used": 7,
+   "verts": 56,
+   "faces": 42,
+   "x_min": -1.0,
+   "x_max": 19.0
+  },
+  {
+   "fact": "FIT_CURVE with no curve set",
+   "verts": 56,
+   "faces": 42,
+   "x_min": -1.0,
+   "x_max": 19.0
+  },
+  {
+   "fact": "a new Mirror modifier mirrors X across the object's origin, merge on (0.001), clipping off",
+   "use_axis": [
+    true,
+    false,
+    false
+   ],
+   "use_bisect_axis": [
+    false,
+    false,
+    false
+   ],
+   "use_mirror_merge": true,
+   "merge_threshold": 0.0010000000474974513,
+   "use_clip": false,
+   "mirror_object": null
+  },
+  {
+   "fact": "mirroring a cube that touches the plane at x=0 merges the seam vertices (16 -> 12)",
+   "verts": 12,
+   "faces": 11,
+   "x_min": -2.0,
+   "x_max": 2.0
+  },
+  {
+   "fact": "with use_mirror_merge off, the seam keeps duplicate vertices",
+   "verts": 16,
+   "faces": 12,
+   "x_min": -2.0,
+   "x_max": 2.0
+  },
+  {
+   "fact": "a mesh crossing the mirror plane overlaps its mirror copy unless use_bisect_axis is on",
+   "verts": 16,
+   "faces": 12,
+   "x_min": -1.5,
+   "x_max": 1.5
+  },
+  {
+   "fact": "on a mesh spanning x -0.5..1.5, use_bisect_axis[0] keeps the NEGATIVE side and mirrors it (x -0.5..0.5); use_bisect_flip_axis[0] keeps the positive side instead (x -1.5..1.5)",
+   "bisect": {
+    "verts": 12,
+    "faces": 10,
+    "x_min": -0.5,
+    "x_max": 0.5
+   },
+   "bisect_flip": {
+    "verts": 12,
+    "faces": 10,
+    "x_min": -1.5,
+    "x_max": 1.5
+   }
+  }
+ ],
+ "data": {}
+}

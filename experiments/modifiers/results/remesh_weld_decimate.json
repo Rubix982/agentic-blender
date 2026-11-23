@@ -1,0 +1,177 @@
+{
+ "experiment": "experiments/modifiers/remesh_weld_decimate.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.27,
+ "facts": [
+  {
+   "fact": "a new Remesh modifier defaults to mode VOXEL",
+   "mode": "VOXEL",
+   "voxel_size": 0.10000000149011612,
+   "adaptivity": 0.0,
+   "modes": [
+    "BLOCKS",
+    "SMOOTH",
+    "SHARP",
+    "VOXEL"
+   ]
+  },
+  {
+   "fact": "voxel remesh of a torus (major 1, minor 0.3): halving voxel_size roughly quadruples the face count; output is all quads and manifold",
+   "base": {
+    "verts": 576,
+    "faces": 576,
+    "manifold": true,
+    "tris": 0,
+    "quads": 576,
+    "volume": 1.6916
+   },
+   "by_voxel_size": {
+    "0.1": {
+     "seconds": 0.022,
+     "verts": 1568,
+     "faces": 1568,
+     "manifold": true,
+     "tris": 0,
+     "quads": 1568,
+     "volume": 1.6067
+    },
+    "0.05": {
+     "seconds": 0.023,
+     "verts": 6548,
+     "faces": 6548,
+     "manifold": true,
+     "tris": 0,
+     "quads": 6548,
+     "volume": 1.6777
+    },
+    "0.025": {
+     "seconds": 0.052,
+     "verts": 26804,
+     "faces": 26804,
+     "manifold": true,
+     "tris": 0,
+     "quads": 26804,
+     "volume": 1.6878
+    }
+   },
+   "torus_volume_exact": 1.7765
+  },
+  {
+   "fact": "adaptivity 0.5 reduces faces and introduces triangles",
+   "verts": 466,
+   "faces": 571,
+   "manifold": true,
+   "tris": 210,
+   "quads": 361,
+   "volume": 1.5239
+  },
+  {
+   "fact": "Remesh mode SHARP (octree_depth 5)",
+   "verts": 2192,
+   "faces": 2192,
+   "manifold": true,
+   "tris": 0,
+   "quads": 2192,
+   "volume": 1.6908
+  },
+  {
+   "fact": "Weld modifier defaults",
+   "merge_threshold": 0.0010000000474974513,
+   "mode": "ALL",
+   "modes": [
+    "ALL",
+    "CONNECTED"
+   ]
+  },
+  {
+   "fact": "Weld (default 0.001 m, mode ALL) rejoins a sphere whose faces were all split apart: verts back to 114 and manifold",
+   "before": {
+    "verts": 480,
+    "faces": 128,
+    "manifold": false,
+    "tris": 32,
+    "quads": 96,
+    "volume": 3.9266
+   },
+   "after": {
+    "verts": 114,
+    "faces": 128,
+    "manifold": true,
+    "tris": 32,
+    "quads": 96,
+    "volume": 3.9266
+   }
+  },
+  {
+   "fact": "Weld mode CONNECTED only merges along existing edges, so split faces stay split",
+   "verts": 480,
+   "faces": 128,
+   "manifold": false,
+   "tris": 32,
+   "quads": 96,
+   "volume": 3.9266
+  },
+  {
+   "fact": "Decimate defaults",
+   "decimate_type": "COLLAPSE",
+   "ratio": 1.0,
+   "types": [
+    "COLLAPSE",
+    "UNSUBDIV",
+    "DISSOLVE"
+   ]
+  },
+  {
+   "fact": "Decimate COLLAPSE ratio is a fraction of the triangle count; the output is mostly triangles",
+   "base": {
+    "verts": 1986,
+    "faces": 2048,
+    "manifold": true,
+    "tris": 128,
+    "quads": 1920,
+    "volume": 4.172
+   },
+   "by_ratio": {
+    "0.5": {
+     "verts": 994,
+     "faces": 1409,
+     "manifold": true,
+     "tris": 834,
+     "quads": 575,
+     "volume": 4.1666,
+     "face_count_reported": 1409
+    },
+    "0.1": {
+     "verts": 200,
+     "faces": 381,
+     "manifold": true,
+     "tris": 366,
+     "quads": 15,
+     "volume": 4.1257,
+     "face_count_reported": 381
+    }
+   }
+  },
+  {
+   "fact": "Decimate DISSOLVE (planar, 5 deg) on a simple-subdivided cube gets back to 6 faces",
+   "verts": 8,
+   "faces": 6,
+   "manifold": true,
+   "tris": 0,
+   "quads": 6,
+   "volume": 8.0
+  },
+  {
+   "fact": "Decimate UNSUBDIV with 2 iterations undoes 2 levels of simple subdivision on the cube",
+   "verts": 26,
+   "faces": 24,
+   "manifold": true,
+   "tris": 0,
+   "quads": 24,
+   "volume": 8.0
+  }
+ ],
+ "data": {}
+}

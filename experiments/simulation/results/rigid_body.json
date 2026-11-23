@@ -1,0 +1,167 @@
+{
+ "experiment": "experiments/simulation/rigid_body.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.83,
+ "facts": [
+  {
+   "fact": "rigidbody.world_add and rigidbody.object_add run in background mode; object_add with no active object fails its poll, and temp_override(object=...) is enough",
+   "world_add": [
+    "FINISHED"
+   ],
+   "no_active_error": "Operator bpy.ops.rigidbody.object_add.poll() Context missing active object",
+   "with_override": [
+    "FINISHED"
+   ],
+   "has_rigid_body": true
+  },
+  {
+   "fact": "a 2 cm convex-hull cube at the default margin (0.04 m, use_margin off) comes to rest about 4 cm above the ground it should touch; a 1 mm margin brings it down to the ground; a BOX shape has no gap",
+   "rows": [
+    [
+     "CONVEX_HULL",
+     false,
+     0.04,
+     0.0
+    ],
+    [
+     "CONVEX_HULL",
+     true,
+     0.001,
+     0.001
+    ],
+    [
+     "CONVEX_HULL",
+     false,
+     0.001,
+     0.0
+    ],
+    [
+     "BOX",
+     false,
+     0.04,
+     0.0
+    ],
+    [
+     "BOX",
+     true,
+     0.04,
+     0.0
+    ],
+    [
+     "MESH",
+     false,
+     0.04,
+     0.0366
+    ],
+    [
+     "MESH",
+     true,
+     0.001,
+     0.001
+    ],
+    [
+     "SPHERE",
+     false,
+     0.04,
+     0.0
+    ],
+    [
+     "CONVEX_HULL (margin 1 mm) on a CONVEX_HULL ground (default margin)",
+     true,
+     0.001,
+     0.0011
+    ]
+   ]
+  },
+  {
+   "fact": "the rigid body world's cache bakes headless with ptcache.bake and temp_override(point_cache=scene.rigidbody_world.point_cache); the bake matches stepping and can be read out of order",
+   "result": [
+    "FINISHED"
+   ],
+   "is_baked": true,
+   "max_diff_m": 0.0,
+   "bake_s": 0.002,
+   "step_s": 0.002,
+   "stepped_info": "60 frames in memory (10 KiB)."
+  },
+  {
+   "fact": "jumping from frame 1 to frame 30 with nothing cached does not simulate a rigid body: it stays where it was",
+   "z_frame1": 1.0,
+   "z_after_jump": 1.0,
+   "stepped_z30": 0.1
+  },
+  {
+   "fact": "100 convex-hull cubes on a plane: seconds per frame at the default 10 substeps",
+   "seconds_per_frame": 0.0033
+  }
+ ],
+ "data": {
+  "margin_rows": [
+   {
+    "shape": "CONVEX_HULL",
+    "use_margin": false,
+    "margin": 0.04,
+    "rest_centre_z": 0.01,
+    "gap_m": 0.0
+   },
+   {
+    "shape": "CONVEX_HULL",
+    "use_margin": true,
+    "margin": 0.001,
+    "rest_centre_z": 0.011,
+    "gap_m": 0.001
+   },
+   {
+    "shape": "CONVEX_HULL",
+    "use_margin": false,
+    "margin": 0.001,
+    "rest_centre_z": 0.01,
+    "gap_m": 0.0
+   },
+   {
+    "shape": "BOX",
+    "use_margin": false,
+    "margin": 0.04,
+    "rest_centre_z": 0.01,
+    "gap_m": 0.0
+   },
+   {
+    "shape": "BOX",
+    "use_margin": true,
+    "margin": 0.04,
+    "rest_centre_z": 0.01,
+    "gap_m": 0.0
+   },
+   {
+    "shape": "MESH",
+    "use_margin": false,
+    "margin": 0.04,
+    "rest_centre_z": 0.0466,
+    "gap_m": 0.0366
+   },
+   {
+    "shape": "MESH",
+    "use_margin": true,
+    "margin": 0.001,
+    "rest_centre_z": 0.011,
+    "gap_m": 0.001
+   },
+   {
+    "shape": "SPHERE",
+    "use_margin": false,
+    "margin": 0.04,
+    "rest_centre_z": 0.01,
+    "gap_m": 0.0
+   },
+   {
+    "shape": "CONVEX_HULL (margin 1 mm) on a CONVEX_HULL ground (default margin)",
+    "use_margin": true,
+    "margin": 0.001,
+    "rest_centre_z": 0.0111,
+    "gap_m": 0.0011
+   }
+  ]
+ }
+}

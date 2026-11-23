@@ -1,0 +1,81 @@
+{
+ "experiment": "experiments/simulation/cloth_bake.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 4.23,
+ "facts": [
+  {
+   "fact": "stepping frame_set 1..60 simulates the cloth into a memory cache that is not 'baked'",
+   "seconds": 0.98,
+   "is_baked": false,
+   "info": "60 frames in memory (2.0 MiB).",
+   "lowest_z": 0.4067
+  },
+  {
+   "fact": "going back to frame 30 after stepping is a cache read, not a re-simulation",
+   "seconds": 0.0
+  },
+  {
+   "fact": "ptcache.bake_from_cache (with point_cache in the context) marks the stepped cache baked",
+   "result": [
+    "FINISHED"
+   ],
+   "is_baked": true
+  },
+  {
+   "fact": "bpy.ops.ptcache.bake without a point_cache in the context fails its poll in background mode",
+   "error": "Operator bpy.ops.ptcache.bake.poll() failed, context is incorrect"
+  },
+  {
+   "fact": "ptcache.bake with temp_override(point_cache=...) bakes headless and gives the same cloth as stepping",
+   "result": [
+    "FINISHED"
+   ],
+   "seconds": 1.01,
+   "is_baked": true,
+   "frame_after_bake": 1,
+   "max_diff_vs_stepping_m": 0.0
+  },
+  {
+   "fact": "ptcache.bake_all(bake=True) needs no override and bakes every cache in the scene",
+   "result": [
+    "FINISHED"
+   ],
+   "error": null,
+   "seconds": 0.96,
+   "is_baked": true,
+   "max_diff_vs_stepping_m": 0.0
+  },
+  {
+   "fact": "ptcache.free_bake_all clears the bake",
+   "result": [
+    "FINISHED"
+   ],
+   "is_baked": false
+  },
+  {
+   "fact": "jumping from frame 1 straight to frame 60 (nothing cached) takes ONE solver step stretched over the 59 frames: the free cloth falls metres, straight through the collider, nothing like the stepped result",
+   "moved_max_m": 4.905,
+   "lowest_z": -3.905,
+   "stepped_lowest_z": 0.407,
+   "max_diff_vs_stepping_m": 4.736,
+   "cache_info": "2 frames in memory (68 KiB), not exact since frame 1"
+  },
+  {
+   "fact": "a jump of 2 frames from the start is also taken as one step; a further jump after it does not simulate at all (the cloth shows the last simulated state)",
+   "fell_at_3_m": 0.023,
+   "cache_info_at_3": "2 frames in memory (68 KiB), not exact since frame 1",
+   "moved_between_3_and_60_m": 0.0
+  },
+  {
+   "fact": "points pinned at weight 1.0 do not move at all under gravity (default pin stiffness 1)",
+   "pinned": 31,
+   "max_move_m": 0.0
+  }
+ ],
+ "data": {
+  "frames": 60,
+  "points": 961
+ }
+}

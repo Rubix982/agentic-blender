@@ -1,0 +1,181 @@
+{
+ "experiment": "experiments/meshes/build_from_arrays.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 3.36,
+ "facts": [
+  {
+   "fact": "at 10000 vertices, from_pydata (with tolist) takes 0.010 s and vertices.add+foreach_set+update(calc_edges=True) takes 0.004 s",
+   "ratio": 2.5,
+   "verts": 10000,
+   "faces": 9801,
+   "edges_pydata": 19800,
+   "edges_foreach": 19800,
+   "pydata_tolist_s": 0.003,
+   "pydata_build_s": 0.0066,
+   "pydata_update_s": 0.0,
+   "foreach_set_s": 0.0032,
+   "foreach_update_calc_edges_s": 0.0006,
+   "validate_s": 0.0022,
+   "validate_changed_pydata": false,
+   "validate_changed_foreach": false,
+   "same_counts": true,
+   "attr_set_s": 0.0029,
+   "attr_update_s": 0.0032,
+   "attr_same_mesh": true
+  },
+  {
+   "fact": "at 100489 vertices, from_pydata (with tolist) takes 0.153 s and vertices.add+foreach_set+update(calc_edges=True) takes 0.044 s",
+   "ratio": 3.5,
+   "verts": 100489,
+   "faces": 99856,
+   "edges_pydata": 200344,
+   "edges_foreach": 200344,
+   "pydata_tolist_s": 0.0959,
+   "pydata_build_s": 0.0568,
+   "pydata_update_s": 0.0,
+   "foreach_set_s": 0.0382,
+   "foreach_update_calc_edges_s": 0.0058,
+   "validate_s": 0.0135,
+   "validate_changed_pydata": false,
+   "validate_changed_foreach": false,
+   "same_counts": true,
+   "attr_set_s": 0.0045,
+   "attr_update_s": 0.0053,
+   "attr_same_mesh": true
+  },
+  {
+   "fact": "at 1000000 vertices, from_pydata (with tolist) takes 1.763 s and vertices.add+foreach_set+update(calc_edges=True) takes 0.368 s",
+   "ratio": 4.8,
+   "verts": 1000000,
+   "faces": 998001,
+   "edges_pydata": 1998000,
+   "edges_foreach": 1998000,
+   "pydata_tolist_s": 1.1299,
+   "pydata_build_s": 0.6329,
+   "pydata_update_s": 0.0,
+   "foreach_set_s": 0.3206,
+   "foreach_update_calc_edges_s": 0.0474,
+   "validate_s": 0.2431,
+   "validate_changed_pydata": false,
+   "validate_changed_foreach": false,
+   "same_counts": true,
+   "attr_set_s": 0.0939,
+   "attr_update_s": 0.0476,
+   "attr_same_mesh": true
+  },
+  {
+   "fact": "at 10000 vertices, writing positions and corner vertices through mesh.attributes ('position', '.corner_vert') takes 0.006 s against 0.004 s through vertices/loops.foreach_set",
+   "same_mesh": true
+  },
+  {
+   "fact": "at 100489 vertices, writing positions and corner vertices through mesh.attributes ('position', '.corner_vert') takes 0.010 s against 0.044 s through vertices/loops.foreach_set",
+   "same_mesh": true
+  },
+  {
+   "fact": "at 1000000 vertices, writing positions and corner vertices through mesh.attributes ('position', '.corner_vert') takes 0.142 s against 0.368 s through vertices/loops.foreach_set",
+   "same_mesh": true
+  },
+  {
+   "fact": "from_pydata computes edges itself; the foreach_set route has no edges until update(calc_edges=True)",
+   "edges_pydata": 19800,
+   "edges_foreach": 19800
+  },
+  {
+   "fact": "neither route leaves anything for validate() to fix on a clean grid",
+   "changed": [
+    [
+     false,
+     false
+    ],
+    [
+     false,
+     false
+    ],
+    [
+     false,
+     false
+    ]
+   ]
+  },
+  {
+   "fact": "built by foreach_set, a mesh has 0 edges before update() and 180 after a plain update() (calc_edges=False); so update() computes missing edges even without calc_edges",
+   "edges_before_update": 0,
+   "edges_after_plain_update": 180,
+   "expected": 180
+  },
+  {
+   "fact": "loop_start alone defines the faces: loop_total is derived from the next face's loop_start, and is already 4 on a quad built without setting it",
+   "loop_total_before_setting": 4,
+   "foreach_set_loop_total": "accepted",
+   "attribute_set_loop_total": "AttributeError: bpy_struct: attribute \"loop_total\" from \"MeshPolygon\" is read-only"
+  },
+  {
+   "fact": "Mesh.update docstring in 4.5",
+   "doc": "update",
+   "params": {
+    "calc_edges": "Force recalculation of edges",
+    "calc_edges_loose": "Calculate the loose state of each edge"
+   }
+  }
+ ],
+ "data": {
+  "rows": [
+   {
+    "verts": 10000,
+    "faces": 9801,
+    "edges_pydata": 19800,
+    "edges_foreach": 19800,
+    "pydata_tolist_s": 0.003,
+    "pydata_build_s": 0.0066,
+    "pydata_update_s": 0.0,
+    "foreach_set_s": 0.0032,
+    "foreach_update_calc_edges_s": 0.0006,
+    "validate_s": 0.0022,
+    "validate_changed_pydata": false,
+    "validate_changed_foreach": false,
+    "same_counts": true,
+    "attr_set_s": 0.0029,
+    "attr_update_s": 0.0032,
+    "attr_same_mesh": true
+   },
+   {
+    "verts": 100489,
+    "faces": 99856,
+    "edges_pydata": 200344,
+    "edges_foreach": 200344,
+    "pydata_tolist_s": 0.0959,
+    "pydata_build_s": 0.0568,
+    "pydata_update_s": 0.0,
+    "foreach_set_s": 0.0382,
+    "foreach_update_calc_edges_s": 0.0058,
+    "validate_s": 0.0135,
+    "validate_changed_pydata": false,
+    "validate_changed_foreach": false,
+    "same_counts": true,
+    "attr_set_s": 0.0045,
+    "attr_update_s": 0.0053,
+    "attr_same_mesh": true
+   },
+   {
+    "verts": 1000000,
+    "faces": 998001,
+    "edges_pydata": 1998000,
+    "edges_foreach": 1998000,
+    "pydata_tolist_s": 1.1299,
+    "pydata_build_s": 0.6329,
+    "pydata_update_s": 0.0,
+    "foreach_set_s": 0.3206,
+    "foreach_update_calc_edges_s": 0.0474,
+    "validate_s": 0.2431,
+    "validate_changed_pydata": false,
+    "validate_changed_foreach": false,
+    "same_counts": true,
+    "attr_set_s": 0.0939,
+    "attr_update_s": 0.0476,
+    "attr_same_mesh": true
+   }
+  ]
+ }
+}

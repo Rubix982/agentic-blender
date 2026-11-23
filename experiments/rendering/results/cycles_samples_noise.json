@@ -1,0 +1,134 @@
+{
+ "experiment": "experiments/rendering/cycles_samples_noise.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 11.94,
+ "facts": [
+  {
+   "fact": "Cycles render defaults in 4.5: 4096 max samples, adaptive sampling on with noise threshold 0.01 and min samples 0 (automatic), denoising on",
+   "samples": 4096,
+   "use_adaptive_sampling": true,
+   "adaptive_threshold": 0.01,
+   "adaptive_min_samples": 0,
+   "use_denoising": true
+  },
+  {
+   "fact": "without adaptive sampling, noise (RMSE vs a 4096-sample reference) roughly halves for each 4x samples (Monte Carlo 1/sqrt(N)); time grows about linearly with samples",
+   "table": [
+    {
+     "samples": 16,
+     "adaptive": false,
+     "seconds": 0.31,
+     "rmse": 0.12612
+    },
+    {
+     "samples": 64,
+     "adaptive": false,
+     "seconds": 0.39,
+     "rmse": 0.05528
+    },
+    {
+     "samples": 256,
+     "adaptive": false,
+     "seconds": 0.64,
+     "rmse": 0.03089
+    },
+    {
+     "samples": 1024,
+     "adaptive": false,
+     "seconds": 1.62,
+     "rmse": 0.01689
+    }
+   ],
+   "ratio_16_to_64": 2.28,
+   "ratio_64_to_256": 1.79,
+   "reference_seconds": 6.54
+  },
+  {
+   "fact": "adaptive sampling at 1024 max samples, threshold 0.01, takes less time than 1024 fixed samples, at a higher RMSE",
+   "fixed_1024": {
+    "samples": 1024,
+    "adaptive": false,
+    "seconds": 1.62,
+    "rmse": 0.01689
+   },
+   "adaptive_1024": {
+    "samples": 1024,
+    "adaptive": true,
+    "threshold": 0.01,
+    "seconds": 0.74,
+    "rmse": 0.02936
+   }
+  },
+  {
+   "fact": "the 4.5 default (4096 max samples, adaptive, threshold 0.01) on this 256 px scene",
+   "default": {
+    "samples": 4096,
+    "adaptive": true,
+    "threshold": 0.01,
+    "seconds": 0.8,
+    "rmse": 0.02817
+   }
+  },
+  {
+   "fact": "raising the noise threshold to 0.05 cuts time further at more noise",
+   "adaptive_005": {
+    "samples": 1024,
+    "adaptive": true,
+    "threshold": 0.05,
+    "seconds": 0.4,
+    "rmse": 0.08701
+   }
+  }
+ ],
+ "data": {
+  "rows": [
+   {
+    "samples": 16,
+    "adaptive": false,
+    "seconds": 0.31,
+    "rmse": 0.12612
+   },
+   {
+    "samples": 64,
+    "adaptive": false,
+    "seconds": 0.39,
+    "rmse": 0.05528
+   },
+   {
+    "samples": 256,
+    "adaptive": false,
+    "seconds": 0.64,
+    "rmse": 0.03089
+   },
+   {
+    "samples": 1024,
+    "adaptive": false,
+    "seconds": 1.62,
+    "rmse": 0.01689
+   },
+   {
+    "samples": 1024,
+    "adaptive": true,
+    "threshold": 0.01,
+    "seconds": 0.74,
+    "rmse": 0.02936
+   },
+   {
+    "samples": 1024,
+    "adaptive": true,
+    "threshold": 0.05,
+    "seconds": 0.4,
+    "rmse": 0.08701
+   },
+   {
+    "samples": 4096,
+    "adaptive": true,
+    "threshold": 0.01,
+    "seconds": 0.8,
+    "rmse": 0.02817
+   }
+  ]
+ }
+}

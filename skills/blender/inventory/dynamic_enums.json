@@ -1,0 +1,102 @@
+{
+ "Scene.render.engine": [
+  "BLENDER_EEVEE_NEXT",
+  "BLENDER_WORKBENCH",
+  "CYCLES",
+  "HYDRA_STORM"
+ ],
+ "ColorManagedViewSettings.view_transform": [
+  "Standard",
+  "Khronos PBR Neutral",
+  "AgX",
+  "Filmic",
+  "Filmic Log",
+  "False Color",
+  "Raw"
+ ],
+ "ColorManagedViewSettings.look": [
+  "None",
+  "AgX - Punchy",
+  "AgX - Greyscale",
+  "AgX - Very High Contrast",
+  "AgX - High Contrast",
+  "AgX - Medium High Contrast",
+  "AgX - Base Contrast",
+  "AgX - Medium Low Contrast",
+  "AgX - Low Contrast",
+  "AgX - Very Low Contrast"
+ ],
+ "ColorManagedDisplaySettings.display_device": [
+  "sRGB",
+  "Display P3",
+  "Rec.1886",
+  "Rec.2020"
+ ],
+ "ColorManagedInputColorspaceSettings.name (Image.colorspace_settings.name)": [
+  "ACES2065-1",
+  "ACEScg",
+  "AgX Base Display P3",
+  "AgX Base Rec.1886",
+  "AgX Base Rec.2020",
+  "AgX Base sRGB",
+  "AgX Log",
+  "Display P3",
+  "Filmic Log",
+  "Filmic sRGB",
+  "Khronos PBR Neutral sRGB",
+  "Linear CIE-XYZ D65",
+  "Linear CIE-XYZ E",
+  "Linear DCI-P3 D65",
+  "Linear FilmLight E-Gamut",
+  "Linear Rec.2020",
+  "Linear Rec.709",
+  "Non-Color",
+  "Rec.1886",
+  "Rec.2020",
+  "sRGB"
+ ],
+ "ColorManagedSequencerColorspaceSettings.name": [
+  "ACES2065-1",
+  "ACEScg",
+  "AgX Base Display P3",
+  "AgX Base Rec.1886",
+  "AgX Base Rec.2020",
+  "AgX Base sRGB",
+  "AgX Log",
+  "Display P3",
+  "Filmic Log",
+  "Filmic sRGB",
+  "Khronos PBR Neutral sRGB",
+  "Linear CIE-XYZ D65",
+  "Linear CIE-XYZ E",
+  "Linear DCI-P3 D65",
+  "Linear FilmLight E-Gamut",
+  "Linear Rec.2020",
+  "Linear Rec.709",
+  "Non-Color",
+  "Rec.1886",
+  "Rec.2020",
+  "sRGB"
+ ],
+ "CyclesPreferences.compute_device_type": [
+  "NONE",
+  "METAL"
+ ],
+ "CyclesPreferences.devices (this machine)": [
+  {
+   "name": "Apple M2 Pro",
+   "type": "CPU"
+  },
+  {
+   "name": "Apple M2 Pro (GPU - 19 cores)",
+   "type": "METAL"
+  }
+ ],
+ "CyclesRenderSettings.device": [
+  "CPU",
+  "GPU"
+ ],
+ "CyclesRenderSettings.denoiser": [
+  "OPENIMAGEDENOISE"
+ ]
+}

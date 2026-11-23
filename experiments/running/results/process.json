@@ -1,0 +1,119 @@
+{
+ "experiment": "experiments/running/process.py",
+ "blender": "Blender 4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "facts": [
+  {
+   "fact": "Peak memory (resident) of a headless Blender job, in MB",
+   "empty script, factory file": 177,
+   "1M-vertex grid mesh": 1059,
+   "Cycles render 512 px, 64 samples, CPU": 482
+  },
+  {
+   "fact": "A segmentation fault in a headless run ends Blender with a negative return code (the signal); Blender prints 'Writing: <path>' and leaves a backtrace in the system temp folder (blender.crash.txt with no file open)",
+   "returncode": -11,
+   "crash_file": [
+    "blender.crash.txt"
+   ],
+   "temp_folder": "$TMPDIR (tempfile.gettempdir())"
+  },
+  {
+   "fact": "blender --command runs a named subcommand without a scene; 4.5 lists these",
+   "listed": [
+    "extension"
+   ]
+  },
+  {
+   "fact": "bpy, Blender as a Python module, is on PyPI; its 4.5 wheels are built for one Python version only",
+   "latest": "5.3.0",
+   "newest_4_5": "4.5.9",
+   "python_tags": [
+    "cp311"
+   ],
+   "mac_arm": [
+    "bpy-4.5.9-cp311-cp311-macosx_11_0_arm64.whl"
+   ]
+  }
+ ],
+ "data": {
+  "crash": {
+   "returncode": -11,
+   "crash_files": [
+    "blender.crash.txt"
+   ],
+   "head": [
+    "# Blender 4.5.14, Commit date: 2026-09-14 14:54, Hash 62c1db4208e8",
+    "",
+    "# backtrace",
+    "0   Blender                             0x0000000103181534 _Z33BLI_system_backtrace_with_os_infoP7__sFILEPKv + 56",
+    "1   Blender                             0x000000010287d4a4 _ZL19sig_handle_crash_fni + 264",
+    "2   libsystem_platform.dylib            0x00000001856816a4 _sigtramp + 56"
+   ],
+   "stderr_tail": [],
+   "stdout_tail": [
+    "Blender 4.5.14 LTS (hash 62c1db4208e8 built 2026-09-15 01:30:44)",
+    "Writing: /var/folders/l4/m2hkdpt50bj34vq1pb4_82jc0000gn/T/blender.crash.txt"
+   ]
+  },
+  "command_help": [
+   "Blender Command Listing:",
+   "\textension"
+  ],
+  "extension_help": [
+   "usage: blender --command extension [-h]",
+   "                                   {server-generate,build,validate,list,sync,update,install,install-file,remove,repo-list,repo-add,repo-remove}",
+   "                                   ...",
+   "",
+   "Command for managing Blender extensions.",
+   "",
+   "options:",
+   "  -h, --help            show this help message and exit",
+   "",
+   "subcommands:",
+   "",
+   "  {server-generate,build,validate,list,sync,update,install,install-file,remove,repo-list,repo-add,repo-remove}",
+   "    server-generate     Create a listing from all packages.",
+   "    build               Build a package.",
+   "    validate            Validate a package.",
+   "    list                List all packages.",
+   "    sync                Synchronize with remote repositories.",
+   "    update              Upgrade any outdated packages.",
+   "    install             Install packages.",
+   "    install-file        Install package from file.",
+   "    remove              Remove packages.",
+   "    repo-list           List repositories.",
+   "    repo-add            Add repository.",
+   "    repo-remove         Remove repository."
+  ],
+  "pypi_bpy": {
+   "latest": "5.3.0",
+   "v45": [
+    "4.5.0",
+    "4.5.1",
+    "4.5.10",
+    "4.5.11",
+    "4.5.12",
+    "4.5.13",
+    "4.5.14",
+    "4.5.15",
+    "4.5.16",
+    "4.5.2",
+    "4.5.3",
+    "4.5.4",
+    "4.5.6",
+    "4.5.7",
+    "4.5.8",
+    "4.5.9"
+   ],
+   "files_4_5": [
+    "bpy-4.5.9-cp311-cp311-macosx_11_0_arm64.whl",
+    "bpy-4.5.9-cp311-cp311-macosx_11_0_x86_64.whl",
+    "bpy-4.5.9-cp311-cp311-manylinux_2_28_x86_64.whl",
+    "bpy-4.5.9-cp311-cp311-win_amd64.whl",
+    "bpy-4.5.9-cp311-cp311-win_arm64.whl"
+   ],
+   "requires_python": "==3.13.*"
+  }
+ }
+}

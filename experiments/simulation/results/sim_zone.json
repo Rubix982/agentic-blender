@@ -1,0 +1,68 @@
+{
+ "experiment": "experiments/simulation/sim_zone.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.14,
+ "facts": [
+  {
+   "fact": "a simulation zone made from Python (pair_with_output) carries its state across frames when stepped: a cube moved by -Delta Time each frame (1 m/s) falls 1/fps a frame",
+   "lowest_z_by_frame": {
+    "1": -0.1,
+    "2": -0.1417,
+    "13": -0.6,
+    "25": -1.1,
+    "30": -1.3083
+   },
+   "fps": 24.0,
+   "expected_drop_by_30_m": 1.2083,
+   "paired": true
+  },
+  {
+   "fact": "after stepping, going back to an earlier frame reads the zone's cache",
+   "z_at_15_after_stepping": -0.6833
+  },
+  {
+   "fact": "jumping from frame 1 straight to frame 30 with nothing cached: what the zone outputs",
+   "z_at_1": -0.1,
+   "z_after_jump": -0.1417
+  },
+  {
+   "fact": "baking a simulation zone in background mode: which calls finish, and the baked result read out of order",
+   "attempts": [
+    {
+     "call": "simulation_nodes_cache_bake(selected=False)",
+     "result": [
+      "FINISHED"
+     ],
+     "error": null,
+     "bakes": 1,
+     "bake_target": "INHERIT"
+    },
+    {
+     "call": "simulation_nodes_cache_bake(selected=True) in temp_override",
+     "result": [
+      "FINISHED"
+     ],
+     "error": null,
+     "bakes": 1,
+     "bake_target": "INHERIT"
+    },
+    {
+     "call": "geometry_node_bake_single(session_uid, modifier_name, bake_id)",
+     "result": [
+      "FINISHED"
+     ],
+     "error": null,
+     "bakes": 1,
+     "bake_target": "INHERIT"
+    }
+   ],
+   "z_at_25": -1.1,
+   "z_at_5": -0.2667,
+   "bake_directory": "",
+   "blend_saved": false
+  }
+ ],
+ "data": {}
+}

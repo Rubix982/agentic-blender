@@ -1,0 +1,182 @@
+{
+ "experiment": "experiments/meshes/smooth_normals.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 1.59,
+ "facts": [
+  {
+   "fact": "use_auto_smooth, auto_smooth_angle, calc_normals_split, free_normals_split and create_normals_split no longer exist on Mesh",
+   "present": {
+    "use_auto_smooth": false,
+    "auto_smooth_angle": false,
+    "calc_normals_split": false,
+    "free_normals_split": false,
+    "create_normals_split": false
+   }
+  },
+  {
+   "fact": "setting mesh.use_auto_smooth raises",
+   "error": "AttributeError: 'Mesh' object has no attribute 'use_auto_smooth'"
+  },
+  {
+   "fact": "a fresh primitive cylinder is flat shaded and stores that as a boolean face attribute sharp_face",
+   "attrs": [
+    "UVMap",
+    "position",
+    "sharp_face"
+   ],
+   "sharp_face_true": 18,
+   "faces": 18,
+   "use_smooth_face0": false
+  },
+  {
+   "fact": "mesh.shade_smooth() removes the sharp_face attribute (all faces smooth)",
+   "attrs": [
+    "UVMap",
+    "position"
+   ],
+   "sharp_face_true": null,
+   "use_smooth_face0": true
+  },
+  {
+   "fact": "mesh.shade_flat() writes sharp_face True on every face",
+   "sharp_face_true": 18
+  },
+  {
+   "fact": "Mesh.shade_smooth and set_sharp_from_angle parameters in 4.5",
+   "shade_smooth": "(self)",
+   "shade_smooth_doc": "\n        Render and display faces smooth, using interpolated vertex normals,\n        removing the \"sharp_face\" attribute\n        ",
+   "shade_flat": "(self)",
+   "in_rna": [
+    "set_sharp_from_angle"
+   ],
+   "set_sharp_from_angle": [
+    [
+     "angle",
+     3.1415927410125732
+    ]
+   ]
+  },
+  {
+   "fact": "mesh.set_sharp_from_angle(angle=30 deg) on a smooth 16-sided cylinder marks the 32 rim edges sharp via the sharp_edge attribute",
+   "attrs": [
+    "UVMap",
+    "position",
+    "sharp_edge"
+   ],
+   "sharp_edge_true": 32,
+   "edges": 48
+  },
+  {
+   "fact": "after set_sharp_from_angle, corner_normals has one normal per loop and the top cap corners point straight up",
+   "loops": 96,
+   "distinct_corner_normals": 18,
+   "normals_domain": "CORNER",
+   "has_corner_normals_attr": true
+  },
+  {
+   "fact": "bpy.ops.object.shade_smooth_by_angle runs headless on the active object and writes sharp_edge / removes sharp_face (no modifier)",
+   "result": [
+    "FINISHED"
+   ],
+   "attrs": [
+    "UVMap",
+    "position",
+    "sharp_edge"
+   ],
+   "sharp_edge_true": 32,
+   "sharp_face_true": null,
+   "modifiers": []
+  },
+  {
+   "fact": "headless (-b), bpy.ops.object.shade_auto_smooth returns CANCELLED with the warning 'Asset loading is unfinished', and adds no modifier, even when retried",
+   "results": [
+    [
+     "CANCELLED"
+    ],
+    [
+     "CANCELLED"
+    ],
+    [
+     "CANCELLED"
+    ]
+   ],
+   "modifiers": []
+  },
+  {
+   "fact": "appending 'Smooth by Angle' from datafiles/assets/geometry_nodes/smooth_by_angle.blend and assigning it to a NODES modifier works headless",
+   "file": "assets/geometry_nodes/smooth_by_angle.blend",
+   "groups_in_file": [
+    "Smooth by Angle"
+   ],
+   "inputs": [
+    [
+     "Input_0",
+     "Mesh",
+     "NodeSocketGeometry"
+    ],
+    [
+     "Input_1",
+     "Angle",
+     "NodeSocketFloat"
+    ],
+    [
+     "Socket_1",
+     "Ignore Sharpness",
+     "NodeSocketBool"
+    ]
+   ],
+   "default_angle_deg": 30.0,
+   "is_asset": true
+  },
+  {
+   "fact": "Smooth by Angle (30 deg) on a 16-sided cylinder marks 48 of 48 edges sharp when the mesh was flat shaded (existing flat faces are kept sharp), 32 with Ignore Sharpness on, and 32 when the mesh was shade_smooth()ed first; the original mesh's attributes are not written",
+   "flat_input": 48,
+   "ignore_sharpness": 32,
+   "smooth_input": 32,
+   "eval_sharp_face_true": null,
+   "orig_sharp_edge_true": null
+  },
+  {
+   "fact": "normals_split_custom_set works without any auto smooth flag in 4.5; all corner normals then point +Z, and the custom normals live in an attribute 'custom_normal'",
+   "custom_normal_domain": "CORNER",
+   "custom_normal_type": "INT16_2D",
+   "sharp_edge_true": 0,
+   "has_custom_normals": true,
+   "all_up": true,
+   "attrs": [
+    "UVMap",
+    "custom_normal",
+    "position",
+    "sharp_edge"
+   ],
+   "normals_domain": "CORNER"
+  },
+  {
+   "fact": "normals_split_custom_set_from_vertices sets one normal per vertex",
+   "all_x": true
+  },
+  {
+   "fact": "custom normals are cleared with bpy.ops.mesh.customdata_custom_splitnormals_clear() (object mode, active object)",
+   "result": [
+    "FINISHED"
+   ],
+   "has_custom_normals_after": false
+  },
+  {
+   "fact": "set_sharp_from_angle() with no argument uses angle=pi (180 deg) and marks no edge sharp",
+   "sharp_edge_true": null
+  },
+  {
+   "fact": "normals_domain is FACE for a flat-shaded mesh, POINT for smooth with no sharp edges, CORNER with sharp edges or custom normals",
+   "flat": "FACE"
+  },
+  {
+   "fact": "normals_domain values seen",
+   "smooth": "POINT",
+   "smooth_with_sharp_edges": "CORNER"
+  }
+ ],
+ "data": {}
+}

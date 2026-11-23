@@ -1,0 +1,262 @@
+{
+ "blender": "4.5.14 LTS",
+ "version": [
+  4,
+  5,
+  14
+ ],
+ "build_hash": [
+  54,
+  50,
+  99,
+  49,
+  100,
+  98,
+  52,
+  50,
+  48,
+  56,
+  101,
+  56
+ ],
+ "build_date": [
+  50,
+  48,
+  50,
+  54,
+  45,
+  48,
+  57,
+  45,
+  49,
+  53
+ ],
+ "python": "3.11.15",
+ "platform": "darwin",
+ "binary": "Blender",
+ "libraries": {
+  "ocio": " 2,  4,  1",
+  "oiio": " 3,  0, 19",
+  "opensubdiv": " 3,  6,  0",
+  "openvdb": "12,  0,  0",
+  "alembic": " 1,  8,  3",
+  "usd": " 0, 25,  2",
+  "sdl": "Unknown"
+ },
+ "build_options": [
+  "alembic",
+  "audaspace",
+  "bullet",
+  "codec_ffmpeg",
+  "codec_sndfile",
+  "collada",
+  "compositor_cpu",
+  "coreaudio",
+  "cycles",
+  "cycles_osl",
+  "fluid",
+  "freestyle",
+  "haru",
+  "image_cineon",
+  "image_dds",
+  "image_hdr",
+  "image_openexr",
+  "image_openjpeg",
+  "image_tiff",
+  "image_webp",
+  "input_ndof",
+  "international",
+  "io_fbx",
+  "io_gpencil",
+  "io_ply",
+  "io_stl",
+  "io_wavefront_obj",
+  "libmv",
+  "mod_oceansim",
+  "mod_remesh",
+  "openal",
+  "opencolorio",
+  "opensubdiv",
+  "openvdb",
+  "potrace",
+  "pugixml",
+  "usd"
+ ],
+ "addons": {
+  "bundled": [
+   {
+    "module": "io_anim_bvh",
+    "name": "BioVision Motion Capture (BVH) format",
+    "category": "Import-Export",
+    "description": "Import-Export BVH from armature objects",
+    "version": [
+     1,
+     0,
+     1
+    ]
+   },
+   {
+    "module": "bl_pkg",
+    "name": "Blender Extensions",
+    "category": "System",
+    "description": "Extension repository support for remote repositories",
+    "version": [
+     0,
+     0,
+     1
+    ]
+   },
+   {
+    "module": "copy_global_transform",
+    "name": "Copy Global Transform",
+    "category": "Animation",
+    "description": "Copy and paste object and bone transforms with ease",
+    "version": [
+     4,
+     4
+    ]
+   },
+   {
+    "module": "cycles",
+    "name": "Cycles Render Engine",
+    "category": "Render",
+    "description": "Cycles renderer integration",
+    "version": []
+   },
+   {
+    "module": "io_scene_fbx",
+    "name": "FBX format",
+    "category": "Import-Export",
+    "description": "FBX IO meshes, UVs, vertex colors, materials, textures, cameras, lamps and actions",
+    "version": [
+     5,
+     13,
+     1
+    ]
+   },
+   {
+    "module": "io_scene_gltf2",
+    "name": "glTF 2.0 format",
+    "category": "Import-Export",
+    "description": "Import-Export as glTF 2.0",
+    "version": [
+     4,
+     5,
+     51
+    ]
+   },
+   {
+    "module": "hydra_storm",
+    "name": "Hydra Storm render engine",
+    "category": "Render",
+    "description": "USD's high performance rasterizing renderer",
+    "version": [
+     1,
+     0,
+     0
+    ]
+   },
+   {
+    "module": "ui_translate",
+    "name": "Manage UI translations",
+    "category": "System",
+    "description": "Allows managing UI translations directly from Blender (update main .po files, update scripts' translations, etc.)",
+    "version": [
+     2,
+     1,
+     0
+    ]
+   },
+   {
+    "module": "node_wrangler",
+    "name": "Node Wrangler",
+    "category": "Node",
+    "description": "Various tools to enhance and speed up node-based workflow",
+    "version": [
+     3,
+     55
+    ]
+   },
+   {
+    "module": "pose_library",
+    "name": "Pose Library",
+    "category": "Animation",
+    "description": "Pose Library based on the asset system.",
+    "version": [
+     2,
+     0
+    ]
+   },
+   {
+    "module": "rigify",
+    "name": "Rigify",
+    "category": "Rigging",
+    "description": "Automatic rigging from building-block components",
+    "version": [
+     0,
+     6,
+     10
+    ]
+   },
+   {
+    "module": "io_curve_svg",
+    "name": "Scalable Vector Graphics (SVG) 1.1 format",
+    "category": "Import-Export",
+    "description": "Import SVG as curves",
+    "version": []
+   },
+   {
+    "module": "io_mesh_uv_layout",
+    "name": "UV Layout",
+    "category": "Import-Export",
+    "description": "Export the UV layout as a 2D graphic",
+    "version": [
+     1,
+     2,
+     0
+    ]
+   },
+   {
+    "module": "viewport_vr_preview",
+    "name": "VR Scene Inspection",
+    "category": "3D View",
+    "description": "View the viewport with virtual reality glasses (head-mounted displays)",
+    "version": [
+     0,
+     11,
+     2
+    ]
+   }
+  ],
+  "on_by_default": [
+   "io_anim_bvh",
+   "bl_pkg",
+   "cycles",
+   "io_scene_fbx",
+   "io_scene_gltf2",
+   "pose_library",
+   "io_curve_svg",
+   "io_mesh_uv_layout"
+  ],
+  "enabled_for_this_read": [
+   "copy_global_transform",
+   "hydra_storm",
+   "ui_translate",
+   "node_wrangler",
+   "rigify",
+   "viewport_vr_preview"
+  ],
+  "failed": {}
+ },
+ "counts": {
+  "structs": 3944,
+  "properties": 10477,
+  "functions": 2056,
+  "operators": 2482,
+  "nodes": 523,
+  "nodes_addable": 510,
+  "node_sockets": 2246,
+  "python_members": 611
+ },
+ "seconds": 0.9
+}

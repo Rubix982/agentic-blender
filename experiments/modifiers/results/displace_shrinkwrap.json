@@ -1,0 +1,114 @@
+{
+ "experiment": "experiments/modifiers/displace_shrinkwrap.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.1,
+ "facts": [
+  {
+   "fact": "a new Displace modifier: strength 1, mid_level 0.5, direction NORMAL, no texture",
+   "strength": 1.0,
+   "mid_level": 0.5,
+   "direction": "NORMAL",
+   "texture": null,
+   "texture_coords": "LOCAL",
+   "space": "LOCAL"
+  },
+  {
+   "fact": "with no texture, Displace moves every vertex by (1 - mid_level) * strength along the normal",
+   "z_min": 0.5,
+   "z_max": 0.5
+  },
+  {
+   "fact": "with a CLOUDS texture (bpy.data.textures.new(name, 'CLOUDS')), displacement = (value - mid_level) * strength",
+   "z_min": -0.3605,
+   "z_max": 0.3383,
+   "z_std": 0.1133,
+   "texture_types": [
+    "NONE",
+    "BLEND",
+    "CLOUDS",
+    "DISTORTED_NOISE",
+    "IMAGE",
+    "MAGIC",
+    "MARBLE",
+    "MUSGRAVE",
+    "NOISE",
+    "STUCCI",
+    "VORONOI",
+    "WOOD"
+   ]
+  },
+  {
+   "fact": "mid_level 0, strength 0.2: all displacement is outward, 0..0.2",
+   "z_min": 0.0279,
+   "z_max": 0.1677
+  },
+  {
+   "fact": "direction 'Z' and texture_coords 'GLOBAL' are accepted (texture_coords: LOCAL, GLOBAL, OBJECT, UV)",
+   "z_max": 0.1677,
+   "coords": [
+    "LOCAL",
+    "GLOBAL",
+    "OBJECT",
+    "UV"
+   ]
+  },
+  {
+   "fact": "an IMAGE texture (a ramp 0..1 along x) with UV coords displaces from about 0 to 1 across the grid",
+   "z_min": 0.0,
+   "z_max": 1.0
+  },
+  {
+   "fact": "a new Shrinkwrap: wrap_method NEAREST_SURFACEPOINT, wrap_mode ON_SURFACE, offset 0",
+   "wrap_method": "NEAREST_SURFACEPOINT",
+   "wrap_mode": "ON_SURFACE",
+   "offset": 0.0,
+   "methods": [
+    "NEAREST_SURFACEPOINT",
+    "PROJECT",
+    "NEAREST_VERTEX",
+    "TARGET_PROJECT"
+   ],
+   "modes": [
+    "ON_SURFACE",
+    "INSIDE",
+    "OUTSIDE",
+    "OUTSIDE_SURFACE",
+    "ABOVE_SURFACE"
+   ]
+  },
+  {
+   "fact": "Shrinkwrap of a subdivided cube (size 3) onto a unit sphere: NEAREST_SURFACEPOINT, NEAREST_VERTEX and TARGET_PROJECT put every vertex on the target; PROJECT (no axis, both directions) casts along each vertex normal and leaves the vertices whose ray misses where they were",
+   "by_method": {
+    "NEAREST_SURFACEPOINT": {
+     "max_dist_to_surface": 0.0,
+     "radius_min": 0.9977,
+     "radius_max": 1.0
+    },
+    "PROJECT": {
+     "max_dist_to_surface": 1.40202,
+     "radius_min": 0.9985,
+     "radius_max": 2.4012
+    },
+    "NEAREST_VERTEX": {
+     "max_dist_to_surface": 0.0,
+     "radius_min": 1.0,
+     "radius_max": 1.0
+    },
+    "TARGET_PROJECT": {
+     "max_dist_to_surface": 0.0,
+     "radius_min": 0.9977,
+     "radius_max": 1.0
+    }
+   }
+  },
+  {
+   "fact": "Shrinkwrap offset 0.1 keeps vertices 0.1 off the surface",
+   "max_dist_to_surface": 0.1,
+   "radius_min": 1.0977,
+   "radius_max": 1.1
+  }
+ ],
+ "data": {}
+}

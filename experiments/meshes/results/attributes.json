@@ -1,0 +1,326 @@
+{
+ "experiment": "experiments/meshes/attributes.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.06,
+ "facts": [
+  {
+   "fact": "mesh.attributes.new(name, type, domain): the type and domain enums in 4.5",
+   "group_type": "AttributeGroupMesh",
+   "types": [
+    "FLOAT",
+    "INT",
+    "FLOAT_VECTOR",
+    "FLOAT_COLOR",
+    "BYTE_COLOR",
+    "STRING",
+    "BOOLEAN",
+    "FLOAT2",
+    "INT8",
+    "INT16_2D",
+    "INT32_2D",
+    "QUATERNION",
+    "FLOAT4X4"
+   ],
+   "domains": [
+    "POINT",
+    "EDGE",
+    "FACE",
+    "CORNER",
+    "CURVE",
+    "INSTANCE",
+    "LAYER"
+   ]
+  },
+  {
+   "fact": "a primitive cube's attributes (internal names start with a dot)",
+   "attrs": [
+    [
+     "position",
+     "POINT",
+     "FLOAT_VECTOR"
+    ],
+    [
+     ".select_vert",
+     "POINT",
+     "BOOLEAN"
+    ],
+    [
+     ".edge_verts",
+     "EDGE",
+     "INT32_2D"
+    ],
+    [
+     ".select_edge",
+     "EDGE",
+     "BOOLEAN"
+    ],
+    [
+     ".select_poly",
+     "FACE",
+     "BOOLEAN"
+    ],
+    [
+     "sharp_face",
+     "FACE",
+     "BOOLEAN"
+    ],
+    [
+     ".corner_vert",
+     "CORNER",
+     "INT"
+    ],
+    [
+     ".corner_edge",
+     "CORNER",
+     "INT"
+    ],
+    [
+     "UVMap",
+     "CORNER",
+     "FLOAT2"
+    ]
+   ]
+  },
+  {
+   "fact": "the property to read/write per attribute type with foreach_get/set",
+   "per_type": {
+    "FLOAT": {
+     "domain": "POINT",
+     "n": 8,
+     "item_props": [
+      "value"
+     ]
+    },
+    "INT": {
+     "domain": "FACE",
+     "n": 6,
+     "item_props": [
+      "value"
+     ]
+    },
+    "FLOAT_VECTOR": {
+     "domain": "POINT",
+     "n": 8,
+     "item_props": [
+      "vector"
+     ]
+    },
+    "FLOAT_COLOR": {
+     "domain": "CORNER",
+     "n": 24,
+     "item_props": [
+      "color",
+      "color_srgb"
+     ]
+    },
+    "BYTE_COLOR": {
+     "domain": "POINT",
+     "n": 8,
+     "item_props": [
+      "color",
+      "color_srgb"
+     ]
+    },
+    "STRING": {
+     "domain": "POINT",
+     "n": 8,
+     "item_props": [
+      "value"
+     ]
+    },
+    "BOOLEAN": {
+     "domain": "EDGE",
+     "n": 12,
+     "item_props": [
+      "value"
+     ]
+    },
+    "FLOAT2": {
+     "domain": "CORNER",
+     "n": 24,
+     "item_props": [
+      "vector"
+     ]
+    },
+    "INT8": {
+     "domain": "POINT",
+     "n": 8,
+     "item_props": [
+      "value"
+     ]
+    },
+    "INT16_2D": {
+     "domain": "CORNER",
+     "n": 24,
+     "item_props": [
+      "value"
+     ]
+    },
+    "INT32_2D": {
+     "domain": "EDGE",
+     "n": 12,
+     "item_props": [
+      "value"
+     ]
+    },
+    "QUATERNION": {
+     "domain": "POINT",
+     "n": 8,
+     "item_props": [
+      "value"
+     ]
+    },
+    "FLOAT4X4": {
+     "domain": "FACE",
+     "n": 6,
+     "item_props": [
+      "value"
+     ]
+    }
+   }
+  },
+  {
+   "fact": "FLOAT_COLOR stores linear values in 'color' and also exposes 'color_srgb' (converted on read)",
+   "color0": [
+    1.0,
+    0.5,
+    0.0,
+    1.0
+   ],
+   "color_srgb0": [
+    0.9999716877937317,
+    0.7353371977806091,
+    0.0,
+    1.0
+   ]
+  },
+  {
+   "fact": "color_attributes.new creates a normal attribute that also appears in mesh.attributes; the first one becomes active and default (render) colour",
+   "in_attributes": true,
+   "color_attributes": [
+    "t_BYTE_COLOR",
+    "Col",
+    "t_FLOAT_COLOR"
+   ],
+   "active_color": "t_FLOAT_COLOR",
+   "render_color_index": 2,
+   "active_color_name": "t_FLOAT_COLOR",
+   "default_color_name": "t_FLOAT_COLOR"
+  },
+  {
+   "fact": "color_attributes.new('bad', 'FLOAT', 'POINT') with a non-colour type: accepted: made bad FLOAT POINT",
+   "listed_as_color": false
+  },
+  {
+   "fact": "mesh.vertex_colors (the pre-3.2 API) still exists in 4.5 and lists only BYTE_COLOR CORNER attributes",
+   "vertex_colors": [
+    "Col"
+   ]
+  },
+  {
+   "fact": "a UV map is a FLOAT2 attribute on the CORNER domain; uv_layers.new adds one and uv_layers lists them",
+   "uv_layers": [
+    "UVMap",
+    "t_FLOAT2",
+    "UV2"
+   ],
+   "attr": [
+    "CORNER",
+    "FLOAT2"
+   ],
+   "active": "UVMap",
+   "active_render": [
+    "UVMap"
+   ]
+  },
+  {
+   "fact": "uv_layers[name].uv.foreach_get('vector', a) reads UVs (the old .data[i].uv path also works)",
+   "first": [
+    0.375,
+    0.0
+   ],
+   "old_path": [
+    0.375,
+    0.0
+   ]
+  },
+  {
+   "fact": "a FLOAT2 CORNER attribute made with attributes.new is listed in uv_layers too",
+   "uv_layers": [
+    "UVMap",
+    "t_FLOAT2",
+    "UV2",
+    "UV3"
+   ]
+  },
+  {
+   "fact": "UV selection/pin state lives in hidden bool attributes named after the map, created only when first written",
+   "before": [],
+   "after": [
+    ".vs.UVMap",
+    ".pn.UVMap",
+    ".es.UVMap"
+   ]
+  },
+  {
+   "fact": "attributes.new('position', 'FLOAT', 'POINT') on a mesh that has position: accepted, returned position.001",
+   "positions": [
+    [
+     "position.001",
+     "FLOAT"
+    ],
+    [
+     "position",
+     "FLOAT_VECTOR"
+    ]
+   ]
+  },
+  {
+   "fact": "the built-in 'position' attribute cannot be removed",
+   "error": "RuntimeError: Error: Attribute is required and can't be removed\n"
+  },
+  {
+   "fact": "polygon.material_index and edge.use_edge_sharp are views onto the material_index and sharp_edge attributes",
+   "material_index": [
+    2,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "sharp_edge": [
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "fact": "crease and bevel weight are attributes in 4.x (crease_edge, crease_vert, bevel_weight_edge/vert); Mesh.edge_creases is the convenience accessor",
+   "has_edge_creases": true,
+   "edge_creases": "crease_edge",
+   "old_use_customdata_edge_crease": false
+  },
+  {
+   "fact": "domain sizes of a cube: POINT 8, EDGE 12, FACE 6, CORNER 24",
+   "sizes": {
+    "POINT": 8,
+    "EDGE": 12,
+    "FACE": 6,
+    "CORNER": 24
+   }
+  }
+ ],
+ "data": {}
+}

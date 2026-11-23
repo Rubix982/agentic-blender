@@ -1,0 +1,149 @@
+{
+ "experiment": "experiments/modifiers/solidify_bevel.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.06,
+ "facts": [
+  {
+   "fact": "a new Solidify modifier has thickness 0.01, offset -1, rim on, even thickness off",
+   "thickness": 0.009999999776482582,
+   "offset": -1.0,
+   "use_rim": true,
+   "use_even_offset": false,
+   "mode": "EXTRUDE"
+  },
+  {
+   "fact": "Solidify offset -1 grows the shell behind the normal (z from -0.1 to 0), 0 centres it, +1 grows along the normal",
+   "z_ranges": {
+    "-1.0": [
+     -0.1,
+     0.0
+    ],
+    "0.0": [
+     -0.05,
+     0.05
+    ],
+    "1.0": [
+     0.0,
+     0.1
+    ]
+   }
+  },
+  {
+   "fact": "a solidified plane is closed and manifold with the rim on",
+   "verts": 8,
+   "faces": 6,
+   "manifold": true
+  },
+  {
+   "fact": "with use_rim off, the two shells are not joined (open boundary)",
+   "faces": 2,
+   "manifold": false
+  },
+  {
+   "fact": "on a box corner, Solidify's corner vertices move by thickness*sqrt(2) along the averaged normal without even thickness; use_even_offset keeps the walls at the set thickness",
+   "distinct_x_plain": [
+    0.8845
+   ],
+   "distinct_x_even": [
+    0.8
+   ]
+  },
+  {
+   "fact": "a new Bevel modifier: width 0.1, segments 1, affect EDGES, limit_method ANGLE at 30 deg, clamp overlap on",
+   "width": 0.10000000149011612,
+   "segments": 1,
+   "affect": "EDGES",
+   "limit_method": "ANGLE",
+   "angle_deg": 30.0,
+   "use_clamp_overlap": true,
+   "offset_type": "OFFSET",
+   "profile": 0.5
+  },
+  {
+   "fact": "Bevel on a cube: (verts, faces) by segments",
+   "by_segments": {
+    "1": [
+     24,
+     26
+    ],
+    "2": [
+     56,
+     54
+    ],
+    "3": [
+     96,
+     98
+    ],
+    "4": [
+     152,
+     150
+    ],
+    "8": [
+     488,
+     486
+    ]
+   }
+  },
+  {
+   "fact": "Bevel profile 0.5 is round, 1.0 pushes the profile out to the original corner (square), 0.0 pulls it in (concave): nearest-vertex distance to the original corner",
+   "by_profile": {
+    "0.0": 0.1414,
+    "0.25": 0.1155,
+    "0.5": 0.0732,
+    "0.75": 0.0353,
+    "1.0": 0.0
+   }
+  },
+  {
+   "fact": "on a size-2 cube, Bevel width 1.5 (more than half an edge): with use_clamp_overlap the width is clamped and no face turns inside out; without it, faces invert",
+   "results": {
+    "width=0.5,clamp=True": {
+     "inverted_faces": 0,
+     "top_face_area": 1.0
+    },
+    "width=0.5,clamp=False": {
+     "inverted_faces": 0,
+     "top_face_area": 1.0
+    },
+    "width=1.5,clamp=True": {
+     "inverted_faces": 0,
+     "top_face_area": 0.0
+    },
+    "width=1.5,clamp=False": {
+     "inverted_faces": 12,
+     "top_face_area": 1.0
+    }
+   }
+  },
+  {
+   "fact": "on a 32-sided cylinder, Bevel's default ANGLE limit bevels only the two rims; limit_method NONE also bevels the 32 side edges",
+   "base": [
+    64,
+    34
+   ],
+   "by_limit": {
+    "ANGLE": [
+     128,
+     98
+    ],
+    "NONE": [
+     192,
+     194
+    ]
+   }
+  },
+  {
+   "fact": "an evaluated mesh obtained before a change is freed when the depsgraph re-evaluates: touching it raises ReferenceError",
+   "error": "ReferenceError: StructRNA of type Mesh has been removed"
+  },
+  {
+   "fact": "limit_method WEIGHT bevels only edges with a bevel_weight_edge attribute value > 0",
+   "verts_no_weights": 64,
+   "verts_one_weighted_edge": 66,
+   "edge_weight_prop": "bevel_weight_edge"
+  }
+ ],
+ "data": {}
+}

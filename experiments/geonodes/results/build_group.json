@@ -1,0 +1,182 @@
+{
+ "experiment": "experiments/geonodes/build_group.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.06,
+ "facts": [
+  {
+   "fact": "a new GeometryNodeTree has no nodes and an empty interface; is_modifier is False",
+   "nodes": 0,
+   "items": 0,
+   "is_modifier": false
+  },
+  {
+   "fact": "node_group.inputs / .outputs (3.x) are gone in 4.x: ng.inputs.new raises",
+   "has": {
+    "inputs": false,
+    "outputs": false
+   },
+   "error": "AttributeError: 'GeometryNodeTree' object has no attribute 'inputs'"
+  },
+  {
+   "fact": "interface.new_socket(name, in_out, socket_type) adds group sockets; socket_type is the NodeSocket* idname",
+   "items": [
+    [
+     "Geometry",
+     "OUTPUT",
+     "NodeSocketGeometry",
+     "Socket_0"
+    ],
+    [
+     "Size",
+     "INPUT",
+     "NodeSocketFloat",
+     "Socket_1"
+    ],
+    [
+     "Resolution",
+     "INPUT",
+     "NodeSocketInt",
+     "Socket_2"
+    ],
+    [
+     "Amplitude",
+     "INPUT",
+     "NodeSocketFloat",
+     "Socket_3"
+    ],
+    [
+     "Material",
+     "INPUT",
+     "NodeSocketMaterial",
+     "Socket_4"
+    ]
+   ]
+  },
+  {
+   "fact": "socket_type must be an idname like 'NodeSocketFloat'; 'FLOAT' raises",
+   "error": "TypeError: NodeTreeInterface.new_socket(): error with keyword argument \"socket_type\" -  enum \"FLOAT\" not found in ('NodeSocketFloat', 'NodeSocketInt', 'NodeSocketBool', 'NodeSocketRotation', 'NodeSocketMatrix', "
+  },
+  {
+   "fact": "node sockets by name on Mesh Grid and Set Position",
+   "grid_inputs": [
+    "Size X",
+    "Size Y",
+    "Vertices X",
+    "Vertices Y"
+   ],
+   "setpos_inputs": [
+    "Geometry",
+    "Selection",
+    "Position",
+    "Offset"
+   ],
+   "math_inputs": [
+    [
+     "Value",
+     "Value"
+    ],
+    [
+     "Value",
+     "Value_001"
+    ],
+    [
+     "Value",
+     "Value_002"
+    ]
+   ]
+  },
+  {
+   "fact": "all links valid",
+   "invalid": []
+  },
+  {
+   "fact": "a NODES modifier added from Python has no node group (4.x does not auto-create one)",
+   "node_group": null
+  },
+  {
+   "fact": "modifier input values are ID properties keyed by the interface socket identifier (Socket_N), not by name",
+   "keys": [
+    "Socket_1",
+    "Socket_1_use_attribute",
+    "Socket_1_attribute_name",
+    "Socket_2",
+    "Socket_2_use_attribute",
+    "Socket_2_attribute_name",
+    "Socket_3",
+    "Socket_3_use_attribute",
+    "Socket_3_attribute_name",
+    "Socket_4"
+   ],
+   "ident_by_name": {
+    "Size": "Socket_1",
+    "Resolution": "Socket_2",
+    "Amplitude": "Socket_3",
+    "Material": "Socket_4"
+   }
+  },
+  {
+   "fact": "after assigning the group, the modifier holds the interface defaults",
+   "values": {
+    "Socket_1": 2.0,
+    "Socket_2": 10,
+    "Socket_3": 0.20000000298023224,
+    "Socket_4": null
+   }
+  },
+  {
+   "fact": "mod['Size'] (the socket name) is not the input",
+   "result": "accepted (but it is a new unrelated ID property)"
+  },
+  {
+   "fact": "setting mod[identifier] = value needs ob.update_tag() before the next evaluation picks it up",
+   "verts_default": 100,
+   "verts_after_set": 100,
+   "verts_after_update_tag": 400
+  },
+  {
+   "fact": "the evaluated mesh carries the node result (sin wave, amplitude 0.5)",
+   "z_min": -0.4207,
+   "z_max": 0.4207
+  },
+  {
+   "fact": "assigning a float to an Int input's ID property",
+   "result": "TypeError: Cannot assign a 'float' value to the existing 'Socket_2' Int IDProperty",
+   "stored": "20"
+  },
+  {
+   "fact": "a Material input takes a bpy.types.Material; Set Material adds it to the evaluated mesh's materials",
+   "materials": [
+    "M"
+   ]
+  },
+  {
+   "fact": "a group created by data API is usable on a modifier even with is_modifier False",
+   "is_modifier": false
+  },
+  {
+   "fact": "each input also has <id>_use_attribute and <id>_attribute_name keys to drive it by an attribute",
+   "keys": [
+    "Socket_1",
+    "Socket_1_use_attribute",
+    "Socket_1_attribute_name"
+   ]
+  },
+  {
+   "fact": "node idnames used here",
+   "idnames": [
+    "GeometryNodeInputPosition",
+    "GeometryNodeMeshGrid",
+    "GeometryNodeSetMaterial",
+    "GeometryNodeSetPosition",
+    "NodeGroupInput",
+    "NodeGroupOutput",
+    "ShaderNodeCombineXYZ",
+    "ShaderNodeMath",
+    "ShaderNodeSeparateXYZ"
+   ]
+  }
+ ],
+ "data": {}
+}

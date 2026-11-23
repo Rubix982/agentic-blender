@@ -1,0 +1,92 @@
+{
+ "experiment": "experiments/modifiers/order.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.07,
+ "facts": [
+  {
+   "fact": "modifiers.new appends at the end of the stack (evaluated top to bottom)",
+   "order": [
+    "Bevel",
+    "Subdivision"
+   ]
+  },
+  {
+   "fact": "ObjectModifiers.move(from_index, to_index) reorders without an operator",
+   "has_move": true,
+   "order": [
+    "Subdivision",
+    "Bevel"
+   ]
+  },
+  {
+   "fact": "bevel-then-subsurf and subsurf-then-bevel on a cube give (verts, sum|co|) (218, 477.191) and (218, 252.58): different meshes",
+   "bevel_then_subsurf": [
+    218,
+    477.191
+   ],
+   "subsurf_then_bevel": [
+    218,
+    252.58
+   ],
+   "moved_stack": [
+    218,
+    252.58
+   ],
+   "bevel_limit_method": "ANGLE"
+  },
+  {
+   "fact": "after modifiers.move(1, 0) the evaluated mesh already matched the new order without update_tag()",
+   "right_after_move": [
+    218,
+    252.58
+   ],
+   "after_update_tag": [
+    218,
+    252.58
+   ],
+   "fresh_subsurf_then_bevel": [
+    218,
+    252.58
+   ],
+   "before_move": [
+    218,
+    477.191
+   ]
+  },
+  {
+   "fact": "bpy.ops.object.modifier_move_to_index(modifier=, index=) also works headless",
+   "result": [
+    "FINISHED"
+   ],
+   "order": [
+    "Bevel",
+    "Subdivision"
+   ]
+  },
+  {
+   "fact": "a second modifier given an existing name is renamed with a .001 suffix; look modifiers up by the returned object, not the name you asked for",
+   "name": "Bevel.001"
+  },
+  {
+   "fact": "the subdivision modifier's type is SUBSURF; 'SUBDIVISION' raises",
+   "error": "TypeError: ObjectModifiers.new(): error with argument 2, \"type\" -  enum \"SUBDIVISION\" not found in ('GREASE_PENCIL_VERTEX_WEIGHT_PROXIMITY', 'DATA_TRANSFER', 'MESH_CACHE', 'MESH_SEQUENCE_CACHE', 'NORM"
+  },
+  {
+   "fact": "evaluated_depsgraph_get() in background mode evaluates with viewport settings (levels, not render_levels)",
+   "verts": 218,
+   "levels": 1,
+   "render_levels": 3
+  },
+  {
+   "fact": "show_viewport=False removes the modifier from the evaluated mesh in -b",
+   "verts": 56
+  },
+  {
+   "fact": "modifiers have use_pin_to_last (4.2+) to keep one at the end",
+   "has": true
+  }
+ ],
+ "data": {}
+}

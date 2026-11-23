@@ -1,0 +1,6 @@
+{
+  "name": "blender-field-guide",
+  "version": "0.1.0",
+  "description": "A field guide to Blender 4.5 for coding agents: a lookup tool over everything Blender reports about itself (every type, property, operator and node socket), area guides written from experiments run headless, and lessons from real projects.",
+  "keywords": ["blender", "bpy", "3d", "rendering", "geometry-nodes", "cycles"]
+}

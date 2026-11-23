@@ -1,0 +1,77 @@
+{
+ "experiment": "experiments/geonodes/instances_realize.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.06,
+ "facts": [
+  {
+   "fact": "with unrealised instances, the evaluated object's mesh is empty: the 100 icospheres are not in evaluated.data",
+   "instanced_mesh_verts": 0,
+   "realized_mesh_verts": 4200,
+   "ico_verts": 42
+  },
+  {
+   "fact": "new_from_object on the instancing object also gives an empty mesh (instances are dropped)",
+   "verts": 0
+  },
+  {
+   "fact": "depsgraph.object_instances yields one item per instance (is_instance True, parent = the instancer); the instanced object is a MESH of 42 verts, matrix_world places it",
+   "count": 100,
+   "types": {
+    "MESH": 100
+   },
+   "first": [
+    "instanced",
+    true,
+    "instanced",
+    [
+     -5.0,
+     -5.0,
+     0.0
+    ]
+   ],
+   "instanced_mesh_verts": 42,
+   "ms": 0.27
+  },
+  {
+   "fact": "matrices kept from the object_instances loop: 100 distinct positions when copied (.copy()), 1 when the matrix_world objects themselves were kept",
+   "copies": 100,
+   "refs": 1,
+   "error": null
+  },
+  {
+   "fact": "evaluated_object.evaluated_geometry() returns a GeometrySet exposing instances_pointcloud() and instance_references()",
+   "members": [
+    "curves",
+    "from_evaluated_object",
+    "grease_pencil",
+    "instance_references",
+    "instances_pointcloud",
+    "mesh",
+    "mesh_base",
+    "name",
+    "pointcloud",
+    "volume"
+   ],
+   "mesh": 0,
+   "instances_pointcloud": 100,
+   "references": [
+    "GeometrySet"
+   ]
+  },
+  {
+   "fact": "with Realize Instances, the evaluated mesh holds all copies: 100 x 42 verts",
+   "verts": 4200,
+   "expected": 4200
+  },
+  {
+   "fact": "modifier_apply on a nodes modifier whose output is instances",
+   "result": null,
+   "error": "RuntimeError: Error: Evaluated geometry from modifier does not contain a mesh",
+   "verts_after": 0,
+   "objects": 2
+  }
+ ],
+ "data": {}
+}

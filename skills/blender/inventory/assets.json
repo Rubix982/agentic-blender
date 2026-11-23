@@ -1,0 +1,202 @@
+{
+ "brushes/essentials_brushes-curve_sculpt.blend": {
+  "brushes": [
+   "Add",
+   "Comb",
+   "Delete",
+   "Density",
+   "Grow/Shrink",
+   "Pinch",
+   "Puff",
+   "Pull Tips",
+   "Select",
+   "Slide",
+   "Smooth"
+  ]
+ },
+ "brushes/essentials_brushes-gp_draw.blend": {
+  "brushes": [
+   "Airbrush",
+   "Eraser Hard",
+   "Eraser Soft",
+   "Eraser Stroke",
+   "Fill",
+   "Ink Pen",
+   "Ink Pen Rough",
+   "Marker Bold",
+   "Marker Chisel",
+   "Pen",
+   "Pencil",
+   "Pencil Soft",
+   "Tint"
+  ]
+ },
+ "brushes/essentials_brushes-gp_sculpt.blend": {
+  "brushes": [
+   "Clone",
+   "Grab",
+   "Pinch",
+   "Pull",
+   "Randomize",
+   "Smooth",
+   "Strength",
+   "Thickness",
+   "Twist"
+  ]
+ },
+ "brushes/essentials_brushes-gp_vertex.blend": {
+  "brushes": [
+   "Average",
+   "Blur",
+   "Paint",
+   "Replace",
+   "Smear"
+  ]
+ },
+ "brushes/essentials_brushes-gp_weight.blend": {
+  "brushes": [
+   "Average",
+   "Blur",
+   "Paint",
+   "Smear"
+  ]
+ },
+ "brushes/essentials_brushes-mesh_sculpt.blend": {
+  "brushes": [
+   "Airbrush",
+   "Bend Boundary Cloth",
+   "Bend/Twist Cloth",
+   "Blend Hard",
+   "Blend Soft",
+   "Blend Square",
+   "Blob",
+   "Boundary",
+   "Clay",
+   "Clay Strips",
+   "Clay Thumb",
+   "Crease Polish",
+   "Crease Sharp",
+   "Density",
+   "Drag Cloth",
+   "Draw",
+   "Draw Sharp",
+   "Elastic Grab",
+   "Elastic Snake Hook",
+   "Erase Multires Displacement",
+   "Expand/Contract Cloth",
+   "Face Set Paint",
+   "Fill/Deepen",
+   "Flatten/Contrast",
+   "Grab",
+   "Grab 2D",
+   "Grab Cloth",
+   "Grab Planar Cloth ",
+   "Grab Random Cloth",
+   "Grab Silhouette",
+   "Inflate Cloth",
+   "Inflate/Deflate",
+   "Layer",
+   "Mask",
+   "Nudge",
+   "Paint Blend",
+   "Paint Hard",
+   "Paint Hard Pressure",
+   "Paint Soft",
+   "Paint Soft Pressure",
+   "Paint Square",
+   "Pinch Folds Cloth",
+   "Pinch Point Cloth",
+   "Pinch/Magnify",
+   "Plateau",
+   "Pose",
+   "Pull",
+   "Push Cloth",
+   "Relax Pinch",
+   "Relax Slide",
+   "Scrape Multiplane",
+   "Scrape/Fill",
+   "Sharpen",
+   "Smear",
+   "Smear Multires Displacement",
+   "Smooth",
+   "Snake Hook",
+   "Stretch/Move Cloth",
+   "Thumb",
+   "Trim",
+   "Twist",
+   "Twist Boundary Cloth"
+  ]
+ },
+ "brushes/essentials_brushes-mesh_texture.blend": {
+  "brushes": [
+   "Airbrush",
+   "Blur",
+   "Clone",
+   "Erase Hard",
+   "Erase Hard Pressure",
+   "Erase Soft",
+   "Fill",
+   "Mask",
+   "Paint Hard",
+   "Paint Hard Pressure",
+   "Paint Soft",
+   "Paint Soft Pressure",
+   "Smear"
+  ]
+ },
+ "brushes/essentials_brushes-mesh_vertex.blend": {
+  "brushes": [
+   "Airbrush",
+   "Average",
+   "Blur",
+   "Paint Hard",
+   "Paint Hard Pressure",
+   "Paint Soft",
+   "Paint Soft Pressure",
+   "Smear"
+  ]
+ },
+ "brushes/essentials_brushes-mesh_weight.blend": {
+  "brushes": [
+   "Average",
+   "Blur",
+   "Paint",
+   "Smear"
+  ]
+ },
+ "geometry_nodes/procedural_hair_node_assets.blend": {
+  "node_groups": [
+   "Attach Hair Curves to Surface",
+   "Blend Hair Curves",
+   "Braid Hair Curves",
+   "Clump Hair Curves",
+   "Create Guide Index Map",
+   "Curl Hair Curves",
+   "Curve Info",
+   "Curve Root",
+   "Curve Segment",
+   "Curve Tip",
+   "Displace Hair Curves",
+   "Duplicate Hair Curves",
+   "Frizz Hair Curves",
+   "Generate Hair Curves",
+   "Hair Attachment Info",
+   "Hair Curves Noise",
+   "Interpolate Hair Curves",
+   "Redistribute Curve Points",
+   "Restore Curve Segment Length",
+   "Roll Hair Curves",
+   "Rotate Hair Curves",
+   "Set Hair Curve Profile",
+   "Shrinkwrap Hair Curves",
+   "Smooth Hair Curves",
+   "Straighten Hair Curves",
+   "Trim Hair Curves"
+  ]
+ },
+ "geometry_nodes/smooth_by_angle.blend": {
+  "node_groups": [
+   "Smooth by Angle"
+  ]
+ }
+}

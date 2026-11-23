@@ -1,0 +1,211 @@
+{
+ "experiment": "experiments/running/cli_behaviour.py",
+ "blender": "Blender 4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "facts": [
+  {
+   "fact": "A script that raises still leaves Blender's exit code at 0 unless --python-exit-code is given",
+   "exit_without_flag": 0,
+   "exit_with_flag_1": 1,
+   "traceback_printed": true
+  },
+  {
+   "fact": "sys.exit(N) inside a --python script ends Blender with exit code N",
+   "exit_code": 3
+  },
+  {
+   "fact": "Through a pipe, which ways of printing reach the reader while the script still runs (a 3 s pause between two lines; True = the first line arrived before the pause ended)",
+   "output: plain print": false,
+   "output: PYTHONUNBUFFERED=1": false,
+   "output: PYTHONUNBUFFERED=1 with --python-use-system-env": true,
+   "output: print(..., flush=True)": true,
+   "output: sys.stdout.reconfigure(line_buffering=True) first": true
+  },
+  {
+   "fact": "sys.argv inside Blender holds Blender's own arguments too; a script's own arguments are the ones after '--', and Blender does not act on them",
+   "argv_length": 10,
+   "mine": [
+    "--out",
+    "x.png",
+    "-f",
+    "3"
+   ],
+   "rendered_frame_3": false
+  },
+  {
+   "fact": "Starting headless Blender, running an empty script and quitting takes about this long (3 runs each)",
+   "factory": [
+    0.37,
+    0.37,
+    0.37
+   ],
+   "user_prefs_and_addons": [
+    0.66,
+    0.65,
+    0.65
+   ]
+  },
+  {
+   "fact": "A driver whose expression needs Python stays unevaluated in a file opened headless unless autoexec is on (-y); a simple expression such as 'frame * 2' is evaluated either way",
+   "default": [
+    0.0,
+    10.0
+   ],
+   "-y": [
+    3.1416,
+    10.0
+   ],
+   "--disable-autoexec": [
+    0.0,
+    10.0
+   ]
+  },
+  {
+   "fact": "Command-line arguments run in order: --python-expr placed before -f changed the scene before the frame rendered (the PNG came out at the script's size)",
+   "size": [
+    320,
+    320
+   ],
+   "order": [
+    "DEVICE",
+    "Saved:"
+   ]
+  },
+  {
+   "fact": "'-- --cycles-device METAL' changes the device used without changing scene.cycles.device; timed on the factory cube at 320 px with 512 samples, adaptive sampling off",
+   "cpu_s": 1.8,
+   "metal_flag_s": 1.1,
+   "scene_device_property_with_flag": [
+    "DEVICE CPU"
+   ]
+  },
+  {
+   "fact": "In background mode bpy.context has a window and screen (from the opened file) but no area, region or space; the scene, view layer and active object are the file's; operators that need a 3D view or a screen area fail their poll, while object, mesh and edit-mode operators work",
+   "window": "Window",
+   "screen": "Screen:Layout",
+   "area": null,
+   "object": "Object:Cube",
+   "windows": 1,
+   "operators": {
+    "object.select_all": "{'FINISHED'}",
+    "mesh.primitive_uv_sphere_add": "{'FINISHED'}",
+    "object.shade_smooth": "{'FINISHED'}",
+    "object.mode_set EDIT": "{'FINISHED'}",
+    "mesh.subdivide": "{'FINISHED'}",
+    "object.mode_set OBJECT": "{'FINISHED'}",
+    "view3d.snap_cursor_to_center": "ERROR Operator bpy.ops.view3d.snap_cursor_to_center.poll() failed, context is incorrect",
+    "screen.screenshot": "ERROR Operator bpy.ops.screen.screenshot.poll() failed, context is incorrect"
+   }
+  }
+ ],
+ "data": {
+  "output: plain print": {
+   "first": 3.36,
+   "second": 3.36,
+   "exit": 3.41
+  },
+  "output: PYTHONUNBUFFERED=1": {
+   "first": 3.35,
+   "second": 3.35,
+   "exit": 3.4
+  },
+  "output: PYTHONUNBUFFERED=1 with --python-use-system-env": {
+   "first": 0.37,
+   "second": 3.38,
+   "exit": 3.42
+  },
+  "output: print(..., flush=True)": {
+   "first": 0.36,
+   "second": 3.36,
+   "exit": 3.43
+  },
+  "output: sys.stdout.reconfigure(line_buffering=True) first": {
+   "first": 0.35,
+   "second": 3.35,
+   "exit": 3.42
+  },
+  "drivers": {
+   "default": {
+    "location": [
+     0.0,
+     10.0
+    ],
+    "autoexec": "AUTOEXEC True Driver '__import__(\"math\").pi'"
+   },
+   "-y (enable autoexec)": {
+    "location": [
+     3.1416,
+     10.0
+    ],
+    "autoexec": "AUTOEXEC False "
+   },
+   "--disable-autoexec": {
+    "location": [
+     0.0,
+     10.0
+    ],
+    "autoexec": "AUTOEXEC True Driver '__import__(\"math\").pi'"
+   }
+  },
+  "cli_render": {
+   "cpu": {
+    "seconds": 1.8,
+    "size": [
+     320,
+     320
+    ],
+    "device_property": [
+     "DEVICE CPU"
+    ],
+    "order": [
+     "DEVICE",
+     "Saved:"
+    ]
+   },
+   "metal_flag": {
+    "seconds": 1.1,
+    "size": [
+     320,
+     320
+    ],
+    "device_property": [
+     "DEVICE CPU"
+    ],
+    "order": [
+     "DEVICE",
+     "Saved:"
+    ]
+   }
+  },
+  "context_background": {
+   "window": "Window",
+   "screen": "Screen:Layout",
+   "area": null,
+   "region": null,
+   "space_data": null,
+   "scene": "Scene:Scene",
+   "view_layer": "ViewLayer:ViewLayer",
+   "object": "Object:Cube",
+   "active_object": "Object:Cube",
+   "selected_objects": "list[1]",
+   "mode": "str",
+   "window_manager": "WindowManager:WinMan",
+   "preferences": "Preferences",
+   "collection": "Collection:Collection",
+   "tool_settings": "ToolSettings",
+   "windows": 1,
+   "background": true,
+   "operators": {
+    "object.select_all": "{'FINISHED'}",
+    "mesh.primitive_uv_sphere_add": "{'FINISHED'}",
+    "object.shade_smooth": "{'FINISHED'}",
+    "object.mode_set EDIT": "{'FINISHED'}",
+    "mesh.subdivide": "{'FINISHED'}",
+    "object.mode_set OBJECT": "{'FINISHED'}",
+    "view3d.snap_cursor_to_center": "ERROR Operator bpy.ops.view3d.snap_cursor_to_center.poll() failed, context is incorrect",
+    "screen.screenshot": "ERROR Operator bpy.ops.screen.screenshot.poll() failed, context is incorrect"
+   }
+  }
+ }
+}

@@ -1,0 +1,48 @@
+{
+ "experiment": "experiments/rendering/cycles_metal_vs_cpu.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 6.08,
+ "facts": [
+  {
+   "fact": "exp.metal() selects the Metal GPU device",
+   "device": "METAL"
+  },
+  {
+   "fact": "the first Metal render of a session takes longer than the second (kernel load / scene upload)",
+   "gpu_first_s": 0.91,
+   "gpu_second_s": 0.8
+  },
+  {
+   "fact": "at 384x384, 128 samples, no denoising, the M2 Pro GPU (Metal) renders this scene faster than its 12 CPU threads",
+   "gpu_s": 0.8,
+   "cpu_s": 2.08,
+   "cpu_over_gpu": 2.58,
+   "threads": 12
+  },
+  {
+   "fact": "GPU and CPU renders of the same scene, seed and samples agree in mean value to within 1 %",
+   "gpu_mean": 0.537,
+   "cpu_mean": 0.537,
+   "rel_diff": 0.0
+  },
+  {
+   "fact": "two GPU renders with the same seed are not bit-identical, but agree to within 1e-4 per pixel",
+   "max_abs_diff": 1.1444091796875e-05
+  },
+  {
+   "fact": "GPU and CPU renders with the same seed draw the same noise pattern: they differ by at most 0.01 per pixel, far less than the noise itself at 128 samples",
+   "max_abs_diff": 0.0085,
+   "mean_abs_diff": 1e-06
+  }
+ ],
+ "data": {
+  "resolution": 384,
+  "samples": 128,
+  "gpu_first_s": 0.9094231128692627,
+  "gpu_second_s": 0.8042709827423096,
+  "cpu_first_s": 2.0762720108032227,
+  "cpu_second_s": 2.1260910034179688
+ }
+}

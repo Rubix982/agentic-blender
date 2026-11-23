@@ -1,0 +1,67 @@
+{
+ "experiment": "experiments/meshes/read_back_numpy.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 2.08,
+ "facts": [
+  {
+   "fact": "reading positions through mesh.attributes['position'].data.foreach_get('vector', float32 array) takes 0.21 ms for 1M vertices, against 16.3 ms through vertices.foreach_get('co')",
+   "same_values": true
+  },
+  {
+   "fact": "foreach_get of 1M vertex positions takes 16.3 ms into float32, 73.5 ms into float64, and a Python loop over vertices takes 292 ms",
+   "verts": 1000000,
+   "float32_ms": 16.27,
+   "float64_ms": 73.54,
+   "attribute_position_ms": 0.21,
+   "python_loop_ms": 292.2,
+   "same_values": true
+  },
+  {
+   "fact": "foreach_get into an array of the wrong size raises instead of truncating",
+   "error": "RuntimeError: internal error setting the array"
+  },
+  {
+   "fact": "foreach_get rejects a 2D (n,3) float32 array; pass a flat array (or a.ravel() view) of length 3n",
+   "result": "RuntimeError: internal error setting the array",
+   "values_match": null
+  },
+  {
+   "fact": "corner (loop) vertex indices read through attributes['.corner_vert'] take 0.3 ms against 156.0 ms through loops.foreach_get('vertex_index')",
+   "same_values": true,
+   "internal_names": [
+    ".select_vert",
+    ".edge_verts",
+    ".select_edge",
+    ".select_poly",
+    ".corner_vert",
+    ".corner_edge"
+   ]
+  },
+  {
+   "fact": "loop vertex_index foreach_get: int32 156.0 ms vs int64 156.9 ms for 3992004 loops",
+   "loops": 3992004,
+   "int32_ms": 155.98,
+   "int64_ms": 156.86
+  },
+  {
+   "fact": "world-space positions are co @ M[:3,:3].T + M[:3,3] with M = np.array(obj.matrix_world)",
+   "first": [
+    -1.0,
+    -1.0,
+    0.0
+   ]
+  },
+  {
+   "fact": "polygon normals for 998001 faces via foreach_get take 34.3 ms",
+   "ms": 34.31,
+   "first": [
+    0.0,
+    0.0,
+    1.0
+   ]
+  }
+ ],
+ "data": {}
+}

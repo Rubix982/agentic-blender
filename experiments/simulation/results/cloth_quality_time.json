@@ -1,0 +1,162 @@
+{
+ "experiment": "experiments/simulation/cloth_quality_time.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 26.1,
+ "facts": [
+  {
+   "fact": "cloth time per frame grows about linearly with quality (steps per frame): 1,681 points over a sphere",
+   "sec_per_frame": {
+    "2": 0.0301,
+    "5": 0.0565,
+    "10": 0.0669,
+    "20": 0.1115
+   }
+  },
+  {
+   "fact": "cloth time per frame against point count at quality 5",
+   "sec_per_frame": {
+    "441": 0.011,
+    "1681": 0.0565,
+    "6561": 0.1926
+   }
+  },
+  {
+   "fact": "collision quality's cost and effect on a resting drape",
+   "rows": [
+    [
+     2,
+     0.0565,
+     0
+    ],
+    [
+     1,
+     0.0289,
+     0
+    ],
+    [
+     5,
+     0.0483,
+     0
+    ]
+   ]
+  },
+  {
+   "fact": "a collider moving fast through the cloth (1.2 m in 5 frames) leaves points inside it at low settings",
+   "rows": [
+    [
+     5,
+     2,
+     0,
+     0.024
+    ],
+    [
+     5,
+     8,
+     0,
+     0.0272
+    ],
+    [
+     20,
+     2,
+     0,
+     0.0415
+    ]
+   ]
+  }
+ ],
+ "data": {
+  "rows": [
+   {
+    "points": 1681,
+    "quality": 2,
+    "collision_quality": 2,
+    "fast_ball": false,
+    "seconds_per_frame": 0.0301,
+    "points_inside_ball": 0
+   },
+   {
+    "points": 1681,
+    "quality": 5,
+    "collision_quality": 2,
+    "fast_ball": false,
+    "seconds_per_frame": 0.0565,
+    "points_inside_ball": 0
+   },
+   {
+    "points": 1681,
+    "quality": 10,
+    "collision_quality": 2,
+    "fast_ball": false,
+    "seconds_per_frame": 0.0669,
+    "points_inside_ball": 0
+   },
+   {
+    "points": 1681,
+    "quality": 20,
+    "collision_quality": 2,
+    "fast_ball": false,
+    "seconds_per_frame": 0.1115,
+    "points_inside_ball": 0
+   },
+   {
+    "points": 1681,
+    "quality": 5,
+    "collision_quality": 1,
+    "fast_ball": false,
+    "seconds_per_frame": 0.0289,
+    "points_inside_ball": 0
+   },
+   {
+    "points": 1681,
+    "quality": 5,
+    "collision_quality": 5,
+    "fast_ball": false,
+    "seconds_per_frame": 0.0483,
+    "points_inside_ball": 0
+   },
+   {
+    "points": 441,
+    "quality": 5,
+    "collision_quality": 2,
+    "fast_ball": false,
+    "seconds_per_frame": 0.011,
+    "points_inside_ball": 0
+   },
+   {
+    "points": 6561,
+    "quality": 5,
+    "collision_quality": 2,
+    "fast_ball": false,
+    "seconds_per_frame": 0.1926,
+    "points_inside_ball": 0
+   },
+   {
+    "points": 1681,
+    "quality": 5,
+    "collision_quality": 2,
+    "fast_ball": true,
+    "seconds_per_frame": 0.024,
+    "points_inside_ball": 0
+   },
+   {
+    "points": 1681,
+    "quality": 5,
+    "collision_quality": 8,
+    "fast_ball": true,
+    "seconds_per_frame": 0.0272,
+    "points_inside_ball": 0
+   },
+   {
+    "points": 1681,
+    "quality": 20,
+    "collision_quality": 2,
+    "fast_ball": true,
+    "seconds_per_frame": 0.0415,
+    "points_inside_ball": 0
+   }
+  ],
+  "frames": 40
+ }
+}

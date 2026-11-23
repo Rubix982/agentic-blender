@@ -1,0 +1,155 @@
+{
+ "experiment": "experiments/light/sun_angle_soft_shadow.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 3.99,
+ "facts": [
+  {
+   "fact": "in background mode with factory settings, bpy.ops.object.light_add gives a point light 10 W with radius 0 and a sun 1 W/m2 with angle 0.526 degrees; bpy.data.lights.new gives energy 10 for every type, a sun included",
+   "op_point_energy": 10.0,
+   "op_point_radius": 0.0,
+   "op_sun_energy": 1.0,
+   "op_sun_angle_deg": 0.526,
+   "data_point_energy": 10.0,
+   "data_point_radius": 0.0
+  },
+  {
+   "fact": "in Cycles the sun's shadow edge is within 20 % of the width geometry predicts for a disc of angular diameter sun.angle (full penumbra 2 h tan(angle/2), about h * angle); angle 0 leaves only the pixel filter's blur (~5 mm here)",
+   "rows": [
+    {
+     "engine": "CYCLES",
+     "angle_deg": 0.0,
+     "width_5_95_mm": 4.7,
+     "predicted_5_95_mm": 0.0
+    },
+    {
+     "engine": "CYCLES",
+     "angle_deg": 2.0,
+     "width_5_95_mm": 23.4,
+     "predicted_5_95_mm": 28.1
+    },
+    {
+     "engine": "CYCLES",
+     "angle_deg": 10.0,
+     "width_5_95_mm": 131.3,
+     "predicted_5_95_mm": 140.9
+    }
+   ],
+   "k_5_95": 0.8053,
+   "mm_per_px": 2.34
+  },
+  {
+   "fact": "in EEVEE the shadow edge matches Cycles' width only with light.use_shadow_jitter on (off by default); without it the soft edge is about a quarter narrower",
+   "rows": [
+    {
+     "engine": "EEVEE",
+     "jitter": false,
+     "angle_deg": 0.0,
+     "width_5_95_mm": 4.7,
+     "predicted_5_95_mm": 0.0
+    },
+    {
+     "engine": "EEVEE",
+     "jitter": true,
+     "angle_deg": 0.0,
+     "width_5_95_mm": 4.7,
+     "predicted_5_95_mm": 0.0
+    },
+    {
+     "engine": "EEVEE",
+     "jitter": false,
+     "angle_deg": 2.0,
+     "width_5_95_mm": 18.8,
+     "predicted_5_95_mm": 28.1
+    },
+    {
+     "engine": "EEVEE",
+     "jitter": true,
+     "angle_deg": 2.0,
+     "width_5_95_mm": 28.1,
+     "predicted_5_95_mm": 28.1
+    },
+    {
+     "engine": "EEVEE",
+     "jitter": false,
+     "angle_deg": 10.0,
+     "width_5_95_mm": 98.4,
+     "predicted_5_95_mm": 140.9
+    },
+    {
+     "engine": "EEVEE",
+     "jitter": true,
+     "angle_deg": 10.0,
+     "width_5_95_mm": 135.9,
+     "predicted_5_95_mm": 140.9
+    }
+   ],
+   "use_shadow_jitter_default": false
+  }
+ ],
+ "data": {
+  "rows": [
+   {
+    "engine": "CYCLES",
+    "angle_deg": 0.0,
+    "width_5_95_mm": 4.7,
+    "predicted_5_95_mm": 0.0
+   },
+   {
+    "engine": "EEVEE",
+    "jitter": false,
+    "angle_deg": 0.0,
+    "width_5_95_mm": 4.7,
+    "predicted_5_95_mm": 0.0
+   },
+   {
+    "engine": "EEVEE",
+    "jitter": true,
+    "angle_deg": 0.0,
+    "width_5_95_mm": 4.7,
+    "predicted_5_95_mm": 0.0
+   },
+   {
+    "engine": "CYCLES",
+    "angle_deg": 2.0,
+    "width_5_95_mm": 23.4,
+    "predicted_5_95_mm": 28.1
+   },
+   {
+    "engine": "EEVEE",
+    "jitter": false,
+    "angle_deg": 2.0,
+    "width_5_95_mm": 18.8,
+    "predicted_5_95_mm": 28.1
+   },
+   {
+    "engine": "EEVEE",
+    "jitter": true,
+    "angle_deg": 2.0,
+    "width_5_95_mm": 28.1,
+    "predicted_5_95_mm": 28.1
+   },
+   {
+    "engine": "CYCLES",
+    "angle_deg": 10.0,
+    "width_5_95_mm": 131.3,
+    "predicted_5_95_mm": 140.9
+   },
+   {
+    "engine": "EEVEE",
+    "jitter": false,
+    "angle_deg": 10.0,
+    "width_5_95_mm": 98.4,
+    "predicted_5_95_mm": 140.9
+   },
+   {
+    "engine": "EEVEE",
+    "jitter": true,
+    "angle_deg": 10.0,
+    "width_5_95_mm": 135.9,
+    "predicted_5_95_mm": 140.9
+   }
+  ]
+ }
+}

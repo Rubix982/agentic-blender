@@ -1,0 +1,115 @@
+{
+ "experiment": "experiments/simulation/cloth_self_collision.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 157.89,
+ "facts": [
+  {
+   "fact": "vertex_group_self_collisions EXCLUDES its points from self-collision: with no group the upper square rests on the lower; with every point in the group it falls through",
+   "upper_square_lowest_mm": {
+    "no group": 7.9,
+    "every point": -5035.3,
+    "lower square only": -5035.3,
+    "upper square only": -5035.3
+   },
+   "tooltip": "Triangles with all vertices in this group are not used during self collisions"
+  },
+  {
+   "fact": "self-collision keeps a folded sheet moving once the self distance passes about 0.37 of the edge length: p95 speed in mm a frame over the last 20 of 120 frames, settled under 0.5",
+   "rows": [
+    [
+     12.0,
+     5.0,
+     false,
+     0.013
+    ],
+    [
+     12.0,
+     4.0,
+     true,
+     0.029
+    ],
+    [
+     12.0,
+     4.5,
+     true,
+     4.021
+    ],
+    [
+     12.0,
+     5.0,
+     true,
+     8.05
+    ],
+    [
+     20.0,
+     5.0,
+     true,
+     0.016
+    ]
+   ]
+  },
+  {
+   "fact": "self-collision's cost on a ~2,800-point sheet at quality 12, collision quality 8",
+   "seconds_per_frame_off": 0.065,
+   "seconds_per_frame_on_5mm": 0.665,
+   "factor": 10.2
+  }
+ ],
+ "data": {
+  "groups_mm": {
+   "no group": 7.9,
+   "every point": -5035.3,
+   "lower square only": -5035.3,
+   "upper square only": -5035.3
+  },
+  "buckle": [
+   {
+    "self_collision": false,
+    "self_distance_mm": 5.0,
+    "grid_mm": 12.0,
+    "points": 2924,
+    "p95_speed_mm_per_frame": 0.013,
+    "seconds_per_frame": 0.065,
+    "ratio_distance_to_edge": 0.417
+   },
+   {
+    "self_collision": true,
+    "self_distance_mm": 4.0,
+    "grid_mm": 12.0,
+    "points": 2924,
+    "p95_speed_mm_per_frame": 0.029,
+    "seconds_per_frame": 0.236,
+    "ratio_distance_to_edge": 0.333
+   },
+   {
+    "self_collision": true,
+    "self_distance_mm": 4.5,
+    "grid_mm": 12.0,
+    "points": 2924,
+    "p95_speed_mm_per_frame": 4.021,
+    "seconds_per_frame": 0.299,
+    "ratio_distance_to_edge": 0.375
+   },
+   {
+    "self_collision": true,
+    "self_distance_mm": 5.0,
+    "grid_mm": 12.0,
+    "points": 2924,
+    "p95_speed_mm_per_frame": 8.05,
+    "seconds_per_frame": 0.665,
+    "ratio_distance_to_edge": 0.417
+   },
+   {
+    "self_collision": true,
+    "self_distance_mm": 5.0,
+    "grid_mm": 20.0,
+    "points": 1066,
+    "p95_speed_mm_per_frame": 0.016,
+    "seconds_per_frame": 0.039,
+    "ratio_distance_to_edge": 0.25
+   }
+  ]
+ }
+}

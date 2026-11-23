@@ -1,0 +1,51 @@
+{
+ "experiment": "experiments/rendering/cycles_persistent_data.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 5.34,
+ "facts": [
+  {
+   "fact": "render.use_persistent_data is off by default",
+   "use_persistent_data": false
+  },
+  {
+   "fact": "with persistent data off, every render of a ~500k-face scene pays scene sync and BVH build again",
+   "seconds": [
+    0.77,
+    0.86,
+    0.66,
+    0.61
+   ],
+   "faces": 503808
+  },
+  {
+   "fact": "with persistent data on, renders after the first that only move an object are faster",
+   "seconds": [
+    0.68,
+    0.24,
+    0.23,
+    0.23
+   ],
+   "faces": 503808,
+   "first_over_later": 2.91,
+   "off_mean_later": 0.71,
+   "on_mean_later": 0.23
+  }
+ ],
+ "data": {
+  "off": [
+   0.77,
+   0.86,
+   0.66,
+   0.61
+  ],
+  "on": [
+   0.68,
+   0.24,
+   0.23,
+   0.23
+  ],
+  "faces": 503808
+ }
+}

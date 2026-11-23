@@ -1,0 +1,19 @@
+{
+ "experiment": "experiments/meshes/attribute_stale_ref.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.06,
+ "facts": [
+  {
+   "fact": "after 1 more attributes.new calls, writing through the old reference reached the right layer",
+   "added": 1,
+   "value_read_by_name": 5.0,
+   "error": null
+  }
+ ],
+ "data": {
+  "status": "survived",
+  "added": 1
+ }
+}

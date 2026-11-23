@@ -1,0 +1,67 @@
+{
+ "experiment": "experiments/simulation/soft_body.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.22,
+ "facts": [
+  {
+   "fact": "a new soft body holds its shape in place: use_goal is on with goal_default 0.7 and no goal group, so every point is pulled to where the mesh is; with the goal off it falls to the collider",
+   "rows": [
+    [
+     true,
+     0.7,
+     0.7,
+     0.6326
+    ],
+    [
+     true,
+     0.0,
+     0.7,
+     0.0154
+    ],
+    [
+     false,
+     0.7,
+     0.7,
+     0.0154
+    ]
+   ]
+  },
+  {
+   "fact": "a soft body bakes headless the same way as cloth: ptcache.bake with temp_override(point_cache=modifier.point_cache)",
+   "no_override_error": "Operator bpy.ops.ptcache.bake.poll() failed, context is incorrect",
+   "result": [
+    "FINISHED"
+   ],
+   "is_baked": true,
+   "lowest_end": 0.0154,
+   "same_as_stepped": true
+  }
+ ],
+ "data": {
+  "rows": [
+   {
+    "use_goal": true,
+    "goal_default": 0.7,
+    "lowest_start": 0.7,
+    "lowest_end": 0.6326,
+    "seconds_per_frame": 0.0003
+   },
+   {
+    "use_goal": true,
+    "goal_default": 0.0,
+    "lowest_start": 0.7,
+    "lowest_end": 0.0154,
+    "seconds_per_frame": 0.0004
+   },
+   {
+    "use_goal": false,
+    "goal_default": 0.7,
+    "lowest_start": 0.7,
+    "lowest_end": 0.0154,
+    "seconds_per_frame": 0.0004
+   }
+  ]
+ }
+}

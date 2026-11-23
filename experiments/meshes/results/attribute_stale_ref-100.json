@@ -1,0 +1,19 @@
+{
+ "experiment": "experiments/meshes/attribute_stale_ref.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.06,
+ "facts": [
+  {
+   "fact": "after 100 more attributes.new calls, writing through the old reference did not reach the layer named 'w' (IndexError: bpy_prop_collection[index]: index 0 out of range, size 0)",
+   "added": 100,
+   "value_read_by_name": 0.0,
+   "error": "IndexError: bpy_prop_collection[index]: index 0 out of range, size 0"
+  }
+ ],
+ "data": {
+  "status": "survived",
+  "added": 100
+ }
+}

@@ -1,0 +1,514 @@
+{
+ "experiment": "experiments/simulation/cloth_cache_invalidation.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 12.55,
+ "facts": [
+  {
+   "fact": "an unbaked (memory) cloth cache is thrown away by these changes",
+   "cases": [
+    "rename the cloth object",
+    "cloth quality set to its own value",
+    "cloth mass set to its own value",
+    "cloth object's hide_render set to its own value",
+    "cloth object's hide_viewport toggled off and on",
+    "collider's location set to its own value",
+    "material added to the cloth",
+    "Subdivision modifier added after the cloth",
+    "Subdivision added after the cloth, levels 0 and render levels 0",
+    "a vertex group weight edited"
+   ]
+  },
+  {
+   "fact": "an unbaked cloth cache survives these",
+   "cases": [
+    "nothing (control)",
+    "frame_set to the frame already current",
+    "view_layer.update()",
+    "select_set on the cloth",
+    "camera (unrelated object) location set to its own value",
+    "scene render resolution changed",
+    "a new object added to the scene",
+    "material's Base Color edited (material made before the simulation)"
+   ]
+  },
+  {
+   "fact": "a baked cloth cache (bake_from_cache) survives every change tried except these",
+   "cases": []
+  }
+ ],
+ "data": {
+  "rows": [
+   {
+    "case": "nothing (control)",
+    "baked": false,
+    "kept": true,
+    "max_diff_at_30_m": 0.0,
+    "points": [
+     441,
+     441
+    ],
+    "info_after_change": "40 frames in memory (625 KiB).",
+    "info_at_30": "40 frames in memory (625 KiB).",
+    "frames_left": 40
+   },
+   {
+    "case": "frame_set to the frame already current",
+    "baked": false,
+    "kept": true,
+    "max_diff_at_30_m": 0.0,
+    "points": [
+     441,
+     441
+    ],
+    "info_after_change": "40 frames in memory (625 KiB).",
+    "info_at_30": "40 frames in memory (625 KiB).",
+    "frames_left": 40
+   },
+   {
+    "case": "view_layer.update()",
+    "baked": false,
+    "kept": true,
+    "max_diff_at_30_m": 0.0,
+    "points": [
+     441,
+     441
+    ],
+    "info_after_change": "40 frames in memory (625 KiB).",
+    "info_at_30": "40 frames in memory (625 KiB).",
+    "frames_left": 40
+   },
+   {
+    "case": "select_set on the cloth",
+    "baked": false,
+    "kept": true,
+    "max_diff_at_30_m": 0.0,
+    "points": [
+     441,
+     441
+    ],
+    "info_after_change": "40 frames in memory (625 KiB).",
+    "info_at_30": "40 frames in memory (625 KiB).",
+    "frames_left": 40
+   },
+   {
+    "case": "rename the cloth object",
+    "baked": false,
+    "kept": false,
+    "max_diff_at_30_m": 0.24556130170822144,
+    "points": [
+     441,
+     441
+    ],
+    "info_after_change": "10 frames in memory (156 KiB), cache is outdated!",
+    "info_at_30": "10 frames in memory (156 KiB), cache is outdated!",
+    "frames_left": 10
+   },
+   {
+    "case": "cloth quality set to its own value",
+    "baked": false,
+    "kept": false,
+    "max_diff_at_30_m": 0.24556130170822144,
+    "points": [
+     441,
+     441
+    ],
+    "info_after_change": "10 frames in memory (156 KiB), cache is outdated!",
+    "info_at_30": "10 frames in memory (156 KiB), cache is outdated!",
+    "frames_left": 10
+   },
+   {
+    "case": "cloth mass set to its own value",
+    "baked": false,
+    "kept": false,
+    "max_diff_at_30_m": 0.24556130170822144,
+    "points": [
+     441,
+     441
+    ],
+    "info_after_change": "10 frames in memory (156 KiB), cache is outdated!",
+    "info_at_30": "10 frames in memory (156 KiB), cache is outdated!",
+    "frames_left": 10
+   },
+   {
+    "case": "cloth object's hide_render set to its own value",
+    "baked": false,
+    "kept": false,
+    "max_diff_at_30_m": 0.24556130170822144,
+    "points": [
+     441,
+     441
+    ],
+    "info_after_change": "10 frames in memory (156 KiB), cache is outdated!",
+    "info_at_30": "10 frames in memory (156 KiB), cache is outdated!",
+    "frames_left": 10
+   },
+   {
+    "case": "cloth object's hide_viewport toggled off and on",
+    "baked": false,
+    "kept": false,
+    "max_diff_at_30_m": 0.24556130170822144,
+    "points": [
+     441,
+     441
+    ],
+    "info_after_change": "10 frames in memory (156 KiB), cache is outdated!",
+    "info_at_30": "10 frames in memory (156 KiB), cache is outdated!",
+    "frames_left": 10
+   },
+   {
+    "case": "camera (unrelated object) location set to its own value",
+    "baked": false,
+    "kept": true,
+    "max_diff_at_30_m": 0.0,
+    "points": [
+     441,
+     441
+    ],
+    "info_after_change": "40 frames in memory (625 KiB).",
+    "info_at_30": "40 frames in memory (625 KiB).",
+    "frames_left": 40
+   },
+   {
+    "case": "collider's location set to its own value",
+    "baked": false,
+    "kept": false,
+    "max_diff_at_30_m": 0.24556130170822144,
+    "points": [
+     441,
+     441
+    ],
+    "info_after_change": "10 frames in memory (156 KiB), cache is outdated!",
+    "info_at_30": "10 frames in memory (156 KiB), cache is outdated!",
+    "frames_left": 10
+   },
+   {
+    "case": "scene render resolution changed",
+    "baked": false,
+    "kept": true,
+    "max_diff_at_30_m": 0.0,
+    "points": [
+     441,
+     441
+    ],
+    "info_after_change": "40 frames in memory (625 KiB).",
+    "info_at_30": "40 frames in memory (625 KiB).",
+    "frames_left": 40
+   },
+   {
+    "case": "material added to the cloth",
+    "baked": false,
+    "kept": false,
+    "max_diff_at_30_m": 0.24556130170822144,
+    "points": [
+     441,
+     441
+    ],
+    "info_after_change": "10 frames in memory (156 KiB), cache is outdated!",
+    "info_at_30": "10 frames in memory (156 KiB), cache is outdated!",
+    "frames_left": 10
+   },
+   {
+    "case": "Subdivision modifier added after the cloth",
+    "baked": false,
+    "kept": false,
+    "max_diff_at_30_m": null,
+    "points": [
+     441,
+     1681
+    ],
+    "info_after_change": "10 frames in memory (156 KiB), cache is outdated!",
+    "info_at_30": "10 frames in memory (156 KiB), cache is outdated!",
+    "frames_left": 10
+   },
+   {
+    "case": "Subdivision added after the cloth, levels 0 and render levels 0",
+    "baked": false,
+    "kept": false,
+    "max_diff_at_30_m": 0.24556130170822144,
+    "points": [
+     441,
+     441
+    ],
+    "info_after_change": "10 frames in memory (156 KiB), cache is outdated!",
+    "info_at_30": "10 frames in memory (156 KiB), cache is outdated!",
+    "frames_left": 10
+   },
+   {
+    "case": "a vertex group weight edited",
+    "baked": false,
+    "kept": false,
+    "max_diff_at_30_m": 0.24556130170822144,
+    "points": [
+     441,
+     441
+    ],
+    "info_after_change": "10 frames in memory (156 KiB), cache is outdated!",
+    "info_at_30": "10 frames in memory (156 KiB), cache is outdated!",
+    "frames_left": 10
+   },
+   {
+    "case": "a new object added to the scene",
+    "baked": false,
+    "kept": true,
+    "max_diff_at_30_m": 0.0,
+    "points": [
+     441,
+     441
+    ],
+    "info_after_change": "40 frames in memory (625 KiB).",
+    "info_at_30": "40 frames in memory (625 KiB).",
+    "frames_left": 40
+   },
+   {
+    "case": "material's Base Color edited (material made before the simulation)",
+    "baked": false,
+    "kept": true,
+    "max_diff_at_30_m": 0.0,
+    "points": [
+     441,
+     441
+    ],
+    "info_after_change": "40 frames in memory (625 KiB).",
+    "info_at_30": "40 frames in memory (625 KiB).",
+    "frames_left": 40
+   },
+   {
+    "case": "nothing (control)",
+    "baked": true,
+    "kept": true,
+    "max_diff_at_30_m": 0.0,
+    "points": [
+     441,
+     441
+    ],
+    "info_after_change": "40 frames in memory (625 KiB).",
+    "info_at_30": "40 frames in memory (625 KiB).",
+    "frames_left": 40
+   },
+   {
+    "case": "frame_set to the frame already current",
+    "baked": true,
+    "kept": true,
+    "max_diff_at_30_m": 0.0,
+    "points": [
+     441,
+     441
+    ],
+    "info_after_change": "40 frames in memory (625 KiB).",
+    "info_at_30": "40 frames in memory (625 KiB).",
+    "frames_left": 40
+   },
+   {
+    "case": "view_layer.update()",
+    "baked": true,
+    "kept": true,
+    "max_diff_at_30_m": 0.0,
+    "points": [
+     441,
+     441
+    ],
+    "info_after_change": "40 frames in memory (625 KiB).",
+    "info_at_30": "40 frames in memory (625 KiB).",
+    "frames_left": 40
+   },
+   {
+    "case": "select_set on the cloth",
+    "baked": true,
+    "kept": true,
+    "max_diff_at_30_m": 0.0,
+    "points": [
+     441,
+     441
+    ],
+    "info_after_change": "40 frames in memory (625 KiB).",
+    "info_at_30": "40 frames in memory (625 KiB).",
+    "frames_left": 40
+   },
+   {
+    "case": "rename the cloth object",
+    "baked": true,
+    "kept": true,
+    "max_diff_at_30_m": 0.0,
+    "points": [
+     441,
+     441
+    ],
+    "info_after_change": "40 frames in memory (625 KiB), cache is outdated!",
+    "info_at_30": "40 frames in memory (625 KiB), cache is outdated!",
+    "frames_left": 40
+   },
+   {
+    "case": "cloth quality set to its own value",
+    "baked": true,
+    "kept": true,
+    "max_diff_at_30_m": 0.0,
+    "points": [
+     441,
+     441
+    ],
+    "info_after_change": "40 frames in memory (625 KiB), cache is outdated!",
+    "info_at_30": "40 frames in memory (625 KiB), cache is outdated!",
+    "frames_left": 40
+   },
+   {
+    "case": "cloth mass set to its own value",
+    "baked": true,
+    "kept": true,
+    "max_diff_at_30_m": 0.0,
+    "points": [
+     441,
+     441
+    ],
+    "info_after_change": "40 frames in memory (625 KiB), cache is outdated!",
+    "info_at_30": "40 frames in memory (625 KiB), cache is outdated!",
+    "frames_left": 40
+   },
+   {
+    "case": "cloth object's hide_render set to its own value",
+    "baked": true,
+    "kept": true,
+    "max_diff_at_30_m": 0.0,
+    "points": [
+     441,
+     441
+    ],
+    "info_after_change": "40 frames in memory (625 KiB), cache is outdated!",
+    "info_at_30": "40 frames in memory (625 KiB), cache is outdated!",
+    "frames_left": 40
+   },
+   {
+    "case": "cloth object's hide_viewport toggled off and on",
+    "baked": true,
+    "kept": true,
+    "max_diff_at_30_m": 0.0,
+    "points": [
+     441,
+     441
+    ],
+    "info_after_change": "40 frames in memory (625 KiB), cache is outdated!",
+    "info_at_30": "40 frames in memory (625 KiB), cache is outdated!",
+    "frames_left": 40
+   },
+   {
+    "case": "camera (unrelated object) location set to its own value",
+    "baked": true,
+    "kept": true,
+    "max_diff_at_30_m": 0.0,
+    "points": [
+     441,
+     441
+    ],
+    "info_after_change": "40 frames in memory (625 KiB).",
+    "info_at_30": "40 frames in memory (625 KiB).",
+    "frames_left": 40
+   },
+   {
+    "case": "collider's location set to its own value",
+    "baked": true,
+    "kept": true,
+    "max_diff_at_30_m": 0.0,
+    "points": [
+     441,
+     441
+    ],
+    "info_after_change": "40 frames in memory (625 KiB), cache is outdated!",
+    "info_at_30": "40 frames in memory (625 KiB), cache is outdated!",
+    "frames_left": 40
+   },
+   {
+    "case": "scene render resolution changed",
+    "baked": true,
+    "kept": true,
+    "max_diff_at_30_m": 0.0,
+    "points": [
+     441,
+     441
+    ],
+    "info_after_change": "40 frames in memory (625 KiB).",
+    "info_at_30": "40 frames in memory (625 KiB).",
+    "frames_left": 40
+   },
+   {
+    "case": "material added to the cloth",
+    "baked": true,
+    "kept": true,
+    "max_diff_at_30_m": 0.0,
+    "points": [
+     441,
+     441
+    ],
+    "info_after_change": "40 frames in memory (625 KiB), cache is outdated!",
+    "info_at_30": "40 frames in memory (625 KiB), cache is outdated!",
+    "frames_left": 40
+   },
+   {
+    "case": "Subdivision modifier added after the cloth",
+    "baked": true,
+    "kept": true,
+    "max_diff_at_30_m": null,
+    "points": [
+     441,
+     1681
+    ],
+    "info_after_change": "40 frames in memory (625 KiB), cache is outdated!",
+    "info_at_30": "40 frames in memory (625 KiB), cache is outdated!",
+    "frames_left": 40
+   },
+   {
+    "case": "Subdivision added after the cloth, levels 0 and render levels 0",
+    "baked": true,
+    "kept": true,
+    "max_diff_at_30_m": 0.0,
+    "points": [
+     441,
+     441
+    ],
+    "info_after_change": "40 frames in memory (625 KiB), cache is outdated!",
+    "info_at_30": "40 frames in memory (625 KiB), cache is outdated!",
+    "frames_left": 40
+   },
+   {
+    "case": "a vertex group weight edited",
+    "baked": true,
+    "kept": true,
+    "max_diff_at_30_m": 0.0,
+    "points": [
+     441,
+     441
+    ],
+    "info_after_change": "40 frames in memory (625 KiB), cache is outdated!",
+    "info_at_30": "40 frames in memory (625 KiB), cache is outdated!",
+    "frames_left": 40
+   },
+   {
+    "case": "a new object added to the scene",
+    "baked": true,
+    "kept": true,
+    "max_diff_at_30_m": 0.0,
+    "points": [
+     441,
+     441
+    ],
+    "info_after_change": "40 frames in memory (625 KiB).",
+    "info_at_30": "40 frames in memory (625 KiB).",
+    "frames_left": 40
+   },
+   {
+    "case": "material's Base Color edited (material made before the simulation)",
+    "baked": true,
+    "kept": true,
+    "max_diff_at_30_m": 0.0,
+    "points": [
+     441,
+     441
+    ],
+    "info_after_change": "40 frames in memory (625 KiB).",
+    "info_at_30": "40 frames in memory (625 KiB).",
+    "frames_left": 40
+   }
+  ],
+  "frames": 40
+ }
+}

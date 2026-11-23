@@ -1,0 +1,75 @@
+{
+ "experiment": "experiments/rendering/workbench.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.37,
+ "facts": [
+  {
+   "fact": "Workbench render shading defaults (scene.display.shading) in a new file",
+   "light": "STUDIO",
+   "color_type": "MATERIAL",
+   "show_shadows": false,
+   "show_cavity": false,
+   "render_aa": "8",
+   "light_items": [
+    "STUDIO",
+    "MATCAP",
+    "FLAT"
+   ],
+   "color_type_items": [
+    "MATERIAL",
+    "OBJECT",
+    "RANDOM",
+    "VERTEX",
+    "TEXTURE",
+    "SINGLE"
+   ]
+  },
+  {
+   "fact": "Workbench (color_type MATERIAL) draws material.diffuse_color, not the node tree's Base Color; Cycles draws the node colour",
+   "workbench_rgb": [
+    1,
+    254,
+    1
+   ],
+   "cycles_rgb": [
+    255,
+    190,
+    190
+   ],
+   "diffuse_color": [
+    0,
+    1,
+    0
+   ],
+   "base_color": [
+    1,
+    0,
+    0
+   ]
+  },
+  {
+   "fact": "color_type OBJECT draws object.color",
+   "rgb": [
+    1,
+    1,
+    254
+   ],
+   "object_color": [
+    0,
+    0,
+    1
+   ]
+  },
+  {
+   "fact": "a 512 px Workbench render (studio light, default 8 AA samples) takes well under a second",
+   "seconds": [
+    0.023,
+    0.021,
+    0.019
+   ]
+  }
+ ],
+ "data": {}
+}

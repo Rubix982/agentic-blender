@@ -1,0 +1,97 @@
+{
+ "experiment": "experiments/meshes/bmesh_basics.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.73,
+ "facts": [
+  {
+   "fact": "bm.verts[i] raises IndexError ('outdated internal index table') even right after from_mesh, and again after adding a vertex, until bm.verts.ensure_lookup_table()",
+   "after_from_mesh": "IndexError: BMElemSeq[index]: outdated internal index table, run ensure_lookup_table() first",
+   "after_add": "IndexError: BMElemSeq[index]: outdated internal index table, run ensure_lookup_table() first",
+   "after_ensure": 0
+  },
+  {
+   "fact": "a vertex made with bm.verts.new has index -1 until bm.verts.index_update()",
+   "before": -1
+  },
+  {
+   "fact": "index_update gives it its position",
+   "after": 8
+  },
+  {
+   "fact": "face.select_set(True) also selects the face's 4 vertices",
+   "verts_selected_via_select_set": 4
+  },
+  {
+   "fact": "setting face.select = True on a second face (sharing an edge) gives 6 selected vertices: the .select setter also selects the face's vertices, like select_set",
+   "verts_selected": 6
+  },
+  {
+   "fact": "bm.select_flush_mode() flushes face selection down to vertices",
+   "verts_selected": 6
+  },
+  {
+   "fact": "selection written by to_mesh is in mesh.polygons[i].select / .select_vert attribute",
+   "polys_selected": 1,
+   "verts_selected": 4
+  },
+  {
+   "fact": "bmesh.from_edit_mesh + update_edit_mesh work headless after object.mode_set(mode='EDIT'); the change lands in mesh data on leaving edit mode",
+   "result": "ok, 9 verts -> 21",
+   "verts_after_object_mode": 21
+  },
+  {
+   "fact": "bmesh.from_edit_mesh on a mesh not in edit mode raises",
+   "error": "ValueError: The mesh must be in editmode"
+  },
+  {
+   "fact": "touching a freed BMesh raises ReferenceError rather than crashing",
+   "error": "ReferenceError: BMesh data of type BMesh has been removed"
+  },
+  {
+   "fact": "bmesh.ops.translate moves the given verts; written back by to_mesh, the cube's lowest z is now 0",
+   "min_z": 0.0
+  },
+  {
+   "fact": "bm.from_object(obj, depsgraph) reads the evaluated mesh (modifiers applied); from_mesh reads the base mesh",
+   "from_object_verts": 51,
+   "base_verts": 21
+  },
+  {
+   "fact": "a bmesh round trip of a 1M-vertex grid costs 0.22 s from_mesh and 0.04 s to_mesh",
+   "from_mesh_s": 0.222,
+   "to_mesh_s": 0.044,
+   "verts": 1000000
+  },
+  {
+   "fact": "a bmesh float layer written with v[layer] = value becomes a FLOAT POINT mesh attribute",
+   "attr": [
+    "POINT",
+    "FLOAT"
+   ]
+  },
+  {
+   "fact": "bmesh layer collections available in 4.5",
+   "vert_layer_kinds": [
+    "bool",
+    "color",
+    "deform",
+    "float",
+    "float_color",
+    "float_vector",
+    "int",
+    "shape",
+    "skin",
+    "string"
+   ],
+   "uv_layers": [
+    "UVMap"
+   ],
+   "float_layers": [
+    "weight_x"
+   ]
+  }
+ ],
+ "data": {}
+}

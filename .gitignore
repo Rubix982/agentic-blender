@@ -1,0 +1,6 @@
+docs-local/
+__pycache__/
+*.pyc
+*.blend1
+*.crash.txt
+.DS_Store
