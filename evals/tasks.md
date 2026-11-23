@@ -59,9 +59,10 @@ questions, all while knowing the tasks. No page names a task, but the guide's co
 slab pierced by a grid of holes) and `experiments/modifiers/boolean_solvers.py` (a slab cut by 10 x 10 and 30 x 30
 holes, checked for genus and manifoldness) share their origin, a pierced stone screen; the briefs asked for meshes from
 arrays with smooth-by-angle, a cloth pinned and baked, rigid bodies baked, render passes in a multilayer EXR, and
-automatic weights, which tasks 3, 6, 7, 9 and 10 need. Two gaps the review found, turning a sun's elevation into a
-rotation (task 2) and orbiting a camera, were left unfilled in v1 for that reason; the review's other findings were
-errors and were fixed.
+automatic weights, which tasks 3, 6, 7, 9 and 10 need. Two gaps the review found were not filled because of it: turning a sun's
+elevation into a rotation (task 2) is still not on any page in v1. Orbiting a camera did get covered, by
+`animation-video.md` (turntables), whose worker had been briefed before the review for this project's own need to show
+3D assets turning; no task here is a turntable. The review's other findings were errors and were fixed.
 
 So the comparison runs on two sets, reported separately:
 
