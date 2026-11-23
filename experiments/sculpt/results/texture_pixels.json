@@ -1,0 +1,165 @@
+{
+ "experiment": "experiments/sculpt/texture_pixels.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.33,
+ "facts": [
+  {
+   "fact": "bmesh.ops.create_grid(calc_uvs=True) writes no UV map unless the bmesh already has a UV layer",
+   "uv_layers_without": 0
+  },
+  {
+   "fact": "pixels written with image.pixels.foreach_set into a new, never-saved 8-bit image render through UVs in Cycles and EEVEE: left half red, right half blue, image row 0 at the bottom of the plane (green there)",
+   "uv_corners": [
+    [
+     0.0,
+     0.0
+    ],
+    [
+     1.0,
+     0.0
+    ],
+    [
+     1.0,
+     1.0
+    ],
+    [
+     0.0,
+     1.0
+    ]
+   ],
+   "CYCLES": {
+    "top_left": [
+     1.0,
+     0.0,
+     0.0
+    ],
+    "top_right": [
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bottom": [
+     0.0,
+     1.0,
+     0.0
+    ]
+   },
+   "BLENDER_EEVEE_NEXT": {
+    "top_left": [
+     1.0,
+     0.0,
+     0.0
+    ],
+    "top_right": [
+     -0.0,
+     0.0,
+     1.0
+    ],
+    "bottom": [
+     0.0,
+     1.0,
+     0.0
+    ]
+   }
+  },
+  {
+   "fact": "pixels rewritten with foreach_set after a render (yellow | cyan) show in the next render in Cycles and EEVEE without image.update()",
+   "without_update": {
+    "CYCLES": {
+     "top_left": [
+      1.0,
+      1.0,
+      0.0
+     ],
+     "top_right": [
+      0.0,
+      1.0,
+      1.0
+     ],
+     "bottom": [
+      0.0,
+      1.0,
+      0.0
+     ]
+    },
+    "BLENDER_EEVEE_NEXT": {
+     "top_left": [
+      1.0,
+      1.0,
+      0.0
+     ],
+     "top_right": [
+      -0.0,
+      1.0,
+      1.0
+     ],
+     "bottom": [
+      0.0,
+      1.0,
+      0.0
+     ]
+    }
+   },
+   "after_update": {
+    "CYCLES": {
+     "top_left": [
+      1.0,
+      1.0,
+      0.0
+     ],
+     "top_right": [
+      0.0,
+      1.0,
+      1.0
+     ],
+     "bottom": [
+      0.0,
+      1.0,
+      0.0
+     ]
+    },
+    "BLENDER_EEVEE_NEXT": {
+     "top_left": [
+      1.0,
+      1.0,
+      0.0
+     ],
+     "top_right": [
+      -0.0,
+      1.0,
+      1.0
+     ],
+     "bottom": [
+      0.0,
+      1.0,
+      0.0
+     ]
+    }
+   }
+  },
+  {
+   "fact": "0.5 written to an 8-bit sRGB image renders as about 0.216 linear (0.5 read as an sRGB value); in a float image or a Non-Color 8-bit image it renders as 0.5 (alpha 1 in all three)",
+   "byte_srgb": [
+    0.216,
+    0.216,
+    0.216
+   ],
+   "float_linear": [
+    0.5,
+    0.5,
+    0.5
+   ],
+   "byte_noncolor": [
+    0.502,
+    0.502,
+    0.502
+   ]
+  }
+ ],
+ "data": {
+  "size": 256
+ },
+ "args": []
+}

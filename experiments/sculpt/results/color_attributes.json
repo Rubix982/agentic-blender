@@ -1,0 +1,204 @@
+{
+ "experiment": "experiments/sculpt/color_attributes.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.42,
+ "facts": [
+  {
+   "fact": "a new colour attribute of any of the four kinds starts white and opaque, (1, 1, 1, 1)",
+   "BYTE_COLOR POINT": [
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "BYTE_COLOR CORNER": [
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "FLOAT_COLOR POINT": [
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "FLOAT_COLOR CORNER": [
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ]
+  },
+  {
+   "fact": "all four kinds render at the linear value written, (0.5, 0.25, 0.1), in Cycles and in EEVEE, through the Color Attribute node (BYTE_COLOR to within its 8-bit sRGB step)",
+   "kinds": [
+    "BYTE_COLOR POINT",
+    "BYTE_COLOR CORNER",
+    "FLOAT_COLOR POINT",
+    "FLOAT_COLOR CORNER"
+   ],
+   "cycles": [
+    [
+     0.5029,
+     0.2502,
+     0.0999
+    ],
+    [
+     0.5029,
+     0.2502,
+     0.0999
+    ],
+    [
+     0.5,
+     0.25,
+     0.1
+    ],
+    [
+     0.5,
+     0.25,
+     0.1
+    ]
+   ],
+   "eevee": [
+    [
+     0.5024,
+     0.25,
+     0.0999
+    ],
+    [
+     0.5024,
+     0.25,
+     0.0999
+    ],
+    [
+     0.5,
+     0.25,
+     0.1
+    ],
+    [
+     0.5,
+     0.25,
+     0.1
+    ]
+   ]
+  },
+  {
+   "fact": "a value above 1 (2.0, 0.5, 0.05): FLOAT_COLOR keeps it; BYTE_COLOR clamps it to 1",
+   "read_back": {
+    "BYTE_COLOR POINT": [
+     1.0,
+     0.5029,
+     0.0497,
+     1.0
+    ],
+    "BYTE_COLOR CORNER": [
+     1.0,
+     0.5029,
+     0.0497,
+     1.0
+    ],
+    "FLOAT_COLOR POINT": [
+     2.0,
+     0.5,
+     0.05,
+     1.0
+    ],
+    "FLOAT_COLOR CORNER": [
+     2.0,
+     0.5,
+     0.05,
+     1.0
+    ]
+   },
+   "cycles": [
+    [
+     1.0,
+     0.5029,
+     0.0497
+    ],
+    [
+     1.0,
+     0.5029,
+     0.0497
+    ],
+    [
+     2.0,
+     0.5,
+     0.05
+    ],
+    [
+     2.0,
+     0.5,
+     0.05
+    ]
+   ]
+  },
+  {
+   "fact": "an empty layer_name on the Color Attribute node reads the render (default) colour attribute, which is the first one made; changing the active one does not change the render",
+   "indices_at_start": {
+    "active_color_name": "first",
+    "default_color_name": "first",
+    "render_color_index": 0,
+    "active_color_index": 0
+   },
+   "first_is_red_second_blue": true,
+   "empty_name_at_start": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "after_setting_active_to_second": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "after_setting_render_to_second": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "default_color_name_now": "second"
+  },
+  {
+   "fact": "the Attribute node with attribute_name set to a colour attribute's name reads it too; a misspelled name on the Color Attribute node renders black, with no error",
+   "attribute_node": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "misspelled": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "fact": "100,000 point colours: a Python loop over .data[i].color against one foreach_set('color', flat array)",
+   "loop_s": 0.078,
+   "foreach_set_s": 0.0001
+  },
+  {
+   "fact": "a BYTE_COLOR attribute round-trips a linear value through 8-bit sRGB: foreach_get('color') returns it to within 0.01; foreach_get('color_srgb') returns the stored sRGB value",
+   "max_err_color": 0.0045,
+   "linear_0_5_reads_srgb": 0.7373
+  }
+ ],
+ "data": {
+  "value": [
+   0.5,
+   0.25,
+   0.1,
+   1.0
+  ],
+  "hdr": [
+   2.0,
+   0.5,
+   0.05,
+   1.0
+  ]
+ },
+ "args": []
+}

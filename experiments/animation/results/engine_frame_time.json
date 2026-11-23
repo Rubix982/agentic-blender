@@ -1,0 +1,131 @@
+{
+ "experiment": "experiments/animation/engine_frame_time.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 8.09,
+ "facts": [
+  {
+   "fact": "per-frame render time at 256 x 256 (first frame, then the median of frames 2-5), measured between the render_pre and render_post handlers inside one render(animation=True)",
+   "Workbench": {
+    "first_s": 0.105,
+    "rest_median_s": 0.007,
+    "total_s": 0.14,
+    "frames": 5
+   },
+   "EEVEE 16": {
+    "first_s": 0.168,
+    "rest_median_s": 0.104,
+    "total_s": 0.61,
+    "frames": 5
+   },
+   "EEVEE 64": {
+    "first_s": 0.303,
+    "rest_median_s": 0.298,
+    "total_s": 1.55,
+    "frames": 5
+   },
+   "Cycles CPU 16": {
+    "first_s": 0.095,
+    "rest_median_s": 0.079,
+    "total_s": 0.41,
+    "frames": 5
+   },
+   "Cycles CPU 64": {
+    "first_s": 0.305,
+    "rest_median_s": 0.298,
+    "total_s": 1.5,
+    "frames": 5
+   },
+   "Cycles METAL 16": {
+    "first_s": 0.404,
+    "rest_median_s": 0.293,
+    "total_s": 1.57,
+    "frames": 5
+   },
+   "Cycles METAL 64": {
+    "first_s": 0.31,
+    "rest_median_s": 0.308,
+    "total_s": 1.55,
+    "frames": 5
+   },
+   "Cycles METAL 64 persistent": {
+    "first_s": 0.294,
+    "rest_median_s": 0.098,
+    "total_s": 0.69,
+    "frames": 5
+   }
+  },
+  {
+   "fact": "EEVEE's first frame cost more than the later ones in the first EEVEE run (16 samples) and not in the second (64 samples); that this is shader compilation is not checked",
+   "eevee16_first": 0.168,
+   "eevee16_rest": 0.104,
+   "eevee64_first": 0.303,
+   "eevee64_rest": 0.298
+  },
+  {
+   "fact": "at 256 px Cycles on the CPU was faster per frame than on Metal at 16 samples and level with it at 64; Metal's time barely changed from 16 to 64 samples (a fixed cost per frame), and persistent data cut most of that cost",
+   "cpu16": 0.079,
+   "gpu16": 0.293,
+   "cpu64": 0.298,
+   "gpu64": 0.308,
+   "gpu64_persistent": 0.098,
+   "device": "METAL"
+  }
+ ],
+ "data": {
+  "results": {
+   "Workbench": {
+    "first_s": 0.105,
+    "rest_median_s": 0.007,
+    "total_s": 0.14,
+    "frames": 5
+   },
+   "EEVEE 16": {
+    "first_s": 0.168,
+    "rest_median_s": 0.104,
+    "total_s": 0.61,
+    "frames": 5
+   },
+   "EEVEE 64": {
+    "first_s": 0.303,
+    "rest_median_s": 0.298,
+    "total_s": 1.55,
+    "frames": 5
+   },
+   "Cycles CPU 16": {
+    "first_s": 0.095,
+    "rest_median_s": 0.079,
+    "total_s": 0.41,
+    "frames": 5
+   },
+   "Cycles CPU 64": {
+    "first_s": 0.305,
+    "rest_median_s": 0.298,
+    "total_s": 1.5,
+    "frames": 5
+   },
+   "Cycles METAL 16": {
+    "first_s": 0.404,
+    "rest_median_s": 0.293,
+    "total_s": 1.57,
+    "frames": 5
+   },
+   "Cycles METAL 64": {
+    "first_s": 0.31,
+    "rest_median_s": 0.308,
+    "total_s": 1.55,
+    "frames": 5
+   },
+   "Cycles METAL 64 persistent": {
+    "first_s": 0.294,
+    "rest_median_s": 0.098,
+    "total_s": 0.69,
+    "frames": 5
+   }
+  },
+  "device": "METAL",
+  "size": 256
+ },
+ "args": []
+}

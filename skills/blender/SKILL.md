@@ -41,9 +41,10 @@ memory with things that can be checked. Paths below are relative to this file's 
   `bpy.context.area` is `None`, so view-dependent operators fail their poll as called. Where an operator is the only
   way, give it the context it needs with `bpy.context.temp_override(...)`: the screen's own 3D View area works headless
   (`areas/data-model.md`). Creating 1,000 cubes took 15.2 s with `primitive_cube_add` and 0.05 s through the data API.
-- **`kb.py` shows registered defaults; a new thing may start elsewhere.** The Mesh Boolean node's operation reads
-  `INTERSECT` in the inventory but a node made with `nodes.new` starts at `DIFFERENCE`. Read the value from the object
-  you made when it matters.
+- **Registered defaults are not always where a new thing starts.** The Mesh Boolean node is registered with
+  `INTERSECT` but `nodes.new` gives `DIFFERENCE`; a new Copy Location constraint copies X, Y and Z although `use_x` is
+  registered False. For nodes, modifiers and constraints `kb.py` prints both ("a new one starts at ..."); for anything
+  else, read the value from the object you made.
 - **Check with numbers, not by eye.** Read back what you made: vertex and face counts, bounding boxes, the evaluated
   mesh (`obj.evaluated_get(depsgraph)`), distances with `mathutils.bvhtree`, a light's rotation, a node's links.
   Save the `.blend`, open it again, and read the values from the file.
@@ -99,6 +100,11 @@ rendering it raises, and a failed render sets the exit code to 1 even if caught.
 | `areas/rigging-animation.md` | armatures from Python, automatic weights, poses, keyframes and 4.4+ actions, shape keys, drivers |
 
 Lessons from real projects, by area, with what was measured: `../../kb/lessons/` in the source repository.
+
+Generated reference, exact for 4.5 (`../../kb/reference/`): every shader, geometry, compositor and texture node with
+all its sockets and settings, every modifier and constraint with every setting, scene, render, Cycles, EEVEE, light,
+camera and world settings with what a fresh file starts with, all 2,482 operators, and `bmesh.ops`, `mathutils` and
+`bpy_extras`. Each entry links to its manual page. Grep it, or ask `kb.py` for one item.
 
 ## Version traps
 

@@ -281,6 +281,19 @@ def socket_info(s):
     return d
 
 
+def node_values(n, props):
+    """Values of a new node's own simple settings. Only plain types are read: reading some pointer and collection
+    properties of a bare node crashed Blender 4.5 (segfault) while this inventory was written."""
+    out = {}
+    for p in props:
+        if p["type"] in ("BOOLEAN", "INT", "FLOAT", "STRING", "ENUM") and not p.get("readonly"):
+            try:
+                out[p["id"]] = plain(getattr(n, p["id"]))
+            except Exception:  # noqa: BLE001
+                pass
+    return out
+
+
 node_classes = []
 for name in sorted(dir(bpy.types)):
     cls = getattr(bpy.types, name, None)
@@ -308,11 +321,48 @@ for cls in node_classes:
             d["inputs"] = [socket_info(s) for s in n.inputs]
             d["outputs"] = [socket_info(s) for s in n.outputs]
             d["type"] = n.type
+            d["new_values"] = node_values(n, d["props"])   # what nodes.new gives, not the registered default
         tree.nodes.remove(n)
     if not d["trees"]:
         d["abstract_or_unavailable"] = True
     nodes.append(d)
 print("NODES", len(nodes), sum(1 for n in nodes if n["trees"]), round(time.time() - T0, 1), flush=True)
+
+# 5b. Modifiers and constraints made for real: which type each enum value gives, and the values a new one starts with.
+typed = {"modifiers": {}, "constraints": {}}
+hosts = []
+for label, data in (("mesh", bpy.data.meshes.new("inv_mesh")), ("grease_pencil", bpy.data.grease_pencils_v3.new("inv_gp")),
+                    ("curve", bpy.data.curves.new("inv_curve", "CURVE")), ("lattice", bpy.data.lattices.new("inv_lat")),
+                    ("volume", bpy.data.volumes.new("inv_vol"))):
+    ob = bpy.data.objects.new(f"inv_{label}", data)
+    bpy.context.scene.collection.objects.link(ob)
+    hosts.append((label, ob))
+for item in bpy.types.Modifier.bl_rna.properties["type"].enum_items:
+    for label, ob in hosts:
+        try:
+            m = ob.modifiers.new("inv", item.identifier)
+        except (RuntimeError, TypeError):
+            continue
+        if m is None:
+            continue
+        typed["modifiers"][item.identifier] = dict(struct=m.bl_rna.identifier, object=label,
+                                                   new_values={k: v for k, v in values(m).items() if k not in ("name",)})
+        ob.modifiers.remove(m)
+        break
+    else:
+        typed["modifiers"][item.identifier] = dict(struct=None, error="no host object accepted it")
+for item in bpy.types.Constraint.bl_rna.properties["type"].enum_items:
+    ob = hosts[0][1]
+    try:
+        c = ob.constraints.new(item.identifier)
+        typed["constraints"][item.identifier] = dict(struct=c.bl_rna.identifier,
+                                                     new_values={k: v for k, v in values(c).items() if k not in ("name",)})
+        ob.constraints.remove(c)
+    except (RuntimeError, TypeError) as e:
+        typed["constraints"][item.identifier] = dict(struct=None, error=str(e)[:120])
+for label, ob in hosts:
+    bpy.data.objects.remove(ob)
+print("TYPED", len(typed["modifiers"]), len(typed["constraints"]), round(time.time() - T0, 1), flush=True)
 
 # 6. The Python modules around bpy.
 import importlib  # noqa: E402
@@ -467,7 +517,8 @@ dump("structs.jsonl.gz", structs)
 dump("operators.jsonl.gz", operators)
 dump("nodes.jsonl.gz", nodes)
 dump("modules.jsonl.gz", modules)
-for name, obj in (("meta.json", meta), ("factory.json", factory), ("dynamic_enums.json", dynamic), ("assets.json", assets)):
+for name, obj in (("meta.json", meta), ("factory.json", factory), ("dynamic_enums.json", dynamic), ("assets.json", assets),
+                  ("typed.json", typed)):
     with open(os.path.join(OUT, name), "w") as f:
         f.write(scrub(json.dumps(obj, indent=1, ensure_ascii=False, default=str)))
 print("INVENTORY", json.dumps(meta["counts"]), f"{time.time() - T0:.1f} s", flush=True)

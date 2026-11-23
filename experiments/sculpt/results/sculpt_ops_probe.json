@@ -1,0 +1,621 @@
+{
+ "experiment": "experiments/sculpt/sculpt_ops_probe.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 8.57,
+ "facts": [
+  {
+   "fact": "the sculpt mesh filter crashes a background Blender when no undo step was pushed; Blender exits without a result",
+   "exit": -11,
+   "crash": true,
+   "reached_the_call": true,
+   "tail": [
+    "REACHED",
+    "Blender 4.5.14 LTS (hash 62c1db4208e8 built 2026-09-15 01:30:44)",
+    "Writing: <tmpdir>/blender.crash.txt"
+   ]
+  },
+  {
+   "fact": "one undo push, either before or after entering sculpt mode, is enough: the mesh filter FINISHED and moved every point",
+   "after_only": {
+    "exit": 0,
+    "ret": "{'FINISHED'}",
+    "moved": 1986
+   },
+   "before_only": {
+    "exit": 0,
+    "ret": "{'FINISHED'}",
+    "moved": 1986
+   }
+  },
+  {
+   "fact": "with an undo step pushed before and after entering sculpt mode, every mesh filter type FINISHED and moved points except ERASE_DISPLACEMENT (CANCELLED; it acts on Multires displacement); the types ran one after another on the same 64 x 32 UV sphere, strength 0.5",
+   "types": {
+    "SMOOTH": {
+     "ret": "{'FINISHED'}",
+     "seconds": 0.0002,
+     "moved_max": 0.00241,
+     "moved_count": 1986
+    },
+    "SCALE": {
+     "ret": "{'FINISHED'}",
+     "seconds": 0.0001,
+     "moved_max": 0.49939,
+     "moved_count": 1986
+    },
+    "INFLATE": {
+     "ret": "{'FINISHED'}",
+     "seconds": 0.0001,
+     "moved_max": 0.5,
+     "moved_count": 1986
+    },
+    "SPHERE": {
+     "ret": "{'FINISHED'}",
+     "seconds": 0.0,
+     "moved_max": 0.24954,
+     "moved_count": 1986
+    },
+    "RANDOM": {
+     "ret": "{'FINISHED'}",
+     "seconds": 0.0,
+     "moved_max": 0.24992,
+     "moved_count": 1986
+    },
+    "RELAX": {
+     "ret": "{'FINISHED'}",
+     "seconds": 0.0001,
+     "moved_max": 0.14925,
+     "moved_count": 1986
+    },
+    "SURFACE_SMOOTH": {
+     "ret": "{'FINISHED'}",
+     "seconds": 0.0002,
+     "moved_max": 0.16304,
+     "moved_count": 1986
+    },
+    "SHARPEN": {
+     "ret": "{'FINISHED'}",
+     "seconds": 0.0002,
+     "moved_max": 0.45598,
+     "moved_count": 1986
+    },
+    "ENHANCE_DETAILS": {
+     "ret": "{'FINISHED'}",
+     "seconds": 0.0001,
+     "moved_max": 0.18928,
+     "moved_count": 1986
+    },
+    "ERASE_DISPLACEMENT": {
+     "ret": "{'CANCELLED'}",
+     "seconds": 0.0,
+     "moved_max": 0.0,
+     "moved_count": 0
+    },
+    "RELAX_FACE_SETS": {
+     "ret": "{'FINISHED'}",
+     "seconds": 0.0001,
+     "moved_max": 0.15616,
+     "moved_count": 1986
+    }
+   },
+   "verts": 1986
+  },
+  {
+   "fact": "a mask written as data (a FLOAT POINT attribute named .sculpt_mask, 1 = masked) holds the mesh filter: the masked top half did not move",
+   "undo_steps_pref": 32,
+   "ret": "{'FINISHED'}",
+   "moved_masked_top": 0,
+   "top": 961,
+   "moved_unmasked_bottom": 1025,
+   "bottom": 1025
+  },
+  {
+   "fact": "paint.mask_flood_fill runs headless and writes the .sculpt_mask attribute",
+   "undo_steps_pref": 32,
+   "ret": "{'FINISHED'}",
+   "mask_min": 0.75,
+   "mask_max": 0.75,
+   "domain": "POINT",
+   "type": "FLOAT"
+  },
+  {
+   "fact": "the sculpt cloth filter, with undo steps pushed, returns PASS_THROUGH and moves nothing headless: called plainly, as EXEC_DEFAULT, or inside the 3D View override",
+   "exit": 0,
+   "reached": true,
+   "undo_steps_pref": 32,
+   "ret_default": "{'PASS_THROUGH'}",
+   "ret_exec": "{'PASS_THROUGH'}",
+   "ret_view3d": "{'PASS_THROUGH'}",
+   "moved_max": 0.0,
+   "moved_count": 0,
+   "tail": null
+  },
+  {
+   "fact": "sculpt.sample_detail_size returns CANCELLED headless, plainly and inside the 3D View override, before and after view3d.view_all; the constant detail stays 3.0",
+   "exit": 0,
+   "undo_steps_pref": 32,
+   "detail_before": 3.0,
+   "ret_plain": "{'CANCELLED'}",
+   "region_size": [
+    1586,
+    928
+   ],
+   "ret_view3d": "{'CANCELLED'}",
+   "view_all": "{'FINISHED'}",
+   "ret_view3d_after_view_all": "{'CANCELLED'}",
+   "detail_after": 3.0,
+   "tail": null
+  },
+  {
+   "fact": "dyntopo toggles headless and detail_flood_fill (constant detail 4) retriangulates the sphere",
+   "exit": 0,
+   "undo_steps_pref": 32,
+   "toggle": "{'FINISHED'}",
+   "use_dynamic_topology_sculpting": true,
+   "detail_type_default": "RELATIVE",
+   "flood": "{'FINISHED'}",
+   "flood_seconds": 0.005,
+   "toggle_off": "{'FINISHED'}",
+   "faces_before": 2048,
+   "faces_after": 1324,
+   "tris_after": 1324,
+   "tail": null
+  },
+  {
+   "fact": "object.voxel_remesh runs headless from sculpt mode and object mode (mesh.remesh_voxel_size); quadriflow_remesh too",
+   "exit": 0,
+   "undo_steps_pref": 32,
+   "voxel_size_default": 0.10000000149011612,
+   "voxel_in_sculpt": "{'FINISHED'}",
+   "voxel_seconds": 0.021,
+   "faces_before": 2048,
+   "faces_after_voxel_0.05": 7830,
+   "voxel_in_object": "{'FINISHED'}",
+   "voxel_obj_seconds": 0.016,
+   "faces_after_voxel_0.1": 1998,
+   "quadriflow": "{'FINISHED'}",
+   "quadriflow_seconds": 0.11,
+   "faces_after_quadriflow": 537,
+   "quads_after_quadriflow": 537,
+   "tail": null
+  },
+  {
+   "fact": "Multires: multires_subdivide (object mode, active object) adds levels headless; the mesh filter in sculpt mode moves the multires surface; modifier_apply bakes the levels into the mesh",
+   "exit": 0,
+   "undo_steps_pref": 32,
+   "sub1": "{'FINISHED'}",
+   "sub2": "{'FINISHED'}",
+   "levels": [
+    2,
+    2,
+    2,
+    2
+   ],
+   "faces_base": 128,
+   "faces_evaluated": 1920,
+   "filter_on_multires": "{'FINISHED'}",
+   "filter_moved": {
+    "moved_max": 0.49957,
+    "moved_count": 1922
+   },
+   "apply": "{'FINISHED'}",
+   "faces_after_apply": 1920,
+   "modifiers_left": [],
+   "tail": null
+  },
+  {
+   "fact": "paint.vertex_paint given a stroke as data fails its poll plainly; inside the 3D View override (after view_all) it returns FINISHED but changes no colour",
+   "exit": 0,
+   "steps": [
+    "plain",
+    "view3d",
+    "done"
+   ],
+   "undo_steps_pref": 32,
+   "new_attribute_value": [
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "view_all": "{'FINISHED'}",
+   "brush": "Paint Hard",
+   "brush_color": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "unified_color": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "vp_plain": "RuntimeError: Operator bpy.ops.paint.vertex_paint.poll() failed, context is incorrect",
+   "vp_view3d": "{'FINISHED'}",
+   "col_start_value": [
+    0.0,
+    0.0,
+    0.0,
+    1.0
+   ],
+   "vp_changed_points": 0,
+   "tail": null
+  },
+  {
+   "fact": "paint.weight_paint given a stroke as data fails its poll plainly; inside the 3D View override it crashes Blender (the crash log's stack: wpaint_stroke_update_step -> view3d_operator_needs_gpu -> GPU_viewport)",
+   "exit": -11,
+   "steps": [
+    "plain",
+    "view3d"
+   ],
+   "tail": [
+    "STEP plain",
+    "STEP view3d",
+    "Blender 4.5.14 LTS (hash 62c1db4208e8 built 2026-09-15 01:30:44)",
+    "Writing: <tmpdir>/blender.crash.txt"
+   ]
+  },
+  {
+   "fact": "sculpt.brush_stroke given a stroke as data fails its poll plainly; inside the 3D View override a stroke of object-space locations at (0, -1, 0) FINISHED and moved the points around there",
+   "exit": 0,
+   "undo_steps_pref": 32,
+   "ret_plain": "RuntimeError: Operator bpy.ops.sculpt.brush_stroke.poll() failed, context is incorrect",
+   "ret_view3d": "{'FINISHED'}",
+   "moved_max": 0.69592,
+   "moved_count": 233,
+   "moved_centroid": [
+    -0.0,
+    -0.832,
+    0.0
+   ],
+   "tail": null
+  }
+ ],
+ "data": {
+  "probes": {
+   "mesh_filter, no undo push": {
+    "exit": -11,
+    "seconds": 0.62,
+    "reached": true,
+    "steps": [],
+    "result": null,
+    "crash": true,
+    "tail": [
+     "REACHED",
+     "Blender 4.5.14 LTS (hash 62c1db4208e8 built 2026-09-15 01:30:44)",
+     "Writing: <tmpdir>/blender.crash.txt"
+    ]
+   },
+   "mesh_filter, undo push after mode_set only": {
+    "exit": 0,
+    "seconds": 0.64,
+    "reached": true,
+    "steps": [],
+    "result": {
+     "undo_steps_pref": 32,
+     "ret": "{'FINISHED'}",
+     "moved_max": 0.5,
+     "moved_count": 1986
+    },
+    "crash": false,
+    "tail": null
+   },
+   "mesh_filter, undo push before mode_set only": {
+    "exit": 0,
+    "seconds": 0.66,
+    "reached": true,
+    "steps": [],
+    "result": {
+     "undo_steps_pref": 32,
+     "ret": "{'FINISHED'}",
+     "moved_max": 0.5,
+     "moved_count": 1986
+    },
+    "crash": false,
+    "tail": null
+   },
+   "mesh_filter, every type, undo push before and after": {
+    "exit": 0,
+    "seconds": 0.68,
+    "reached": false,
+    "steps": [],
+    "result": {
+     "undo_steps_pref": 32,
+     "types": {
+      "SMOOTH": {
+       "ret": "{'FINISHED'}",
+       "seconds": 0.0002,
+       "moved_max": 0.00241,
+       "moved_count": 1986
+      },
+      "SCALE": {
+       "ret": "{'FINISHED'}",
+       "seconds": 0.0001,
+       "moved_max": 0.49939,
+       "moved_count": 1986
+      },
+      "INFLATE": {
+       "ret": "{'FINISHED'}",
+       "seconds": 0.0001,
+       "moved_max": 0.5,
+       "moved_count": 1986
+      },
+      "SPHERE": {
+       "ret": "{'FINISHED'}",
+       "seconds": 0.0,
+       "moved_max": 0.24954,
+       "moved_count": 1986
+      },
+      "RANDOM": {
+       "ret": "{'FINISHED'}",
+       "seconds": 0.0,
+       "moved_max": 0.24992,
+       "moved_count": 1986
+      },
+      "RELAX": {
+       "ret": "{'FINISHED'}",
+       "seconds": 0.0001,
+       "moved_max": 0.14925,
+       "moved_count": 1986
+      },
+      "SURFACE_SMOOTH": {
+       "ret": "{'FINISHED'}",
+       "seconds": 0.0002,
+       "moved_max": 0.16304,
+       "moved_count": 1986
+      },
+      "SHARPEN": {
+       "ret": "{'FINISHED'}",
+       "seconds": 0.0002,
+       "moved_max": 0.45598,
+       "moved_count": 1986
+      },
+      "ENHANCE_DETAILS": {
+       "ret": "{'FINISHED'}",
+       "seconds": 0.0001,
+       "moved_max": 0.18928,
+       "moved_count": 1986
+      },
+      "ERASE_DISPLACEMENT": {
+       "ret": "{'CANCELLED'}",
+       "seconds": 0.0,
+       "moved_max": 0.0,
+       "moved_count": 0
+      },
+      "RELAX_FACE_SETS": {
+       "ret": "{'FINISHED'}",
+       "seconds": 0.0001,
+       "moved_max": 0.15616,
+       "moved_count": 1986
+      }
+     },
+     "verts": 1986
+    },
+    "crash": false,
+    "tail": null
+   },
+   "mesh_filter, mask written as data": {
+    "exit": 0,
+    "seconds": 0.56,
+    "reached": false,
+    "steps": [],
+    "result": {
+     "undo_steps_pref": 32,
+     "ret": "{'FINISHED'}",
+     "moved_masked_top": 0,
+     "top": 961,
+     "moved_unmasked_bottom": 1025,
+     "bottom": 1025
+    },
+    "crash": false,
+    "tail": null
+   },
+   "mask_flood_fill": {
+    "exit": 0,
+    "seconds": 0.53,
+    "reached": false,
+    "steps": [],
+    "result": {
+     "undo_steps_pref": 32,
+     "ret": "{'FINISHED'}",
+     "mask_min": 0.75,
+     "mask_max": 0.75,
+     "domain": "POINT",
+     "type": "FLOAT"
+    },
+    "crash": false,
+    "tail": null
+   },
+   "cloth_filter, undo push": {
+    "exit": 0,
+    "seconds": 0.54,
+    "reached": true,
+    "steps": [],
+    "result": {
+     "undo_steps_pref": 32,
+     "ret_default": "{'PASS_THROUGH'}",
+     "ret_exec": "{'PASS_THROUGH'}",
+     "ret_view3d": "{'PASS_THROUGH'}",
+     "moved_max": 0.0,
+     "moved_count": 0
+    },
+    "crash": false,
+    "tail": null
+   },
+   "sample_detail_size": {
+    "exit": 0,
+    "seconds": 0.54,
+    "reached": false,
+    "steps": [],
+    "result": {
+     "undo_steps_pref": 32,
+     "detail_before": 3.0,
+     "ret_plain": "{'CANCELLED'}",
+     "region_size": [
+      1586,
+      928
+     ],
+     "ret_view3d": "{'CANCELLED'}",
+     "view_all": "{'FINISHED'}",
+     "ret_view3d_after_view_all": "{'CANCELLED'}",
+     "detail_after": 3.0
+    },
+    "crash": false,
+    "tail": null
+   },
+   "dyntopo and detail_flood_fill": {
+    "exit": 0,
+    "seconds": 0.55,
+    "reached": false,
+    "steps": [],
+    "result": {
+     "undo_steps_pref": 32,
+     "toggle": "{'FINISHED'}",
+     "use_dynamic_topology_sculpting": true,
+     "detail_type_default": "RELATIVE",
+     "flood": "{'FINISHED'}",
+     "flood_seconds": 0.005,
+     "toggle_off": "{'FINISHED'}",
+     "faces_before": 2048,
+     "faces_after": 1324,
+     "tris_after": 1324
+    },
+    "crash": false,
+    "tail": null
+   },
+   "voxel_remesh and quadriflow": {
+    "exit": 0,
+    "seconds": 0.69,
+    "reached": false,
+    "steps": [],
+    "result": {
+     "undo_steps_pref": 32,
+     "voxel_size_default": 0.10000000149011612,
+     "voxel_in_sculpt": "{'FINISHED'}",
+     "voxel_seconds": 0.021,
+     "faces_before": 2048,
+     "faces_after_voxel_0.05": 7830,
+     "voxel_in_object": "{'FINISHED'}",
+     "voxel_obj_seconds": 0.016,
+     "faces_after_voxel_0.1": 1998,
+     "quadriflow": "{'FINISHED'}",
+     "quadriflow_seconds": 0.11,
+     "faces_after_quadriflow": 537,
+     "quads_after_quadriflow": 537
+    },
+    "crash": false,
+    "tail": null
+   },
+   "multires subdivide, sculpt, apply": {
+    "exit": 0,
+    "seconds": 0.55,
+    "reached": false,
+    "steps": [],
+    "result": {
+     "undo_steps_pref": 32,
+     "sub1": "{'FINISHED'}",
+     "sub2": "{'FINISHED'}",
+     "levels": [
+      2,
+      2,
+      2,
+      2
+     ],
+     "faces_base": 128,
+     "faces_evaluated": 1920,
+     "filter_on_multires": "{'FINISHED'}",
+     "filter_moved": {
+      "moved_max": 0.49957,
+      "moved_count": 1922
+     },
+     "apply": "{'FINISHED'}",
+     "faces_after_apply": 1920,
+     "modifiers_left": []
+    },
+    "crash": false,
+    "tail": null
+   },
+   "brush_stroke as data": {
+    "exit": 0,
+    "seconds": 0.6,
+    "reached": false,
+    "steps": [],
+    "result": {
+     "undo_steps_pref": 32,
+     "ret_plain": "RuntimeError: Operator bpy.ops.sculpt.brush_stroke.poll() failed, context is incorrect",
+     "ret_view3d": "{'FINISHED'}",
+     "moved_max": 0.69592,
+     "moved_count": 233,
+     "moved_centroid": [
+      -0.0,
+      -0.832,
+      0.0
+     ]
+    },
+    "crash": false,
+    "tail": null
+   },
+   "vertex_paint stroke as data": {
+    "exit": 0,
+    "seconds": 0.64,
+    "reached": false,
+    "steps": [
+     "plain",
+     "view3d",
+     "done"
+    ],
+    "result": {
+     "undo_steps_pref": 32,
+     "new_attribute_value": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ],
+     "view_all": "{'FINISHED'}",
+     "brush": "Paint Hard",
+     "brush_color": [
+      1.0,
+      1.0,
+      1.0
+     ],
+     "unified_color": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "vp_plain": "RuntimeError: Operator bpy.ops.paint.vertex_paint.poll() failed, context is incorrect",
+     "vp_view3d": "{'FINISHED'}",
+     "col_start_value": [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+     ],
+     "vp_changed_points": 0
+    },
+    "crash": false,
+    "tail": null
+   },
+   "weight_paint stroke as data": {
+    "exit": -11,
+    "seconds": 0.6,
+    "reached": false,
+    "steps": [
+     "plain",
+     "view3d"
+    ],
+    "result": null,
+    "crash": true,
+    "tail": [
+     "STEP plain",
+     "STEP view3d",
+     "Blender 4.5.14 LTS (hash 62c1db4208e8 built 2026-09-15 01:30:44)",
+     "Writing: <tmpdir>/blender.crash.txt"
+    ]
+   }
+  }
+ },
+ "args": []
+}

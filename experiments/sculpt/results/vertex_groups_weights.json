@@ -1,0 +1,106 @@
+{
+ "experiment": "experiments/sculpt/vertex_groups_weights.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.72,
+ "facts": [
+  {
+   "fact": "vertex_groups[...].add(indices, weight, 'REPLACE') writes one weight to many points in one call; a different weight per point needs one call per point (no foreach_set for vertex groups): times for 100,489 points",
+   "points": 100489,
+   "one_call_s": 0.005,
+   "per_point_calls_s": 0.06
+  },
+  {
+   "fact": "reading weights back: vg.weight(i) per point, or a loop over mesh.vertices[i].groups; both match what was written",
+   "weight_calls_s": 0.03,
+   "groups_loop_s": 0.06,
+   "max_err": 0.0,
+   "max_err_loop": 0.0
+  },
+  {
+   "fact": "a weight outside 0..1 is clamped on add (1.7 -> 1, -0.3 -> 0, the point still a member); ADD and SUBTRACT change an existing weight; weight() of a point not in the group raises RuntimeError",
+   "w3": 1.0,
+   "w4": 0.0,
+   "w1_after_add": 0.75,
+   "w2_after_subtract": 0.25,
+   "not_member": [
+    "error",
+    "RuntimeError: Error: Vertex not in group"
+   ]
+  },
+  {
+   "fact": "vg.remove([i]) takes a point out of the group",
+   "after_remove": [
+    "error",
+    "RuntimeError: Error: Vertex not in group"
+   ]
+  },
+  {
+   "fact": "vertex groups are not listed in mesh.attributes in 4.5 (they live in the mesh's deform layer)",
+   "in_attributes": false,
+   "attribute_names": [
+    "position",
+    "sharp_face"
+   ]
+  },
+  {
+   "fact": "the shader's Attribute node with attribute_name set to a vertex group's name renders its weight in Cycles (a 0 -> 1 ramp across x reads as one) but reads 0 everywhere in EEVEE",
+   "sample_x_px": [
+    4,
+    16,
+    32,
+    48,
+    60
+   ],
+   "expected": [
+    0.07,
+    0.258,
+    0.508,
+    0.758,
+    0.945
+   ],
+   "CYCLES": [
+    0.073,
+    0.258,
+    0.506,
+    0.757,
+    0.945
+   ],
+   "BLENDER_EEVEE_NEXT": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "fact": "copied into a FLOAT POINT attribute, the same weights render in EEVEE through the Attribute node",
+   "eevee": [
+    0.07,
+    0.257,
+    0.507,
+    0.757,
+    0.945
+   ],
+   "engine": "BLENDER_EEVEE_NEXT"
+  },
+  {
+   "fact": "a Displace modifier with vertex_group set moves each point by its weight (no texture: displacement 1 x weight)",
+   "max_err": 0.0
+  },
+  {
+   "fact": "object.vertex_group_normalize_all runs headless with the object active; a point in several groups then sums to 1",
+   "result": [
+    "ok",
+    "{'FINISHED'}"
+   ],
+   "point0_sum": 1.0
+  }
+ ],
+ "data": {
+  "points": 100489
+ },
+ "args": []
+}

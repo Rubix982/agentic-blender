@@ -1,0 +1,257 @@
+{
+ "experiment": "experiments/volumes/mesh_volume_convert.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.25,
+ "facts": [
+  {
+   "fact": "a new Mesh to Volume modifier starts at VOXEL_AMOUNT 32 (voxel size 0.1 unused), density 1, interior band 0.2; kb.py's registered defaults read 0 for all four",
+   "resolution_mode": "VOXEL_AMOUNT",
+   "voxel_amount": 32,
+   "voxel_size": 0.10000000149011612,
+   "density": 1.0,
+   "interior_band_width": 0.20000000298023224
+  },
+  {
+   "fact": "the evaluated Volume object holds one FLOAT grid named 'density'; at amount 32 on a 2 m sphere the voxel is 0.108 m, the bounding box's diagonal (3.46 m) / 32",
+   "grids": [
+    {
+     "name": "density",
+     "data_type": "FLOAT",
+     "channels": 1,
+     "is_loaded": true,
+     "voxel": 0.10825
+    }
+   ],
+   "seconds": 0.012
+  },
+  {
+   "fact": "the Volume data-block itself (not evaluated) has no grids: the modifier's result lives on the evaluated copy",
+   "original_grids": 0,
+   "evaluated_grids": 1
+  },
+  {
+   "fact": "a new Volume to Mesh modifier starts at resolution GRID (the volume's own voxels), threshold 0.1, adaptivity 0",
+   "resolution_mode": "GRID",
+   "threshold": 0.10000000149011612,
+   "adaptivity": 0.0,
+   "grid_name": "density",
+   "voxel_amount": 32
+  },
+  {
+   "fact": "modifier round trip sphere -> volume -> mesh, by voxel amount: the voxel is the bounding-box diagonal / amount; points out grow about 4x per doubling; the result's radius settles near 0.979 (the sphere's is 1)",
+   "by_amount": {
+    "16": {
+     "seconds": 0.012,
+     "voxel": 0.21651,
+     "verts": 362,
+     "faces": 360,
+     "r_mean": 0.9945,
+     "r_min": 0.9647,
+     "r_max": 1.029
+    },
+    "32": {
+     "seconds": 0.012,
+     "voxel": 0.10825,
+     "verts": 1538,
+     "faces": 1536,
+     "r_mean": 0.9857,
+     "r_min": 0.9759,
+     "r_max": 1.0072
+    },
+    "64": {
+     "seconds": 0.018,
+     "voxel": 0.05413,
+     "verts": 6138,
+     "faces": 6136,
+     "r_mean": 0.9793,
+     "r_min": 0.9773,
+     "r_max": 0.9856
+    },
+    "128": {
+     "seconds": 0.034,
+     "voxel": 0.02706,
+     "verts": 24674,
+     "faces": 24672,
+     "r_mean": 0.9785,
+     "r_min": 0.9776,
+     "r_max": 0.9799
+    },
+    "threshold 0.1": {
+     "verts": 6138,
+     "faces": 6136,
+     "r_mean": 0.9793,
+     "r_min": 0.9773,
+     "r_max": 0.9856
+    },
+    "threshold 0.5": {
+     "verts": 5234,
+     "faces": 5232,
+     "r_mean": 0.8979,
+     "r_min": 0.8969,
+     "r_max": 0.9077
+    },
+    "threshold 0.9": {
+     "verts": 4330,
+     "faces": 4328,
+     "r_mean": 0.817,
+     "r_min": 0.811,
+     "r_max": 0.8228
+    }
+   }
+  },
+  {
+   "fact": "the surface Volume to Mesh returns sits about threshold x interior band width inside the mesh (band 0.2: radius 0.979, 0.898, 0.817 at threshold 0.1, 0.5, 0.9)",
+   "threshold 0.1": {
+    "verts": 6138,
+    "faces": 6136,
+    "r_mean": 0.9793,
+    "r_min": 0.9773,
+    "r_max": 0.9856
+   },
+   "threshold 0.5": {
+    "verts": 5234,
+    "faces": 5232,
+    "r_mean": 0.8979,
+    "r_min": 0.8969,
+    "r_max": 0.9077
+   },
+   "threshold 0.9": {
+    "verts": 4330,
+    "faces": 4328,
+    "r_mean": 0.817,
+    "r_min": 0.811,
+    "r_max": 0.8228
+   }
+  },
+  {
+   "fact": "a narrower interior band moves the returned surface out to the mesh's: band 0.05 gives radius 1.000 against 0.979 at band 0.2 (threshold 0.1, amount 64)",
+   "band_0_05": {
+    "verts": 6282,
+    "faces": 6280,
+    "r_mean": 1.0002,
+    "r_min": 0.9915,
+    "r_max": 1.0149
+   },
+   "band_0_2": {
+    "seconds": 0.018,
+    "voxel": 0.05413,
+    "verts": 6138,
+    "faces": 6136,
+    "r_mean": 0.9793,
+    "r_min": 0.9773,
+    "r_max": 0.9856
+   }
+  },
+  {
+   "fact": "geometry nodes Mesh to Volume -> Volume to Mesh (node defaults: amount 64, density 1, band 0.2, threshold 0.1) gives the same round trip as the two modifiers",
+   "seconds": 0.019,
+   "mode": "VOXEL_AMOUNT",
+   "verts": 6138,
+   "faces": 6136,
+   "r_mean": 0.9793,
+   "r_min": 0.9773,
+   "r_max": 0.9856
+  },
+  {
+   "fact": "the SDF grid nodes (Mesh to SDF Grid, voxel 2/64 m -> Grid to Mesh at threshold 0) build and evaluate headless in 4.5, and the surface they return sits on the sphere",
+   "made": "ok",
+   "sdf": {
+    "verts": 19274,
+    "faces": 19272,
+    "r_mean": 0.9984,
+    "r_min": 0.9976,
+    "r_max": 0.9997
+   }
+  },
+  {
+   "fact": "a Volume object whose geometry nodes output a Volume Cube evaluates to one FLOAT grid named 'density' at the node's resolution (32 -> voxel 2/31 m across -1..1)",
+   "grids": [
+    {
+     "name": "density",
+     "data_type": "FLOAT",
+     "channels": 1,
+     "is_loaded": true,
+     "voxel": 0.06452
+    }
+   ]
+  },
+  {
+   "fact": "Blender 4.5's Python can import the OpenVDB module (openvdb), so voxel values can be read and written from a script; bpy itself exposes only grid metadata",
+   "openvdb": {
+    "ok": true,
+    "file": "openvdb.cpython-311-darwin.so",
+    "has_read": true,
+    "has_write": true,
+    "version": "(12, 0, 0)"
+   },
+   "pyopenvdb": {
+    "ok": false,
+    "error": "ModuleNotFoundError: No module named 'pyopenvdb'"
+   }
+  }
+ ],
+ "data": {
+  "results": {
+   "16": {
+    "seconds": 0.012,
+    "voxel": 0.21651,
+    "verts": 362,
+    "faces": 360,
+    "r_mean": 0.9945,
+    "r_min": 0.9647,
+    "r_max": 1.029
+   },
+   "32": {
+    "seconds": 0.012,
+    "voxel": 0.10825,
+    "verts": 1538,
+    "faces": 1536,
+    "r_mean": 0.9857,
+    "r_min": 0.9759,
+    "r_max": 1.0072
+   },
+   "64": {
+    "seconds": 0.018,
+    "voxel": 0.05413,
+    "verts": 6138,
+    "faces": 6136,
+    "r_mean": 0.9793,
+    "r_min": 0.9773,
+    "r_max": 0.9856
+   },
+   "128": {
+    "seconds": 0.034,
+    "voxel": 0.02706,
+    "verts": 24674,
+    "faces": 24672,
+    "r_mean": 0.9785,
+    "r_min": 0.9776,
+    "r_max": 0.9799
+   },
+   "threshold 0.1": {
+    "verts": 6138,
+    "faces": 6136,
+    "r_mean": 0.9793,
+    "r_min": 0.9773,
+    "r_max": 0.9856
+   },
+   "threshold 0.5": {
+    "verts": 5234,
+    "faces": 5232,
+    "r_mean": 0.8979,
+    "r_min": 0.8969,
+    "r_max": 0.9077
+   },
+   "threshold 0.9": {
+    "verts": 4330,
+    "faces": 4328,
+    "r_mean": 0.817,
+    "r_min": 0.811,
+    "r_max": 0.8228
+   }
+  }
+ },
+ "args": []
+}

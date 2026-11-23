@@ -18,7 +18,8 @@
   kb.py factory [SECTION]          a fresh file's values (render, cycles, eevee, view_settings, ...)
   kb.py meta                       version, build, libraries, add-ons, counts
 
-Everything printed was read from Blender 4.5.14 LTS by tools/inventory.py; nothing is from memory.
+Everything printed was read from Blender 4.5.14 LTS by inventory.py; nothing is from memory. "default" is the value
+Blender registers; "(a new one starts at X)" is what a node, modifier or constraint made from Python really starts with.
 """
 import gzip
 import json
@@ -63,7 +64,23 @@ def wrap(text, indent, width=118):
     return ("\n" + " " * indent).join(lines)
 
 
-def fmt_prop(p, full=False, indent=2):
+def made_values():
+    """struct id -> the values a newly made modifier or constraint of that type starts with (typed.json)."""
+    if "MADE" not in _cache:
+        made = {}
+        try:
+            t = load("typed.json")
+            for group in ("modifiers", "constraints"):
+                for rec in t[group].values():
+                    if rec.get("struct"):
+                        made[rec["struct"]] = rec.get("new_values", {})
+        except (OSError, KeyError):
+            pass
+        _cache["MADE"] = made
+    return _cache["MADE"]
+
+
+def fmt_prop(p, full=False, indent=2, new=None):
     t = p["type"].lower()
     if p.get("array"):
         t += f"[{p['array']}]"
@@ -82,6 +99,10 @@ def fmt_prop(p, full=False, indent=2):
             bits.append(f"[{p['soft'][0]} .. {p['soft'][1]}; hard {r[0]} .. {r[1]}]")
         else:
             bits.append(f"[{r[0]} .. {r[1]}]")
+    if new is not None and p["id"] in new and p["type"] not in ("POINTER", "COLLECTION"):
+        nv = new[p["id"]]
+        if nv != p.get("default") and not (isinstance(nv, str) and nv.startswith("<")):
+            bits.append(f"(a new one starts at {json.dumps(nv)})")
     flags = [f for f in ("readonly", "required", "flag", "dynamic") if p.get(f)]
     if flags:
         bits.append("{" + ",".join(flags) + "}")
@@ -180,7 +201,7 @@ def cmd_struct(args):
             print(f"\n  -- inherited from {c['id']} --")
         print(f"\n  properties ({len(c['props'])}):" if c is s else "")
         for p in c["props"]:
-            print(fmt_prop(p))
+            print(fmt_prop(p, new=made_values().get(s["id"])))
         if c["funcs"]:
             print(f"\n  functions ({len(c['funcs'])}):")
             for f in c["funcs"]:
@@ -202,7 +223,7 @@ def cmd_prop(args):
         for p in c["props"]:
             if p["id"] == pname:
                 print(f"{s['id']}.{pname}" + (f"  (from {c['id']})" if c is not s else ""))
-                print(fmt_prop(p, full=True))
+                print(fmt_prop(p, full=True, new=made_values().get(s["id"])))
                 return
     sys.exit(f"{s['id']} has no property {pname!r}; it has: " + ", ".join(p["id"] for c in chain(s) for p in c["props"]))
 
@@ -266,7 +287,7 @@ def cmd_node(args):
     if n.get("props"):
         print("\n  node properties:")
         for p in n["props"]:
-            print(fmt_prop(p))
+            print(fmt_prop(p, new=n.get("new_values", {})))
 
 
 def cmd_nodes(args):
