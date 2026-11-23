@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
 """Run the held-out tasks (evals/tasks.md) with the skill and without it, and score each first script.
 
-  python3 evals/run_eval.py [--tasks 1-10] [--arms with,without] [--runs 1] [--model MODEL] [--max-turns 40]
+  python3 evals/run_eval.py [--set writer|independent] [--tasks 1-10] [--arms with,without] [--runs 1] [--model MODEL]
+                            [--max-turns 40]
+
+--set writer (default) uses evals/tasks.md and evals/checks.py; --set independent uses evals/independent/tasks.md and
+evals/independent/checks.py, written by an agent that never saw the guide. The card's claim rests on the independent set.
 
 For each task, arm and run: a fresh `claude -p` session in an empty folder gets the task. The "with" arm loads this
 plugin through --plugin-dir (a copy without evals/, so the checks can't be read); the "without" arm loads nothing.
@@ -38,8 +42,13 @@ Task:
 """
 
 
+SETS = {"writer": (os.path.join(HERE, "tasks.md"), os.path.join(HERE, "checks.py")),
+        "independent": (os.path.join(HERE, "independent", "tasks.md"), os.path.join(HERE, "independent", "checks.py"))}
+TASKS_MD, CHECKS = SETS["writer"]
+
+
 def tasks():
-    text = open(os.path.join(HERE, "tasks.md")).read().split("## Order of work")[0]
+    text = open(TASKS_MD).read().split("## Order of work")[0]
     items = re.split(r"(?m)^(\d+)\. ", text)[1:]
     return {int(items[i]): re.sub(r"\s+", " ", items[i + 1]).strip() for i in range(0, len(items), 2)}
 
@@ -73,7 +82,10 @@ def transcript_facts(lines):
 
 
 def main():
+    global TASKS_MD, CHECKS
     a = sys.argv[1:]
+    which = a[a.index("--set") + 1] if "--set" in a else "writer"
+    TASKS_MD, CHECKS = SETS[which]
     pick = a[a.index("--tasks") + 1] if "--tasks" in a else "1-10"
     lo, _, hi = pick.partition("-")
     wanted = range(int(lo), int(hi or lo) + 1)
@@ -82,7 +94,7 @@ def main():
     model = a[a.index("--model") + 1] if "--model" in a else None
     max_turns = a[a.index("--max-turns") + 1] if "--max-turns" in a else "40"
     stamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-    base = os.path.join(HERE, "runs", stamp)
+    base = os.path.join(HERE, "runs", f"{stamp}-{which}")
     os.makedirs(base)
     plugin = plugin_copy(os.path.join(base, "plugin")) if "with" in arms else None
     B = blender()
@@ -113,7 +125,7 @@ def main():
                                           "--", out], cwd=work, capture_output=True, text=True, timeout=900)
                     open(os.path.join(work, "run.log"), "w").write(run.stdout + run.stderr)
                     chk = subprocess.run([sys.executable, os.path.join(ROOT, "tools", "run.py"),
-                                          os.path.join(HERE, "checks.py"), "--", str(n), out],
+                                          CHECKS, "--", str(n), out],
                                          capture_output=True, text=True, timeout=600)
                     line = [l for l in chk.stdout.splitlines() if l.startswith("CHECK ")]
                     verdict = json.loads(line[0][6:]) if line else dict(passed=False, reasons=["check did not run"])
