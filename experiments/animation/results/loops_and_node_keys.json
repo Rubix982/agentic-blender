@@ -1,0 +1,79 @@
+{
+ "experiment": "experiments/animation/loops_and_node_keys.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.14,
+ "facts": [
+  {
+   "fact": "without a modifier the curve holds its last key after frame 49 (extrapolation CONSTANT)",
+   "extrapolation": "CONSTANT",
+   "f13": 1.0,
+   "f61": 0.0,
+   "f73": 0.0
+  },
+  {
+   "fact": "a new Cycles F-modifier starts at mode REPEAT both ways with 0 cycles (0 = forever), though the registered default of the modes is NONE",
+   "type": "CYCLES",
+   "mode_before": "REPEAT",
+   "mode_after": "REPEAT",
+   "cycles_before": 0,
+   "cycles_after": 0
+  },
+  {
+   "fact": "a modifier added after the scene was evaluated (frame_set above) is ignored by frame_set: frame 61 still reads the held last key, though fcurve.evaluate(61) already gives the repeat",
+   "f61": 0.0,
+   "f73": 0.0,
+   "evaluate_f61": 1.0
+  },
+  {
+   "fact": "after action.update_tag() the 48-frame cycle repeats: frame 61 equals frame 13 and frame 73 equals frame 25 (x = 2), and frames before the first key repeat too",
+   "f13": 1.0,
+   "f61": 1.0,
+   "f73": 2.0,
+   "f97": 0.0,
+   "f_minus_11": 1.0
+  },
+  {
+   "fact": "keyframing a node input puts the action on the material's node tree, not on the material: mat.animation_data stays None",
+   "material_anim": false,
+   "tree_action": "GlowAction",
+   "slot": "NTShader Nodetree",
+   "data_path": "nodes[\"Emission\"].inputs[1].default_value",
+   "in_bpy_data_actions": true
+  },
+  {
+   "fact": "while the material is on no object it is not evaluated: after frame_set the input still reads the last value set (10), and only fcurve.evaluate gives the keyed value (Bezier: halfway in time is halfway in value)",
+   "users": 0,
+   "f1": 10.0,
+   "f13": 10.0,
+   "evaluate_f1": 0.0,
+   "evaluate_f13": 5.0
+  },
+  {
+   "fact": "once the material is on an object in the scene, frame_set animates it: the original input and the evaluated copy both read the keyed value",
+   "f13_original": 5.0,
+   "f13_evaluated": 5.0,
+   "f1_original": 0.0
+  },
+  {
+   "fact": "a render at each frame shows the keyed strength (linear pixel value = strength for an emission plane)",
+   "f1": 0.0,
+   "f13": 5.0,
+   "f25": 10.0
+  },
+  {
+   "fact": "a Geometry Nodes input is keyed on the object with data path modifiers[\"GN\"][\"<identifier>\"]; the curve lives in the object's action",
+   "identifier": "Socket_2",
+   "data_path": "modifiers[\"GN\"][\"Socket_2\"]",
+   "f13": 2.0
+  },
+  {
+   "fact": "keying through the modifier itself (mod.keyframe_insert('[\"<identifier>\"]')) gives this",
+   "result": "ok",
+   "keys": 3
+  }
+ ],
+ "data": {},
+ "args": []
+}

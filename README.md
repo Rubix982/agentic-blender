@@ -11,7 +11,7 @@ memory with three things that can be checked:
   sockets, and 611 members of `bmesh`, `mathutils` and the other modules around `bpy`. `kb.py` searches it.
 - **What happens when you try.** Small headless experiments, one question each, whose results are kept
   (`experiments/<area>/results/*.json`) and can be run again on another version to see which facts changed
-  (`tools/recheck.py`). On 2026-11-23: 121 experiments, 884 recorded facts.
+  (`tools/recheck.py`). On 2026-11-23 (v2): 125 experiments, 912 recorded facts.
 - **What real projects learned.** Lessons from weeks of building cloth garments on animated figures in Blender, with
   the numbers that were measured, rewritten without the project's specifics (`kb/lessons/`).
 

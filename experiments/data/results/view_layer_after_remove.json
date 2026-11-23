@@ -1,0 +1,85 @@
+{
+ "experiment": "experiments/data/view_layer_after_remove.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.19,
+ "facts": [
+  {
+   "fact": "the factory scene's view layer lists the cube, the light and the camera",
+   "objects": [
+    "Cube",
+    "Light",
+    "Camera"
+   ]
+  },
+  {
+   "fact": "after bpy.data.objects.remove on all three, view_layer.objects still has three entries, each None, while scene.objects is empty",
+   "objects": [
+    null,
+    null,
+    null
+   ],
+   "length": 3,
+   "scene_objects": []
+  },
+  {
+   "fact": "linking a new object does not refresh it: the three None entries stay and the new object is missing",
+   "objects": [
+    null,
+    null,
+    null
+   ],
+   "scene_objects": [
+    "New"
+   ]
+  },
+  {
+   "fact": "the usual deselect loop over view_layer.objects then raises AttributeError",
+   "error": "'NoneType' object has no attribute 'select_set'"
+  },
+  {
+   "fact": "view_layer.objects.active is None and selecting the new object still works",
+   "active": null,
+   "select_ok": true
+  },
+  {
+   "fact": "after view_layer.update() it lists only the new object, and the loop runs",
+   "objects": [
+    "New"
+   ],
+   "error": null
+  },
+  {
+   "fact": "removing only the cube leaves None in its place and the others listed",
+   "objects": [
+    null,
+    "Light",
+    "Camera"
+   ]
+  },
+  {
+   "fact": "bpy.data.batch_remove leaves the same None entries",
+   "objects": [
+    null,
+    null,
+    null
+   ]
+  },
+  {
+   "fact": "bpy.ops.object.delete() on the selected objects works headless and leaves no None entries",
+   "result": [
+    "FINISHED"
+   ],
+   "objects": [],
+   "data_objects": []
+  },
+  {
+   "fact": "starting from read_factory_settings(use_empty=True) there is nothing to remove, and a linked object is listed at once",
+   "objects": [],
+   "error": null
+  }
+ ],
+ "data": {},
+ "args": []
+}

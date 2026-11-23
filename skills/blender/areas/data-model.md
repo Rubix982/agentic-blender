@@ -45,6 +45,14 @@ Blender 4.5.14 LTS on Apple Silicon. Tags: `[inv]` read from Blender (`scripts/k
 11. **Old import operator names.** `bpy.ops.import_scene.obj`, `import_mesh.ply`, `import_mesh.stl` and the matching
     exports are gone; the 4.x C++ ones are `bpy.ops.wm.obj_import`, `wm.ply_import`, `wm.stl_import` (and `_export`).
     `[exp: experiments/data/import_formats.py]`
+12. **Deleting the factory scene's objects, then looping over the view layer.** After `bpy.data.objects.remove` (or
+    `bpy.data.batch_remove`) on the cube, light and camera, `view_layer.objects` still held three entries, each `None`,
+    and linking a new object did not refresh it, so `for o in view_layer.objects: o.select_set(False)` raised
+    `AttributeError: 'NoneType' object has no attribute 'select_set'`. `view_layer.update()` fixed the list, and
+    `bpy.ops.object.delete()` on the selected objects left no `None`. Simplest: start from
+    `read_factory_settings(use_empty=True)` and delete nothing. This crashed three of the ten scripts written without
+    this guide in its test (`evals/results.md` in the source repository).
+    `[exp: experiments/data/view_layer_after_remove.py]`
 
 ## Objects, data, evaluated copies
 
@@ -169,6 +177,10 @@ keep.use_fake_user = True                      # survives purge and saving
 - `BlendDataMeshes.remove(mesh, do_unlink=True, do_id_user=True, do_ui_user=True)`.
 
 All: `[exp: experiments/data/removal_orphans.py]`
+
+After `objects.remove` or `batch_remove`, `view_layer.objects` lists `None` where each removed object was (`[None,
+'Light', 'Camera']` after removing only the cube) until `view_layer.update()`; `scene.objects` is right at once, and
+`bpy.ops.object.delete()` leaves no `None`. `[exp: experiments/data/view_layer_after_remove.py]`
 
 ## `.blend` files
 

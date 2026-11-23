@@ -31,10 +31,12 @@ photo match (one real photograph rebuilt in Blender, compared in the same frame,
 
 ### T-004 · v2: the lessons the comparison found
 
-**Status:** open
 **Parent:** C-001
 **Opened:** 2026-11-23
 **Question:** add to the guide the view-layer trap (`None` in `view_layer.objects` after `bpy.data.objects.remove`,
 until `view_layer.update()`; `evals/results/stale_view_layer.py`), which crashed 3 of the 10 scripts written without
 it, and the sun-elevation rule held back from v1.
-**Answer:** —
+**Answer:** in v2 (git tag `v2`): the view-layer trap (`data-model.md`, `errors.md`), the sun from elevation and
+bearing with the sky's `sun_rotation` (`light-world-camera.md`), light and shadow linking, and looping keys and keyed
+node inputs (`animation-video.md`), each from a new experiment.
+**Status:** answered

@@ -1,0 +1,109 @@
+{
+ "experiment": "experiments/light/sun_elevation.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.32,
+ "facts": [
+  {
+   "fact": "rotation_euler = (radians(90 - elevation), 0, radians(180 - bearing)) puts the sun at that elevation and bearing (+Y north, +X east, bearing clockwise from north)",
+   "rows": [
+    {
+     "elevation": 30,
+     "bearing": 0,
+     "measured_elevation": 30.0,
+     "measured_bearing": 360.0
+    },
+    {
+     "elevation": 30,
+     "bearing": 90,
+     "measured_elevation": 30.0,
+     "measured_bearing": 90.0
+    },
+    {
+     "elevation": 60,
+     "bearing": 225,
+     "measured_elevation": 60.0,
+     "measured_bearing": 225.0
+    },
+    {
+     "elevation": 10,
+     "bearing": 135,
+     "measured_elevation": 10.0,
+     "measured_bearing": 135.0
+    },
+    {
+     "elevation": 45,
+     "bearing": 300,
+     "measured_elevation": 45.0,
+     "measured_bearing": 300.0
+    }
+   ],
+   "max_error_deg": 0.0
+  },
+  {
+   "fact": "tilting the sun by its elevation (rotation_euler.x = radians(30)) puts it at elevation 60, not 30",
+   "measured_elevation": 60.0,
+   "measured_bearing": 180.0
+  },
+  {
+   "fact": "a 1 m pole's shadow under that rotation is 1 / tan(elevation) long, to within the 5 mm step (and 0.02 m pole radius), and points away from the sun's bearing",
+   "rows": [
+    {
+     "elevation": 30,
+     "bearing": 0,
+     "shadow_m": 1.75,
+     "predicted_m": 1.732,
+     "shadow_points_to_bearing": 180.0
+    },
+    {
+     "elevation": 45,
+     "bearing": 90,
+     "shadow_m": 1.015,
+     "predicted_m": 1.0,
+     "shadow_points_to_bearing": 270.0
+    },
+    {
+     "elevation": 20,
+     "bearing": 200,
+     "shadow_m": 2.76,
+     "predicted_m": 2.747,
+     "shadow_points_to_bearing": 20.0
+    }
+   ]
+  },
+  {
+   "fact": "in an equirectangular render from a camera at rotation (90, 0, 0) degrees, a lamp due east (bearing 90) at elevation 10 lands at column 269.5 of 360: column = bearing + 180, so the image centre is north (where the camera looks) and east is right of centre",
+   "lamp_found_elevation": 10.5,
+   "lamp_found_column_deg": 269.5
+  },
+  {
+   "fact": "the Nishita sky's sun_rotation r puts its sun at bearing r (clockwise from +Y, as in the Sun light rule above) and sun_elevation is its elevation, to within the 1-degree pixels in bearing and 3 degrees in elevation",
+   "rows": [
+    {
+     "sun_rotation": 0,
+     "found_elevation": 30.5,
+     "found_bearing": 1.0
+    },
+    {
+     "sun_rotation": 90,
+     "found_elevation": 30.5,
+     "found_bearing": 91.0
+    },
+    {
+     "sun_rotation": 180,
+     "found_elevation": 30.5,
+     "found_bearing": 181.0
+    },
+    {
+     "sun_rotation": 270,
+     "found_elevation": 27.5,
+     "found_bearing": 270.0
+    }
+   ],
+   "column_offset_deg": 179.5
+  }
+ ],
+ "data": {},
+ "args": []
+}

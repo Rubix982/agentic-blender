@@ -1,0 +1,96 @@
+{
+ "experiment": "experiments/light/light_linking.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 1.28,
+ "facts": [
+  {
+   "fact": "an object linked into a collection gets a CollectionObject entry whose light_linking.link_state starts at INCLUDE; a CollectionObject has no .object, so pair the entries with collection.objects by position",
+   "states": [
+    "INCLUDE",
+    "INCLUDE"
+   ],
+   "has_object_attr": false,
+   "same_order": [
+    "Plane",
+    "Left"
+   ]
+  },
+  {
+   "fact": "brightness (mean of 3x3 px, linear) of each sphere's top, of the ground in each sphere's shadow, and of lit ground, for each linking setup and engine",
+   "rows": {
+    "no linking": {
+     "CYCLES": {
+      "left_top": 0.6,
+      "right_top": 0.602,
+      "left_shadow": 0.016,
+      "right_shadow": 0.017,
+      "lit_ground": 0.593
+     },
+     "BLENDER_EEVEE_NEXT": {
+      "left_top": 0.61,
+      "right_top": 0.61,
+      "left_shadow": 0.0,
+      "right_shadow": 0.0,
+      "lit_ground": 0.583
+     }
+    },
+    "receivers = ground + left, INCLUDE": {
+     "CYCLES": {
+      "left_top": 0.6,
+      "right_top": 0.0,
+      "left_shadow": 0.016,
+      "right_shadow": 0.017,
+      "lit_ground": 0.591
+     },
+     "BLENDER_EEVEE_NEXT": {
+      "left_top": 0.61,
+      "right_top": 0.0,
+      "left_shadow": 0.0,
+      "right_shadow": 0.0,
+      "lit_ground": 0.583
+     }
+    },
+    "receivers = right only, EXCLUDE": {
+     "CYCLES": {
+      "left_top": 0.6,
+      "right_top": 0.0,
+      "left_shadow": 0.016,
+      "right_shadow": 0.017,
+      "lit_ground": 0.591
+     },
+     "BLENDER_EEVEE_NEXT": {
+      "left_top": 0.61,
+      "right_top": 0.0,
+      "left_shadow": 0.0,
+      "right_shadow": 0.0,
+      "lit_ground": 0.583
+     }
+    },
+    "blockers = right only, EXCLUDE": {
+     "CYCLES": {
+      "left_top": 0.6,
+      "right_top": 0.602,
+      "left_shadow": 0.016,
+      "right_shadow": 0.619,
+      "lit_ground": 0.593
+     },
+     "BLENDER_EEVEE_NEXT": {
+      "left_top": 0.61,
+      "right_top": 0.61,
+      "left_shadow": 0.0,
+      "right_shadow": 0.583,
+      "lit_ground": 0.583
+     }
+    }
+   }
+  },
+  {
+   "fact": "the linking collections need not be in the scene: none of them was linked to scene.collection",
+   "in_scene": []
+  }
+ ],
+ "data": {},
+ "args": []
+}

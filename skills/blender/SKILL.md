@@ -133,6 +133,8 @@ What an agent's memory most often gets wrong in 4.5, one line each; the page has
   accepts misspelt keywords silently. → `data-model.md`
 - `scene.update()` and `scene.objects.link()` are gone: `view_layer.update()`, `collection.objects.link()`.
   `matrix_world` and `dimensions` stay stale until `view_layer.update()`. → `data-model.md`
+- `bpy.data.objects.remove` leaves `None` in `view_layer.objects` until `view_layer.update()`, so deleting the factory
+  cube and then looping over the view layer raises `AttributeError`; start from the empty file instead. → `data-model.md`
 
 **Meshes, modifiers, geometry nodes**
 - Auto smooth is gone (`use_auto_smooth`, `calc_normals_split`); `shade_auto_smooth` is CANCELLED headless; append
@@ -155,6 +157,10 @@ What an agent's memory most often gets wrong in 4.5, one line each; the page has
 - The default view transform is AgX: linear 1.0 renders as byte 197, not 255. `image.save_render` applies it,
   `image.save` doesn't. → `rendering.md`, `uv-images.md`
 - `is_shadow_catcher` is on the object (`Object.is_shadow_catcher`), not `object.cycles`. → `light-world-camera.md`
+- A sun shines down its local -Z: for elevation e and bearing b, `rotation_euler = (radians(90 - e), 0,
+  radians(180 - b))`; a Nishita sky's `sun_rotation` is the bearing. Light linking is on the light's object
+  (`light_linking.receiver_collection`, `blocker_collection`); each entry's `link_state` is on
+  `collection.collection_objects[i].light_linking`, which has no `.object`. → `light-world-camera.md`
 
 **UVs, images, lines**
 - Smart UV Project's angle is in radians and silently clamped (passing 66 means 90°); `pack_islands` needs
@@ -189,6 +195,9 @@ What an agent's memory most often gets wrong in 4.5, one line each; the page has
 - The sequencer's types were renamed in 4.4 (`Sequence` and friends are gone from `bpy.types`; `.sequences` still works,
   deprecated); a new scene's `sequence_editor` is None until `sequence_editor_create()`. → `animation-video.md`
 - `scene.eevee.use_motion_blur` is gone: `render.use_motion_blur` covers both engines. → `animation-video.md`
+- An F-modifier (Cycles, to loop) added after a `frame_set` is ignored until `action.update_tag()`; a keyed node
+  input's action is on `mat.node_tree`, not the material; a Geometry Nodes input is keyed on the object as
+  `modifiers["GN"]["Socket_2"]`. → `animation-video.md`
 - The sculpt mesh filter segfaults headless unless an undo step was pushed first (`bpy.ops.ed.undo_push()`); the cloth
   filter does nothing; `weight_paint` strokes crash. → `sculpt-paint.md`
 - EEVEE reads a vertex group through the Attribute node as 0; copy it into a FLOAT attribute. → `sculpt-paint.md`

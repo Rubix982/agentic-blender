@@ -44,6 +44,14 @@ runs moved by up to 2x. Keyframes and slotted actions in general: `rigging-anima
 10. **Old MPEG containers for anything you will read back.** Blender's own movie loading read 20 of 24 frames from an
     MPEG-1 file and 19 from MPEG-2 (written as `.dvd`); every other container read back 24.
     `[exp: experiments/animation/video_codecs.py]`
+11. **An F-modifier added after the scene was evaluated.** A Cycles modifier added to a curve after a `frame_set` was
+    ignored by later `frame_set` calls (frame 61 still read the held last key, 0.0) though `fcurve.evaluate(61)`
+    already gave 1.0; `action.update_tag()` fixed it. A new Cycles modifier starts at REPEAT both ways, with no limit.
+    `[exp: experiments/animation/loops_and_node_keys.py]`
+12. **Looking for a material's animation on the material.** Keying a node input
+    (`node.inputs["Strength"].keyframe_insert("default_value")`) puts the action on `mat.node_tree`;
+    `mat.animation_data` stays None. While the material is on no object, `frame_set` leaves the input at the last value
+    set; `fcurve.evaluate(frame)` reads the curve. `[exp: experiments/animation/loops_and_node_keys.py]`
 
 ## Render a frame range from Python
 
@@ -187,6 +195,44 @@ found it. Past the last key the rotation holds (CONSTANT extrapolation, the defa
   `[exp: experiments/animation/turntable.py]`
 - The empty-and-parent rig is the simplest of the three: one F-curve, exact steps, nothing to aim. Rotating the subject
   instead of the camera gives the same frames with fixed lighting moving over it (not measured here).
+
+## Loops and keyed inputs
+
+```python
+from bpy_extras import anim_utils
+
+def fcurve(id_block, path, index=0):
+    ad = id_block.animation_data
+    return anim_utils.action_get_channelbag_for_slot(ad.action, ad.action_slot).fcurves.find(path, index=index)
+
+# a slide that repeats forever: keys at 1, 25 and 49 (back where it started), then a Cycles modifier
+for f, x in ((1, 0.0), (25, 2.0), (49, 0.0)):
+    ob.location.x = x; ob.keyframe_insert("location", index=0, frame=f)
+fcurve(ob, "location", 0).modifiers.new("CYCLES")     # REPEAT before and after, no limit
+ob.animation_data.action.update_tag()                 # needed if the scene was evaluated since the keys were made
+
+# a material's node input: the action is on the node tree
+s = mat.node_tree.nodes["Emission"].inputs["Strength"]
+s.default_value = 0;  s.keyframe_insert("default_value", frame=1)
+s.default_value = 10; s.keyframe_insert("default_value", frame=25)
+fcurve(mat.node_tree, 'nodes["Emission"].inputs[1].default_value')
+
+# a Geometry Nodes modifier input: keyed on the object, by the input's identifier
+mod[ident] = 1.0; ob.keyframe_insert(data_path=f'modifiers["{mod.name}"]["{ident}"]', frame=1)
+```
+
+Measured `[exp: experiments/animation/loops_and_node_keys.py]`:
+
+- With the Cycles modifier (after `update_tag`) frame 61 read 1.0 like frame 13, frame 73 read 2.0 like frame 25,
+  frame 97 read 0.0 like frame 1, and frame -11 read 1.0: the 48-frame cycle repeats both ways. Without it the curve
+  held 0.0 after frame 49 (extrapolation CONSTANT). `[exp: experiments/animation/loops_and_node_keys.py]`
+- The node input's action sat on the node tree (slot `NTShader Nodetree`, path
+  `nodes["Emission"].inputs[1].default_value`). Once the material was on a plane in the scene, `frame_set(13)` gave
+  5.0 on the original input and on the evaluated copy, and renders of an emission plane at frames 1, 13 and 25 read
+  0.0, 5.0 and 10.0. `[exp: experiments/animation/loops_and_node_keys.py]`
+- A Geometry Nodes input keyed at 1.0 and 3.0 read 2.0 at frame 13, path `modifiers["GN"]["Socket_2"]`, in the
+  object's action; `mod.keyframe_insert('["Socket_2"]')` added a key to the same curve.
+  `[exp: experiments/animation/loops_and_node_keys.py]`
 
 ## Motion blur
 

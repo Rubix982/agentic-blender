@@ -46,6 +46,12 @@ convert it to irradiance, E = pi x radiance / 0.8.
 9. **Reading a constrained camera's matrix before an update.** After moving a Track To target, `matrix_world` was
    stale (target projected to x = -0.05) until `bpy.context.view_layer.update()` (then 0.5).
    `[exp: experiments/camera/camera_aim_dof.py]`
+10. **Tilting a sun by its elevation.** A sun shines down its local -Z, so `rotation_euler.x = radians(30)` put it 60
+    degrees up, not 30. For elevation e and compass bearing b (+Y north, +X east, clockwise from north):
+    `rotation_euler = (radians(90 - e), 0, radians(180 - b))`. `[exp: experiments/light/sun_elevation.py]`
+11. **Looking for the object in a light-linking entry.** `collection.collection_objects[i]` has only
+    `light_linking.link_state`; `.object` raises `AttributeError`. The object is `collection.objects[i]`, in the same
+    order. `[exp: experiments/light/light_linking.py]`
 
 ## Lights
 
@@ -89,6 +95,62 @@ uniform disc predicts 0.805 of the full penumbra 2 h tan(angle / 2)):
 | 10 degrees | 141 mm | 131 | 98 | 136 |
 
 `[exp: experiments/light/sun_angle_soft_shadow.py]` A new sun's angle is 0.526 degrees. `[exp: experiments/light/light_units.py]`
+
+## A sun at a given elevation and bearing
+
+```python
+def sun_rotation(elevation_deg, bearing_deg):        # +Y north, +X east, bearing clockwise from north
+    return (math.radians(90 - elevation_deg), 0.0, math.radians(180 - bearing_deg))
+
+sun.rotation_euler = sun_rotation(30, 135)           # 30 degrees up, in the south-east
+sky.sun_elevation = math.radians(30)                 # a Nishita sky's sun in the same place:
+sky.sun_rotation = math.radians(135)                 # its sun_rotation is the bearing
+```
+
+Checked three ways `[exp: experiments/light/sun_elevation.py]`:
+
+- Five pairs of elevation and bearing, from (10, 135) to (60, 225): the light's +Z axis came out at the asked elevation
+  and bearing, error 0.0 degrees. `[exp: experiments/light/sun_elevation.py]`
+- A 1 m pole's shadow, found by ray casts in 5 mm steps: 1.75 m at elevation 30 (1 / tan 30° = 1.732), 1.015 m at 45
+  (1.0) and 2.76 m at 20 (2.747), the excess being the pole's 0.02 m radius; each pointed away from the sun's bearing.
+  `[exp: experiments/light/sun_elevation.py]`
+- A Nishita sky rendered as an equirectangular panorama at 1 degree a pixel, its orientation fixed by a control lamp
+  due east: `sun_rotation` 0, 90, 180 and 270 put the sun disc at bearings 1, 91, 181 and 270, at elevation 30 within
+  3 degrees. `[exp: experiments/light/sun_elevation.py]`
+
+In an equirectangular render from a camera at rotation (90, 0, 0) degrees, column = bearing + 180 degrees: north,
+where the camera looks, is the image centre, and east is right of centre. `[exp: experiments/light/sun_elevation.py]`
+
+## Light and shadow linking
+
+```python
+recv = bpy.data.collections.new("LitBySun")          # need not be linked into the scene
+recv.objects.link(ground); recv.objects.link(left)   # each entry starts at link_state INCLUDE
+sun.light_linking.receiver_collection = recv         # on the light's object: the sun now lights only these
+
+block = bpy.data.collections.new("NoSunShadow")
+block.objects.link(right)
+block.collection_objects[0].light_linking.link_state = "EXCLUDE"   # entries pair with block.objects by position
+sun.light_linking.blocker_collection = block         # the right sphere casts no shadow from this sun
+```
+
+Two spheres on a floor under a sun, a black world, seen from above; linear brightness, the mean of 3 x 3 pixels
+`[exp: experiments/light/light_linking.py]`:
+
+| Setup | Engine | Left top | Right top | Left's shadow | Right's shadow | Lit floor |
+|---|---|---|---|---|---|---|
+| no linking | Cycles | 0.6 | 0.602 | 0.016 | 0.017 | 0.593 |
+| receivers: floor and left, INCLUDE | Cycles | 0.6 | 0.0 | 0.016 | 0.017 | 0.591 |
+| receivers: right only, EXCLUDE | Cycles | 0.6 | 0.0 | 0.016 | 0.017 | 0.591 |
+| blockers: right only, EXCLUDE | Cycles | 0.6 | 0.602 | 0.016 | 0.619 | 0.593 |
+| no linking | EEVEE | 0.61 | 0.61 | 0.0 | 0.0 | 0.583 |
+| receivers: floor and left, INCLUDE | EEVEE | 0.61 | 0.0 | 0.0 | 0.0 | 0.583 |
+| receivers: right only, EXCLUDE | EEVEE | 0.61 | 0.0 | 0.0 | 0.0 | 0.583 |
+| blockers: right only, EXCLUDE | EEVEE | 0.61 | 0.61 | 0.0 | 0.583 | 0.583 |
+
+Both engines honour both kinds. A receiver collection of INCLUDE entries lights only them; one of EXCLUDE entries
+lights everything else. An object the sun does not light still casts the sun's shadow: only the blocker collection
+removes it.
 
 ## World
 

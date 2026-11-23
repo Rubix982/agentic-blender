@@ -28,6 +28,9 @@ elsewhere.
 - **`Error: Cannot render, no camera`** — the scene has no `scene.camera`; an empty factory scene has none. A failed
   render also sets Blender's exit code to 1 even if the script catches it. `[exp: experiments/rendering/empty_scene_render.py]`
   `[exp: experiments/running/caught_errors.py]` → `running.md`, `rendering.md`
+- **`AttributeError: 'CollectionObject' object has no attribute 'object'`** — a light-linking entry
+  (`collection.collection_objects[i]`) holds only `light_linking.link_state`; the object is `collection.objects[i]`, in
+  the same order. `[exp: experiments/light/light_linking.py]` → `light-world-camera.md`
 - **`TypeError: bpy_struct: item.attr = val: enum "BLENDER_EEVEE" not found in (...)`** — the EEVEE engine id is
   `BLENDER_EEVEE_NEXT` in 4.2 to 4.5; the message lists the valid values (the reliable way to read a dynamic enum).
   `[exp: experiments/rendering/eevee_background.py]` → `rendering.md`
@@ -89,6 +92,11 @@ elsewhere.
 
 ## Data and Python
 
+- **`AttributeError: 'NoneType' object has no attribute 'select_set'`** (or any attribute, in a loop over
+  `view_layer.objects`) — objects were removed with `bpy.data.objects.remove` or `batch_remove`, and the view layer
+  still lists `None` in their place until `view_layer.update()`. Call it after removing, loop over `scene.objects`, or
+  start from `read_factory_settings(use_empty=True)`. `[exp: experiments/data/view_layer_after_remove.py]` →
+  `data-model.md`
 - **`ReferenceError: StructRNA of type Object has been removed`** (or `Mesh`, `BMesh data ... has been removed`) — the
   data-block was removed, the file was reloaded (`open_mainfile` invalidates every reference), or an evaluated mesh was
   read after the next evaluation. Look it up again. `[exp: experiments/data/blend_files.py]`
