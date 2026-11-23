@@ -90,7 +90,7 @@ Blender -b scene.blend -E CYCLES -o /tmp/frame_ -F PNG -x 1 -f 1 -- --cycles-dev
 | a 1,000,000-vertex grid | 1,041 to 1,059 MB |
 | a Cycles render, 512 px, 64 samples, CPU | 422 to 482 MB |
 
-`[exp: experiments/running/process.py]`. Starting Blender costs about 0.4 s, so many small headless runs are cheap; a
+`[exp: experiments/running/process.py]`. Starting Blender costs about 0.4 s `[exp: experiments/running/cli_behaviour.py]`, so many small headless runs are cheap; a
 heavy scene rebuilt on every run is what costs. A cloth simulation on a figure took about 2 GB a job, and more than four
 such jobs at once on 16 GB swapped and slowed every job. `[lesson]`
 

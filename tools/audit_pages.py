@@ -54,11 +54,13 @@ def result_numbers(exp_path):
     return os.path.exists(script), files, nums
 
 
-def matches(written, values, timing=False):
+def matches(written, values, kind=None):
     s = written.replace(",", "")
     x = float(s)
-    if timing:   # timings vary run to run and with load: within a factor of 2, as tools/recheck.py compares them
+    if kind == "time":   # timings vary run to run and with load: within a factor of 2, as tools/recheck.py compares them
         return any(v > 0 and x > 0 and max(v, x) / min(v, x) <= 2 for v in values)
+    if kind == "mem":
+        return any(v > 0 and x > 0 and abs(v - x) <= 0.1 * max(v, x) for v in values)
     dec = len(s.split(".")[1]) if "." in s else 0
     tol = 0.5 * 10 ** (-dec) + 1e-12
     for v in values:
@@ -119,8 +121,9 @@ def audit(page, verbose):
                 notes.append(f"    missing experiment or result: {c}")
             values += vals
         for n in nums:
-            timing = re.search(re.escape(n) + r"\s?(?:s|ms|seconds)\b", claim) is not None
-            if matches(n, values, timing):
+            unit = re.search(re.escape(n) + r"(?:\s?(?:to|-|–|and|,)\s?[\d.,]+)*\s?(s|ms|seconds|MB|GB)\b", claim)
+            kind = None if not unit else ("mem" if unit.group(1) in ("MB", "GB") else "time")
+            if matches(n, values, kind):
                 found += 1
             else:
                 missing += 1

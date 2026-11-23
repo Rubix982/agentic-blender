@@ -292,7 +292,8 @@ surface took 205 s against 1,114 s with the trousers as a separate collider; a d
 instead of 3. (not re-checked here)
 **What to do:** fuse the body and every garment worn under into one closed collider: thicken sheets into a slab, voxel
 remesh (8-12 mm), smooth, displace out about 3 mm, apply; bind it to the body (Surface Deform or weights). Close holes
-before remeshing; see `modifiers.md` for the Remesh traps.
+before remeshing; see `kb/lessons/modifiers.md` ("A voxel Remesh needs a closed shell" and "A voxel Remesh drops a slab
+thinner than one voxel").
 **How it was found:** fabric settings exhausted, then the collider measured.
 
 ### collision_settings.collection limits which colliders a cloth sees

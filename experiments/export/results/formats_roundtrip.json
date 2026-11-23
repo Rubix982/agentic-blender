@@ -3,7 +3,7 @@
  "blender": "4.5.14 LTS",
  "machine": "Darwin arm64",
  "date": "2026-11-23",
- "seconds": 0.61,
+ "seconds": 0.59,
  "facts": [
   {
    "fact": "exporter/importer operators present in 4.5: the C++ wm.obj_*, wm.stl_*, wm.ply_*, wm.usd_* and the add-on export_scene.fbx/gltf; the old Python export_scene.obj, export_mesh.stl/ply are gone (AttributeError on call); 4.5 also has wm.fbx_import (new C++ FBX importer) and still wm.collada_export",
@@ -23,6 +23,13 @@
     "wm.fbx_import": true,
     "import_scene.fbx": true,
     "wm.collada_export": true
+   }
+  },
+  {
+   "fact": "calling a removed exporter raises AttributeError 'Calling operator ... error, could not be found'",
+   "errors": {
+    "export_scene.obj": "Calling operator \"bpy.ops.export_scene.obj\" error, could not be found",
+    "export_mesh.stl": "Calling operator \"bpy.ops.export_mesh.stl\" error, could not be found"
    }
   },
   {

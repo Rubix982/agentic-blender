@@ -7,8 +7,8 @@ nodes' own instancing (Instance on Points, Realize Instances) is in `geometry-no
 ## What goes wrong most often
 
 1. **Copying the mesh when the object is all that needs copying.** 2,000 spheres (32 x 16) as full copies made a
-   69.2 MB `.blend` with 2,001 meshes; as linked duplicates (objects sharing one mesh) 2.9 MB with 1 mesh, created in
-   half the time. `obj.copy()` shares the mesh; `obj.data.copy()` is what duplicates it. `[exp: experiments/instancing/repeat_geometry.py]`
+   69.2 MB `.blend` with 2,001 meshes; as linked duplicates (objects sharing one mesh) 2.9 MB with 1 mesh, and quicker
+   to create (0.081 s against 0.130 s). `obj.copy()` shares the mesh; `obj.data.copy()` is what duplicates it. `[exp: experiments/instancing/repeat_geometry.py]`
 2. **Counting objects to count what is drawn.** Instances are not objects. Vertex instancing and a particle system
    drew 2,000 spheres from 2 objects; count them with `depsgraph.object_instances` (`is_instance`). Collection
    instances need one empty each, so 2,000 empties are 2,000 objects. `[exp: experiments/instancing/repeat_geometry.py]`
@@ -22,13 +22,13 @@ nodes' own instancing (Instance on Points, Realize Instances) is in `geometry-no
 
 ## Five ways to repeat 2,000 spheres
 
-| Way | Create (s) | Meshes | `.blend` (MB) | Depsgraph |
+| Way | Create | Meshes | `.blend` (MB) | Depsgraph |
 |---|---|---|---|---|
-| full copies (`objects.new(name, mesh.copy())`) | 0.138 | 2,001 | 69.23 | 2,000 objects |
-| linked duplicates (`objects.new(name, mesh)`) | 0.073 | 1 | 2.91 | 2,000 objects |
-| collection instances (empties, `instance_type = "COLLECTION"`) | 0.065 | 1 | 2.91 | 2,000 instances + 2,000 empties |
-| vertex instancing (`parent.instance_type = "VERTS"`, child parented) | 0.001 | 2 | 0.42 | 2,000 instances, 2 objects |
-| particle system (hair, `render_type = "OBJECT"`) | 0.007 | 2 | 0.40 | 2,000 instances, 2 objects |
+| full copies (`objects.new(name, mesh.copy())`) | 0.130 s | 2,001 | 69.23 | 2,000 objects |
+| linked duplicates (`objects.new(name, mesh)`) | 0.081 s | 1 | 2.91 | 2,000 objects |
+| collection instances (empties, `instance_type = "COLLECTION"`) | 0.068 s | 1 | 2.91 | 2,000 instances + 2,000 empties |
+| vertex instancing (`parent.instance_type = "VERTS"`, child parented) | 0.001 s | 2 | 0.42 | 2,000 instances, 2 objects |
+| particle system (hair, `render_type = "OBJECT"`) | 0.019 s | 2 | 0.40 | 2,000 instances, 2 objects |
 
 `[exp: experiments/instancing/repeat_geometry.py]` (uncompressed saves; creation from Python, one `view_layer.update()`).
 `Object.instance_type` is one of `NONE`, `VERTS`, `FACES`, `COLLECTION`. `[inv]`

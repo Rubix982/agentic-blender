@@ -12,9 +12,12 @@ renders, exports), and kept one Blender open as a live server for quick looks.
 **What to do:** `sys.stdout.reconfigure(line_buffering=True)` at the top of every `-b` script, or `print(..., flush=True)`.
 **How it was found:** a running job could not be watched.
 
-### Python's atexit hooks do not reliably run when headless Blender exits
-**What happens:** anything written in an `atexit` hook can be lost when Blender quits.
-**Evidence:** records written at exit went missing. (not re-checked here)
+### Records written in an atexit hook were lost from batch jobs
+**What happens:** the project lost records it wrote in an `atexit` hook. A clean exit does run the hook, so the loss
+probably came from jobs that crashed or were killed, where no hook runs.
+**Evidence:** records written at exit went missing. Not reproduced in a simple test
+`[exp: experiments/running/lesson_checks.py]`: the hook ran both when a `-b` script ended and on `sys.exit(0)`; the
+loss probably came from crashed or killed jobs.
 **What to do:** write records as they happen (append at each event), never at exit.
 **How it was found:** missing records.
 
@@ -107,9 +110,11 @@ position (points by x, y, z; faces by their points) before simulating against th
 
 ### Blender's bundled Python has no Pillow
 **What happens:** image drawing written with PIL cannot run inside Blender.
-**Evidence:** label drawing for a sheet had to move out of Blender. (not re-checked here)
+**Evidence:** label drawing for a sheet had to move out of Blender. Re-checked
+`[exp: experiments/running/lesson_checks.py]`: no PIL in 4.5.14's Python; numpy 1.26.4, OpenImageIO, MaterialX 1.39.2 and
+requests are bundled.
 **What to do:** write a sidecar JSON from Blender (positions projected through the camera) and draw in an outside Python;
-or use numpy with `Image.pixels`.
+or use numpy with `Image.pixels`, or the bundled OpenImageIO.
 **How it was found:** an import error.
 
 ### Read what this Blender can do from Blender itself

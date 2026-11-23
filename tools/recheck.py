@@ -2,12 +2,12 @@
 """Run the experiments again and list the facts whose numbers changed: how this guide notices that a new Blender (or
 another machine) no longer behaves as written.
 
-  python3 tools/recheck.py [AREA ...] [--only NAME] [--timeout S]
+  python3 tools/recheck.py [AREA ...] [--only NAME] [--timeout S] [--update]
 
 Each experiment is re-run the way it ran (the arguments its result recorded; for older results without them, the
-suffix of the result's file name, e.g. boolean_solvers-30.json -> 30). Results are overwritten in place, so `git diff`
-shows every change; this prints a summary: facts unchanged, changed (with the old and new numbers), new, gone, and
-experiments that failed. Timings are compared loosely (within a factor of 2); everything else exactly, floats to 0.1 %.
+suffix of the result's file name, e.g. boolean_solvers-30.json -> 30). The stored results are what the area pages cite,
+so they are put back after the comparison; --update keeps the new ones instead (then update the pages). This prints a
+summary: facts unchanged, changed (with the old and new numbers), new, gone, and experiments that failed. Timings are compared loosely (within a factor of 2); everything else exactly, floats to 0.1 %.
 """
 import glob
 import json
@@ -81,11 +81,14 @@ def main():
         inside = "exp.Experiment(" in src
         for result, args in runs_for(script):
             _, before = facts_of(result)
+            stored = open(result, "rb").read() if os.path.exists(result) else None
             cmd = ([sys.executable, os.path.join(ROOT, "tools", "run.py"), script, "--timeout", timeout, "--"] + args
                    if inside else [sys.executable, script] + args)
             r = subprocess.run(cmd, capture_output=True, text=True, cwd=ROOT)
             label = os.path.relpath(result, ROOT)
             if r.returncode != 0:
+                if stored is not None:
+                    open(result, "wb").write(stored)
                 totals["failed"] += 1
                 tail = (r.stderr or r.stdout).strip().splitlines()[-3:]
                 print(f"FAILED  {label}\n        " + "\n        ".join(tail))
@@ -110,6 +113,8 @@ def main():
                 if fact not in after:
                     totals["gone"] += 1
                     print(f"GONE    {label}: {fact}")
+            if stored is not None and "--update" not in sys.argv:
+                open(result, "wb").write(stored)
     print("\n" + ", ".join(f"{k} {v}" for k, v in totals.items()))
     sys.exit(1 if totals["changed"] or totals["failed"] or totals["gone"] else 0)
 

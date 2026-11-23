@@ -18,6 +18,15 @@ E.fact("exporter/importer operators present in 4.5: the C++ wm.obj_*, wm.stl_*, 
        "export_scene.fbx/gltf; the old Python export_scene.obj, export_mesh.stl/ply are gone (AttributeError on call); "
        "4.5 also has wm.fbx_import (new C++ FBX importer) and still wm.collada_export",
        present=old_ops)
+call_errors = {}
+for name, f in (("export_scene.obj", lambda: bpy.ops.export_scene.obj(filepath=E.out("x.obj"))),
+                ("export_mesh.stl", lambda: bpy.ops.export_mesh.stl(filepath=E.out("x.stl")))):
+    try:
+        f()
+        call_errors[name] = "ran"
+    except AttributeError as e:
+        call_errors[name] = str(e)
+E.fact("calling a removed exporter raises AttributeError 'Calling operator ... error, could not be found'", errors=call_errors)
 
 
 def build():

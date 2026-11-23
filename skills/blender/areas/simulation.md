@@ -192,11 +192,13 @@ deepens them `[lesson]`.
 ### Self-collision only where cloth meets itself
 
 ```python
+g = o.vertex_groups.new(name="g")           # the triangles NOT to self-collide
+...
 cs = cm.collision_settings
+cs.use_collision = False
 cs.use_self_collision = True
-cs.self_distance_min = 0.004            # under ~1/3 of the mesh's edge length
-g.vertex_groups.new(name="no_self").add(indices_that_never_meet_themselves, 1.0, "REPLACE")
-cs.vertex_group_self_collisions = "no_self"   # the group is EXCLUDED
+cs.self_distance_min = 0.005                # keep under ~1/3 of the mesh's edge length (here 27 mm squares)
+cs.vertex_group_self_collisions = "g" if mode != "no group" else ""
 ```
 
 Measured `[exp: experiments/simulation/cloth_self_collision.py]`: two squares 3 cm apart in one cloth, lower pinned: no
@@ -227,9 +229,11 @@ me = bpy.data.meshes.new("sewn")
 me.from_pydata(verts, edges, faces)
 ...
 st = cm.settings
+st.vertex_group_mass = "pin"
+st.pin_stiffness = stiff
+st.effector_weights.gravity = 0.0
 st.use_sewing_springs = True
 st.sewing_force_max = 200.0      # default 0 = no limit [inv]
-st.effector_weights.gravity = 0.0
 ```
 
 Springs pull but never join: weld the seam once closed, before posing. A weak force loses to friction against the body
