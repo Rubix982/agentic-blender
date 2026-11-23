@@ -9,8 +9,12 @@ evals/independent/checks.py, written by an agent that never saw the guide. The c
 --arms reference (or wrong) runs the set's reference (or deliberately wrong) solutions, <set>/reference/taskN.py or
 wrongN.py, in place of an agent: no Claude session; a test of the harness and the checks.
 
-For each task, arm and run: a fresh `claude -p` session in an empty folder gets the task. The "with" arm loads this
-plugin through --plugin-dir (a copy without evals/, so the checks can't be read); the "without" arm loads nothing.
+For each task, arm and run: a fresh `claude -p` session in an empty folder outside this repository (so neither arm can
+find the guide, the checks or the reference solutions by looking around, and no git status names the guide) gets the
+task, with no MCP servers (--strict-mcp-config). The "with" arm loads this plugin as frozen at git tag v1 through
+--plugin-dir (without evals/); the "without" arm loads nothing. Each folder is copied back into evals/runs/ when done.
+A session that ends in an error (e.g. the usage limit) is recorded as not run, not as a failure, and the run stops;
+--resume evals/runs/<dir> carries on, skipping what is done.
 The agent writes ./task.py and must not run Blender; this script then runs task.py exactly once, headless, and grades
 what it saved with evals/checks.py. "Right first time" = the script exits 0 and its output passes the check.
 
@@ -24,6 +28,7 @@ import re
 import shutil
 import subprocess
 import sys
+import tempfile
 import time
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -69,32 +74,46 @@ def output_ext(n, text, which):
     return {"openexr": ".exr", "jpeg": ".jpg", "gltf": ".glb"}.get(w.group(1).lower(), "." + w.group(1).lower()) if w else ".blend"
 
 
-def plugin_copy(dest):
-    """The plugin as the with-arm sees it: everything but the held-out tasks and checks."""
-    shutil.copytree(ROOT, dest, ignore=shutil.ignore_patterns(".git", "evals", "__pycache__", "*.blend1"))
+def plugin_copy(dest, tag="v1"):
+    """The plugin as the with-arm sees it: the frozen tag, without the held-out tasks and checks."""
+    os.makedirs(dest)
+    subprocess.run(f"git -C '{ROOT}' archive {tag} | tar -x -C '{dest}'", shell=True, check=True)
+    shutil.rmtree(os.path.join(dest, "evals"), ignore_errors=True)
     return dest
 
 
 def transcript_facts(lines):
-    skill_used = blender_called = False
+    skill_used = blender_called = touched_repo = False
     usage, cost, turns = {}, None, None
+    model = skill_listed = mcp_tools = error = None
     for line in lines:
         try:
             ev = json.loads(line)
         except ValueError:
             continue
+        if ev.get("type") == "system" and ev.get("subtype") == "init":
+            model = ev.get("model")
+            skill_listed = any("blender" in str(x).lower() for x in ev.get("skills", []))
+            mcp_tools = [t for t in ev.get("tools", []) if t.startswith("mcp__")]
         msg = ev.get("message") or {}
         for part in msg.get("content", []) if isinstance(msg.get("content"), list) else []:
             if part.get("type") == "tool_use":
                 inp = json.dumps(part.get("input", {}))
                 if part.get("name") == "Skill" or "SKILL.md" in inp or "kb.py" in inp:
                     skill_used = True
+                if ROOT in inp or "code/blender-field-guide" in inp:
+                    touched_repo = True
                 if part.get("name") == "Bash" and re.search(r"Blender(\.app)?/Contents/MacOS/Blender|\bblender\b.*-b", inp):
                     blender_called = True
         if ev.get("type") == "result":
             usage, cost, turns = ev.get("usage", {}), ev.get("total_cost_usd"), ev.get("num_turns")
-    return dict(skill_used=skill_used, agent_ran_blender=blender_called, cost_usd=cost, turns=turns,
-                output_tokens=usage.get("output_tokens"))
+            if ev.get("is_error") or ev.get("subtype") not in ("success", "error_max_turns"):
+                error = f"{ev.get('subtype')}: {str(ev.get('result'))[:300]}"
+    if not any(l.strip() for l in lines):
+        error = "no output"
+    return dict(skill_used=skill_used, agent_ran_blender=blender_called, touched_repo=touched_repo, cost_usd=cost,
+                turns=turns, output_tokens=usage.get("output_tokens"), model=model, skill_listed=skill_listed,
+                mcp_tools=mcp_tools, session_error=error)
 
 
 def main():
@@ -109,22 +128,33 @@ def main():
     runs = int(a[a.index("--runs") + 1]) if "--runs" in a else 1
     model = a[a.index("--model") + 1] if "--model" in a else None
     max_turns = a[a.index("--max-turns") + 1] if "--max-turns" in a else "40"
-    stamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-    base = os.path.join(HERE, "runs", f"{stamp}-{which}")
-    os.makedirs(base)
-    plugin = plugin_copy(os.path.join(base, "plugin")) if "with" in arms else None
+    if "--resume" in a:
+        base = os.path.abspath(a[a.index("--resume") + 1])
+    else:
+        stamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+        base = os.path.join(HERE, "runs", f"{stamp}-{which}")
+        os.makedirs(base)
+    done = []
+    if os.path.exists(os.path.join(base, "results.jsonl")):
+        done = [json.loads(l) for l in open(os.path.join(base, "results.jsonl")) if l.strip()]
+    workroot = tempfile.mkdtemp(prefix="bfg-eval-", dir="/private/tmp" if os.path.isdir("/private/tmp") else None)
+    plugin = plugin_copy(os.path.join(workroot, "plugin")) if "with" in arms else None
     if "reference" in arms and which == "writer" and not os.path.isdir(os.path.join(HERE, "reference")):
         sys.exit("the writer's set has no reference solutions yet")
     B = blender()
     T = tasks()
-    results = []
+    results = [x for x in done if not x.get("session_error")]
+    stop = False
     for n in wanted:
         for arm in arms:
             for r in range(runs):
-                work = os.path.join(base, f"task{n}-{arm}-{r}")
+                if stop or any(x["task"] == n and x["arm"] == arm and x["run"] == r for x in results):
+                    continue
+                work = os.path.join(workroot, f"task{n}-{arm}-{r}")
                 os.makedirs(work)
                 cmd = ["claude", "-p", PROMPT.format(blender=B, task=T[n]), "--output-format", "stream-json", "--verbose",
-                       "--allowedTools", "Read,Write,Edit,Glob,Grep,Bash,Skill", "--max-turns", max_turns]
+                       "--allowedTools", "Read,Write,Edit,Glob,Grep,Bash,Skill", "--max-turns", max_turns,
+                       "--strict-mcp-config"]
                 if model:
                     cmd += ["--model", model]
                 if arm == "with":
@@ -143,6 +173,14 @@ def main():
                     info = transcript_facts(p.stdout.splitlines())
                 rec = dict(task=n, arm=arm, run=r, agent_seconds=round(time.time() - t, 1), **info)
                 script = os.path.join(work, "task.py")
+                if rec.get("session_error") and not os.path.exists(script):
+                    rec.update(script_written=False, script_ran=False, check_passed=False, right_first_time=None)
+                    print(json.dumps({k: rec[k] for k in ("task", "arm", "run", "session_error")}), flush=True)
+                    with open(os.path.join(base, "results.jsonl"), "a") as f:
+                        f.write(json.dumps(rec, default=str) + "\n")
+                    shutil.copytree(work, os.path.join(base, os.path.basename(work)), dirs_exist_ok=True)
+                    stop = True
+                    continue
                 out = os.path.join(work, f"out{output_ext(n, T[n], which)}")
                 if not os.path.exists(script):
                     rec.update(script_written=False, script_ran=False, check_passed=False, reasons=["no task.py"])
@@ -164,6 +202,9 @@ def main():
                                                       "agent_ran_blender", "cost_usd")}), flush=True)
                 with open(os.path.join(base, "results.jsonl"), "a") as f:
                     f.write(json.dumps(rec, default=str) + "\n")
+                shutil.copytree(work, os.path.join(base, os.path.basename(work)), dirs_exist_ok=True)
+    if stop:
+        print(f"stopped on a session error; carry on with: python3 evals/run_eval.py --set {which} --resume {base}")
     lines = ["| task | " + " | ".join(arms) + " |", "|---|" + "---|" * len(arms)]
     for n in wanted:
         cells = []
