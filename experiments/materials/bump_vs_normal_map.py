@@ -73,13 +73,21 @@ def bump(distance=1.0, strength=1.0, invert=False, coord="UV"):
 
 
 def save_image(name, rgb, float_buffer, colorspace):
-    img = bpy.data.images.new(name, 4, 4, float_buffer=float_buffer)
-    img.pixels.foreach_set(np.tile(np.array(list(rgb) + [1.0], np.float32), 16))
+    """A 4 x 4 image of one colour, written to a file and loaded back. A float EXR is written with OpenImageIO:
+    Image.save() of a float image made by images.new() wrote sRGB-encoded values (measured in section 0)."""
     path = os.path.join(TMP, name + (".exr" if float_buffer else ".png"))
-    img.filepath_raw = path
-    img.file_format = "OPEN_EXR" if float_buffer else "PNG"
-    img.save()
-    bpy.data.images.remove(img)
+    if float_buffer:
+        out = oiio.ImageOutput.create(path)
+        out.open(path, oiio.ImageSpec(4, 4, 4, oiio.FLOAT))
+        out.write_image(np.tile(np.array(list(rgb) + [1.0], np.float32), (4, 4, 1)))
+        out.close()
+    else:
+        img = bpy.data.images.new(name, 4, 4)
+        img.pixels.foreach_set(np.tile(np.array(list(rgb) + [1.0], np.float32), 16))
+        img.filepath_raw = path
+        img.file_format = "PNG"
+        img.save()
+        bpy.data.images.remove(img)
     img = bpy.data.images.load(path)
     img.colorspace_settings.name = colorspace
     return img
@@ -120,6 +128,26 @@ def expected(d, grad=0.5):
     v = np.array([-d * grad, 0, 1.0])
     return [round(float(x), 4) for x in v / np.linalg.norm(v)]
 
+
+# 0. Writing a float image to EXR from Python, which a normal map made in code needs.
+vals = np.array([0.5, 2.0, 0.18, 1.0], np.float32)
+img = bpy.data.images.new("f", 4, 4, float_buffer=True)
+img.pixels.foreach_set(np.tile(vals, 16))
+p0 = os.path.join(TMP, "save.exr")
+img.filepath_raw = p0
+img.file_format = "OPEN_EXR"
+img.save()
+via_save = oiio.ImageBuf(p0).get_pixels(oiio.FLOAT)[0, 0, :3]
+p1 = os.path.join(TMP, "save_render.exr")
+img.save_render(p1)
+via_save_render = oiio.ImageBuf(p1).get_pixels(oiio.FLOAT)[0, 0, :3]
+E.fact("Image.save() of a float image made with images.new(float_buffer=True), file_format OPEN_EXR, wrote "
+       "sRGB-encoded values into the EXR (0.5 -> 0.735, 2.0 -> 1.353, 0.18 -> 0.461) although the image's colour space "
+       "reads Linear Rec.709; image.save_render(path) with the scene's format set to OPEN_EXR wrote them unchanged",
+       written=vals[:3].tolist(), colorspace=img.colorspace_settings.name,
+       read_back_save=[round(float(x), 4) for x in via_save],
+       read_back_save_render=[round(float(x), 4) for x in via_save_render])
+bpy.data.images.remove(img)
 
 # 1. Bump: Distance in metres of height per unit of the Height input.
 rows = {}
@@ -169,18 +197,22 @@ for s in (1.0, 0.5, 2.0):
     rows[f"strength {s}"] = dict(normal=n, tilt_deg=tilt_deg(n))
 E.fact("Normal Map's Strength scales the tilt away from the surface normal (2.0 tilts further than the map)", **rows)
 
-# 3. Object scale: the bump depends on it, the normal map does not.
-plane.scale = (2, 2, 1)
-bpy.context.view_layer.update()
-nb, _ = read_normal(material(bump(distance=1.0)))
-nn, _ = read_normal(material(normal_map(rgb)))
+# 3. Object scale: uniform, and non-uniform (2, 2, 1).
+res = {}
+for label, sc in (("uniform (2, 2, 2)", (2, 2, 2)), ("non-uniform (2, 2, 1)", (2, 2, 1))):
+    plane.scale = sc
+    bpy.context.view_layer.update()
+    nb, _ = read_normal(material(bump(distance=1.0)))
+    nn, _ = read_normal(material(normal_map(rgb)))
+    res[label] = dict(bump=nb, bump_tilt=tilt_deg(nb), normal_map=nn, normal_map_tilt=tilt_deg(nn))
 plane.scale = (1, 1, 1)
-E.fact("Scaling the object changes the bump but not the normal map: at object scale 2 the same UV ramp spans 4 m and "
-       "the bump's tilt fell to that of half the slope (Distance stays in world units: the height is not scaled with "
-       "the object), while the normal map's normal was unchanged",
-       bump_scale_1=n_bump1, bump_scale_2=nb, bump_scale_2_tilt=tilt_deg(nb),
-       expected_world_units=expected(1.0, grad=0.25), expected_object_units=expected(1.0, grad=0.5),
-       normal_map_scale_2=nn, normal_map_scale_1=n_float)
+bpy.context.view_layer.update()
+E.fact("Object scale and the two nodes: at uniform scale 2 the same UV ramp spans 4 m and the bump's tilt fell to that "
+       "of half the slope (Distance is in world units, not scaled with the object), while the normal map's normal did "
+       "not change; at non-uniform scale (2, 2, 1) both flattened, because the normal map's tangents are transformed "
+       "with the object", scale_1=dict(bump=n_bump1, bump_tilt=tilt_deg(n_bump1), normal_map=n_float,
+                                       normal_map_tilt=tilt_deg(n_float)), **res,
+       expected_bump_world_units=expected(1.0, grad=0.25), expected_bump_object_units=expected(1.0, grad=0.5))
 
 # 4. A normal map on a mesh with no UV map.
 me = bpy.data.meshes.new("noUV")

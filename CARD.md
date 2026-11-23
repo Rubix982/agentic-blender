@@ -39,4 +39,9 @@ have come out the other way.
 6. **CONSEQUENCE OF NOT DOING IT.** Each project rediscovers Blender from an agent's memory, which mixes versions 2.7 to
    4.x; the next one (a pierced stone screen to be lit and rendered) starts from zero.
 
+**Amendment (2026-11-23, before any run):** the ten tasks in `evals/tasks.md` were written by the guide's writer, who
+then briefed the guide's workers knowing them, so the guide's coverage leans toward them (details in `evals/tasks.md`).
+The claim in field 5 is tested on an independent set of ten tasks written by a fresh agent that had not seen the guide
+(`evals/independent/`); the writer's set is reported beside it.
+
 **Result:** —

@@ -51,3 +51,23 @@ Amended on 2026-11-23, before any run and before the checks were written: task 2
 3. Then reference solutions (`evals/reference/`), written to show that each check passes a correct answer and fails a
    wrong one. Anything learned while writing them waits for v2; it does not go into v1.
 4. Then the runs: a fresh agent per task, with v1 and without it.
+
+## Amendment before any run (2026-11-23): this set is not independent of the guide
+
+The guide's writer wrote these tasks, then briefed the workers who wrote the guide, and wrote a reviewer's findability
+questions, all while knowing the tasks. No page names a task, but the guide's coverage leans toward them: task 1 (a
+slab pierced by a grid of holes) and `experiments/modifiers/boolean_solvers.py` (a slab cut by 10 x 10 and 30 x 30
+holes, checked for genus and manifoldness) share their origin, a pierced stone screen; the briefs asked for meshes from
+arrays with smooth-by-angle, a cloth pinned and baked, rigid bodies baked, render passes in a multilayer EXR, and
+automatic weights, which tasks 3, 6, 7, 9 and 10 need. Two gaps the review found, turning a sun's elevation into a
+rotation (task 2) and orbiting a camera, were left unfilled in v1 for that reason; the review's other findings were
+errors and were fixed.
+
+So the comparison runs on two sets, reported separately:
+
+- **this set** (`evals/tasks.md`), written by the guide's writer: a check that the guide does what its writer meant;
+- **an independent set** (`evals/independent/`), written by a fresh agent that had not seen the guide or this set,
+  with its own checks, validated on its own reference solutions before any run.
+
+The card's claim rests on the independent set: at least 3 more of its 10 tasks right first time with the skill than
+without. This set's numbers are reported beside it, task 1 marked as closest to an experiment.

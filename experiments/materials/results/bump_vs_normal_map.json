@@ -3,8 +3,27 @@
  "blender": "4.5.14 LTS",
  "machine": "Darwin arm64",
  "date": "2026-11-23",
- "seconds": 6.2,
+ "seconds": 7.08,
  "facts": [
+  {
+   "fact": "Image.save() of a float image made with images.new(float_buffer=True), file_format OPEN_EXR, wrote sRGB-encoded values into the EXR (0.5 -> 0.735, 2.0 -> 1.353, 0.18 -> 0.461) although the image's colour space reads Linear Rec.709; image.save_render(path) with the scene's format set to OPEN_EXR wrote them unchanged",
+   "written": [
+    0.5,
+    2.0,
+    0.18000000715255737
+   ],
+   "colorspace": "sRGB",
+   "read_back_save": [
+    0.7354,
+    1.3533,
+    0.4614
+   ],
+   "read_back_save_render": [
+    0.5,
+    2.0,
+    0.18
+   ]
+  },
   {
    "fact": "Bump's Distance is the height in scene units that one unit of the Height input stands for: on a ramp h = u (0..1 over 2 m, so 0.5 per metre), the normal matched normalize(-Distance x 0.5, 0, 1); the default Distance 0.001 tilts it by under 0.03 degrees, so a 0..1 texture at the default barely shows",
    "distance 0.001": {
@@ -149,9 +168,9 @@
     0.8944
    ],
    "float_exr_non_color": [
-    0.1166,
-    0.4399,
-    0.8904
+    -0.4472,
+    0.0,
+    0.8944
    ],
    "png_non_color": [
     -0.4488,
@@ -168,85 +187,106 @@
   {
    "fact": "Tangent space follows the UV map: red above 0.5 tilts the normal toward +U (here +x), green above 0.5 toward +V (here +y), the OpenGL convention; a DirectX-style map needs its green channel inverted",
    "green_high": [
-    0.3601,
-    0.6216,
-    0.6956
+    0.0,
+    0.6,
+    0.8
    ],
    "red_high": [
-    0.6216,
-    0.3601,
-    0.6956
+    0.6,
+    0.0,
+    0.8
    ]
   },
   {
    "fact": "Normal Map's Strength scales the tilt away from the surface normal (2.0 tilts further than the map)",
    "strength 1.0": {
     "normal": [
-     0.1166,
-     0.4399,
-     0.8904
+     -0.4472,
+     0.0,
+     0.8944
     ],
-    "tilt_deg": 27.08
+    "tilt_deg": 26.57
    },
    "strength 0.5": {
     "normal": [
-     0.062,
-     0.2339,
-     0.9703
+     -0.2298,
+     0.0,
+     0.9732
     ],
-    "tilt_deg": 14.0
+    "tilt_deg": 13.29
    },
    "strength 2.0": {
     "normal": [
-     0.1832,
-     0.6909,
-     0.6993
+     -0.7071,
+     0.0,
+     0.7071
     ],
-    "tilt_deg": 45.63
+    "tilt_deg": 45.0
    }
   },
   {
-   "fact": "Scaling the object changes the bump but not the normal map: at object scale 2 the same UV ramp spans 4 m and the bump's tilt fell to that of half the slope (Distance stays in world units: the height is not scaled with the object), while the normal map's normal was unchanged",
-   "bump_scale_1": [
-    -0.4472,
-    0.0,
-    0.8944
-   ],
-   "bump_scale_2": [
+   "fact": "Object scale and the two nodes: at uniform scale 2 the same UV ramp spans 4 m and the bump's tilt fell to that of half the slope (Distance is in world units, not scaled with the object), while the normal map's normal did not change; at non-uniform scale (2, 2, 1) both flattened, because the normal map's tangents are transformed with the object",
+   "scale_1": {
+    "bump": [
+     -0.4472,
+     0.0,
+     0.8944
+    ],
+    "bump_tilt": 26.57,
+    "normal_map": [
+     -0.4472,
+     0.0,
+     0.8944
+    ],
+    "normal_map_tilt": 26.57
+   },
+   "uniform (2, 2, 2)": {
+    "bump": [
+     -0.2425,
+     0.0,
+     0.9701
+    ],
+    "bump_tilt": 14.05,
+    "normal_map": [
+     -0.4472,
+     0.0,
+     0.8944
+    ],
+    "normal_map_tilt": 26.57
+   },
+   "non-uniform (2, 2, 1)": {
+    "bump": [
+     -0.2425,
+     0.0,
+     0.9701
+    ],
+    "bump_tilt": 14.05,
+    "normal_map": [
+     -0.2425,
+     0.0,
+     0.9701
+    ],
+    "normal_map_tilt": 14.05
+   },
+   "expected_bump_world_units": [
     -0.2425,
     0.0,
     0.9701
    ],
-   "bump_scale_2_tilt": 14.05,
-   "expected_world_units": [
-    -0.2425,
-    0.0,
-    0.9701
-   ],
-   "expected_object_units": [
+   "expected_bump_object_units": [
     -0.4472,
     0.0,
     0.8944
-   ],
-   "normal_map_scale_2": [
-    0.0634,
-    0.2393,
-    0.9689
-   ],
-   "normal_map_scale_1": [
-    0.1166,
-    0.4399,
-    0.8904
    ]
   },
   {
    "fact": "On a mesh with no UV map the tangent-space Normal Map still renders without an error but its normal is not the encoded one; Bump needs no UVs (here driven by Object coordinates: h = x, 1 per metre)",
    "normal_map_no_uv": [
-    0.1166,
-    -0.4399,
-    0.8904
+    -0.4472,
+    0.0,
+    0.8944
    ],
-   "normal_map_no_uv_tilt": 27.08,
+   "normal_map_no_uv_tilt": 26.57,
    "expected": [
     -0.4472,
     0.0,
@@ -284,11 +324,11 @@
     "lambert": 0.302
    },
    "normal_map": {
-    "combined_g": 0.1728,
+    "combined_g": 0.2997,
     "normal_pass": [
-     0.1166,
-     0.4399,
-     0.8904
+     -0.4472,
+     0.0,
+     0.8944
     ]
    }
   }
