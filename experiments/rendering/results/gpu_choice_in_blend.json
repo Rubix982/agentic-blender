@@ -1,0 +1,19 @@
+{
+ "experiment": "experiments/rendering/gpu_choice_in_blend.py",
+ "blender": "4.5.14",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "facts": [
+  {
+   "fact": "a file saved with scene.cycles.device = 'GPU' and the Metal device chosen, opened again with --factory-startup: what the scene and the device preference say, and whether a GPU is active (on this Mac the factory preference already names METAL, so the GPU stays in use)",
+   "when_saved": {
+    "scene_device": "GPU",
+    "compute_device_type": "METAL",
+    "has_active_device": "True"
+   },
+   "when_reopened": "READ GPU METAL True ['Apple M2 Pro (GPU - 19 cores)']",
+   "factory_compute_device_type": "METAL"
+  }
+ ],
+ "data": {}
+}

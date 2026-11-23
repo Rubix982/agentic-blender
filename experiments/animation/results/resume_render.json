@@ -1,0 +1,30 @@
+{
+ "experiment": "experiments/animation/resume_render.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.33,
+ "facts": [
+  {
+   "fact": "the defaults",
+   "use_overwrite": true,
+   "use_placeholder": false
+  },
+  {
+   "fact": "with use_overwrite off and use_placeholder on: the first run renders every frame; after deleting frame 2's file and emptying frame 4's, the second run renders only these",
+   "first_run": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "second_run": [
+    2
+   ],
+   "frame4_bytes_after": 0
+  }
+ ],
+ "data": {},
+ "args": []
+}

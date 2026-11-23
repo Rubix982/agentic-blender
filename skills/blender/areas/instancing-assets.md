@@ -21,6 +21,13 @@ Blender (free HDRIs, textures and models from Poly Haven and ambientCG) are in `
 5. **Using the names list after a library load.** After `with bpy.data.libraries.load(path) as (src, dst):
    dst.node_groups = names`, the list holds the loaded data-blocks, not the names. `[exp: experiments/instancing/repeat_geometry.py]`
 
+6. **Instancing one part of a model that is a set.** Some Poly Haven models are several variants laid side by side:
+    `fern_02` arrived as 4 meshes (1.973 m across as a set, the first fern alone 0.552 m),
+    `shrub_sorrel_01` as 11. Instancing the first mesh scatters one small variant. Put all the parts in a collection
+    and instance it with Collection Info (Separate Children, Reset Children) and Instance on Points' Pick Instance
+    with a random Instance Index: 196 points used all 4 ferns, at the scales asked for
+    (1.408 to 2.398 for 1.4 to 2.4). `[exp: experiments/instancing/variant_sets.py]`
+
 ## Five ways to repeat 2,000 spheres
 
 | Way | Create | Meshes | `.blend` (MB) | Depsgraph |

@@ -454,6 +454,10 @@ def cmd_find(args):
         print(f"  ... {len(rows) - n} more (-n {len(rows)})")
     if not rows:
         print("  nothing matches all of: " + " ".join(terms) + "  (try fewer or shorter terms, or docs.py search)")
+        if len(terms) > 1:                  # e.g. "overwrite placeholder": two settings, no entry has both words
+            for t in terms:
+                print(f"\n  {t} alone:")
+                cmd_find([t, "-n", "5"] + (["--kind", kind] if kind else []))
 
 
 def cmd_path(args):

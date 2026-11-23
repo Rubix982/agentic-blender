@@ -1,8 +1,10 @@
 """C-005: render the saved shot, logging each frame's time. Run from the repository root:
     python3 skills/blender/scripts/run.py --blend shots/morning-clearing/out/scene.blend \
         shots/morning-clearing/render.py -- START END [STEP] [OUT_DIR]
-Frames already written are skipped (use_overwrite off, placeholders on), so a stopped run resumes where it was.
-The GPU is chosen again here: the device is a preference, not saved in the .blend, and --factory-startup resets it."""
+Frames already written are skipped (use_overwrite off, placeholders on), so a stopped run resumes where it was; an
+empty placeholder left by a crash is skipped too, so delete empty files first (experiments/animation/resume_render.py).
+The GPU is chosen again here in case the preferences differ; on this Mac the factory ones already name METAL, so a
+.blend saved with the GPU keeps it (experiments/rendering/gpu_choice_in_blend.py)."""
 import os
 import sys
 import time

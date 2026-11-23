@@ -31,7 +31,10 @@ Blender 4.5.14 LTS on Apple Silicon. Tags: `[inv]` read from Blender (`scripts/k
    `[exp: experiments/geonodes/instances_realize.py]`
 8. **Linking by a socket name that is not unique.** Math's three inputs are all named "Value" (identifiers `Value`,
    `Value_001`, `Value_002`), and Store Named Attribute has one "Value" input per data type, only one enabled. Link by
-   index or identifier, and pick the enabled socket. `[exp: experiments/geonodes/build_group.py]`
+   index or identifier, and pick the enabled socket. `[exp: experiments/geonodes/build_group.py]` On a FLOAT Random
+   Value, `node.inputs["Min"]` returned the enabled FLOAT socket (`Min_001`), not the Vector or INT ones
+   of that name; an identifier is not a key (`node.inputs["Min_001"]` raised `KeyError`): find it with
+   `next(s for s in node.inputs if s.identifier == "Min_001")`. `[exp: experiments/instancing/variant_sets.py]`
    `[exp: experiments/geonodes/named_attribute_to_shader.py]` Socket names change between versions and cost runs
    when written from memory; look them up. `[lesson: kb/lessons/geometry-nodes.md]`
 9. **Mesh Boolean node's enum names.** Its solvers are `EXACT`, `FLOAT`, `MANIFOLD` (default `FLOAT`); the Boolean

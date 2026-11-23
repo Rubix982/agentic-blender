@@ -1,0 +1,134 @@
+{
+ "experiment": "experiments/instancing/variant_sets.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 1.05,
+ "facts": [
+  {
+   "fact": "parts each Poly Haven model arrived as from glTF, the size of the whole import and of its first part alone (fern_02 and shrub_sorrel_01 are sets of variants side by side)",
+   "rows": {
+    "fern_02": {
+     "objects": 4,
+     "meshes": 4,
+     "set_size_m": [
+      1.973,
+      1.724,
+      0.428
+     ],
+     "first_part_size_m": [
+      0.552,
+      0.613,
+      0.287
+     ]
+    },
+    "shrub_sorrel_01": {
+     "objects": 11,
+     "meshes": 11,
+     "set_size_m": [
+      0.352,
+      0.146,
+      0.058
+     ],
+     "first_part_size_m": [
+      0.038,
+      0.055,
+      0.056
+     ]
+    },
+    "rock_09": {
+     "objects": 1,
+     "meshes": 1,
+     "set_size_m": [
+      0.074,
+      0.145,
+      0.033
+     ],
+     "first_part_size_m": [
+      0.074,
+      0.145,
+      0.033
+     ]
+    },
+    "boulder_01": {
+     "objects": 1,
+     "meshes": 1,
+     "set_size_m": [
+      1.272,
+      1.83,
+      1.004
+     ],
+     "first_part_size_m": [
+      1.272,
+      1.83,
+      1.004
+     ]
+    },
+    "tree_stump_01": {
+     "objects": 1,
+     "meshes": 1,
+     "set_size_m": [
+      1.426,
+      1.59,
+      0.573
+     ],
+     "first_part_size_m": [
+      1.426,
+      1.59,
+      0.573
+     ]
+    },
+    "dead_tree_trunk_02": {
+     "objects": 1,
+     "meshes": 1,
+     "set_size_m": [
+      4.051,
+      1.056,
+      1.055
+     ],
+     "first_part_size_m": [
+      4.051,
+      1.056,
+      1.055
+     ]
+    }
+   }
+  },
+  {
+   "fact": "on a FLOAT Random Value, node.inputs['Min'] returns the FLOAT socket (Min_001), not the Vector or INT ones of the same name that this data type leaves unused; node.inputs['Min_001'] raises KeyError (keys are names); searching the sockets by identifier finds it",
+   "inputs_Min": {
+    "identifier": "Min_001",
+    "type": "VALUE",
+    "enabled": true
+   },
+   "inputs_Min_001": "KeyError: 'bpy_prop_collection[key]: key \"Min_001\" not found'",
+   "by_identifier": {
+    "identifier": "Min_001",
+    "type": "VALUE"
+   }
+  },
+  {
+   "fact": "a fern scatter asking for scale 1.4 to 2.4, with Random Value's sockets taken by name and by identifier: the scales the instances got, how many of the set's 4 variants were used, and whether the scale link is valid",
+   "by_name": {
+    "instances": 196,
+    "scale_min": 1.408,
+    "scale_max": 2.398,
+    "variants_used": 4,
+    "link_valid": true,
+    "socket_linked": "Value_001",
+    "socket_enabled": true
+   },
+   "by_identifier": {
+    "instances": 196,
+    "scale_min": 1.408,
+    "scale_max": 2.398,
+    "variants_used": 4,
+    "link_valid": true,
+    "socket_linked": "Value_001",
+    "socket_enabled": true
+   }
+  }
+ ],
+ "data": {},
+ "args": []
+}

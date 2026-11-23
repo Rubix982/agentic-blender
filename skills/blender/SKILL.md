@@ -156,6 +156,9 @@ What an agent's memory most often gets wrong in 4.5, one line each; the page has
 - Boolean: the modifier's solvers are `FAST`/`EXACT`/`MANIFOLD` (default EXACT), the node's `FLOAT`/`EXACT`/`MANIFOLD`;
   Manifold returns the mesh uncut, with only a console warning, when a cutter is open. → `modifiers.md`
 - `new_from_object(original)` gives the base mesh, not the modified one; evaluate first. → `modifiers.md`
+- Some Poly Haven models are sets of variants side by side (`fern_02` is 4 ferns): instance the set's collection with
+  Collection Info (Separate and Reset Children) and Pick Instance, not its first mesh. A socket identifier is not a
+  key (`node.inputs["Min_001"]` raises KeyError); find it by `.identifier`. → `instancing-assets.md`, `geometry-nodes.md`
 
 **Materials, light, rendering**
 - Principled BSDF inputs were renamed in 4.0 (`Subsurface` → `Subsurface Weight`, `Specular` → `Specular IOR Level`,
@@ -208,6 +211,8 @@ What an agent's memory most often gets wrong in 4.5, one line each; the page has
 - The sequencer's types were renamed in 4.4 (`Sequence` and friends are gone from `bpy.types`; `.sequences` still works,
   deprecated); a new scene's `sequence_editor` is None until `sequence_editor_create()`. → `animation-video.md`
 - `scene.eevee.use_motion_blur` is gone: `render.use_motion_blur` covers both engines. → `animation-video.md`
+- To resume a stopped sequence: `render.use_overwrite = False`, `render.use_placeholder = True`; an empty placeholder
+  counts as done, so delete empty files first. → `animation-video.md`
 - An F-modifier (Cycles, to loop) added after a `frame_set` is ignored until `action.update_tag()`; a keyed node
   input's action is on `mat.node_tree`, not the material; a Geometry Nodes input is keyed on the object as
   `modifiers["GN"]["Socket_2"]`. → `animation-video.md`

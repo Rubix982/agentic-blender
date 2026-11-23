@@ -67,6 +67,17 @@ bpy.ops.render.render(animation=True)                 # blocks; writes f_0001.pn
 background mode (used below). `[exp: experiments/animation/engine_frame_time.py]` File naming:
 `[exp: experiments/rendering/animation_output.py]`
 
+## Resume a sequence after a stop
+
+```python
+scene.render.use_overwrite = False      # skip frames whose file exists (default True)
+scene.render.use_placeholder = True     # write an empty file as each frame starts (default False)
+```
+
+Five frames rendered; after deleting frame 2's file and emptying frame 4's (as a crash leaves a placeholder), a second
+run rendered [2] only. An empty placeholder counts as done: delete empty files before resuming.
+`[exp: experiments/animation/resume_render.py]`
+
 ## Render a frame range from the command line
 
 ```bash

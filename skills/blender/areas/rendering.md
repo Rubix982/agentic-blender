@@ -68,6 +68,11 @@ for kind in ("METAL", "OPTIX", "CUDA", "HIP", "ONEAPI"):
         break
 ```
 
+A `.blend` saved with `scene.cycles.device = "GPU"` and opened again with `--factory-startup` still rendered on the GPU
+here: the factory preference already names `METAL` and its GPU is active (`READ GPU METAL True ['Apple M2 Pro (GPU - 19 cores)']`). On a
+machine with several GPU backends the choice is a preference, not part of the file, so set it in the script that
+renders. `[exp: experiments/rendering/gpu_choice_in_blend.py]`
+
 `prefs.devices` lists `Apple M2 Pro` (type CPU) and `Apple M2 Pro (GPU - 19 cores)` (type METAL); only the METAL one is
 switched on above. `[exp: experiments/running/smoke.py]` `[inv]` The first Metal render of a session took 0.91 s and
 the next 0.80 s; the small gap suggests the Metal kernels were already compiled and cached on this machine. GPU and CPU renders with the same seed differ by at

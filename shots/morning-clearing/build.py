@@ -130,20 +130,19 @@ lib = bpy.data.collections.new("Library")
 scene.collection.children.link(lib)
 sources = {}
 for key in ("fern", "rock", "sorrel"):
+    # a Poly Haven model can be a set of variants laid side by side (fern_02: 4 ferns, shrub_sorrel_01: 11 plants):
+    # keep every part in one collection and instance them with Collection Info, picking one variant per point
     objs, _ = ai.import_model(ai.manifest("polyhaven", ASSETS[key]))
-    bpy.context.view_layer.update()
-    src = next(o for o in objs if o.type == "MESH")
-    # glTF's Y-up turn sits on the object (or its parent), not the mesh, and Object Info in ORIGINAL space instances
-    # the bare mesh: bake the world transform into the mesh first, or the instances lie on their side
-    src.data.transform(src.matrix_world)
-    src.parent = None
-    src.matrix_world = __import__("mathutils").Matrix.Identity(4)
+    col = bpy.data.collections.new(f"Lib_{key}")
+    lib.children.link(col)
     for o in objs:
         for c in list(o.users_collection):
             c.objects.unlink(o)
-        lib.objects.link(o)
-    src.location.z = -50                                              # out of sight; instanced below
-    sources[key] = src
+        col.objects.link(o)
+        if o.parent is None:
+            o.location.z -= 50                                        # under the ground; Reset Children re-centres
+    sources[key] = (col, sum(1 for o in objs if o.type == "MESH" and o.parent is None))
+report["variants"] = {k: n for k, (c, n) in sources.items()}
 bpy.context.view_layer.update()
 me = ground.data
 weights = {k: me.attributes.new(f"density_{k}", "FLOAT", "POINT") for k in sources}
@@ -153,9 +152,19 @@ for i, v in enumerate(me.vertices):
     corridor = abs(x) < 0.9 and -9 < y < -1.3                          # keep the camera's way clear
     near = math.exp(-((d - 1.6) ** 2) / 2.0)                          # a ring round the boulder
     sides = math.exp(-((abs(x) - 1.5) ** 2) / 0.15) if -6.5 < y < -2.0 else 0.0  # foreground, inside the 35 mm view
-    weights["fern"].data[i].value = 0.0 if corridor else min(1.0, 0.4 + 0.6 * near + sides)
+    weights["fern"].data[i].value = 0.0 if corridor else min(1.0, 0.18 + 0.82 * near + sides)
     weights["sorrel"].data[i].value = 0.15 if corridor else 0.5 + 0.5 * near
     weights["rock"].data[i].value = 0.06 + 0.94 * math.exp(-(d ** 2) / 1.5)
+
+def sin(node, ident):
+    """A node input by identifier. Not needed for Random Value on 4.5 (inputs["Min"] already gives the socket of the
+    current data type: experiments/instancing/variant_sets.py), but it says exactly which socket is meant."""
+    return next(x for x in node.inputs if x.identifier == ident)
+
+
+def sout(node, ident):
+    return next(x for x in node.outputs if x.identifier == ident)
+
 
 ng = bpy.data.node_groups.new("Scatter", "GeometryNodeTree")
 ng.interface.new_socket(name="Geometry", in_out="INPUT", socket_type="NodeSocketGeometry")
@@ -164,8 +173,8 @@ N, L = ng.nodes, ng.links
 gi, go = N.new("NodeGroupInput"), N.new("NodeGroupOutput")
 join = N.new("GeometryNodeJoinGeometry")
 L.new(gi.outputs["Geometry"], join.inputs["Geometry"])                # keep the ground itself
-DENS = dict(fern=1.4, sorrel=2.0, rock=2.5)
-SCALE = dict(fern=(0.35, 0.7), sorrel=(1.5, 3.0), rock=(0.5, 1.4))
+DENS = dict(fern=1.0, sorrel=2.0, rock=2.5)
+SCALE = dict(fern=(1.4, 2.4), sorrel=(2.0, 4.0), rock=(0.5, 1.4))
 for seed, key in enumerate(sources):
     dist = N.new("GeometryNodeDistributePointsOnFaces")
     dist.inputs["Seed"].default_value = seed
@@ -178,25 +187,32 @@ for seed, key in enumerate(sources):
     L.new(w.outputs["Attribute"], mul.inputs[0])
     L.new(mul.outputs[0], dist.inputs["Density"])
     L.new(gi.outputs["Geometry"], dist.inputs["Mesh"])
-    info = N.new("GeometryNodeObjectInfo")
-    info.inputs["Object"].default_value = sources[key]
-    info.inputs["As Instance"].default_value = True
-    info.transform_space = "ORIGINAL"
+    col, nvar = sources[key]
+    info = N.new("GeometryNodeCollectionInfo")
+    info.inputs["Collection"].default_value = col
+    info.inputs["Separate Children"].default_value = True
+    info.inputs["Reset Children"].default_value = True
+    pick = N.new("FunctionNodeRandomValue")
+    pick.data_type = "INT"
+    sin(pick, "Min_002").default_value, sin(pick, "Max_002").default_value = 0, max(0, nvar - 1)   # the INT ones
+    pick.inputs["Seed"].default_value = seed + 30
     rz = N.new("FunctionNodeRandomValue")
     rz.data_type = "FLOAT"
-    rz.inputs["Max"].default_value = 2 * math.pi
+    sin(rz, "Max_001").default_value = 2 * math.pi                  # the FLOAT Max
     rz.inputs["Seed"].default_value = seed + 10
     comb = N.new("ShaderNodeCombineXYZ")
-    L.new(rz.outputs["Value"], comb.inputs["Z"])
+    L.new(sout(rz, "Value_001"), comb.inputs["Z"])
     rs = N.new("FunctionNodeRandomValue")
     rs.data_type = "FLOAT"
-    rs.inputs["Min"].default_value, rs.inputs["Max"].default_value = SCALE[key]
+    sin(rs, "Min_001").default_value, sin(rs, "Max_001").default_value = SCALE[key]
     rs.inputs["Seed"].default_value = seed + 20
     inst = N.new("GeometryNodeInstanceOnPoints")
     L.new(dist.outputs["Points"], inst.inputs["Points"])
-    L.new(info.outputs["Geometry"], inst.inputs["Instance"])
+    L.new(info.outputs["Instances"], inst.inputs["Instance"])
+    inst.inputs["Pick Instance"].default_value = True
+    L.new(sout(pick, "Value_002"), inst.inputs["Instance Index"])
     L.new(comb.outputs["Vector"], inst.inputs["Rotation"])
-    L.new(rs.outputs["Value"], inst.inputs["Scale"])
+    L.new(sout(rs, "Value_001"), inst.inputs["Scale"])
     L.new(inst.outputs["Instances"], join.inputs["Geometry"])
 L.new(join.outputs["Geometry"], go.inputs["Geometry"])
 gn = ground.modifiers.new("Scatter", "NODES")                         # after Undulate: points land on the bumps
@@ -362,6 +378,14 @@ tree.links.new(grain.outputs["Image"], comp.inputs["Image"])
 bpy.context.view_layer.update()
 dg = bpy.context.evaluated_depsgraph_get()
 report["instances"] = sum(1 for i in dg.object_instances if i.is_instance)
+scales = {}
+for i in dg.object_instances:                                         # check what the scatter really made
+    if i.is_instance and i.object.original.users_collection:
+        name = i.object.original.users_collection[0].name
+        sc = i.matrix_world.to_scale().z
+        lo, hi, n = scales.get(name, (9e9, -9e9, 0))
+        scales[name] = (min(lo, sc), max(hi, sc), n + 1)
+report["instance_scale"] = {k: (round(a, 2), round(b, 2), n) for k, (a, b, n) in scales.items()}
 report["objects"] = len(bpy.data.objects)
 os.makedirs(os.path.dirname(OUT), exist_ok=True)
 bpy.ops.wm.save_as_mainfile(filepath=OUT)
