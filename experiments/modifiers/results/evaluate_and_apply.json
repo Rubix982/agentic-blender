@@ -3,7 +3,7 @@
  "blender": "4.5.14 LTS",
  "machine": "Darwin arm64",
  "date": "2026-11-23",
- "seconds": 0.3,
+ "seconds": 0.31,
  "facts": [
   {
    "fact": "obj.evaluated_get(depsgraph).data is the evaluated mesh (modifiers applied); obj.data stays the base mesh",
@@ -16,14 +16,14 @@
    "fact": "evaluated.to_mesh() gives a temporary mesh not in bpy.data; release it with to_mesh_clear()",
    "verts": 7938,
    "in_bpy_data": false,
-   "ms": 0.04
+   "ms": 0.01
   },
   {
    "fact": "bpy.data.meshes.new_from_object(evaluated_obj) gives a real mesh datablock with modifiers applied (0 users until assigned)",
    "verts": 7938,
    "in_bpy_data": true,
    "users": 0,
-   "ms": 0.1
+   "ms": 0.03
   },
   {
    "fact": "new_from_object(original object) returns the BASE mesh without modifiers: pass the evaluated object",
@@ -52,7 +52,7 @@
    ],
    "error": null,
    "verts": 7938,
-   "ms": 27.77
+   "ms": 25.36
   },
   {
    "fact": "without an override, modifier_apply acts on the ACTIVE object, not the one you meant",
@@ -91,12 +91,29 @@
    "verts": 482
   },
   {
-   "fact": "applying a level-3 subsurf (31746 verts): new_from_object + swap 28 ms, modifier_apply 30 ms (depsgraph already evaluated for the first)",
-   "data_route_ms": 27.9,
-   "operator_ms": 30.3,
+   "fact": "new_from_object + swap on a multi-user mesh: works where modifier_apply refused",
+   "result": {
+    "verts": 7938,
+    "shape_keys": false,
+    "other_user_verts": 482
+   }
+  },
+  {
+   "fact": "new_from_object + swap on a shape keys: works where modifier_apply refused",
+   "result": {
+    "verts": 7938,
+    "shape_keys": false,
+    "other_user_verts": null
+   }
+  },
+  {
+   "fact": "applying a level-3 subsurf (31746 verts): new_from_object + swap 26 ms, modifier_apply 28 ms (depsgraph already evaluated for the first)",
+   "data_route_ms": 26.5,
+   "operator_ms": 27.7,
    "verts": 31746,
    "same": true
   }
  ],
- "data": {}
+ "data": {},
+ "args": []
 }

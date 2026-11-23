@@ -64,8 +64,8 @@ with open(path, "rb") as f:
     data = f.read()
 g = json.loads(data[20:20 + struct.unpack_from("<I", data, 12)[0]])
 mat = g["materials"][0]
-E.fact("after baking and rewiring, the GLB carries baseColorTexture and a metallicRoughnessTexture (the exporter packs "
-       "roughness into the green channel of a new image)",
+E.fact("after baking and rewiring, the GLB carries a baseColorTexture and a metallicRoughnessTexture, each an embedded "
+       "PNG made from the baked images (before baking, the procedural material exported neither)",
        material=mat, images=[(i.get("name"), i.get("mimeType")) for i in g.get("images", [])], glb_bytes=len(data))
 for f in ("basecolor.png", "roughness.png", "baked.glb"):
     if f != "basecolor.png":

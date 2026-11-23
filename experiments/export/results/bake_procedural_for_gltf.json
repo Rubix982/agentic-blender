@@ -3,7 +3,7 @@
  "blender": "4.5.14 LTS",
  "machine": "Darwin arm64",
  "date": "2026-11-23",
- "seconds": 1.13,
+ "seconds": 1.11,
  "facts": [
   {
    "fact": "DIFFUSE (pass_filter COLOR) and ROUGHNESS bakes of a procedural material into 256 px byte images",
@@ -19,7 +19,7 @@
    ]
   },
   {
-   "fact": "after baking and rewiring, the GLB carries baseColorTexture and a metallicRoughnessTexture (the exporter packs roughness into the green channel of a new image)",
+   "fact": "after baking and rewiring, the GLB carries a baseColorTexture and a metallicRoughnessTexture, each an embedded PNG made from the baked images (before baking, the procedural material exported neither)",
    "material": {
     "doubleSided": true,
     "name": "procedural",

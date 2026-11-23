@@ -102,6 +102,17 @@ except Exception as e:
     r, err = None, f"{type(e).__name__}: {str(e).strip()}"
 E.fact("modifier_apply on a mesh with shape keys", result=r, error=err, verts=len(ob9.data.vertices))
 
+# the data route on the two cases the operator refuses
+for label, obx in (("multi-user mesh", ob7), ("shape keys", ob9)):
+    dg = bpy.context.evaluated_depsgraph_get()
+    try:
+        nmx = bpy.data.meshes.new_from_object(obx.evaluated_get(dg))
+        obx.modifiers.clear(); obx.data = nmx
+        res = dict(verts=len(obx.data.vertices), shape_keys=obx.data.shape_keys is not None, other_user_verts=len(ob8.data.vertices) if label == "multi-user mesh" else None)
+    except Exception as e:
+        res = f"{type(e).__name__}: {e}"
+    E.fact(f"new_from_object + swap on a {label}: works where modifier_apply refused" if isinstance(res, dict) else f"new_from_object + swap on a {label} failed", result=res)
+
 # timing at size: new_from_object vs operator on a level-3 subsurf of a 32x16 sphere
 for lvl in (3,):
     a = sphere("tA", loc=(0, 5, 0)); a.modifiers["Sub"].levels = lvl

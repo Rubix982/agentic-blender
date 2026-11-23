@@ -11,7 +11,8 @@
   kb.py nodes [shader|geometry|compositor|texture] [TERM]   list node types
   kb.py py NAME                    a Python function or class (bmesh.ops.bevel, mathutils.geometry.delaunay_2d_cdt,
                                    bpy_extras.object_utils.world_to_camera_view) with its docstring
-  kb.py path STRUCT                how to reach a type from bpy.context or bpy.data (e.g. CyclesRenderSettings)
+  kb.py path STRUCT                how to reach a type from bpy.context or bpy.data (e.g. CyclesRenderSettings);
+                                   <T> marks a place that holds a more general type, where a T can be found
   kb.py enums                      enums whose values depend on the machine or file (engines, view transforms,
                                    colour spaces, GPU devices)
   kb.py factory [SECTION]          a fresh file's values (render, cycles, eevee, view_settings, ...)
@@ -104,9 +105,11 @@ def resolve_struct(name):
     if name in S:
         return S[name]
     low = name.lower()
-    for s in S.values():
-        if s["id"].lower() == low or s.get("alias", "").lower() == low or s["name"].lower() == low:
-            return s
+    for key in ("id", "alias", "name"):   # an identifier match wins over a display-name match
+        hits = [s for s in S.values() if (s.get(key) or "").lower() == low]
+        hits.sort(key=lambda s: (bool(s.get("ui")), "Node" in s["id"], len(s["id"])))
+        if hits:
+            return hits[0]
     cands = [s["id"] for s in S.values() if low in s["id"].lower() and not s.get("ui")]
     sys.exit(f"no type {name!r}" + (f"; close: {', '.join(sorted(cands)[:15])}" if cands else ""))
 
@@ -208,6 +211,8 @@ def cmd_op(args):
     name = args[0].removeprefix("bpy.ops.")
     ops = load("operators.jsonl.gz")
     hit = [o for o in ops if o["id"] == name or o.get("idname") == name or o.get("idname", "").lower() == name.lower()]
+    if not hit:
+        hit = [o for o in ops if o["id"].split(".", 1)[-1].lower() == name.lower()]
     if not hit:
         hit = [o for o in ops if name.lower() in o["id"].lower()]
         if len(hit) != 1:
@@ -392,6 +397,8 @@ def cmd_find(args):
         print(f"  {k:6s} {ident}" + (f"\n         {desc[:150]}" if desc else ""))
     if len(rows) > n:
         print(f"  ... {len(rows) - n} more (-n {len(rows)})")
+    if not rows:
+        print("  nothing matches all of: " + " ".join(terms) + "  (try fewer or shorter terms, or docs.py search)")
 
 
 def cmd_path(args):

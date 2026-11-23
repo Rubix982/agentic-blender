@@ -1,0 +1,78 @@
+{
+ "experiment": "experiments/rendering/animation_output.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.26,
+ "facts": [
+  {
+   "fact": "a new scene's frame range, fps and output path",
+   "frame_start": 1,
+   "frame_end": 250,
+   "fps": 24,
+   "filepath_default": "/tmp/",
+   "read": {
+    "fps": 24
+   }
+  },
+  {
+   "fact": "render(animation=True) names files from render.filepath: no '#' appends a 4-digit frame number; a run of '#' is replaced by the zero-padded frame number at that place; use_file_extension adds .png",
+   "results": {
+    "frame_": [
+     "frame_0001.png",
+     "frame_0002.png"
+    ],
+    "frame_###": [
+     "frame_001.png",
+     "frame_002.png"
+    ],
+    "f_##_v2": [
+     "f_01_v2.png",
+     "f_02_v2.png"
+    ],
+    "noext": [
+     "noext0001",
+     "noext0002"
+    ]
+   }
+  },
+  {
+   "fact": "FFMPEG output defaults: container MKV, codec H264, quality MEDIUM (constant_rate_factor)",
+   "format": "MKV",
+   "codec": "H264",
+   "crf": "MEDIUM",
+   "preset": "GOOD"
+  },
+  {
+   "fact": "with format MPEG4 + codec H264 a 10-frame range renders to one .mp4 named with the frame range (clip0001-0010.mp4)",
+   "files": [
+    "clip0001-0010.mp4"
+   ],
+   "bytes": [
+    2035
+   ],
+   "seconds": 0.05
+  }
+ ],
+ "data": {
+  "names": {
+   "frame_": [
+    "frame_0001.png",
+    "frame_0002.png"
+   ],
+   "frame_###": [
+    "frame_001.png",
+    "frame_002.png"
+   ],
+   "f_##_v2": [
+    "f_01_v2.png",
+    "f_02_v2.png"
+   ],
+   "noext": [
+    "noext0001",
+    "noext0002"
+   ]
+  }
+ },
+ "args": []
+}

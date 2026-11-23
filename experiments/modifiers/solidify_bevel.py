@@ -53,7 +53,7 @@ def wall(me):
 plain = wall(evm(c))
 s2.use_even_offset = True
 even = wall(evm(c))
-E.fact("on a box corner, Solidify's corner vertices move by thickness*sqrt(2) along the averaged normal without even thickness; use_even_offset keeps the walls at the set thickness",
+E.fact("on an open box with thickness 0.2, the inner corner vertex sits thickness/sqrt(3) = 0.1155 in from each wall without even thickness (it moves 0.2 along the corner's averaged normal); use_even_offset puts it the full 0.2 in",
        distinct_x_plain=plain, distinct_x_even=even)
 
 # --- Bevel on a cube
