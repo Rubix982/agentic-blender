@@ -226,3 +226,59 @@ Seen on the sheet, not measured. These are polish for the next shot, not failure
 - The moss barely reads at this distance.
 - The trees beyond the clearing are the HDRI, so they show no parallax as the camera moves.
 
+
+---
+
+### C-006 · What lowers flicker in a moving-camera shot on this laptop, and at what cost
+
+**Opened:** 2026-11-24 (night, unattended)
+
+1. **WHERE WE ARE.** C-005's forest shot measured 0.0076 of flicker before grain (each frame against the mean of its
+   neighbours, mean over pixels). That figure also contains the camera's motion. The competitions study (section 6)
+   reports four claims about flicker, none measured here:
+   - low-sample denoised animation flickers;
+   - a fixed seed helps only with a still camera;
+   - more samples did not cure it in one production (A-01);
+   - temporal denoising came from outside Blender.
+2. **WHAT WE ARE DOING.** Render frames 101–125 of the shot in seven variants with `experiments/animation/flicker.py`:
+   - baseline: 128 samples with OpenImageDenoise and a constant seed;
+   - an animated seed;
+   - no denoising;
+   - 141 % resolution at 64 samples, downscaled;
+   - 384 samples;
+   - the raw frames run through `bpy.ops.cycles.denoise_animation`;
+   - 1,024 samples as the floor.
+
+   Every variant's noise threshold scales with its samples. For each, measure seconds per frame, flicker (mean, 99th
+   percentile, and the foreground plants' quarter), detail (neighbouring-pixel difference) and the difference from
+   the baseline's frames.
+3. **WHY.** Three things are unknown now and will be known after:
+   - which of the study's fixes lowers flicker on this machine, by how much, and at what cost in time;
+   - how much of C-005's 0.0076 is noise rather than motion;
+   - whether `denoise_animation` does anything temporal here. It demands motion-vector passes, so it is built to be
+     temporal, but on a Mac it can only use OpenImageDenoise.
+4. **WHAT IS AFFECTED.**
+   - `areas/animation-video.md`: a flicker section saying which setting to use for a moving camera.
+   - `areas/realism.md`: the denoising and grain lines.
+   - C-005's flicker figure, which gets re-read as motion plus noise.
+   - The bar in the next shot's card.
+   - `kb/research/competitions-study.md` section 6: each claim gains a measured line for this machine.
+5. **CONCLUSION.** "Excess" means a variant's flicker minus the floor's (1,024 samples).
+   - **A fix that works.** If a variant at most 1.5x the baseline's time halves the baseline's excess, and keeps at
+     least 90 % of the floor's detail, the guide recommends it for moving shots. If none does, the guide says the only
+     cure measured here is samples, and gives the cost curve (128 / 384 / 1,024).
+   - **`denoise_animation`.** If its frames differ from the baseline's by less than a tenth of the baseline's excess,
+     it is per-frame denoising on this Mac and the guide says so. If its flicker is lower than the baseline's by at
+     least a quarter, it is a temporal cure available headless, and the study's "outside Blender" claim gets a
+     correction for 4.5.
+   - **C-005's figure.** If the floor's flicker is at least half the baseline's, C-005's 0.0076 was mostly motion, and
+     future bars are set as excess over a floor. If it is less than half, the figure was mostly noise and stands as a
+     flicker figure.
+6. **CONSEQUENCE OF NOT DOING IT.** The guide's animation page carries the study's flicker advice unmeasured, one source
+   of it says samples did not help, and every shot's flicker figure stays mixed with its motion.
+
+**Known limit, stated before the run:** the measure counts change between frames. Noise that stays fixed in the
+picture while the scene moves under it (the constant seed's "dirty lens") changes little from frame to frame and is
+undercounted, so the animated seed may score worse here than it looks.
+
+**Result:** —
