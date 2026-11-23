@@ -139,4 +139,11 @@ What an agent's memory most often gets wrong in 4.5, one line each; the page has
   another object's action does not move until its slot is set; shape-key animation is on the Key data-block.
   → `rigging-animation.md`
 
-<!-- compositing and export traps are added when those pages are final -->
+**Compositing and export**
+- In background mode `bpy.data.images["Render Result"]` has 0 pixels, `bpy` loads a multilayer EXR as size (0, 0), and
+  the Viewer node's image is a placeholder: save to files and read them back (OpenImageIO is bundled). → `compositing.md`
+- The compositor is still `scene.node_tree` (with `scene.use_nodes`) in 4.5. → `compositing.md`
+- `export_scene.obj` and `export_mesh.stl/ply` are gone (`wm.obj_export`, ...); glTF does not apply modifiers unless
+  `export_apply=True`, drops procedural textures (bake them first), and writes Specular IOR Level doubled. → `export-baking.md`
+- A Cycles bake with no image node selected returns CANCELLED silently. → `export-baking.md`
+- A failed render sets Blender's exit code to 1 even when the script catches the error. → `running.md`

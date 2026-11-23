@@ -1,0 +1,528 @@
+{
+ "experiment": "experiments/animation/video_codecs.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 2.85,
+ "facts": [
+  {
+   "fact": "a new scene's FFMPEG settings: container MKV, codec H264, quality MEDIUM, speed GOOD, keyframe interval 25, no audio",
+   "format": "MPEG1",
+   "codec": "NONE",
+   "crf": "NONE",
+   "preset": "GOOD",
+   "gopsize": 0,
+   "audio_codec": "NONE"
+  },
+  {
+   "fact": "which container/codec pairs wrote a 24-frame 128 px clip (bytes, seconds, frames read back by movieclips.load)",
+   "written": {
+    "MPEG4/H264": [
+     2938,
+     0.194,
+     24
+    ],
+    "MPEG4/H265": [
+     4583,
+     0.118,
+     24
+    ],
+    "MPEG4/AV1": [
+     2724,
+     0.158,
+     24
+    ],
+    "MPEG4/MPEG4": [
+     3078,
+     0.096,
+     24
+    ],
+    "MKV/H264": [
+     2757,
+     0.093,
+     24
+    ],
+    "MKV/FFV1": [
+     61560,
+     0.098,
+     24
+    ],
+    "MKV/AV1": [
+     12147,
+     0.152,
+     24
+    ],
+    "WEBM/WEBM": [
+     2820,
+     0.207,
+     24
+    ],
+    "WEBM/AV1": [
+     12073,
+     0.157,
+     24
+    ],
+    "QUICKTIME/PRORES": [
+     14551,
+     0.095,
+     24
+    ],
+    "QUICKTIME/QTRLE": [
+     48286,
+     0.095,
+     24
+    ],
+    "QUICKTIME/PNG": [
+     67359,
+     0.095,
+     24
+    ],
+    "QUICKTIME/H264": [
+     12308,
+     0.096,
+     24
+    ],
+    "OGG/THEORA": [
+     6651,
+     0.106,
+     24
+    ],
+    "AVI/HUFFYUV": [
+     409556,
+     0.092,
+     24
+    ],
+    "MPEG2/MPEG2": [
+     12288,
+     0.094,
+     19
+    ],
+    "MPEG1/MPEG1": [
+     6144,
+     0.093,
+     20
+    ],
+    "FLASH/FLASH": [
+     4785,
+     0.092,
+     24
+    ]
+   }
+  },
+  {
+   "fact": "which pairs wrote nothing, and the error render() raised",
+   "failed": {
+    "DV/DV": [
+     "RuntimeError: Error: Render width has to be 720 pixels for DV!",
+     "DV"
+    ]
+   }
+  },
+  {
+   "fact": "an .mp4 (MPEG4/H264) read back by bpy.data.movieclips.load has the rendered frame count (24) and size",
+   "frames": 24,
+   "size": [
+    128,
+    128
+   ],
+   "image_source": "MOVIE",
+   "image_frames": 24,
+   "name": [
+    "clip0001-0024.mp4"
+   ]
+  },
+  {
+   "fact": "H.264 at an odd frame size (127 x 127): what happens",
+   "render": "error",
+   "render_error": "RuntimeError: Error: width not divisible by 2 (127x127)",
+   "bytes": 0,
+   "size_read_back": null
+  },
+  {
+   "fact": "H.264 file size of the same 24-frame 128 px clip by constant_rate_factor (bytes)",
+   "sizes": {
+    "LOSSLESS": 13392,
+    "PERC_LOSSLESS": 4118,
+    "HIGH": 3235,
+    "MEDIUM": 2938,
+    "LOW": 2758,
+    "LOWEST": 2500
+   }
+  }
+ ],
+ "data": {
+  "pairs": {
+   "MPEG4/H264": {
+    "set_format": "ok",
+    "set_codec": "ok",
+    "codec_now": "H264",
+    "render": "{'FINISHED'}",
+    "render_error": null,
+    "files": [
+     "clip0001-0024.mp4"
+    ],
+    "seconds": 0.194,
+    "bytes": 2938,
+    "movieclip_frames": 24,
+    "movieclip_size": [
+     128,
+     128
+    ],
+    "image_source": "MOVIE",
+    "image_frames": 24
+   },
+   "MPEG4/H265": {
+    "set_format": "ok",
+    "set_codec": "ok",
+    "codec_now": "H265",
+    "render": "{'FINISHED'}",
+    "render_error": null,
+    "files": [
+     "clip0001-0024.mp4"
+    ],
+    "seconds": 0.118,
+    "bytes": 4583,
+    "movieclip_frames": 24,
+    "movieclip_size": [
+     128,
+     128
+    ],
+    "image_source": "MOVIE",
+    "image_frames": 24
+   },
+   "MPEG4/AV1": {
+    "set_format": "ok",
+    "set_codec": "ok",
+    "codec_now": "AV1",
+    "render": "{'FINISHED'}",
+    "render_error": null,
+    "files": [
+     "clip0001-0024.mp4"
+    ],
+    "seconds": 0.158,
+    "bytes": 2724,
+    "movieclip_frames": 24,
+    "movieclip_size": [
+     128,
+     128
+    ],
+    "image_source": "MOVIE",
+    "image_frames": 24
+   },
+   "MPEG4/MPEG4": {
+    "set_format": "ok",
+    "set_codec": "ok",
+    "codec_now": "MPEG4",
+    "render": "{'FINISHED'}",
+    "render_error": null,
+    "files": [
+     "clip0001-0024.mp4"
+    ],
+    "seconds": 0.096,
+    "bytes": 3078,
+    "movieclip_frames": 24,
+    "movieclip_size": [
+     128,
+     128
+    ],
+    "image_source": "MOVIE",
+    "image_frames": 24
+   },
+   "MKV/H264": {
+    "set_format": "ok",
+    "set_codec": "ok",
+    "codec_now": "H264",
+    "render": "{'FINISHED'}",
+    "render_error": null,
+    "files": [
+     "clip0001-0024.mkv"
+    ],
+    "seconds": 0.093,
+    "bytes": 2757,
+    "movieclip_frames": 24,
+    "movieclip_size": [
+     128,
+     128
+    ],
+    "image_source": "MOVIE",
+    "image_frames": 24
+   },
+   "MKV/FFV1": {
+    "set_format": "ok",
+    "set_codec": "ok",
+    "codec_now": "FFV1",
+    "render": "{'FINISHED'}",
+    "render_error": null,
+    "files": [
+     "clip0001-0024.mkv"
+    ],
+    "seconds": 0.098,
+    "bytes": 61560,
+    "movieclip_frames": 24,
+    "movieclip_size": [
+     128,
+     128
+    ],
+    "image_source": "MOVIE",
+    "image_frames": 24
+   },
+   "MKV/AV1": {
+    "set_format": "ok",
+    "set_codec": "ok",
+    "codec_now": "AV1",
+    "render": "{'FINISHED'}",
+    "render_error": null,
+    "files": [
+     "clip0001-0024.mkv"
+    ],
+    "seconds": 0.152,
+    "bytes": 12147,
+    "movieclip_frames": 24,
+    "movieclip_size": [
+     128,
+     128
+    ],
+    "image_source": "MOVIE",
+    "image_frames": 24
+   },
+   "WEBM/WEBM": {
+    "set_format": "ok",
+    "set_codec": "ok",
+    "codec_now": "WEBM",
+    "render": "{'FINISHED'}",
+    "render_error": null,
+    "files": [
+     "clip0001-0024.webm"
+    ],
+    "seconds": 0.207,
+    "bytes": 2820,
+    "movieclip_frames": 24,
+    "movieclip_size": [
+     128,
+     128
+    ],
+    "image_source": "MOVIE",
+    "image_frames": 24
+   },
+   "WEBM/AV1": {
+    "set_format": "ok",
+    "set_codec": "ok",
+    "codec_now": "AV1",
+    "render": "{'FINISHED'}",
+    "render_error": null,
+    "files": [
+     "clip0001-0024.webm"
+    ],
+    "seconds": 0.157,
+    "bytes": 12073,
+    "movieclip_frames": 24,
+    "movieclip_size": [
+     128,
+     128
+    ],
+    "image_source": "MOVIE",
+    "image_frames": 24
+   },
+   "QUICKTIME/PRORES": {
+    "set_format": "ok",
+    "set_codec": "ok",
+    "codec_now": "PRORES",
+    "render": "{'FINISHED'}",
+    "render_error": null,
+    "files": [
+     "clip0001-0024.mov"
+    ],
+    "seconds": 0.095,
+    "bytes": 14551,
+    "movieclip_frames": 24,
+    "movieclip_size": [
+     128,
+     128
+    ],
+    "image_source": "MOVIE",
+    "image_frames": 24
+   },
+   "QUICKTIME/QTRLE": {
+    "set_format": "ok",
+    "set_codec": "ok",
+    "codec_now": "QTRLE",
+    "render": "{'FINISHED'}",
+    "render_error": null,
+    "files": [
+     "clip0001-0024.mov"
+    ],
+    "seconds": 0.095,
+    "bytes": 48286,
+    "movieclip_frames": 24,
+    "movieclip_size": [
+     128,
+     128
+    ],
+    "image_source": "MOVIE",
+    "image_frames": 24
+   },
+   "QUICKTIME/PNG": {
+    "set_format": "ok",
+    "set_codec": "ok",
+    "codec_now": "PNG",
+    "render": "{'FINISHED'}",
+    "render_error": null,
+    "files": [
+     "clip0001-0024.mov"
+    ],
+    "seconds": 0.095,
+    "bytes": 67359,
+    "movieclip_frames": 24,
+    "movieclip_size": [
+     128,
+     128
+    ],
+    "image_source": "MOVIE",
+    "image_frames": 24
+   },
+   "QUICKTIME/H264": {
+    "set_format": "ok",
+    "set_codec": "ok",
+    "codec_now": "H264",
+    "render": "{'FINISHED'}",
+    "render_error": null,
+    "files": [
+     "clip0001-0024.mov"
+    ],
+    "seconds": 0.096,
+    "bytes": 12308,
+    "movieclip_frames": 24,
+    "movieclip_size": [
+     128,
+     128
+    ],
+    "image_source": "MOVIE",
+    "image_frames": 24
+   },
+   "OGG/THEORA": {
+    "set_format": "ok",
+    "set_codec": "ok",
+    "codec_now": "THEORA",
+    "render": "{'FINISHED'}",
+    "render_error": null,
+    "files": [
+     "clip0001-0024.ogv"
+    ],
+    "seconds": 0.106,
+    "bytes": 6651,
+    "movieclip_frames": 24,
+    "movieclip_size": [
+     128,
+     128
+    ],
+    "image_source": "MOVIE",
+    "image_frames": 24
+   },
+   "AVI/HUFFYUV": {
+    "set_format": "ok",
+    "set_codec": "ok",
+    "codec_now": "HUFFYUV",
+    "render": "{'FINISHED'}",
+    "render_error": null,
+    "files": [
+     "clip0001-0024.avi"
+    ],
+    "seconds": 0.092,
+    "bytes": 409556,
+    "movieclip_frames": 24,
+    "movieclip_size": [
+     128,
+     128
+    ],
+    "image_source": "MOVIE",
+    "image_frames": 24
+   },
+   "MPEG2/MPEG2": {
+    "set_format": "ok",
+    "set_codec": "ok",
+    "codec_now": "MPEG2",
+    "render": "{'FINISHED'}",
+    "render_error": null,
+    "files": [
+     "clip0001-0024.dvd"
+    ],
+    "seconds": 0.094,
+    "bytes": 12288,
+    "movieclip_frames": 19,
+    "movieclip_size": [
+     128,
+     128
+    ],
+    "image_source": "FILE",
+    "image_frames": 1
+   },
+   "MPEG1/MPEG1": {
+    "set_format": "ok",
+    "set_codec": "ok",
+    "codec_now": "MPEG1",
+    "render": "{'FINISHED'}",
+    "render_error": null,
+    "files": [
+     "clip0001-0024.mpg"
+    ],
+    "seconds": 0.093,
+    "bytes": 6144,
+    "movieclip_frames": 20,
+    "movieclip_size": [
+     128,
+     128
+    ],
+    "image_source": "MOVIE",
+    "image_frames": 20
+   },
+   "DV/DV": {
+    "set_format": "ok",
+    "set_codec": "ok",
+    "codec_now": "DV",
+    "render": "error",
+    "render_error": "RuntimeError: Error: Render width has to be 720 pixels for DV!",
+    "files": [],
+    "seconds": 0.0,
+    "bytes": 0
+   },
+   "FLASH/FLASH": {
+    "set_format": "ok",
+    "set_codec": "ok",
+    "codec_now": "FLASH",
+    "render": "{'FINISHED'}",
+    "render_error": null,
+    "files": [
+     "clip0001-0024.flv"
+    ],
+    "seconds": 0.092,
+    "bytes": 4785,
+    "movieclip_frames": 24,
+    "movieclip_size": [
+     128,
+     128
+    ],
+    "image_source": "MOVIE",
+    "image_frames": 24
+   }
+  },
+  "odd": {
+   "set_format": "ok",
+   "set_codec": "ok",
+   "codec_now": "H264",
+   "render": "error",
+   "render_error": "RuntimeError: Error: width not divisible by 2 (127x127)",
+   "files": [],
+   "seconds": 0.0,
+   "bytes": 0
+  },
+  "quality": {
+   "LOSSLESS": 13392,
+   "PERC_LOSSLESS": 4118,
+   "HIGH": 3235,
+   "MEDIUM": 2938,
+   "LOW": 2758,
+   "LOWEST": 2500
+  }
+ },
+ "args": []
+}

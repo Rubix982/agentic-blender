@@ -1,0 +1,18 @@
+{
+ "experiment": "experiments/running/caught_errors.py",
+ "blender": "Blender 4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "facts": [
+  {
+   "fact": "A failed render sets headless Blender's exit code to 1 even when the script catches the error and goes on; a later successful render clears it. Other caught operator errors (a poll failure) and caught Python errors leave it at 0. Exit codes with --python-exit-code 1 (0 = success), and the caught render error without the flag",
+   "nothing fails": 0,
+   "caught render error ('no camera'), script ends": 1,
+   "caught render error, then a successful operator": 1,
+   "caught render error, then a successful render": 0,
+   "caught poll failure, script ends": 0,
+   "caught Python error (not an operator)": 0,
+   "caught render error, no --python-exit-code": 1
+  }
+ ]
+}

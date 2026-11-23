@@ -8,7 +8,10 @@ real project, `[doc: link]` Blender's own documentation. Command-line reference:
 
 1. **A failed script reports success.** A script that raises leaves Blender's exit code at 0. Only
    `--python-exit-code 1` turns a Python error into a failed run. `sys.exit(N)` inside the script does end Blender with
-   code N. `[exp: experiments/running/cli_behaviour.py]`
+   code N. `[exp: experiments/running/cli_behaviour.py]` The other way round, a failed render ("Cannot render, no
+   camera") sets the exit code to 1 even when the script catches the error and goes on, with or without
+   `--python-exit-code`; a later successful render clears it. Caught poll failures and caught Python errors leave it at
+   0. So exit code 1 after a clean-looking log can mean a render failed earlier. `[exp: experiments/running/caught_errors.py]`
 2. **Nothing prints until the end.** Read through a pipe (a subprocess, a log, a tool call), a plain `print()` inside
    Blender is held until the script finishes: a line printed 3 s before the end arrived with the end.
    `PYTHONUNBUFFERED=1` does nothing, because Blender's Python ignores `PYTHON*` environment variables unless
