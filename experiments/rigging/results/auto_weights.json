@@ -1,0 +1,208 @@
+{
+ "experiment": "experiments/rigging/auto_weights.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.29,
+ "facts": [
+  {
+   "fact": "parent_set(type='ARMATURE_AUTO') works in background mode with the mesh selected and the armature active and selected: it adds one vertex group per deforming bone, an Armature modifier, and the parent",
+   "result": [
+    "FINISHED"
+   ],
+   "error": null,
+   "groups": [
+    "lower",
+    "upper"
+   ],
+   "unweighted_points": 0,
+   "points": 336,
+   "modifiers": [
+    [
+     "ARMATURE",
+     "Rig"
+    ]
+   ],
+   "parent": "Rig",
+   "parent_type": "OBJECT"
+  },
+  {
+   "fact": "posing the upper bone 90 degrees moves the evaluated mesh's top ring; the original mesh data does not move",
+   "top_before": [
+    -0.0,
+    0.0,
+    2.0
+   ],
+   "top_evaluated": [
+    -0.0,
+    -1.0,
+    1.0
+   ],
+   "top_original_data": [
+    -0.0,
+    0.0,
+    2.0
+   ]
+  },
+  {
+   "fact": "with nothing selected, a temp_override(active_object=rig, selected_editable_objects=[mesh, rig]) is enough for parent_set ARMATURE_AUTO",
+   "result": [
+    "FINISHED"
+   ],
+   "error": null,
+   "groups": [
+    "lower",
+    "upper"
+   ],
+   "unweighted_points": 0,
+   "points": 336,
+   "modifiers": [
+    [
+     "ARMATURE",
+     "Rig"
+    ]
+   ],
+   "parent": "Rig",
+   "parent_type": "OBJECT"
+  },
+  {
+   "fact": "with the armature active but the mesh not selected, parent_set does nothing to the mesh",
+   "result": [
+    "FINISHED"
+   ],
+   "error": null,
+   "groups": [],
+   "unweighted_points": 336,
+   "points": 336,
+   "modifiers": [],
+   "parent": null,
+   "parent_type": "OBJECT"
+  },
+  {
+   "fact": "automatic weights on the same tube and rig scaled to 0.01 (object scale, not applied)",
+   "result": [
+    "FINISHED"
+   ],
+   "error": null,
+   "groups": [
+    "lower",
+    "upper"
+   ],
+   "unweighted_points": 0,
+   "points": 336,
+   "modifiers": [
+    [
+     "ARMATURE",
+     "Rig"
+    ]
+   ],
+   "parent": "Rig",
+   "parent_type": "OBJECT"
+  },
+  {
+   "fact": "automatic weights on the same tube and rig scaled to 0.001 (object scale, not applied)",
+   "result": [
+    "FINISHED"
+   ],
+   "error": null,
+   "groups": [
+    "lower",
+    "upper"
+   ],
+   "unweighted_points": 0,
+   "points": 336,
+   "modifiers": [
+    [
+     "ARMATURE",
+     "Rig"
+    ]
+   ],
+   "parent": "Rig",
+   "parent_type": "OBJECT"
+  },
+  {
+   "fact": "automatic weights with a inner shell in the mesh (look for 'Bone Heat Weighting' in the log)",
+   "result": [
+    "FINISHED"
+   ],
+   "groups": [
+    "lower",
+    "upper"
+   ],
+   "unweighted_points": 0,
+   "points": 672,
+   "modifiers": [
+    [
+     "ARMATURE",
+     "Rig"
+    ]
+   ],
+   "parent": "Rig",
+   "parent_type": "OBJECT"
+  },
+  {
+   "fact": "automatic weights with a loose cube 3 m away in the mesh (look for 'Bone Heat Weighting' in the log)",
+   "result": [
+    "FINISHED"
+   ],
+   "groups": [
+    "lower",
+    "upper"
+   ],
+   "unweighted_points": 0,
+   "points": 344,
+   "modifiers": [
+    [
+     "ARMATURE",
+     "Rig"
+    ]
+   ],
+   "parent": "Rig",
+   "parent_type": "OBJECT"
+  },
+  {
+   "fact": "parent_set type ARMATURE_ENVELOPE",
+   "result": [
+    "FINISHED"
+   ],
+   "error": null,
+   "groups": [
+    "lower",
+    "upper"
+   ],
+   "unweighted_points": 0,
+   "points": 336,
+   "modifiers": [
+    [
+     "ARMATURE",
+     "Rig"
+    ]
+   ],
+   "parent": "Rig",
+   "parent_type": "OBJECT"
+  },
+  {
+   "fact": "parent_set type ARMATURE_NAME",
+   "result": [
+    "FINISHED"
+   ],
+   "error": null,
+   "groups": [
+    "lower",
+    "upper"
+   ],
+   "unweighted_points": 336,
+   "points": 336,
+   "modifiers": [
+    [
+     "ARMATURE",
+     "Rig"
+    ]
+   ],
+   "parent": "Rig",
+   "parent_type": "OBJECT"
+  }
+ ],
+ "data": {},
+ "args": []
+}

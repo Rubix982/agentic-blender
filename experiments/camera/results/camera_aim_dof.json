@@ -1,0 +1,63 @@
+{
+ "experiment": "experiments/camera/camera_aim_dof.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 1.01,
+ "facts": [
+  {
+   "fact": "a new Track To constraint defaults to track_axis TRACK_NEGATIVE_Z and up_axis UP_Y, which is right for cameras and lights (2.8+; older scripts set them by hand)",
+   "track_axis": "TRACK_NEGATIVE_Z",
+   "up_axis": "UP_Y"
+  },
+  {
+   "fact": "both put the target at the frame centre (0.5, 0.5) with the same camera up vector; the constraint's result is in matrix_world (after a view_layer.update()), while rotation_euler stays (0, 0, 0)",
+   "computed_ndc": [
+    0.5,
+    0.5
+   ],
+   "constraint_ndc": [
+    0.5,
+    0.5
+   ],
+   "up_dot": 1.0,
+   "constraint_rotation_euler": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "fact": "after moving the target, the constrained camera's matrix_world is stale until bpy.context.view_layer.update()",
+   "before_update_ndc": [
+    -0.053,
+    0.41
+   ],
+   "after_update_ndc": [
+    0.5,
+    0.5
+   ]
+  },
+  {
+   "fact": "to_track_quat('Z', 'Y') points the camera away from the target: its depth is negative",
+   "depth": -10.874
+  },
+  {
+   "fact": "with camera.data.dof.use_dof and f/1.4, the card at the focus stays sharp and the other blurs (edge width in px, 10-90 %, [near card at 2 m, far card at 6 m]); focus_object overrides focus_distance",
+   "dof_off": [
+    0,
+    0
+   ],
+   "focus_near": [
+    0,
+    0
+   ],
+   "focus_far_distance_6": [
+    0,
+    0
+   ]
+  }
+ ],
+ "data": {},
+ "args": []
+}

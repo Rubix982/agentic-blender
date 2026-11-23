@@ -1,0 +1,146 @@
+{
+ "experiment": "experiments/rigging/actions_slotted.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.14,
+ "facts": [
+  {
+   "fact": "keyframe_insert makes a layered action with one slot, one layer and one keyframe strip",
+   "action": "CubeAction",
+   "is_layered": true,
+   "is_legacy": false,
+   "slots": [
+    [
+     "OBCube",
+     "Cube",
+     "OBJECT"
+    ]
+   ],
+   "assigned_slot": "OBCube",
+   "layers": 1,
+   "strips": [
+    "KEYFRAME"
+   ]
+  },
+  {
+   "fact": "the F-curves live in the strip's channelbag for the slot: strip.channelbag(slot).fcurves",
+   "fcurves": [
+    [
+     "location",
+     0
+    ],
+    [
+     "location",
+     1
+    ],
+    [
+     "location",
+     2
+    ]
+   ],
+   "groups": [
+    "Object Transforms"
+   ]
+  },
+  {
+   "fact": "action.fcurves still works in 4.5 on a one-slot action (it reads the first slot's channelbag)",
+   "result": [
+    "ok",
+    [
+     [
+      "location",
+      0
+     ],
+     [
+      "location",
+      1
+     ],
+     [
+      "location",
+      2
+     ]
+    ]
+   ]
+  },
+  {
+   "fact": "an F-curve evaluates at any frame without changing the scene; new keys are BEZIER by default",
+   "y_at_6": 1.0,
+   "interpolation": "BEZIER",
+   "pref_default": "BEZIER"
+  },
+  {
+   "fact": "frame_set applies the action to the object",
+   "location_at_6": [
+    0.5,
+    1.0,
+    1.5
+   ]
+  },
+  {
+   "fact": "bpy_extras.anim_utils has the channelbag helpers",
+   "get_helper": [
+    "ok",
+    true
+   ],
+   "ensure_helper": [
+    "ok",
+    false
+   ]
+  },
+  {
+   "fact": "action.fcurves.new() on a new, empty action in 4.5",
+   "result": [
+    "ok",
+    "location"
+   ],
+   "layers_after": 1,
+   "slots_after": [
+    "XXLegacy Slot"
+   ],
+   "is_layered": true,
+   "is_legacy": false
+  },
+  {
+   "fact": "an action built by hand (slots.new, layers.new, strips.new, channelbag(slot, ensure=True), fcurves.new) drives the object once assigned; assigning the action picks its slot automatically when there is one",
+   "slot_identifier": "OBCube",
+   "auto_assigned_slot": "OBCube",
+   "z_at_25": 5.0
+  },
+  {
+   "fact": "assigning A's action to B: which slot B gets, and whether B moves",
+   "slots": [
+    "OBA"
+   ],
+   "B_slot": null,
+   "B_suitable": [
+    "OBA"
+   ],
+   "B_location": [
+    3.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "fact": "keying B afterwards adds a second slot to the shared action",
+   "slots": [
+    "OBA",
+    "OBB"
+   ],
+   "B_slot": "OBB",
+   "legacy_fcurves": [
+    "ok",
+    3
+   ]
+  },
+  {
+   "fact": "1,000 keys: a keyframe_insert loop against keyframe_points.add + foreach_set('co') + update()",
+   "insert_loop_s": 0.022,
+   "bulk_s": 0.0002,
+   "bulk_value_at_500": 4.99
+  }
+ ],
+ "data": {},
+ "args": []
+}

@@ -5,7 +5,7 @@ marked with that version. Every fact carries its evidence, as one of four tags:
 
 | Tag | Meaning | Where it comes from |
 |---|---|---|
-| `[inv]` | read from Blender itself: a type, property, default, range, enum, operator or node socket | `tools/inventory.py`, run headless; the output is `kb/inventory/` and `skills/blender/scripts/kb.py` searches it |
+| `[inv]` | read from Blender itself: a type, property, default, range, enum, operator or node socket | `skills/blender/scripts/inventory.py`, run headless; the output is `skills/blender/inventory/` and `skills/blender/scripts/kb.py` searches it |
 | `[exp: path]` | measured here, by a script anyone can run again | `experiments/<area>/<name>.py`, result in `experiments/<area>/results/<name>.json` |
 | `[lesson]` | learned on a real project, with what was measured there | `kb/lessons/`; the projects are described, not named |
 | `[doc: link]` | from Blender's manual or Python reference for 4.5 | `docs.blender.org/manual/en/4.5/`, `docs.blender.org/api/4.5/` (local copies in `docs-local/`, not committed) |

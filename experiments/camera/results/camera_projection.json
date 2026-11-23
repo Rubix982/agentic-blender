@@ -1,0 +1,308 @@
+{
+ "experiment": "experiments/camera/camera_projection.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.24,
+ "facts": [
+  {
+   "fact": "a new camera: lens 50 mm, sensor 36 mm wide (24 tall), sensor_fit AUTO, clip 0.1 to 1000 m, perspective, ortho_scale 6, depth of field off at f/2.8",
+   "lens": 50.0,
+   "sensor_width": 36.0,
+   "sensor_height": 24.0,
+   "sensor_fit": "AUTO",
+   "clip_start": 0.10000000149011612,
+   "clip_end": 1000.0,
+   "type": "PERSP",
+   "ortho_scale": 6.0,
+   "lens_unit": "MILLIMETERS",
+   "dof_use": false,
+   "fstop": 2.799999952316284
+  },
+  {
+   "fact": "world_to_camera_view(scene, cam, point) returns (x, y, depth) with x, y in 0..1 from the bottom-left of the frame; pixel = (x * W, (1 - y) * H) lands within 1 px of the rendered position for every case: aspect, sensor_fit, lens, shift, resolution_percentage, orthographic",
+   "rows": [
+    {
+     "case": "landscape 320x200, 50 mm",
+     "rendered_px": [
+      226.6,
+      68.9
+     ],
+     "predicted_px": [
+      226.7,
+      68.9
+     ],
+     "err_px": 0.09,
+     "ndc": [
+      0.7083,
+      0.6556,
+      10.0
+     ]
+    },
+    {
+     "case": "portrait 200x320, 50 mm, AUTO fit",
+     "rendered_px": [
+      166.6,
+      128.8
+     ],
+     "predicted_px": [
+      166.7,
+      128.9
+     ],
+     "err_px": 0.12,
+     "ndc": [
+      0.8333,
+      0.5972,
+      10.0
+     ]
+    },
+    {
+     "case": "portrait 200x320, sensor_fit HORIZONTAL",
+     "rendered_px": [
+      142.0,
+      140.6
+     ],
+     "predicted_px": [
+      141.7,
+      140.6
+     ],
+     "err_px": 0.31,
+     "ndc": [
+      0.7083,
+      0.5608,
+      10.0
+     ]
+    },
+    {
+     "case": "landscape, 25 mm",
+     "rendered_px": [
+      193.5,
+      84.5
+     ],
+     "predicted_px": [
+      193.3,
+      84.4
+     ],
+     "err_px": 0.18,
+     "ndc": [
+      0.6042,
+      0.5778,
+      10.0
+     ]
+    },
+    {
+     "case": "landscape, shift_x 0.1, shift_y -0.05",
+     "rendered_px": [
+      194.6,
+      52.9
+     ],
+     "predicted_px": [
+      194.7,
+      52.9
+     ],
+     "err_px": 0.09,
+     "ndc": [
+      0.6083,
+      0.7356,
+      10.0
+     ]
+    },
+    {
+     "case": "landscape, resolution_percentage 50",
+     "rendered_px": [
+      113.5,
+      34.5
+     ],
+     "predicted_px": [
+      113.3,
+      34.4
+     ],
+     "err_px": 0.18,
+     "ndc": [
+      0.7083,
+      0.6556,
+      10.0
+     ]
+    },
+    {
+     "case": "orthographic, ortho_scale 6",
+     "rendered_px": [
+      240.0,
+      62.6
+     ],
+     "predicted_px": [
+      240.0,
+      62.7
+     ],
+     "err_px": 0.03,
+     "ndc": [
+      0.75,
+      0.6867,
+      10.0
+     ]
+    }
+   ],
+   "max_err_px": 0.31
+  },
+  {
+   "fact": "camera.angle (= angle_x for AUTO fit) is 2*atan(sensor_width / 2 / lens): 39.6 degrees at 50 mm on a 36 mm sensor",
+   "angle_deg": 39.598,
+   "angle_x_deg": 39.598,
+   "formula_deg": 39.598
+  },
+  {
+   "fact": "for an orthographic camera, ortho_scale is the frame's extent in metres along the longer side: a point 3 m right of centre with ortho_scale 6 sits at x = 1.0",
+   "x": 1.0
+  },
+  {
+   "fact": "bpy.ops.view3d.camera_to_view_selected runs in background mode without a 3D viewport: it moves the active camera (keeping its rotation) so the selected objects fill the frame",
+   "result": "{'FINISHED'}",
+   "cam_before": [
+    0.0,
+    -10.0,
+    0.0
+   ],
+   "cam_after": [
+    1.5,
+    -0.364,
+    0.7
+   ],
+   "ball_ndc": [
+    0.5,
+    0.5
+   ],
+   "bbox_x_range": [
+    0.109,
+    0.891
+   ],
+   "bbox_y_range": [
+    -0.125,
+    1.125
+   ]
+  }
+ ],
+ "data": {
+  "rows": [
+   {
+    "case": "landscape 320x200, 50 mm",
+    "rendered_px": [
+     226.6,
+     68.9
+    ],
+    "predicted_px": [
+     226.7,
+     68.9
+    ],
+    "err_px": 0.09,
+    "ndc": [
+     0.7083,
+     0.6556,
+     10.0
+    ]
+   },
+   {
+    "case": "portrait 200x320, 50 mm, AUTO fit",
+    "rendered_px": [
+     166.6,
+     128.8
+    ],
+    "predicted_px": [
+     166.7,
+     128.9
+    ],
+    "err_px": 0.12,
+    "ndc": [
+     0.8333,
+     0.5972,
+     10.0
+    ]
+   },
+   {
+    "case": "portrait 200x320, sensor_fit HORIZONTAL",
+    "rendered_px": [
+     142.0,
+     140.6
+    ],
+    "predicted_px": [
+     141.7,
+     140.6
+    ],
+    "err_px": 0.31,
+    "ndc": [
+     0.7083,
+     0.5608,
+     10.0
+    ]
+   },
+   {
+    "case": "landscape, 25 mm",
+    "rendered_px": [
+     193.5,
+     84.5
+    ],
+    "predicted_px": [
+     193.3,
+     84.4
+    ],
+    "err_px": 0.18,
+    "ndc": [
+     0.6042,
+     0.5778,
+     10.0
+    ]
+   },
+   {
+    "case": "landscape, shift_x 0.1, shift_y -0.05",
+    "rendered_px": [
+     194.6,
+     52.9
+    ],
+    "predicted_px": [
+     194.7,
+     52.9
+    ],
+    "err_px": 0.09,
+    "ndc": [
+     0.6083,
+     0.7356,
+     10.0
+    ]
+   },
+   {
+    "case": "landscape, resolution_percentage 50",
+    "rendered_px": [
+     113.5,
+     34.5
+    ],
+    "predicted_px": [
+     113.3,
+     34.4
+    ],
+    "err_px": 0.18,
+    "ndc": [
+     0.7083,
+     0.6556,
+     10.0
+    ]
+   },
+   {
+    "case": "orthographic, ortho_scale 6",
+    "rendered_px": [
+     240.0,
+     62.6
+    ],
+    "predicted_px": [
+     240.0,
+     62.7
+    ],
+    "err_px": 0.03,
+    "ndc": [
+     0.75,
+     0.6867,
+     10.0
+    ]
+   }
+  ]
+ },
+ "args": []
+}

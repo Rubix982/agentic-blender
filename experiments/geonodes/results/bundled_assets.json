@@ -1,0 +1,89 @@
+{
+ "experiment": "experiments/geonodes/bundled_assets.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.25,
+ "facts": [
+  {
+   "fact": "the bundled geometry-node asset files in 4.5",
+   "dir": "datafiles/assets/geometry_nodes",
+   "files": [
+    "procedural_hair_node_assets.blend",
+    "smooth_by_angle.blend"
+   ]
+  },
+  {
+   "fact": "node groups marked as assets in each file",
+   "groups": {
+    "procedural_hair_node_assets.blend": 26,
+    "smooth_by_angle.blend": 1
+   },
+   "names": {
+    "procedural_hair_node_assets.blend": [
+     "Trim Hair Curves",
+     "Straighten Hair Curves",
+     "Smooth Hair Curves",
+     "Shrinkwrap Hair Curves",
+     "Set Hair Curve Profile",
+     "Rotate Hair Curves",
+     "Roll Hair Curves",
+     "Restore Curve Segment Length",
+     "Redistribute Curve Points",
+     "Interpolate Hair Curves",
+     "Hair Curves Noise",
+     "Hair Attachment Info",
+     "Generate Hair Curves",
+     "Frizz Hair Curves",
+     "Duplicate Hair Curves",
+     "Displace Hair Curves",
+     "Curve Tip",
+     "Curve Segment",
+     "Curve Root",
+     "Curve Info",
+     "Curl Hair Curves",
+     "Create Guide Index Map",
+     "Clump Hair Curves",
+     "Braid Hair Curves",
+     "Blend Hair Curves",
+     "Attach Hair Curves to Surface"
+    ],
+    "smooth_by_angle.blend": [
+     "Smooth by Angle"
+    ]
+   }
+  },
+  {
+   "fact": "appending all asset node groups from procedural_hair_node_assets.blend brings in their dependencies too",
+   "node_groups_in_file": 27,
+   "by_type": {
+    "GeometryNodeTree": 27
+   },
+   "asset_marked": 26,
+   "modifier_groups": 21,
+   "tool_groups": 0
+  },
+  {
+   "fact": "linking (link=True) gives a library node group that cannot be edited but can be assigned to a modifier",
+   "library": "smooth_by_angle.blend",
+   "is_editable": false,
+   "libraries": [
+    "smooth_by_angle.blend"
+   ]
+  },
+  {
+   "fact": "the linked Smooth by Angle evaluates (default 30 deg) on a 32-sided cylinder: 64 rim edges sharp",
+   "sharp_edges": 64
+  },
+  {
+   "fact": "bpy.ops.object.modifier_add_node_group (asset operator) in -b mode",
+   "result": [
+    "CANCELLED"
+   ],
+   "modifiers": [
+    "Smooth by Angle"
+   ]
+  }
+ ],
+ "data": {}
+}

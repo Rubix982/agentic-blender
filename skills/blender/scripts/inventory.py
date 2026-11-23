@@ -1,6 +1,6 @@
-"""Read everything Blender says about itself, and write it to skills/blender/inventory/.
+"""Read everything Blender says about itself, and write it to the inventory folder next to this one.
 
-  python3 tools/run.py tools/inventory.py
+  python3 scripts/run.py scripts/inventory.py        (from the skill's folder; takes about 2 s)
 
 Runs inside Blender (headless, factory settings). Writes, one JSON object per line, gzipped:
   structs.jsonl.gz   every RNA type in bpy.types: base, description, properties (type, subtype, unit, default,
@@ -31,8 +31,7 @@ import addon_utils
 import bpy
 
 T0 = time.time()
-ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
-OUT = os.path.join(ROOT, "skills", "blender", "inventory")
+OUT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "inventory"))   # skills/blender/inventory
 os.makedirs(OUT, exist_ok=True)
 
 
@@ -459,9 +458,9 @@ def scrub(text):
 
 
 def dump(name, rows):
-    with gzip.open(os.path.join(OUT, name), "wt", encoding="utf-8") as f:
-        for r in rows:
-            f.write(scrub(json.dumps(r, ensure_ascii=False, separators=(",", ":"))) + "\n")
+    text = "".join(scrub(json.dumps(r, ensure_ascii=False, separators=(",", ":"))) + "\n" for r in rows)
+    with open(os.path.join(OUT, name), "wb") as f:   # mtime=0: the same inventory gives the same bytes
+        f.write(gzip.compress(text.encode("utf-8"), mtime=0))
 
 
 dump("structs.jsonl.gz", structs)

@@ -1,0 +1,69 @@
+{
+ "experiment": "experiments/geonodes/repeat_zone.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.06,
+ "facts": [
+  {
+   "fact": "a repeat zone is two nodes, GeometryNodeRepeatInput and GeometryNodeRepeatOutput, joined by repeat_input.pair_with_output(repeat_output)",
+   "paired_before": null,
+   "pair_returned": true,
+   "paired_after": "Repeat Output",
+   "default_items": [
+    [
+     "Geometry",
+     "GEOMETRY"
+    ]
+   ]
+  },
+  {
+   "fact": "repeat_items.new(socket_type, name) on the OUTPUT node adds a state item that appears on both nodes",
+   "items": [
+    [
+     "Geometry",
+     "GEOMETRY"
+    ],
+    [
+     "Count",
+     "FLOAT"
+    ]
+   ],
+   "input_sockets": [
+    "Iterations",
+    "Geometry",
+    "Count",
+    ""
+   ],
+   "output_sockets": [
+    "Iteration",
+    "Geometry",
+    "Count",
+    ""
+   ]
+  },
+  {
+   "fact": "links valid",
+   "invalid": []
+  },
+  {
+   "fact": "subdividing a cube N times in a repeat zone gives 6*4^N faces and the float state item counts N",
+   "by_iterations": {
+    "0": {
+     "faces": 6,
+     "count": 0.0
+    },
+    "1": {
+     "faces": 24,
+     "count": 1.0
+    },
+    "3": {
+     "faces": 384,
+     "count": 3.0
+    }
+   }
+  }
+ ],
+ "data": {},
+ "args": []
+}

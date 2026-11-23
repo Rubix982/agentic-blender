@@ -72,6 +72,8 @@ try:
         bpy.ops.object.mode_set(mode="OBJECT")
 except Exception as e:
     r3, m3, err = None, None, str(e).strip().splitlines()[0]
-E.fact("mode_set on an armature that is not the active object, through temp_override(active_object=...)",
+E.fact("temp_override(active_object=other) does not redirect object.mode_set in background mode: it reported FINISHED, "
+       "the overridden armature stayed in OBJECT mode and no bone could be made on it, and the view layer's real active "
+       "armature was left in EDIT mode; set view_layer.objects.active instead",
        result=r3, mode_inside=m3, error=err, bones_made=[b.name for b in arm2.bones], rig_mode=rig.mode)
 E.save()

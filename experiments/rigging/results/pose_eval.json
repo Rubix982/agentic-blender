@@ -1,0 +1,85 @@
+{
+ "experiment": "experiments/rigging/pose_eval.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.19,
+ "facts": [
+  {
+   "fact": "a pose bone's rotation_mode is QUATERNION by default, so setting rotation_euler alone does not turn it; switching rotation_mode to 'XYZ' converts the current rotation (identity) and overwrites the euler set before, so the euler must be set after the mode",
+   "default_mode": "QUATERNION",
+   "upper_tail_with_quaternion_mode": [
+    0.0,
+    0.0,
+    2.0
+   ],
+   "euler_after_mode_switch": [
+    0.0,
+    -0.0,
+    0.0
+   ],
+   "upper_tail_after_switch": [
+    0.0,
+    0.0,
+    2.0
+   ],
+   "upper_tail_euler_set_after_switch": [
+    0.0,
+    -2.0,
+    -0.0
+   ]
+  },
+  {
+   "fact": "after setting a pose bone's rotation, pose_bone.tail/matrix still read the old pose until the depsgraph is evaluated: view_layer.update() or context.evaluated_depsgraph_get() both bring them up to date",
+   "before_update": [
+    0.0,
+    0.0,
+    2.0
+   ],
+   "after_evaluated_depsgraph_get": [
+    0.0,
+    -2.0,
+    -0.0
+   ],
+   "after_view_layer_update": [
+    0.0,
+    -2.0,
+    -0.0
+   ]
+  },
+  {
+   "fact": "setting pose_bone.matrix on a parent and then its child: the child lands where asked only if the depsgraph is updated between the two",
+   "error_without_update": 0.7071,
+   "error_with_update": 0.0
+  },
+  {
+   "fact": "an IK constraint added from Python solves in background mode: the chain's tip reaches a reachable target",
+   "tip": [
+    -0.0,
+    1.2,
+    1.2
+   ],
+   "target": [
+    0.0,
+    1.2000000476837158,
+    1.2000000476837158
+   ],
+   "miss_m": 0.0
+  },
+  {
+   "fact": "pose_bone.head/tail are in armature (object) space: an armature moved 5 m along X still reports x = 0; multiply by the object's matrix_world for world space",
+   "pose_head": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "world_head": [
+    5.0,
+    0.0,
+    1.0
+   ]
+  }
+ ],
+ "data": {},
+ "args": []
+}

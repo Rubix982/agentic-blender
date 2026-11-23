@@ -120,6 +120,33 @@ for sc_ in (0.01, 0.001):
     E.fact(f"automatic weights on the same tube and rig scaled to {sc_} (object scale, not applied)",
            result=res, error=err, **summary(m))
 
+# a doubled shell (a second copy of the surface 4 mm inside the first), and a loose piece far from every bone
+def doubled(kind):
+    exp.empty()
+    m = tube(); r = rig()
+    me = m.data
+    bm = bmesh.new(); bm.from_mesh(me)
+    if kind == "inner shell":
+        geom = bmesh.ops.duplicate(bm, geom=bm.verts[:] + bm.edges[:] + bm.faces[:])["geom"]
+        for v in [g for g in geom if isinstance(g, bmesh.types.BMVert)]:
+            v.co.x *= 0.96; v.co.y *= 0.96
+    else:
+        res = bmesh.ops.create_cube(bm, size=0.2)
+        for v in res["verts"]:
+            v.co.x += 3.0
+    bm.to_mesh(me); bm.free()
+    bpy.ops.object.select_all(action="DESELECT")
+    m.select_set(True); r.select_set(True)
+    bpy.context.view_layer.objects.active = r
+    res = list(bpy.ops.object.parent_set(type="ARMATURE_AUTO"))
+    return res, summary(m)
+
+
+for kind in ("inner shell", "loose cube 3 m away"):
+    res, s_ = doubled(kind)
+    print("HEATCASE", kind, flush=True)
+    E.fact(f"automatic weights with a {kind} in the mesh (look for 'Bone Heat Weighting' in the log)", result=res, **s_)
+
 # envelope and empty groups
 for kind in ("ARMATURE_ENVELOPE", "ARMATURE_NAME"):
     m, r, res, err = run_select(kind=kind)

@@ -13,7 +13,7 @@ E = exp.Experiment(__file__)
 N = 80
 
 
-def build(margin=None, own_collections=False, shape="CONVEX_HULL"):
+def build(margin=None, own_collections=False, shape="CONVEX_HULL", jerk=False):
     exp.empty()
     sc = bpy.context.scene
     sc.frame_start, sc.frame_end = 1, N
@@ -24,10 +24,15 @@ def build(margin=None, own_collections=False, shape="CONVEX_HULL"):
     bpy.ops.rigidbody.object_add(type="PASSIVE")
     anchor.rigid_body.kinematic = True        # "Animated": follows its keyframes
     anchor.keyframe_insert("location", frame=1)
-    anchor.location.x = 0.10
-    anchor.keyframe_insert("location", frame=20)
-    anchor.location.x = 0.0
-    anchor.keyframe_insert("location", frame=40)
+    if jerk:     # shaken: +-5 cm every 3 frames, like a point riding a walking garment, only harsher
+        for k, f in enumerate(range(4, 61, 3)):
+            anchor.location.x = 0.05 if k % 2 == 0 else -0.05
+            anchor.keyframe_insert("location", frame=f)
+    else:
+        anchor.location.x = 0.10
+        anchor.keyframe_insert("location", frame=20)
+        anchor.location.x = 0.0
+        anchor.keyframe_insert("location", frame=40)
     pieces, top = [], 1.0 - 0.005
     for k in range(4):
         L = 0.025 if k < 3 else 0.05
@@ -61,8 +66,8 @@ def build(margin=None, own_collections=False, shape="CONVEX_HULL"):
     return sc, anchor, pieces, joints
 
 
-def swing(margin=None, own_collections=False, shape="CONVEX_HULL"):
-    sc, anchor, pieces, joints = build(margin, own_collections, shape)
+def swing(margin=None, own_collections=False, shape="CONVEX_HULL", jerk=False):
+    sc, anchor, pieces, joints = build(margin, own_collections, shape, jerk)
     angles, rise = [], 0.0
     z0 = pieces[-1].matrix_world.translation.z
     for f in range(1, N + 1):
@@ -74,19 +79,22 @@ def swing(margin=None, own_collections=False, shape="CONVEX_HULL"):
             angles.append(math.degrees(math.atan2(math.hypot(d[0], d[1]), -d[2])))
         rise = max(rise, t[2] - z0)
     return dict(margin=margin if margin is not None else "default 0.04 (use_margin off)", own_collections=own_collections,
-                shape=shape, disable_collisions=joints[0].disable_collisions,
+                shape=shape, jerk=jerk, disable_collisions=joints[0].disable_collisions,
                 swing_p50_deg=round(float(np.percentile(angles, 50)), 1), swing_p95_deg=round(float(np.percentile(angles, 95)), 1),
                 swing_max_deg=round(float(max(angles)), 1), tassel_rise_m=round(float(rise), 4))
 
 
 rows = []
-for args in ((None, False), (0.001, False), (None, True), (0.001, True), (None, False, "MESH"), (0.001, False, "MESH")):
+for args in ((None, False), (0.001, False), (None, True), (0.001, True), (None, False, "MESH"), (0.001, False, "MESH"),
+             (None, False, "CONVEX_HULL", True), (0.001, False, "CONVEX_HULL", True), (0.001, True, "CONVEX_HULL", True),
+             (None, False, "MESH", True)):
     rows.append(swing(*args))
     print("CHAIN", rows[-1], flush=True)
 E.fact("a POINT constraint's disable_collisions is on by default: the two bodies it joins never collide with each other",
        disable_collisions=rows[0]["disable_collisions"])
 E.fact("a hanging chain of 2.5-5 cm convex-hull pieces swung by its anchor: the swing (degrees from straight down) at "
-       "the default margin, a 1 mm margin, each piece in its own collision collection, and both; and with MESH shapes",
-       rows=[(r["shape"], r["margin"], r["own_collections"], r["swing_p50_deg"], r["swing_p95_deg"], r["swing_max_deg"],
+       "the default margin, a 1 mm margin, each piece in its own collision collection, and both; with MESH shapes; "
+       "gently swung (10 cm over 19 frames) and shaken (+-5 cm every 3 frames). Neither a 1 mm margin nor separate collision collections calms it",
+       rows=[(r["shape"], r["jerk"], r["margin"], r["own_collections"], r["swing_p50_deg"], r["swing_p95_deg"], r["swing_max_deg"],
               r["tassel_rise_m"]) for r in rows])
 E.save(rows=rows)

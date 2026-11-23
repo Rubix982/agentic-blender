@@ -25,7 +25,7 @@ def tail_world(r, name):
     return np.round(np.array(r.matrix_world @ r.pose.bones[name].tail), 4).tolist()
 
 
-# 1. rotation_euler on a QUATERNION bone does nothing
+# 1. rotation_euler on a QUATERNION bone does nothing; switching the mode converts (and overwrites) the rotation
 r = rig()
 pb = r.pose.bones["lower"]
 mode = pb.rotation_mode
@@ -33,11 +33,17 @@ pb.rotation_euler = (math.radians(90), 0, 0)
 bpy.context.view_layer.update()
 t_euler_ignored = tail_world(r, "upper")
 pb.rotation_mode = "XYZ"
+euler_after_switch = [round(x, 4) for x in pb.rotation_euler]
+bpy.context.view_layer.update()
+t_after_switch = tail_world(r, "upper")
+pb.rotation_euler = (math.radians(90), 0, 0)
 bpy.context.view_layer.update()
 t_euler_used = tail_world(r, "upper")
 E.fact("a pose bone's rotation_mode is QUATERNION by default, so setting rotation_euler alone does not turn it; "
-       "after rotation_mode = 'XYZ' the same euler takes effect",
-       default_mode=mode, upper_tail_with_quaternion_mode=t_euler_ignored, upper_tail_after_XYZ=t_euler_used)
+       "switching rotation_mode to 'XYZ' converts the current rotation (identity) and overwrites the euler set before, "
+       "so the euler must be set after the mode",
+       default_mode=mode, upper_tail_with_quaternion_mode=t_euler_ignored, euler_after_mode_switch=euler_after_switch,
+       upper_tail_after_switch=t_after_switch, upper_tail_euler_set_after_switch=t_euler_used)
 
 # 2. pose_bone.matrix / tail are stale until the depsgraph updates
 r = rig()
@@ -48,8 +54,8 @@ dg = bpy.context.evaluated_depsgraph_get()     # does fetching the depsgraph upd
 after_get = tail_world(r, "upper")
 bpy.context.view_layer.update()
 fresh = tail_world(r, "upper")
-E.fact("after setting a pose bone's rotation, pose_bone.tail/matrix still read the old pose until "
-       "view_layer.update() (or a frame change) runs", before_update=stale, after_evaluated_depsgraph_get=after_get,
+E.fact("after setting a pose bone's rotation, pose_bone.tail/matrix still read the old pose until the depsgraph "
+       "is evaluated: view_layer.update() or context.evaluated_depsgraph_get() both bring them up to date", before_update=stale, after_evaluated_depsgraph_get=after_get,
        after_view_layer_update=fresh)
 
 # 3. setting pose_bone.matrix down a chain: with and without an update between parent and child

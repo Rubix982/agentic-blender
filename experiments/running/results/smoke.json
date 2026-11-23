@@ -3,7 +3,7 @@
  "blender": "4.5.14 LTS",
  "machine": "Darwin arm64",
  "date": "2026-11-23",
- "seconds": 0.07,
+ "seconds": 0.06,
  "facts": [
   {
    "fact": "an empty scene after read_factory_settings(use_empty=True) has no objects",
@@ -19,6 +19,11 @@
   }
  ],
  "data": {
-  "args_after_dashdash": []
- }
+  "args_after_dashdash": [
+   "x"
+  ]
+ },
+ "args": [
+  "x"
+ ]
 }

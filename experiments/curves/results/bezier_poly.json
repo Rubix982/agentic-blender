@@ -1,0 +1,153 @@
+{
+ "experiment": "experiments/curves/bezier_poly.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.05,
+ "facts": [
+  {
+   "fact": "bpy.data.curves.new(name, 'CURVE') makes curve data that is 2D (dimensions '2D'), resolution_u 12, no bevel",
+   "dimensions": "2D",
+   "resolution_u": 12,
+   "bevel_depth": 0.0,
+   "extrude": 0.0,
+   "fill_mode": "NONE",
+   "types": [
+    "CURVE",
+    "SURFACE",
+    "FONT"
+   ]
+  },
+  {
+   "fact": "splines.new('BEZIER') starts with 1 bezier point; add more with bezier_points.add(n)",
+   "points": 1
+  },
+  {
+   "fact": "handle types; AUTO handles are computed when the curve is evaluated",
+   "types": [
+    "FREE",
+    "VECTOR",
+    "ALIGNED",
+    "AUTO"
+   ],
+   "handle_left_0": [
+    0.4143827557563782,
+    1.0,
+    0.5
+   ]
+  },
+  {
+   "fact": "a 2D curve keeps its points' z when evaluated (the 2D flag changes the fill and bevel options, and the fill_mode default is 'NONE' until set to 3D, where it becomes 'FULL')",
+   "z_max_2d": 0.5,
+   "z_max_3d": 0.5,
+   "fill_mode_3d": "FULL"
+  },
+  {
+   "fact": "an open bezier with 4 points and resolution_u 12 becomes 37 vertices / 36 edges with no faces",
+   "counts": [
+    37,
+    36,
+    0
+   ],
+   "manifold": null
+  },
+  {
+   "fact": "resolution_u 4 gives 3 segments x 4 + 1 = 13 vertices",
+   "counts": [
+    13,
+    12,
+    0
+   ],
+   "manifold": null
+  },
+  {
+   "fact": "bevel_depth 0.1 sweeps a round profile along it; open ends stay open unless use_fill_caps",
+   "counts": [
+    296,
+    584,
+    288
+   ],
+   "manifold": false
+  },
+  {
+   "fact": "use_fill_caps closes the ends (but the result is still not manifold: cap vertices are separate from the tube)",
+   "counts": [
+    312,
+    610,
+    300
+   ],
+   "manifold": false
+  },
+  {
+   "fact": "extrude 0.5 (no bevel) makes a ribbon",
+   "counts": [
+    74,
+    109,
+    36
+   ],
+   "manifold": false
+  },
+  {
+   "fact": "bevel_mode 'OBJECT' with a closed square poly curve as bevel_object sweeps a square tube",
+   "bevel_modes": [
+    "ROUND",
+    "OBJECT",
+    "PROFILE"
+   ],
+   "counts": [
+    148,
+    292,
+    144
+   ],
+   "manifold": false
+  },
+  {
+   "fact": "POLY/NURBS spline points have 4D co (x, y, z, w); assigning a 3-tuple raises",
+   "error": "ValueError: bpy_struct: item.attr = val: sequences of dimension 0 should contain 4 items, not 3"
+  },
+  {
+   "fact": "a closed 10-point POLY circle evaluates to 10 verts and 10 edges (resolution does not apply to poly)",
+   "counts": [
+    10,
+    10,
+    0
+   ],
+   "manifold": null
+  },
+  {
+   "fact": "2D curve with fill_mode BOTH fills the closed shape with faces",
+   "fill_modes_2d": [
+    "FULL",
+    "BACK",
+    "FRONT",
+    "HALF"
+   ],
+   "counts": [
+    10,
+    17,
+    8
+   ],
+   "manifold": false
+  },
+  {
+   "fact": "new_from_object(evaluated curve object) gives a mesh datablock of the evaluated curve",
+   "verts": 37,
+   "faces": 0
+  },
+  {
+   "fact": "bpy.ops.object.convert(target='MESH') works headless with an override and replaces the curve object's data with a mesh",
+   "result": [
+    "FINISHED"
+   ],
+   "type": "MESH",
+   "verts": 296,
+   "curves_left": [
+    "path",
+    "poly",
+    "prof"
+   ]
+  }
+ ],
+ "data": {},
+ "args": []
+}

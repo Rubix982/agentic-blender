@@ -1,0 +1,59 @@
+{
+ "experiment": "experiments/geonodes/named_attribute_to_shader.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.18,
+ "facts": [
+  {
+   "fact": "Store Named Attribute's Value socket changes type with data_type: the enabled Value input for FLOAT_COLOR",
+   "value_inputs": [
+    [
+     "Value",
+     "RGBA",
+     true
+    ]
+   ]
+  },
+  {
+   "fact": "the evaluated mesh has the stored attribute; the original mesh does not",
+   "evaluated": [
+    "POINT",
+    "FLOAT_COLOR"
+   ],
+   "original": false,
+   "value": [
+    1.0,
+    0.20000000298023224,
+    0.0,
+    1.0
+   ]
+  },
+  {
+   "fact": "ShaderNodeAttribute.attribute_type options",
+   "types": [
+    "GEOMETRY",
+    "OBJECT",
+    "INSTANCER",
+    "VIEW_LAYER"
+   ]
+  },
+  {
+   "fact": "the rendered centre pixel shows the colour from geometry nodes (red 1.0, green 0.2 linear -> about 0.48 sRGB, blue 0)",
+   "centre_rgb": [
+    0.996,
+    0.482,
+    0.0
+   ]
+  },
+  {
+   "fact": "a misspelt attribute name renders black without any error",
+   "centre_rgb": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  }
+ ],
+ "data": {}
+}

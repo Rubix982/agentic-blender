@@ -15,6 +15,7 @@ import datetime
 import json
 import os
 import platform
+import sys
 import time
 
 import bpy
@@ -43,7 +44,8 @@ class Experiment:
         root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
         rec = dict(experiment=os.path.relpath(self.path, root), blender=bpy.app.version_string,
                    machine=f"{platform.system()} {platform.machine()}", date=datetime.date.today().isoformat(),
-                   seconds=round(time.time() - self.t0, 2), facts=self.facts, data=data)
+                   seconds=round(time.time() - self.t0, 2), facts=self.facts, data=data,
+                   args=sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else [])   # to run it again as it ran
         text = json.dumps(rec, indent=1, default=str).replace(os.path.expanduser("~"), "~")   # no home paths
         with open(os.path.join(self.dir, f"{self.name}.json"), "w") as f:
             f.write(text)

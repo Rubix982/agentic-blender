@@ -1,0 +1,121 @@
+{
+ "experiment": "experiments/rigging/armature_build.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.05,
+ "facts": [
+  {
+   "fact": "arm.edit_bones.new() outside edit mode fails (edit bones exist only in edit mode)",
+   "error": "RuntimeError: Error: Armature 'Rig' not in edit mode, cannot add an editbone",
+   "edit_bones_len_in_object_mode": 0
+  },
+  {
+   "fact": "object.mode_set(mode='EDIT') with no active object fails in background mode",
+   "error": "Operator bpy.ops.object.mode_set.poll() Context missing active object"
+  },
+  {
+   "fact": "with the armature as the active object, mode_set('EDIT') works in background mode and edit bones can be made",
+   "result": [
+    "FINISHED"
+   ],
+   "mode": "EDIT",
+   "back_to_object": [
+    "FINISHED"
+   ]
+  },
+  {
+   "fact": "a zero-length edit bone is deleted when edit mode is left",
+   "in_edit": [
+    "root",
+    "upper",
+    "zero",
+    "side",
+    "side_aligned"
+   ],
+   "after": [
+    "root",
+    "upper",
+    "side",
+    "side_aligned"
+   ]
+  },
+  {
+   "fact": "in object mode the bones read back through arm.bones: head_local, tail_local, parent, use_connect, matrix_local",
+   "upper_head": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "upper_tail": [
+    0.0,
+    0.0,
+    2.0
+   ],
+   "parent": "root",
+   "connected": true,
+   "side_matrix_local": [
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     -0.8776,
+     0.0,
+     -0.4794,
+     0.0
+    ],
+    [
+     -0.4794,
+     0.0,
+     0.8776,
+     1.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ]
+  },
+  {
+   "fact": "a bone pointing along +X with roll 0.5 rad, and one aligned with align_roll(+Z): their local Z axes",
+   "roll_set": 0.5,
+   "side_z_axis": [
+    0.0,
+    -0.4794,
+    0.8776
+   ],
+   "aligned_z_axis": [
+    0.0,
+    0.0,
+    1.0
+   ]
+  },
+  {
+   "fact": "pose bones appear for every bone after leaving edit mode, rotation mode QUATERNION by default",
+   "pose_bones": [
+    "root",
+    "upper",
+    "side",
+    "side_aligned"
+   ],
+   "rotation_mode": "QUATERNION"
+  },
+  {
+   "fact": "temp_override(active_object=other) does not redirect object.mode_set in background mode: it reported FINISHED, the overridden armature stayed in OBJECT mode and no bone could be made on it, and the view layer's real active armature was left in EDIT mode; set view_layer.objects.active instead",
+   "result": [
+    "FINISHED"
+   ],
+   "mode_inside": "OBJECT",
+   "error": null,
+   "bones_made": [],
+   "rig_mode": "EDIT"
+  }
+ ],
+ "data": {},
+ "args": []
+}
