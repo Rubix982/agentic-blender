@@ -1,0 +1,86 @@
+{
+ "experiment": "experiments/lines/lines.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 1.06,
+ "facts": [
+  {
+   "fact": "A Grease Pencil object's data in 4.5 is a GreasePencil from bpy.data.grease_pencils_v3 (layers -> frames -> drawing -> strokes), and the object's type is 'GREASEPENCIL'. The pre-4.3 types (bpy.data.grease_pencils, GPencilStroke) still exist, for annotations; code written for them does not draw Grease Pencil objects",
+   "data_grease_pencils": true,
+   "data_grease_pencils_v3": true,
+   "type_GPencilStroke": true,
+   "type_GreasePencilDrawing": true,
+   "object_type": "GREASEPENCIL",
+   "object_data_type": "GreasePencilv3"
+  },
+  {
+   "fact": "Strokes are added with drawing.add_strokes(point_counts) and filled through attributes: 'position' (POINT) and, added when needed, 'radius' (POINT, in metres) and 'cyclic' (CURVE). A new drawing's attributes before any are added",
+   "attributes_after_add_strokes": [
+    "curve_type",
+    "position"
+   ],
+   "strokes": 2,
+   "points": 69
+  },
+  {
+   "fact": "A Grease Pencil material is a normal material given Grease Pencil settings with bpy.data.materials.create_gpencil_data(mat); its stroke colour is mat.grease_pencil.color",
+   "is_grease_pencil": true,
+   "show_stroke": true,
+   "show_fill": false
+  },
+  {
+   "fact": "A Grease Pencil drawing renders headless in EEVEE, Cycles and Workbench (Grease Pencil is drawn as its own pass on top of the render); dark_fraction is the share of the 256 px frame the ink covers",
+   "renders": {
+    "BLENDER_EEVEE_NEXT": {
+     "seconds": 0.17,
+     "dark_fraction": 0.0591,
+     "mean": 0.7288
+    },
+    "CYCLES": {
+     "seconds": 0.14,
+     "dark_fraction": 0.0591,
+     "mean": 0.7287
+    },
+    "BLENDER_WORKBENCH": {
+     "seconds": 0.01,
+     "dark_fraction": 0.0591,
+     "mean": 0.7288
+    }
+   }
+  },
+  {
+   "fact": "object.grease_pencil_add(type='LINEART_SCENE') works headless and gives a Grease Pencil object with a Line Art modifier; the strokes it generates are read from the evaluated object",
+   "lineart": {
+    "result": "{'FINISHED'}",
+    "modifier": "LINEART",
+    "source_type": "SCENE",
+    "strokes": 121,
+    "points": 545
+   }
+  },
+  {
+   "fact": "Freestyle (render.use_freestyle) draws lines on a Cycles render headless, but in a scene made from an empty factory file the view layer's line set has no line style: the render printed a Python error ('NoneType' object has no attribute 'use_chaining'), raised nothing, and came out without lines. With bpy.data.linestyles.new() assigned to the line set, lines appear (dark share of the white frame below)",
+   "line_style_before": null,
+   "freestyle": {
+    "off": {
+     "seconds": 0.15,
+     "dark_fraction": 0.0,
+     "mean": 0.7692
+    },
+    "on, no line style": {
+     "seconds": 0.18,
+     "dark_fraction": 0.0,
+     "mean": 0.7692
+    },
+    "on, with a line style": {
+     "seconds": 0.31,
+     "dark_fraction": 0.0336,
+     "mean": 0.7285
+    }
+   }
+  }
+ ],
+ "data": {},
+ "args": []
+}

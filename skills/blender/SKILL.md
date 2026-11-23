@@ -64,6 +64,7 @@ memory with things that can be checked. Paths below are relative to this file's 
 | `areas/materials.md` | Principled BSDF in 4.5, textures, bump and normal maps, displacement, colour spaces |
 | `areas/light-world-camera.md` | light types and units, sky and HDRI worlds, shadow catcher, camera lens and framing |
 | `areas/rendering.md` | Cycles on Metal and CPU, samples, denoising, EEVEE in 4.5, view transforms, output |
+| `areas/lines.md` | Grease Pencil strokes from Python (the 4.3+ data), its materials and rendering, Line Art, Freestyle |
 | `areas/compositing.md` | render passes, the compositor in background mode, multilayer EXR |
 | `areas/export-baking.md` | glTF, OBJ, USD, FBX, STL, PLY: what survives; baking textures |
 | `areas/simulation.md` | cloth, rigid bodies, soft bodies, simulation zones; baking headless; caches |
