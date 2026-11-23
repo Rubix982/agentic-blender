@@ -82,4 +82,7 @@ dg = bpy.context.evaluated_depsgraph_get()
 z_eval2 = a.evaluated_get(dg).data.vertices[0].co.z
 E.fact("after writing vertex co directly, the evaluated mesh " + ("already shows it" if z_eval == 5 else "still shows the old value until mesh.update()"),
        before_update=z_eval, after_update=z_eval2)
+E.fact("the 2.7x calls scene.update() and scene.objects.link() are gone; view_layer.update() and collection.objects.link() replace them",
+       scene_has_update=hasattr(bpy.context.scene, "update"), scene_objects_has_link=hasattr(bpy.context.scene.objects, "link"),
+       view_layer_has_update=hasattr(bpy.context.view_layer, "update"))
 E.save()

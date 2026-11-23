@@ -1,0 +1,24 @@
+{
+ "experiment": "experiments/running/lesson_checks.py",
+ "blender": "Blender 4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "facts": [
+  {
+   "fact": "Python packages bundled with Blender 4.5 (None = not importable): no Pillow; numpy and OpenImageIO are there",
+   "PIL": null,
+   "numpy": "1.26.4",
+   "OpenImageIO": "present",
+   "imageio": null,
+   "cv2": null,
+   "scipy": null,
+   "requests": "2.32.3",
+   "MaterialX": "1.39.2"
+  },
+  {
+   "fact": "Does a Python atexit hook run when headless Blender quits? (True = the hook's file was written)",
+   "script ends normally": true,
+   "script calls sys.exit(0)": true
+  }
+ ]
+}

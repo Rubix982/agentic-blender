@@ -3,7 +3,7 @@
  "blender": "4.5.14 LTS",
  "machine": "Darwin arm64",
  "date": "2026-11-23",
- "seconds": 0.07,
+ "seconds": 0.06,
  "facts": [
   {
    "fact": "obj.copy() makes a linked duplicate: a new object sharing the same mesh (users 2)",
@@ -101,6 +101,12 @@
    "fact": "after writing vertex co directly, the evaluated mesh already shows it",
    "before_update": 5.0,
    "after_update": 5.0
+  },
+  {
+   "fact": "the 2.7x calls scene.update() and scene.objects.link() are gone; view_layer.update() and collection.objects.link() replace them",
+   "scene_has_update": false,
+   "scene_objects_has_link": false,
+   "view_layer_has_update": true
   }
  ],
  "data": {},

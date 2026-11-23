@@ -1,0 +1,26 @@
+{
+ "experiment": "experiments/rendering/empty_scene_render.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.05,
+ "facts": [
+  {
+   "fact": "an empty factory scene has no world (scene.world is None) and no camera; bpy.data.worlds may still hold one",
+   "world": null,
+   "camera": null,
+   "worlds_in_file": [],
+   "engine": "BLENDER_EEVEE_NEXT"
+  },
+  {
+   "fact": "bpy.ops.render.render() without a scene camera raises RuntimeError 'Error: Cannot render, no camera' in every engine; the Blender process then exits 1 under --python-exit-code 1 even though this script catches the error (run it)",
+   "results": {
+    "CYCLES": "Error: Cannot render, no camera",
+    "BLENDER_EEVEE_NEXT": "Error: Cannot render, no camera",
+    "BLENDER_WORKBENCH": "Error: Cannot render, no camera"
+   }
+  }
+ ],
+ "data": {},
+ "args": []
+}

@@ -32,8 +32,9 @@ ratios much less.
    short one raises `RuntimeError: internal error setting the array` (the log line says "Array length mismatch").
    A `float64` array works but took 73 ms against 16 ms for `float32`. `[exp: experiments/meshes/read_back_numpy.py]`
 6. **Keeping an attribute reference while adding attributes.** After 5 more `attributes.new` calls, the old
-   reference's `.data` had length 0 (`IndexError`); after 1 or 2 it still worked. One longer run crashed Blender
-   (exit -11). Re-fetch by name after adding. `[exp: experiments/meshes/attribute_stale_ref.py]` Adding elements
+   reference's `.data` had length 0 (`IndexError`); after 1 or 2 it still worked. Once, with 100 more attributes on a
+   mesh that already had a dozen, writing through the old reference crashed Blender (exit -11); that run was not
+   repeated. Re-fetch by name after adding. `[exp: experiments/meshes/attribute_stale_ref.py]` Adding elements
    re-allocates arrays and invalidates earlier references, and mode switches do the same.
    `[doc: https://docs.blender.org/api/4.5/info_gotchas_crashes.html]`
 7. **`bm.verts[i]` without a lookup table.** It raises `IndexError: ... outdated internal index table` even right after
@@ -43,7 +44,7 @@ ratios much less.
    `geom=bm.edges[:]` and no `affect` the result was a vertex bevel (96 verts, 62 faces), not an edge bevel (96, 98).
    Pass `affect='EDGES'`. `[exp: experiments/meshes/bmesh_ops.py]`
 9. **`extrude_face_region` keeps the original face.** The extruded cube was not manifold (11 faces) until the old face
-   was deleted (10 faces, manifold). The edit-mode extrude operator hides this. `[exp: experiments/meshes/bmesh_ops.py]`
+   was deleted (10 faces, manifold). `[exp: experiments/meshes/bmesh_ops.py]`
 10. **`validate()` is not a cleanup.** It removes broken faces (duplicates, two-vertex faces, repeated or out-of-range
     indices) but leaves coincident vertices alone. Merging is `bmesh.ops.remove_doubles` or the Weld modifier.
     `[exp: experiments/meshes/validate_broken.py]`

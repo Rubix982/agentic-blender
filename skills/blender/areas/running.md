@@ -127,3 +127,43 @@ loaded between changes. Code must run on Blender's main thread: the server queue
 garments each round, instead of starting Blender for every look (10 to 60 s each). `[lesson]` An MCP connector for
 Blender works the same way (`execute_blender_code`, and a `look` tool that returns a viewport image); it drives the
 user's own Blender and needs them to have it open with the add-on running. Untested in this guide.
+
+## Lessons from a production pipeline
+
+From a project that ran Blender 4.5.14 headless in batches (cloth drapes, renders, exports) on a 16 GB Apple Silicon
+laptop, and kept one Blender open as a live server. Each is `[lesson]` unless marked; full entries with evidence in
+`kb/lessons/running.md` of the source repository.
+
+- **Snapshot the scripts before a batch.** Each job imports the script files as they are when it starts, so editing
+  them mid-batch mixed two code versions in one study (three times). Copy the script tree at batch start and run every
+  job from the copy.
+- **Rendering, not simulation, sets a job's peak memory.** A pose job with its own render peaked at 3.25 GB, its
+  simulation at 0.44 to 0.85 GB; without the render it peaked at 0.88 GB with a bit-identical result. Four jobs that
+  each started with over 25 % memory free reached their renders together (4 x 3.6 GB) and crashed the machine. Split
+  simulation and rendering into separate jobs, and gate each start on that kind's peak against free memory.
+- **Parallel jobs slow each other far more than their count suggests.** A render pass took 7 s alone and about 3 min
+  with four jobs on 12 cores. Time a job alone before planning a batch.
+- **Count only background jobs.** `pgrep -x Blender` also matches the user's open Blender and a live server; count
+  processes whose command line contains ` -b `.
+- **Check every render's output exists.** Cycles on the Apple GPU sometimes aborted while compiling Metal kernels (log
+  stopped at "Updating Meshes"), and renders crashed with about five GPU renders at once. Check the image exists and is
+  not empty; retry. For emission-only bakes the CPU avoids the Metal compile.
+- **Fix the thread count for reproducible simulations.** The same cloth job at the same thread count gave identical
+  vertices; at `-t 3` one drape differed by up to 0.10 m. A voxel remesh returned its points in a different order from
+  run to run (15,184 of 41,244 moved), which changed collisions by 2 to 6 cm until the points were re-sorted by
+  position.
+- **In a live session, tag what you create.** Reloading a module forgets its lists, so objects from earlier runs stayed
+  in the scene (32 meshes) and rendered over new ones. Mark created objects (`o["made_by"] = "fit"`) and clean up by
+  the tag.
+- **A live server turned a 30 to 60 s look into about a second:** a query 0.2 s, a preview about 3 s. Bind it to
+  127.0.0.1, run received code in a namespace kept between sends, run it on the main thread.
+- **User add-ons can start servers in batch jobs.** Without `--factory-startup` every enabled add-on registers in every
+  `-b` job, including one that opens a socket that runs any Python sent to it. In an add-on, return early from
+  `register()` when `bpy.app.background` is true.
+- **No Pillow inside Blender.** Re-checked: Blender 4.5's Python has no `PIL` (nor `cv2`, `scipy`, `imageio`), but has
+  `numpy` 1.26.4, `OpenImageIO`, `MaterialX` 1.39.2 and `requests`. Draw with numpy into `Image.pixels`, or write data
+  out and draw in another Python. `[exp: experiments/running/lesson_checks.py]`
+- **Write records as they happen, not at exit.** The project lost records written from an `atexit` hook. Not
+  reproduced here: in a simple test the hook ran both when the script ended and on `sys.exit(0)`
+  `[exp: experiments/running/lesson_checks.py]`, so the loss probably came from crashed or killed jobs, which no exit
+  hook survives.

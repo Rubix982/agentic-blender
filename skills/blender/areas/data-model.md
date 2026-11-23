@@ -221,7 +221,8 @@ A 16 x 8 UV sphere (114 vertices, 128 faces) exported and imported back, each in
 
 The imported object is selected and named after the object (OBJ) or the file (PLY, STL). Import options include
 `global_scale`, `forward_axis`, `up_axis` for all three, `validate_meshes` (OBJ), `use_mesh_validate` (STL) and
-`merge_verts` (PLY). `bpy.ops.wm.fbx_import` also exists in 4.5 next to `import_scene.fbx`. `[exp: experiments/data/import_formats.py]`
+`merge_verts` (PLY). `[exp: experiments/data/import_formats.py]` `bpy.ops.wm.fbx_import` also exists in 4.5 next to
+`import_scene.fbx` `[inv]`; neither was tried here.
 Export details belong to `export-baking.md`.
 
 ## mathutils
@@ -290,8 +291,8 @@ All: `[exp: experiments/data/bvh_kdtree.py]`
   and type 5 gave 2 faces of area 12 (hole left out); the inner loop's winding made no difference.
 - `tessellate_polygon([outer, inner])` treated the second loop as a hole: 8 triangles, indices into the concatenated
   loops.
-- `intersect_ray_tri(v1, v2, v3, ray, orig, clip=True)` takes the direction BEFORE the origin; it returned (0.2, 0.2, 0)
-  for a hit and None for a triangle behind the ray.
+- `intersect_ray_tri(v1, v2, v3, ray, orig, clip=True)` `[inv]` takes the direction BEFORE the origin; it returned
+  (0.2, 0.2, 0) for a hit and None for a triangle behind the ray.
 - `intersect_line_plane(a, b, plane_co, plane_no)` treats the line as infinite; `intersect_point_line(pt, a, b)`
   returns (closest point, factor along a-b); `intersect_line_line` returns the two closest points of skew lines;
   `intersect_line_line_2d` works on segments and returns None when they do not cross.
@@ -308,5 +309,5 @@ All: `[exp: experiments/data/bvh_kdtree.py]`
 | `matrix * vector` (2.7x) | `matrix @ vector` | `[exp: experiments/data/mathutils_basics.py]` |
 | `bpy.ops.import_scene.obj`, `export_scene.obj` | `bpy.ops.wm.obj_import`, `wm.obj_export` | `[exp: experiments/data/import_formats.py]` |
 | `bpy.ops.import_mesh.ply` / `.stl`, `export_mesh.stl` | `bpy.ops.wm.ply_import` / `wm.stl_import`, `wm.ply_export` / `wm.stl_export` | `[exp: experiments/data/import_formats.py]` |
-| `scene.objects.link(ob)` (2.7x) | `scene.collection.objects.link(ob)` or any collection's `objects.link` | `[exp: experiments/data/collections.py]` |
-| `bpy.context.scene.update()` (2.7x) | `bpy.context.view_layer.update()` | `[exp: experiments/data/objects_data_depsgraph.py]` |
+| `scene.objects.link(ob)` (2.7x) | `scene.collection.objects.link(ob)` or any collection's `objects.link` (`scene.objects` has no `link`) | `[exp: experiments/data/objects_data_depsgraph.py]` |
+| `bpy.context.scene.update()` (2.7x) | `bpy.context.view_layer.update()` (`scene.update` does not exist) | `[exp: experiments/data/objects_data_depsgraph.py]` |

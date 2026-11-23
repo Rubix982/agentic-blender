@@ -101,9 +101,9 @@ scene.world = world
 ```
 
 `[exp: experiments/light/world_sky.py]` A uniform world of radiance L lights a horizontal floor with E = pi L (0.5 gave
-1.571 in Cycles, 1.557 in EEVEE); Strength multiplies it. A new file's world is not linked to a fresh scene made with
-`read_factory_settings(use_empty=True)`; `scene.world = None` renders black with no ambient light.
-`[exp: experiments/light/world_sky.py]` `[exp: experiments/light/light_units.py]`
+1.571 in Cycles, 1.557 in EEVEE); Strength multiplies it. `[exp: experiments/light/world_sky.py]` A scene made with
+`read_factory_settings(use_empty=True)` has no world and no camera `[exp: experiments/rendering/empty_scene_render.py]`;
+with `scene.world = None` the background is black and adds no light. `[exp: experiments/light/light_units.py]`
 
 Sky Texture:
 
@@ -161,10 +161,12 @@ cam = bpy.data.objects.new("Camera", bpy.data.cameras.new("Camera"))
 cam.location = (5, -6, 3.5)
 cam.rotation_euler = (Vector((0.5, 0, 0.8)) - cam.location).to_track_quat("-Z", "Y").to_euler()
 scene.collection.objects.link(cam)
-scene.camera = cam                           # renders fail without a scene camera
+scene.camera = cam
 ```
 
-`[exp: experiments/rendering/cycles_metal_vs_cpu.py]`
+`[exp: experiments/rendering/cycles_metal_vs_cpu.py]` Without `scene.camera`, `bpy.ops.render.render()` raises
+`RuntimeError: Error: Cannot render, no camera` in every engine, and the Blender process then exits 1 even when the
+script catches the error. `[exp: experiments/rendering/empty_scene_render.py]`
 
 Aiming with a constraint instead (defaults are already right for cameras and lights):
 
@@ -230,6 +232,6 @@ With 50 mm at f/1.4 and 256 px, the in-focus card stayed as sharp as without DOF
 | `World.use_sun_shadow` | True | EEVEE `[inv]` |
 | `Camera.lens`, `sensor_width`, `sensor_fit` | 50, 36, AUTO | |
 | `Camera.shift_x`, `shift_y` | 0 | fraction of the longer side |
-| `Camera.type` | PERSP | ORTHO, PANO |
+| `Camera.type` | PERSP | ORTHO, PANO, CUSTOM `[inv]` |
 | `Camera.dof.use_dof`, `aperture_fstop`, `focus_distance` | False, 2.8, 10 m | `[inv]` |
 | `Object.is_shadow_catcher`, `is_holdout` | False | Cycles |
