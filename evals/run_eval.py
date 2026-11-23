@@ -53,6 +53,17 @@ def tasks():
     return {int(items[i]): re.sub(r"\s+", " ", items[i + 1]).strip() for i in range(0, len(items), 2)}
 
 
+EXT = re.compile(r"`?\.(blend|glb|gltf|png|exr|jpg|jpeg|obj|fbx|stl|ply|usdc|usda|usd|abc|svg|mp4|mkv|json|txt|csv)`?\b", re.I)
+
+
+def output_ext(n, text, which):
+    """The writer's set: as listed; any other set: the first file extension its task text names (default .blend)."""
+    if which == "writer":
+        return OUT_EXT.get(n, ".blend")
+    m = EXT.search(text)
+    return "." + m.group(1).lower() if m else ".blend"
+
+
 def plugin_copy(dest):
     """The plugin as the with-arm sees it: everything but the held-out tasks and checks."""
     shutil.copytree(ROOT, dest, ignore=shutil.ignore_patterns(".git", "evals", "__pycache__", "*.blend1"))
@@ -117,7 +128,7 @@ def main():
                 info = transcript_facts(p.stdout.splitlines())
                 rec = dict(task=n, arm=arm, run=r, agent_seconds=round(time.time() - t, 1), **info)
                 script = os.path.join(work, "task.py")
-                out = os.path.join(work, f"out{OUT_EXT.get(n, '.blend')}")
+                out = os.path.join(work, f"out{output_ext(n, T[n], which)}")
                 if not os.path.exists(script):
                     rec.update(script_written=False, script_ran=False, check_passed=False, reasons=["no task.py"])
                 else:

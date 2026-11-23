@@ -133,6 +133,7 @@ def expected(d, grad=0.5):
 vals = np.array([0.5, 2.0, 0.18, 1.0], np.float32)
 img = bpy.data.images.new("f", 4, 4, float_buffer=True)
 img.pixels.foreach_set(np.tile(vals, 16))
+cs_before = img.colorspace_settings.name
 p0 = os.path.join(TMP, "save.exr")
 img.filepath_raw = p0
 img.file_format = "OPEN_EXR"
@@ -142,9 +143,10 @@ p1 = os.path.join(TMP, "save_render.exr")
 img.save_render(p1)
 via_save_render = oiio.ImageBuf(p1).get_pixels(oiio.FLOAT)[0, 0, :3]
 E.fact("Image.save() of a float image made with images.new(float_buffer=True), file_format OPEN_EXR, wrote "
-       "sRGB-encoded values into the EXR (0.5 -> 0.735, 2.0 -> 1.353, 0.18 -> 0.461) although the image's colour space "
-       "reads Linear Rec.709; image.save_render(path) with the scene's format set to OPEN_EXR wrote them unchanged",
-       written=vals[:3].tolist(), colorspace=img.colorspace_settings.name,
+       "sRGB-encoded values into the EXR (0.5 -> 0.735, 2.0 -> 1.353, 0.18 -> 0.461), and the image's colour space read "
+       "Linear Rec.709 before the save and sRGB after it; image.save_render(path) with the scene's format set to "
+       "OPEN_EXR wrote the values unchanged", written=vals[:3].tolist(), colorspace_before_save=cs_before,
+       colorspace_after_save=img.colorspace_settings.name,
        read_back_save=[round(float(x), 4) for x in via_save],
        read_back_save_render=[round(float(x), 4) for x in via_save_render])
 bpy.data.images.remove(img)
@@ -195,7 +197,8 @@ rows = {}
 for s in (1.0, 0.5, 2.0):
     n, _ = read_normal(material(normal_map(rgb, strength=s)))
     rows[f"strength {s}"] = dict(normal=n, tilt_deg=tilt_deg(n))
-E.fact("Normal Map's Strength scales the tilt away from the surface normal (2.0 tilts further than the map)", **rows)
+E.fact("Normal Map's Strength changes the tilt away from the surface normal: for a map tilted 26.57 degrees, "
+       "Strength 0.5 gave 13.29 degrees (the same as Bump's blend) and 2.0 gave 45.0 degrees", **rows)
 
 # 3. Object scale: uniform, and non-uniform (2, 2, 1).
 res = {}
@@ -221,13 +224,26 @@ nouv = bpy.data.objects.new("noUV", me)
 scene.collection.objects.link(nouv)
 plane.hide_render = True
 n_nouv, _ = read_normal(material(normal_map(rgb)), ob=nouv)
+nouv.rotation_euler = (0, 0, math.radians(90))
+bpy.context.view_layer.update()
+n_nouv_rot, _ = read_normal(material(normal_map(rgb)), ob=nouv)
+plane.rotation_euler = (0, 0, math.radians(90))
+bpy.context.view_layer.update()
+nouv.hide_render = True
+plane.hide_render = False
+n_uv_rot, _ = read_normal(material(normal_map(rgb)))
+plane.rotation_euler = (0, 0, 0)
+nouv.rotation_euler = (0, 0, 0)
+nouv.hide_render = False
+plane.hide_render = True
 n_nouv_bump, _ = read_normal(material(bump(distance=1.0, coord="Object")), ob=nouv)
 plane.hide_render = False
 nouv.hide_render = True
-E.fact("On a mesh with no UV map the tangent-space Normal Map still renders without an error but its normal is not "
-       "the encoded one; Bump needs no UVs (here driven by Object coordinates: h = x, 1 per metre)",
-       normal_map_no_uv=n_nouv, normal_map_no_uv_tilt=tilt_deg(n_nouv), expected=list(target),
-       bump_object_coords=n_nouv_bump, bump_object_expected=expected(1.0, grad=1.0))
+E.fact("A tangent-space Normal Map on a quad with no UV map rendered without an error and gave the encoded normal, "
+       "with the tangent along the object's local +x (rotating the object 90 degrees about z turned the tilt to world "
+       "+y-or-minus-y with it, as it did for the UV-mapped plane); Bump needs no UVs at all (here Object coordinates: "
+       "h = x, 1 per metre)", no_uv=n_nouv, no_uv_rotated_90=n_nouv_rot, uv_plane_rotated_90=n_uv_rot,
+       expected=list(target), bump_object_coords=n_nouv_bump, bump_object_expected=expected(1.0, grad=1.0))
 
 # 5. The Normal pass, and shading under a sun.
 def lit(build):
