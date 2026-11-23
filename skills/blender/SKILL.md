@@ -53,6 +53,29 @@ memory with things that can be checked. Paths below are relative to this file's 
 - **Mind the machine.** An empty headless Blender takes about 175 MB, a 1M-vertex mesh about 1 GB, a cloth
   simulation on a figure about 2 GB. Run at most four Blender jobs at once on 16 GB.
 
+## A headless script's skeleton
+
+Each line answers a measured trap (`areas/running.md`, `areas/data-model.md`):
+
+```python
+import sys
+import bpy
+
+sys.stdout.reconfigure(line_buffering=True)                 # otherwise print() is held until the script ends
+argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []   # the script's own arguments
+bpy.ops.wm.read_factory_settings(use_empty=True)             # a known, empty scene (no camera, light or world)
+scene = bpy.context.scene
+
+# ... build with the data API (bpy.data.*.new, collection.objects.link), not operators in loops ...
+
+bpy.context.view_layer.update()                              # matrices, dimensions, drivers, constraints
+# read back what you made and check it with numbers here; raise if it is wrong, so the run fails
+bpy.ops.wm.save_as_mainfile(filepath=argv[0])                # data nothing uses is not saved
+```
+
+Run it with `python3 scripts/run.py script.py -- out.blend` (exit code 1 on any error). An empty scene has no camera:
+rendering it raises, and a failed render sets the exit code to 1 even if caught.
+
 ## Areas
 
 | Page | What it covers |
