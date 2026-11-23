@@ -1,0 +1,100 @@
+{
+ "experiment": "experiments/animation/turntable.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 0.06,
+ "facts": [
+  {
+   "fact": "keyed with keyframe_insert, the empty's rotation eases in and out (BEZIER, the default): the first step is far smaller than the middle one",
+   "interpolation": "BEZIER",
+   "step_first": 1.823,
+   "step_mid": 22.448,
+   "step_min": 1.823,
+   "step_max": 22.448,
+   "turn_deg": 360.0,
+   "radius_spread": 0.0,
+   "aim_error_max_deg": 0.0
+  },
+  {
+   "fact": "setting each key's interpolation to LINEAR through the action's channelbag gives an even step of 360/24 = 15 degrees, and frame N + 1 equals frame 1, so rendering 1..N loops without a repeated frame",
+   "step_first": 15.0,
+   "step_mid": 15.0,
+   "step_min": 15.0,
+   "step_max": 15.0,
+   "turn_deg": 360.0,
+   "radius_spread": 0.0,
+   "aim_error_max_deg": 0.0
+  },
+  {
+   "fact": "in 4.5 the F-curve is reachable through action.fcurves (one slot), anim_utils.action_get_channelbag_for_slot, and action.layers[0].strips[0].channelbag(slot)",
+   "legacy_action_fcurves": [
+    "ok",
+    true
+   ],
+   "channelbag_helper": [
+    "ok",
+    true
+   ],
+   "layers_strips": [
+    "ok",
+    true
+   ]
+  },
+  {
+   "fact": "setting preferences.edit.keyframe_new_interpolation_type = 'LINEAR' before keyframe_insert makes linear keys",
+   "interpolations": [
+    "BEZIER",
+    "BEZIER"
+   ],
+   "default_pref": "BEZIER"
+  },
+  {
+   "fact": "past the last key the rotation holds (CONSTANT extrapolation, the default); extrapolation = 'LINEAR' keeps turning (frame N + 1 + 6 reads 450 degrees)",
+   "z_at_2N_plus_1_mod360": 0.0,
+   "z_linear_ext": 450.0
+  },
+  {
+   "fact": "a Follow Path constraint alone does not move the camera over time: the curve's eval_time is not animated (path_duration 100) until it is keyed",
+   "moved_between_1_and_50": 0.0,
+   "use_curve_follow": false,
+   "use_fixed_location": false,
+   "forward_axis": "FORWARD_Y",
+   "up_axis": "UP_Z",
+   "path_duration": 100,
+   "use_path": true
+  },
+  {
+   "fact": "Follow Path on a 16-point NURBS circle with eval_time keyed linearly 0 -> path_duration: steps vary with the curve's parametrisation and the radius wobbles",
+   "step_first": 15.0,
+   "step_mid": 15.0,
+   "step_min": 15.0,
+   "step_max": 15.001,
+   "turn_deg": 360.0,
+   "radius_spread": 0.00084,
+   "aim_error_max_deg": 0.0
+  },
+  {
+   "fact": "Follow Path on a 4-point Bezier circle, eval_time linear: the step is even only to within the Bezier's speed variation",
+   "step_first": 15.002,
+   "step_mid": 15.002,
+   "step_min": 14.998,
+   "step_max": 15.002,
+   "turn_deg": 360.0,
+   "radius_spread": 0.00124,
+   "aim_error_max_deg": 0.0
+  },
+  {
+   "fact": "a Track To constraint made with constraints.new aims the camera's -Z at the target with Y up (TRACK_NEGATIVE_Z, UP_Y), so a camera needs no axis change",
+   "track_axis": "TRACK_NEGATIVE_Z",
+   "up_axis": "UP_Y",
+   "aim_error_deg": 0.0
+  }
+ ],
+ "data": {
+  "N": 24,
+  "radius": 6.0,
+  "height": 2.0
+ },
+ "args": []
+}
