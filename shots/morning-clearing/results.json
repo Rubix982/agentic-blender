@@ -1,0 +1,56 @@
+{
+ "frames": {
+  "graded": 240,
+  "clean": 240,
+  "wanted": 240
+ },
+ "seconds_per_frame": {
+  "mean": 22.58,
+  "median": 22.62,
+  "max": 23.37,
+  "first": 22.66,
+  "total_hours": 1.506
+ },
+ "boulder": {
+  "size_m": [
+   1.2721,
+   1.8303,
+   1.0038
+  ],
+  "stated_m": [
+   1.2727,
+   1.8307,
+   1.0039
+  ],
+  "max_error": 0.00044
+ },
+ "flicker_before_grain": {
+  "mean": 0.00757,
+  "max": 0.00986,
+  "frames_above_0_01": 0,
+  "bar": 0.01
+ },
+ "grain": {
+  "mean_abs_difference_graded_vs_clean": 0.0088
+ },
+ "sheet_frames": [
+  "0001.png",
+  "0035.png",
+  "0069.png",
+  "0103.png",
+  "0138.png",
+  "0172.png",
+  "0206.png",
+  "0240.png"
+ ],
+ "video": {
+  "files": [
+   "morning-clearing-0001-0240.mp4"
+  ],
+  "mb": [
+   7.06
+  ],
+  "strip_frames": 240
+ },
+ "card_bar_met": true
+}

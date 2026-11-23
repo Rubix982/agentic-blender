@@ -177,7 +177,7 @@ and model the main objects themselves.
 
 ### C-005 · A ten-second realistic shot from a brief, by script, overnight on this laptop
 
-**Opened:** 2026-11-23 (night, unattended)
+**Opened:** 2026-11-23 (night, unattended) · **Closed:** 2026-11-24
 
 **The brief (fixed before the work):** early morning in a forest clearing. A mossy boulder beside a fallen trunk,
 ferns and small stones around it on a leaf-litter floor, light ground haze, a low sun through the trees casting
@@ -202,5 +202,27 @@ dappled light. The camera dollies slowly towards the boulder, focused on it. 10 
 6. **CONSEQUENCE OF NOT DOING IT.** Every measured piece stays a still, and the first real animation request finds out
    at once whether they combine.
 
-**Result:** —
+**Result (2026-11-24, closed): the bar is met.** All 240 frames rendered (graded and clean), at 22.6 s a frame on
+the Metal GPU (max 23.4), 1.51 hours in all against the 9 allowed; Cycles' peak memory was 3.6 GB. The boulder arrived
+within 0.044 % of its stated size. Flicker before grain averaged 0.0076 (max 0.0099; no frame above 0.01). The grain
+adds 0.0088 on average. The 7.1 MB H.264 video was joined by the Video Sequencer
+(`shots/morning-clearing/results.json`, `sheet.png`).
+
+The flicker number is an upper bound, not flicker alone. A frame against the mean of its neighbours also catches the
+camera's motion, since the dolly is straight but its image motion is not, and the haze drifts. C-006 separates the two
+by comparing render variants over the same frames.
+
+Five gaps found on the way, each now an experiment and a page line (commit 6670fde):
+- Poly Haven's plants come as variant sets, and the first build instanced one variant of four.
+- Socket identifiers are not keys.
+- Resuming a sequence: an empty placeholder counts as done.
+- The GPU choice saved in a .blend survives `--factory-startup` on this Mac.
+- `kb.py find` with no full match now lists each term.
+
+Two of my diagnoses on the way were wrong (a glTF rotation; socket names) and are recorded as such in the commit.
+
+Seen on the sheet, not measured. These are polish for the next shot, not failures of the bar:
+- The boulder, the shot's subject, sits mostly behind the sorrel the density ring put around it.
+- The moss barely reads at this distance.
+- The trees beyond the clearing are the HDRI, so they show no parallax as the camera moves.
 
