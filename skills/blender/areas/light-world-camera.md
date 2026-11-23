@@ -18,8 +18,9 @@ convert it to irradiance, E = pi x radiance / 0.8.
    sun of 1 W/m2 and a point light of 10 W, radius 0, in background mode with factory settings. Set `energy`
    explicitly. `[exp: experiments/light/light_units.py]` `[exp: experiments/light/sun_angle_soft_shadow.py]`
 3. **A Nishita sky treated like a 0..1 colour.** At strength 1 with the sun at 45 degrees it put irradiance of about
-   94 (green channel) on the floor in Cycles, 90 % of it from the sun disc. Scale the Background Strength down (around
-   0.01 to 0.03 for a sunlit scene under Standard) or lower exposure. The manual says as much: "this sky type is quite
+   94 (green channel) on the floor in Cycles, 90 % of it from the sun disc. Scale the Background Strength down or lower
+   exposure; from that number, a strength of about 0.02 brings a white floor near 0.5 under Standard (derived, not
+   rendered). The manual says as much: "this sky type is quite
    bright and makes the image look overexposed with the default scene settings".
    `[exp: experiments/light/world_sky.py]` `[doc: https://docs.blender.org/manual/en/4.5/render/shader_nodes/textures/sky.html]`
 4. **Expecting EEVEE to be lit by the Nishita sun disc.** It is not: EEVEE's floor irradiance stayed near Cycles'

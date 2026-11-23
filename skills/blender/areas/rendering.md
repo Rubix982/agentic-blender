@@ -64,12 +64,13 @@ for kind in ("METAL", "OPTIX", "CUDA", "HIP", "ONEAPI"):
 
 `prefs.devices` lists `Apple M2 Pro` (type CPU) and `Apple M2 Pro (GPU - 19 cores)` (type METAL); only the METAL one is
 switched on above. `[exp: experiments/running/smoke.py]` `[inv]` The first Metal render of a session took 0.91 s and
-the next 0.80 s (kernels were already compiled on this machine). GPU and CPU renders with the same seed differ by at
+the next 0.80 s; the small gap suggests the Metal kernels were already compiled and cached on this machine. GPU and CPU renders with the same seed differ by at
 most 0.0085 per pixel: the same noise pattern. Two GPU renders differ by at most 1e-5, so they are not bit-identical.
 `[exp: experiments/rendering/cycles_metal_vs_cpu.py]`
 
 EEVEE renders in background mode on macOS. A 256 px frame took 0.07 s at 1 TAA sample, 0.11 s at 16, 0.32 s at 64
-(`scene.eevee.taa_render_samples`, default 64); the session's first EEVEE render took 0.35 s (shader compilation).
+(`scene.eevee.taa_render_samples`, default 64); the session's first EEVEE render took 0.35 s, probably shader
+compilation.
 `[exp: experiments/rendering/eevee_background.py]` Workbench: 0.02 s at 512 px. `[exp: experiments/rendering/workbench.py]`
 
 ## Samples, noise and denoising (Cycles)
@@ -128,14 +129,14 @@ scene where only an object's rotation changed between renders, renders after the
 
 | setting | default | what it does |
 |---|---|---|
-| `scene.eevee.taa_render_samples` | 64 | anti-aliasing and soft-effect samples per final render |
+| `scene.eevee.taa_render_samples` | 64 | "Number of samples per pixel for rendering" |
 | `scene.eevee.use_shadows` | True | all shadows on/off |
-| `scene.eevee.shadow_ray_count`, `shadow_step_count` | 1, 6 | shadow-map ray marching for soft shadows |
-| `scene.eevee.use_raytracing` | False | screen-space ray-traced reflection/refraction; `ray_tracing_method` PROBE or SCREEN (default SCREEN) |
-| `scene.eevee.use_fast_gi` | True | horizon-scan fast GI (`fast_gi_method` GLOBAL_ILLUMINATION) |
-| `scene.eevee.use_gtao` | False | still exists; ambient occlusion setting |
-| `scene.eevee.gi_diffuse_bounces` | 3 | light-probe bounces |
-| `light.use_shadow_jitter` | False | jittered soft shadows; needed for physically sized penumbrae |
+| `scene.eevee.shadow_ray_count`, `shadow_step_count` | 1, 6 | shadow rays per light; shadow-map samples per ray |
+| `scene.eevee.use_raytracing` | False | "Enable the ray-tracing module"; `ray_tracing_method` PROBE or SCREEN (default SCREEN) |
+| `scene.eevee.use_fast_gi` | True in a new file (RNA default False) | "faster global illumination technique for high roughness surfaces" |
+| `scene.eevee.use_gtao` | False | ambient occlusion, "medium scale indirect shadowing" |
+| `scene.eevee.gi_diffuse_bounces` | 3 | times light is reinjected inside light grids |
+| `light.use_shadow_jitter` (on PointLight, SunLight, SpotLight, AreaLight) | False | jittered soft shadows; needed for physically sized penumbrae |
 | `material.surface_render_method` | DITHERED | `BLENDED` for sorted transparency; `material.blend_method = "BLEND"` still works and maps to BLENDED |
 
 Defaults `[inv]` (`kb.py factory eevee`); removals and `blend_method` mapping `[exp: experiments/rendering/eevee_background.py]`.

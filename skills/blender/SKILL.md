@@ -79,4 +79,46 @@ Lessons from real projects, by area, with what was measured: `../../kb/lessons/`
 
 ## Version traps
 
-<!-- filled from the area pages -->
+What an agent's memory most often gets wrong in 4.5, one line each; the page has the evidence.
+
+**Running**
+- A script that raises still exits 0 without `--python-exit-code 1`; `print()` is held until the end through a pipe,
+  and `PYTHONUNBUFFERED` does nothing inside Blender. → `running.md`
+- `bpy.app.timers` and `bpy.msgbus` never fire in a `-b` script; handlers do, but only `@persistent` ones survive
+  `open_mainfile`. → `python-extending.md`
+- Context-dict overrides (`bpy.ops.x(ctx, ...)`) raise `ValueError`; use `bpy.context.temp_override(...)`, which also
+  accepts misspelt keywords silently. → `data-model.md`
+- `scene.update()` and `scene.objects.link()` are gone: `view_layer.update()`, `collection.objects.link()`.
+  `matrix_world` and `dimensions` stay stale until `view_layer.update()`. → `data-model.md`
+
+**Meshes, modifiers, geometry nodes**
+- Auto smooth is gone (`use_auto_smooth`, `calc_normals_split`); `shade_auto_smooth` is CANCELLED headless; append
+  "Smooth by Angle" from Blender's bundled assets instead. Custom normals, `sharp_face`, creases and bevel weights are
+  attributes. → `meshes.md`
+- Importers are `wm.obj_import`, `wm.ply_import`, `wm.stl_import` (the `import_scene.obj` family is gone). → `data-model.md`
+- `node_group.inputs.new` is gone: `interface.new_socket`; modifier inputs are keyed `Socket_N` (`mod["Name"]` silently
+  makes an unrelated property); call `ob.update_tag()` after setting one. → `geometry-nodes.md`
+- Boolean: the modifier's solvers are `FAST`/`EXACT`/`MANIFOLD` (default EXACT), the node's `FLOAT`/`EXACT`/`MANIFOLD`;
+  Manifold returns the mesh uncut, with only a console warning, when a cutter is open. → `modifiers.md`
+- `new_from_object(original)` gives the base mesh, not the modified one; evaluate first. → `modifiers.md`
+
+**Materials, light, rendering**
+- Principled BSDF inputs were renamed in 4.0 (`Subsurface` → `Subsurface Weight`, `Specular` → `Specular IOR Level`,
+  `Emission` → `Emission Color`, ...); index order changed too. Musgrave Texture is gone (merged into Noise). → `materials.md`
+- `bpy.data.materials.new()` has no node tree until `use_nodes = True`; `Emission Strength` defaults to 0. → `materials.md`
+- The EEVEE engine id is `BLENDER_EEVEE_NEXT`; `use_soft_shadows`, `use_contact_shadow` and other 4.1 EEVEE settings
+  are gone. → `rendering.md`, `light-world-camera.md`
+- Cycles renders on the CPU unless the Metal device is chosen; this Mac's only denoiser is `OPENIMAGEDENOISE`. → `rendering.md`
+- The default view transform is AgX: linear 1.0 renders as byte 197, not 255. `image.save_render` applies it,
+  `image.save` doesn't. → `rendering.md`, `uv-images.md`
+- `is_shadow_catcher` is on the object (`Object.is_shadow_catcher`), not `object.cycles`. → `light-world-camera.md`
+
+**UVs, images, lines**
+- Smart UV Project's angle is in radians and silently clamped (passing 66 means 90°); `pack_islands` needs
+  `use_uv_select_sync`; `uv_layer.data` is deprecated. → `uv-images.md`
+- A new float image saved to EXR is sRGB-encoded unless it is `Non-Color` before its pixels are written; unused data
+  (an image nobody uses) is dropped on save. → `uv-images.md`
+- Grease Pencil was rewritten in 4.3: `bpy.data.grease_pencils_v3`, `drawing.add_strokes()`; the old types remain for
+  annotations, so old code runs and draws nothing. → `lines.md`
+
+<!-- simulation, rigging, compositing and export traps are added when those pages are final -->

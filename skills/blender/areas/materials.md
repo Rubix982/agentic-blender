@@ -76,7 +76,7 @@ nt.links.new(noise.outputs["Fac"], em.inputs["Color"])
 ```
 
 What each texture's scalar output covers over a 2 m plane, Object coordinates, default settings
-(`[exp: experiments/materials/procedural_textures.py]`, contact sheet `results/procedural_textures-sheet.png`):
+(`[exp: experiments/materials/procedural_textures.py]`, contact sheet `experiments/materials/results/procedural_textures-sheet.png`):
 
 | texture | output | min | mean | max |
 |---|---|---|---|---|
