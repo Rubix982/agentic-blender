@@ -66,3 +66,12 @@ that never saw the guide, a fresh agent got 10 right with the skill and 6 withou
 Requirements: Blender 4.5 (found at `$BLENDER`, `~/Applications/Blender.app`, `/Applications/Blender.app` or on
 `PATH`) and Python 3.9 or later. Everything here was read and measured on Blender 4.5.14 LTS, Apple Silicon (M2 Pro,
 16 GB).
+
+## Licence
+
+MIT (`LICENSE`), for the code, the guides and the experiments. The inventory (`skills/blender/inventory/`), the
+generated reference (`kb/reference/`) and the add-on probe's results (`experiments/extensions/results/`) also hold
+names and descriptions read from Blender and its add-ons, which are GPL-licensed; that text comes from them and stays
+under their licences. Blender's manual is not copied here: `docs.py` downloads it to your machine and quotes it with
+links. Assets fetched by `assets.py` are CC0 and live in your cache, not in this repository.
+
