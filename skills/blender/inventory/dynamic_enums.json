@@ -2,8 +2,7 @@
  "Scene.render.engine": [
   "BLENDER_EEVEE_NEXT",
   "BLENDER_WORKBENCH",
-  "CYCLES",
-  "HYDRA_STORM"
+  "CYCLES"
  ],
  "ColorManagedViewSettings.view_transform": [
   "Standard",
@@ -98,5 +97,11 @@
  ],
  "CyclesRenderSettings.denoiser": [
   "OPENIMAGEDENOISE"
+ ],
+ "Scene.render.engine, with every bundled add-on on (Hydra Storm is an add-on, off by default)": [
+  "BLENDER_EEVEE_NEXT",
+  "BLENDER_WORKBENCH",
+  "CYCLES",
+  "HYDRA_STORM"
  ]
 }

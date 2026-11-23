@@ -46,6 +46,7 @@ Blender jobs sharing the machine; repeated runs moved by up to 2x, the ratios mu
 ## Pick an engine and a device
 
 ```python
+scene.render.engine = "CYCLES"      # a fresh file's engine is BLENDER_EEVEE_NEXT: without this line nothing below is used
 # Cycles on the Metal GPU (tools/exp.py: exp.metal(), used by every experiment here)
 prefs = bpy.context.preferences.addons["cycles"].preferences
 for kind in ("METAL", "OPTIX", "CUDA", "HIP", "ONEAPI"):
@@ -93,8 +94,9 @@ Measured on a 256 px scene with a gold sphere and one area light, noise as RMSE 
 `[exp: experiments/rendering/cycles_samples_noise.py]` About 0.3 s of each render is fixed cost (sync, BVH, kernel
 launch); noise fell by 2.3x from 16 to 64 samples and 1.8x from 64 to 256, near the 2x that 1/sqrt(N) predicts.
 
-Denoising (OpenImageDenoise, quality HIGH, input passes RGB_ALBEDO_NORMAL, prefilter ACCURATE: the defaults) took a
-16-sample render from display RMSE 0.0206 to 0.0039 in 0.65 s; 1024 samples without denoising reached 0.0025 in
+Denoising (OpenImageDenoise, quality HIGH, input passes RGB_ALBEDO_NORMAL, prefilter ACCURATE: the defaults, but with
+`denoising_use_gpu` on, which is not) took a 16-sample render from display RMSE 0.0206 to 0.0039 in 0.65 s (0.45 s with
+the default CPU denoising); 1024 samples without denoising reached 0.0025 in
 1.68 s. Display RMSE is measured after clipping to 0..1 and a 2.2 gamma; linear RMSE barely moved (0.126 to 0.090),
 which is consistent with the denoiser leaving fireflies brighter than 1 in place, though that was not checked pixel by
 pixel. FAST quality: 0.0049; BALANCED: 0.0045. `[exp: experiments/rendering/cycles_denoisers.py]`

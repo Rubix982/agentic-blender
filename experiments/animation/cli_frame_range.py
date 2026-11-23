@@ -101,7 +101,8 @@ fact("-f takes one frame, a comma list with '..' ranges, or a negative number co
 fact("-o replaces the output path (// is the .blend's folder, '#' the frame padding); -F sets the format; -x 0 drops the "
      "extension", o_F=res["-o //other/g_## -F JPEG -s 1 -e 2 -a"]["files"],
      x0=res["-o /abs/h_ -x 0 -f 1"]["files"])
-fact("-F FFMPEG on a file whose FFMPEG settings were never set: what is written",
+fact("-F FFMPEG on a file whose FFMPEG settings were never set writes one MKV named with the frame range (the FFMPEG "
+     "defaults fill in), exit code 0",
      files=res["-F FFMPEG -s 1 -e 10 -a (file never set FFMPEG)"]["files"],
      exit=res["-F FFMPEG -s 1 -e 10 -a (file never set FFMPEG)"]["exit"],
      errors=res["-F FFMPEG -s 1 -e 10 -a (file never set FFMPEG)"]["errors"])

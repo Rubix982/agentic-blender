@@ -35,8 +35,9 @@ ob.id_properties_ui("count").update(min=0, max=10, description="how many")
 ```
 
 Lists come back as `IDPropertyArray`, dicts as `IDPropertyGroup` (`.to_dict()` gives plain Python). They are saved
-with the file and need no registration. `[exp: experiments/extending/python_extending.py]` They are also what
-drivers and geometry-node attributes can read by name.
+with the file and need no registration. `[exp: experiments/extending/python_extending.py]` The shader
+Attribute node (type OBJECT) reads them by name in a render (`materials.md`). Geometry nodes' Named Attribute reads
+geometry attributes, not these.
 
 ## Registered properties and property groups
 

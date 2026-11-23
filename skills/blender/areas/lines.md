@@ -45,8 +45,8 @@ mat.grease_pencil.color = (0.05, 0.03, 0.02, 1); gp.materials.append(mat)
 ## Rendering
 
 A star and a circle, 0.03 m radius, under an orthographic camera at 256 px: the ink covered 5.9 % of the frame in
-EEVEE (1.23 s), Cycles (0.15 s) and Workbench (0.01 s) alike. Grease Pencil is drawn as its own layer over the render,
-so the engine barely matters. `[exp: experiments/lines/lines.py]`
+EEVEE (1.23 s), Cycles (0.15 s) and Workbench (0.01 s) alike. The engine made no difference to the
+ink's coverage here. `[exp: experiments/lines/lines.py]`
 
 ## Line Art: lines from 3D geometry
 

@@ -79,8 +79,9 @@ Blender -b scene.blend -E CYCLES -o /tmp/frame_ -F PNG -x 1 -f 1 -- --cycles-dev
 #        engine        output prefix, format, add extension, frame;   Cycles' device, after '--'
 ```
 
-- `-E` takes the engine id: in 4.5 these are `BLENDER_EEVEE_NEXT`, `BLENDER_WORKBENCH`, `CYCLES`, `HYDRA_STORM`
-  (`kb.py enums`). The EEVEE id changed in 4.2; code written for older versions that sets `'BLENDER_EEVEE'` fails. `[inv]`
+- `-E` takes the engine id: in a fresh 4.5 these are `BLENDER_EEVEE_NEXT`, `BLENDER_WORKBENCH`, `CYCLES`; `HYDRA_STORM`
+  appears only with the Hydra Storm add-on on (`kb.py enums`). The EEVEE id changed in 4.2; code written for older
+  versions that sets `'BLENDER_EEVEE'` fails. `[inv]` `[exp: experiments/rendering/eevee_background.py]`
 - `-- --cycles-device METAL` renders on the GPU without changing `scene.cycles.device` (it still read `CPU`): the same
   320 px, 512-sample frame took 1.8 s on the CPU and 1.1 s with the flag. To choose the device inside a script instead,
   see `rendering.md`. `[exp: experiments/running/cli_behaviour.py]`
@@ -115,7 +116,8 @@ A segmentation fault ends Blender with a negative return code (−11 here), with
 - Turning one on from a script: `addon_utils.enable("rigify", default_set=True)`. With `default_set=False`, Rigify's
   own registration failed (`KeyError: 'bpy_prop_collection[key]: key "rigify" not found'`), since it reads its
   preferences entry. Set `bpy.context.preferences.use_preferences_save = False` first so nothing is written to the
-  user's preferences. (Seen while writing `tools/inventory.py`.)
+  user's preferences. Seen while writing `scripts/inventory.py`, which enables every bundled add-on this way; not a
+  separate experiment.
 - Since 4.2 most add-ons are extensions, managed with `blender --command extension {list, sync, install,
   install-file, remove, update, repo-list, repo-add, repo-remove, build, validate, server-generate}`. `--command` is
   the only subcommand family 4.5 lists. `[exp: experiments/running/process.py]`

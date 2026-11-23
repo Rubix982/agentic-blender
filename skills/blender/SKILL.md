@@ -43,8 +43,16 @@ memory with things that can be checked. Paths below are relative to this file's 
   (`areas/data-model.md`). Creating 1,000 cubes took 15.2 s with `primitive_cube_add` and 0.05 s through the data API.
 - **Registered defaults are not always where a new thing starts.** The Mesh Boolean node is registered with
   `INTERSECT` but `nodes.new` gives `DIFFERENCE`; a new Copy Location constraint copies X, Y and Z although `use_x` is
-  registered False. For nodes, modifiers and constraints `kb.py` prints both ("a new one starts at ..."); for anything
-  else, read the value from the object you made.
+  registered False; Track To starts at `TRACK_NEGATIVE_Z`/`UP_Y`, the Sky Texture at `NISHITA`, Noise at `FBM`. For
+  nodes, modifiers and constraints `kb.py` prints both ("a new one starts at ..."); scene settings a fresh file holds
+  are in `kb.py factory` (e.g. `scene.render.bake.normal_space` is `TANGENT`, registered `OBJECT`); for anything else,
+  read the value from the object you made.
+- **Some enum lists depend on state.** `Curve.fill_mode` lists FULL, BACK, FRONT, HALF for a 3D curve, but a new curve
+  is 2D, starts at `NONE` and also accepts `BOTH`. When `kb.py` and Blender disagree on an enum, assign a wrong value
+  and read the `TypeError`: it lists what this object accepts now.
+- **`kb.py` also knows functions** (`find set_sharp_from_angle`) **and what Blender defines in Python** (`prop
+  Mesh.shade_smooth`, `struct Object` shows `children`, `evaluated_geometry`): a name missing from the API's property
+  lists may still exist.
 - **Check with numbers, not by eye.** Read back what you made: vertex and face counts, bounding boxes, the evaluated
   mesh (`obj.evaluated_get(depsgraph)`), distances with `mathutils.bvhtree`, a light's rotation, a node's links.
   Save the `.blend`, open it again, and read the values from the file.

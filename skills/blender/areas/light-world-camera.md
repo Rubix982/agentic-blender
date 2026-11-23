@@ -95,7 +95,7 @@ uniform disc predicts 0.805 of the full penumbra 2 h tan(angle / 2)):
 ```python
 world = bpy.data.worlds.new("World")        # use_nodes False, node_tree None, color (0.05, 0.05, 0.05)
 world.use_nodes = True                      # creates Background (Color, Strength, Weight) -> World Output
-bg = world.node_tree.nodes["Background"]
+bg = next(n for n in world.node_tree.nodes if n.type == "BACKGROUND")   # by type: node names follow the UI language
 bg.inputs["Color"].default_value = (0.5, 0.5, 0.5, 1)
 bg.inputs["Strength"].default_value = 1.0
 scene.world = world
@@ -222,13 +222,13 @@ With 50 mm at f/1.4 and 256 px, the in-focus card stayed as sharp as without DOF
 
 | property | default | note |
 |---|---|---|
-| `Light.energy` | 10 via `lights.new` | W, or W/m2 for a sun `[exp: experiments/light/light_units.py]` |
+| `energy` (on `SunLight`, `PointLight`, `SpotLight`, `AreaLight`) | 10 via `lights.new` | W, or W/m2 for a sun `[exp: experiments/light/light_units.py]` |
 | `SunLight.angle` | 0.526 deg | angular diameter |
 | `PointLight.shadow_soft_size`, `SpotLight.shadow_soft_size` | 0 via `lights.new` | radius in m `[inv]` |
 | `AreaLight.size` | 0.25 m | `shape` SQUARE, RECTANGLE, DISK, ELLIPSE `[inv]` |
 | `Light.normalize` | True | power is total output whatever the size |
 | `Light.exposure` | 0 | power x 2^exposure |
-| `Light.use_shadow_jitter` | False | EEVEE soft shadows from light size |
+| `use_shadow_jitter` (on each light type) | False | EEVEE soft shadows from light size |
 | `Light.use_temperature`, `temperature` | False, 6500 K | `[inv]` |
 | `World.sun_threshold` | 10 | EEVEE: world values above this are extracted as a sun `[inv]` |
 | `World.use_sun_shadow` | True | EEVEE `[inv]` |

@@ -124,7 +124,8 @@ edges and volume against the exact value `[exp: experiments/modifiers/boolean_so
 | 30 x 30 | collection of 900 objects | 17.7 s | 5.5 s | 0.35 s |
 
 All twelve results were correct: genus 100 or 900, 0 non-manifold edges, volume within 0.001 of exact. Manifold was
-10 to 16x faster than Exact. Fast with a collection of 900 cutters was the slowest of all and left 35,876 vertices
+13 to 28x faster than Exact (0.377 against 0.024 s and 0.567 against 0.020 s at 10 x 10; 4.09 against 0.31 s and 5.5
+against 0.35 s at 30 x 30). Fast with a collection of 900 cutters was the slowest of all and left 35,876 vertices
 against 28,808 for the others. `[exp: experiments/modifiers/boolean_solvers.py]`
 
 The cases that broke:

@@ -224,6 +224,7 @@ def settings_page():
         ("View (colour management)", "ColorManagedViewSettings", "scene.view_settings", FACTORY.get("view_settings")),
         ("Display (colour management)", "ColorManagedDisplaySettings", "scene.display_settings", FACTORY.get("display_settings")),
         ("Units", "UnitSettings", "scene.unit_settings", FACTORY.get("unit_settings")),
+        ("Baking", "BakeSettings", "scene.render.bake", FACTORY.get("bake")),
         ("Light (all types)", "Light", "light data", (FACTORY.get("lights") or {}).get("Light")),
         ("Sun light", "SunLight", "light data, type SUN", None),
         ("Point light", "PointLight", "light data, type POINT", None),

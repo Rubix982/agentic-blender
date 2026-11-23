@@ -3,7 +3,7 @@
  "blender": "4.5.14 LTS",
  "machine": "Darwin arm64",
  "date": "2026-11-23",
- "seconds": 0.83,
+ "seconds": 0.81,
  "facts": [
   {
    "fact": "rigidbody.world_add and rigidbody.object_add run in background mode; object_add with no active object fails its poll, and temp_override(object=...) is enough",
@@ -17,7 +17,7 @@
    "has_rigid_body": true
   },
   {
-   "fact": "a 2 cm convex-hull cube at the default margin (0.04 m, use_margin off) comes to rest about 4 cm above the ground it should touch; a 1 mm margin brings it down to the ground; a BOX shape has no gap",
+   "fact": "the gap a 2 cm cube leaves above the ground it rests on, by collision shape and margin (default margin 0.04 m, use_margin off): only the MESH shape leaves a gap at the default margin (about 37 mm); convex hull, box and sphere rest on the ground (rows: shape, use_margin, margin, gap in m)",
    "rows": [
     [
      "CONVEX_HULL",
@@ -94,7 +94,7 @@
   },
   {
    "fact": "100 convex-hull cubes on a plane: seconds per frame at the default 10 substeps",
-   "seconds_per_frame": 0.0033
+   "seconds_per_frame": 0.0032
   }
  ],
  "data": {
@@ -163,5 +163,6 @@
     "gap_m": 0.0011
    }
   ]
- }
+ },
+ "args": []
 }

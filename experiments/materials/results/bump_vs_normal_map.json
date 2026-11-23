@@ -1,0 +1,301 @@
+{
+ "experiment": "experiments/materials/bump_vs_normal_map.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 6.2,
+ "facts": [
+  {
+   "fact": "Bump's Distance is the height in scene units that one unit of the Height input stands for: on a ramp h = u (0..1 over 2 m, so 0.5 per metre), the normal matched normalize(-Distance x 0.5, 0, 1); the default Distance 0.001 tilts it by under 0.03 degrees, so a 0..1 texture at the default barely shows",
+   "distance 0.001": {
+    "normal": [
+     -0.0005,
+     0.0,
+     1.0
+    ],
+    "tilt_deg": 0.0,
+    "expected": [
+     -0.0005,
+     0.0,
+     1.0
+    ],
+    "expected_tilt": 0.0,
+    "spread": 0.0
+   },
+   "distance 0.25": {
+    "normal": [
+     -0.124,
+     0.0,
+     0.9923
+    ],
+    "tilt_deg": 7.11,
+    "expected": [
+     -0.124,
+     0.0,
+     0.9923
+    ],
+    "expected_tilt": 7.11,
+    "spread": 0.0
+   },
+   "distance 1.0": {
+    "normal": [
+     -0.4472,
+     0.0,
+     0.8944
+    ],
+    "tilt_deg": 26.57,
+    "expected": [
+     -0.4472,
+     0.0,
+     0.8944
+    ],
+    "expected_tilt": 26.57,
+    "spread": 0.0
+   },
+   "distance 2.0": {
+    "normal": [
+     -0.7071,
+     0.0,
+     0.7071
+    ],
+    "tilt_deg": 45.0,
+    "expected": [
+     -0.7071,
+     0.0,
+     0.7071
+    ],
+    "expected_tilt": 45.0,
+    "spread": 0.0
+   }
+  },
+  {
+   "fact": "Bump's Strength blends the bumped normal with the unbumped one and normalises (not a scale on the height): Strength 0.5 at Distance 1 gave the tilt of the normalised average, not of Distance 0.5; invert flips the slope's sign",
+   "strength 1.0": {
+    "normal": [
+     -0.4472,
+     0.0,
+     0.8944
+    ],
+    "tilt_deg": 26.57,
+    "lerp_of_normals": [
+     -0.4472,
+     0.0,
+     0.8944
+    ],
+    "lerp_tilt": 26.57
+   },
+   "strength 0.5": {
+    "normal": [
+     -0.2298,
+     0.0,
+     0.9732
+    ],
+    "tilt_deg": 13.29,
+    "lerp_of_normals": [
+     -0.2297,
+     0.0,
+     0.9732
+    ],
+    "lerp_tilt": 13.28
+   },
+   "strength 0.25": {
+    "normal": [
+     -0.1141,
+     0.0,
+     0.9935
+    ],
+    "tilt_deg": 6.54,
+    "lerp_of_normals": [
+     -0.1141,
+     0.0,
+     0.9935
+    ],
+    "lerp_tilt": 6.55
+   },
+   "strength 0.0": {
+    "normal": [
+     0.0,
+     0.0,
+     1.0
+    ],
+    "tilt_deg": 0.0,
+    "lerp_of_normals": [
+     0.0,
+     0.0,
+     1.0
+    ],
+    "lerp_tilt": 0.0
+   },
+   "invert": {
+    "normal": [
+     0.4472,
+     0.0,
+     0.8944
+    ],
+    "tilt_deg": 26.57
+   },
+   "distance_half_tilt": 14.05
+  },
+  {
+   "fact": "A tangent-space Normal Map whose colour encodes the bumped normal (rgb = n x 0.5 + 0.5) gives the same normal as the Bump node, from a float EXR or an 8-bit PNG under Non-Color; the same PNG left in sRGB gives a different, wrong normal",
+   "colour": [
+    0.2764,
+    0.5,
+    0.9472
+   ],
+   "bump_distance_1": [
+    -0.4472,
+    0.0,
+    0.8944
+   ],
+   "float_exr_non_color": [
+    0.1166,
+    0.4399,
+    0.8904
+   ],
+   "png_non_color": [
+    -0.4488,
+    0.0039,
+    0.8936
+   ],
+   "png_srgb": [
+    -0.674,
+    -0.4365,
+    0.5959
+   ],
+   "srgb_tilt_deg": 53.42
+  },
+  {
+   "fact": "Tangent space follows the UV map: red above 0.5 tilts the normal toward +U (here +x), green above 0.5 toward +V (here +y), the OpenGL convention; a DirectX-style map needs its green channel inverted",
+   "green_high": [
+    0.3601,
+    0.6216,
+    0.6956
+   ],
+   "red_high": [
+    0.6216,
+    0.3601,
+    0.6956
+   ]
+  },
+  {
+   "fact": "Normal Map's Strength scales the tilt away from the surface normal (2.0 tilts further than the map)",
+   "strength 1.0": {
+    "normal": [
+     0.1166,
+     0.4399,
+     0.8904
+    ],
+    "tilt_deg": 27.08
+   },
+   "strength 0.5": {
+    "normal": [
+     0.062,
+     0.2339,
+     0.9703
+    ],
+    "tilt_deg": 14.0
+   },
+   "strength 2.0": {
+    "normal": [
+     0.1832,
+     0.6909,
+     0.6993
+    ],
+    "tilt_deg": 45.63
+   }
+  },
+  {
+   "fact": "Scaling the object changes the bump but not the normal map: at object scale 2 the same UV ramp spans 4 m and the bump's tilt fell to that of half the slope (Distance stays in world units: the height is not scaled with the object), while the normal map's normal was unchanged",
+   "bump_scale_1": [
+    -0.4472,
+    0.0,
+    0.8944
+   ],
+   "bump_scale_2": [
+    -0.2425,
+    0.0,
+    0.9701
+   ],
+   "bump_scale_2_tilt": 14.05,
+   "expected_world_units": [
+    -0.2425,
+    0.0,
+    0.9701
+   ],
+   "expected_object_units": [
+    -0.4472,
+    0.0,
+    0.8944
+   ],
+   "normal_map_scale_2": [
+    0.0634,
+    0.2393,
+    0.9689
+   ],
+   "normal_map_scale_1": [
+    0.1166,
+    0.4399,
+    0.8904
+   ]
+  },
+  {
+   "fact": "On a mesh with no UV map the tangent-space Normal Map still renders without an error but its normal is not the encoded one; Bump needs no UVs (here driven by Object coordinates: h = x, 1 per metre)",
+   "normal_map_no_uv": [
+    0.1166,
+    -0.4399,
+    0.8904
+   ],
+   "normal_map_no_uv_tilt": 27.08,
+   "expected": [
+    -0.4472,
+    0.0,
+    0.8944
+   ],
+   "bump_object_coords": [
+    -0.7071,
+    0.0,
+    0.7071
+   ],
+   "bump_object_expected": [
+    -0.7071,
+    0.0,
+    0.7071
+   ]
+  },
+  {
+   "fact": "Under a sun from -x at 45 degrees, a white diffuse surface with the bump and with the matching normal map rendered the same brightness, brighter than the flat surface as Lambert predicts; Cycles' Normal pass holds the bumped (shading) normal, not the geometric one",
+   "flat": {
+    "combined_g": 0.2251,
+    "normal_pass": [
+     0.0,
+     0.0,
+     1.0
+    ],
+    "lambert": 0.2251
+   },
+   "bump": {
+    "combined_g": 0.2997,
+    "normal_pass": [
+     -0.4472,
+     -0.0,
+     0.8944
+    ],
+    "lambert": 0.302
+   },
+   "normal_map": {
+    "combined_g": 0.1728,
+    "normal_pass": [
+     0.1166,
+     0.4399,
+     0.8904
+    ]
+   }
+  }
+ ],
+ "data": {
+  "device": "METAL",
+  "resolution": 32
+ },
+ "args": []
+}

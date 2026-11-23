@@ -6,7 +6,7 @@ The **factory** column is the value in the factory startup file (Blender's defau
 
 ## Index
 
-[Render settings](#render-settings), [Cycles](#cycles), [EEVEE](#eevee), [Output image format](#output-image-format), [View (colour management)](#view-colour-management), [Display (colour management)](#display-colour-management), [Units](#units), [Light (all types)](#light-all-types), [Sun light](#sun-light), [Point light](#point-light), [Spot light](#spot-light), [Area light](#area-light), [Camera](#camera), [Depth of field](#depth-of-field), [World](#world), [Cycles light settings](#cycles-light-settings), [Cycles world settings](#cycles-world-settings), [Cycles object settings](#cycles-object-settings), [Cycles view layer](#cycles-view-layer), [View layer](#view-layer)
+[Render settings](#render-settings), [Cycles](#cycles), [EEVEE](#eevee), [Output image format](#output-image-format), [View (colour management)](#view-colour-management), [Display (colour management)](#display-colour-management), [Units](#units), [Baking](#baking), [Light (all types)](#light-all-types), [Sun light](#sun-light), [Point light](#point-light), [Spot light](#spot-light), [Area light](#area-light), [Camera](#camera), [Depth of field](#depth-of-field), [World](#world), [Cycles light settings](#cycles-light-settings), [Cycles world settings](#cycles-world-settings), [Cycles object settings](#cycles-object-settings), [Cycles view layer](#cycles-view-layer), [View layer](#view-layer)
 
 ## Render settings
 
@@ -366,6 +366,42 @@ The **factory** column is the value in the factory startup file (Blender's defau
 | `mass_unit` | enum | DEFAULT | KILOGRAMS ≠ | `DEFAULT` | Unit that will be used to display mass values |
 | `time_unit` | enum | DEFAULT | SECONDS ≠ | `DEFAULT` | Unit that will be used to display time values |
 | `temperature_unit` | enum | DEFAULT | KELVIN ≠ | `DEFAULT` | Unit that will be used to display temperature values |
+
+## Baking
+
+`BakeSettings` · `scene.render.bake` · [API](https://docs.blender.org/api/4.5/bpy.types.BakeSettings.html)
+
+| property | type | default | factory | range or values | description |
+|---|---|---|---|---|---|
+| `cage_object` | pointer → `Object` |  |  |  | Object to use as cage instead of calculating the cage from the active object with cage extrusion |
+| `filepath` | string file_path |  | // |  | Image filepath to use when saving externally |
+| `width` | int pixel | 512 | 512 | 4 .. 10000 | Horizontal dimension of the baking map |
+| `height` | int pixel | 512 | 512 | 4 .. 10000 | Vertical dimension of the baking map |
+| `margin` | int pixel | 16 | 16 | 0 .. 64 | Extends the baked result as a post process filter |
+| `margin_type` | enum | ADJACENT_FACES | ADJACENT_FACES | `ADJACENT_FACES`, `EXTEND` | Algorithm to extend the baked result |
+| `max_ray_distance` | float distance | 0 | 0 | 0 .. 1 | The maximum ray distance for matching points between the active and selected objects. If zero, there is no limit. |
+| `cage_extrusion` | float distance | 0 | 0 | 0 .. 1 | Inflate the active object by the specified distance for baking. This helps matching to points nearer to the outside of the selected object meshes. |
+| `normal_space` | enum | OBJECT | TANGENT ≠ | `OBJECT`, `TANGENT` | Choose normal space for baking |
+| `normal_r` | enum | POS_X | POS_X | `POS_X`, `POS_Y`, `POS_Z`, `NEG_X`, `NEG_Y`, `NEG_Z` | Axis to bake in red channel |
+| `normal_g` | enum | POS_X | POS_Y ≠ | `POS_X`, `POS_Y`, `POS_Z`, `NEG_X`, `NEG_Y`, `NEG_Z` | Axis to bake in green channel |
+| `normal_b` | enum | POS_X | POS_Z ≠ | `POS_X`, `POS_Y`, `POS_Z`, `NEG_X`, `NEG_Y`, `NEG_Z` | Axis to bake in blue channel |
+| `image_settings` (read-only) | pointer → `ImageFormatSettings` |  |  |  |  |
+| `target` | enum | IMAGE_TEXTURES | IMAGE_TEXTURES | `IMAGE_TEXTURES`, `VERTEX_COLORS` | Where to output the baked map |
+| `save_mode` | enum | INTERNAL | INTERNAL | `INTERNAL`, `EXTERNAL` | Where to save baked image textures |
+| `view_from` | enum | ABOVE_SURFACE | ABOVE_SURFACE | `ABOVE_SURFACE`, `ACTIVE_CAMERA` | Source of reflection ray directions |
+| `use_selected_to_active` | boolean | False | False |  | Bake shading on the surface of selected objects to the active object |
+| `use_clear` | boolean | True | True |  | Clear Images before baking (internal only) |
+| `use_split_materials` | boolean | False | False |  | Split external images per material (external only) |
+| `use_automatic_name` | boolean | False | False |  | Automatically name the output file with the pass type (external only) |
+| `use_cage` | boolean | False | False |  | Cast rays to active object from a cage |
+| `use_pass_emit` | boolean | True | True |  | Add emission contribution |
+| `use_pass_direct` | boolean | True | True |  | Add direct lighting contribution |
+| `use_pass_indirect` | boolean | True | True |  | Add indirect lighting contribution |
+| `use_pass_color` | boolean | True | True |  | Color the pass |
+| `use_pass_diffuse` | boolean | True | True |  | Add diffuse contribution |
+| `use_pass_glossy` | boolean | True | True |  | Add glossy contribution |
+| `use_pass_transmission` | boolean | True | True |  | Add transmission contribution |
+| `pass_filter` (read-only) | enum | () | ["COLOR", "DIFFUSE", "DIRECT", "EMIT", "GLOSSY", "INDIRECT", "TRANSMISSION"] ≠ | `NONE`, `EMIT`, `DIRECT`, `INDIRECT`, `COLOR`, `DIFFUSE`, `GLOSSY`, `TRANSMISSION` | Passes to include in the active baking pass |
 
 ## Light (all types)
 

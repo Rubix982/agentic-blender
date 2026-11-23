@@ -92,7 +92,8 @@ E.fact("the deprecated sequence_editor.sequences still works in 4.5 and warns no
        sequences=old, sequences_all=old_all, python_warnings=[str(x.message)[:120] for x in w])
 ops_try = err(lambda: bpy.ops.sequencer.image_strip_add(directory=d + "/", files=[{"name": f} for f in frames],
                                                          frame_start=1, channel=2))
-E.fact("bpy.ops.sequencer.image_strip_add in background mode, without an override", result=ops_try)
+E.fact("bpy.ops.sequencer.image_strip_add fails its poll in background mode without an override (use strips.new_image)",
+       result=ops_try)
 
 vse.frame_start, vse.frame_end = 1, s.frame_final_end - 1
 vse.render.image_settings.file_format = "FFMPEG"

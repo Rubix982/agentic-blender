@@ -347,7 +347,8 @@ mod.node_group = ng
 - Baking headless: `bpy.ops.object.simulation_nodes_cache_bake(selected=False)`, the same with `selected=True` inside
   `temp_override(active_object=ob, object=ob, selected_objects=[ob], selected_editable_objects=[ob])`, and
   `bpy.ops.object.geometry_node_bake_single(session_uid=ob.session_uid, modifier_name=mod.name,
-  bake_id=mod.bakes[0].bake_id)` all finished on an unsaved file (`bake_target` INHERIT, `bake_directory` empty); the bake
+  bake_id=mod.bakes[0].bake_id)` all finished on an unsaved file (the bake item's `bake_target` INHERIT, which defers to
+  the modifier's, PACKED on a new modifier; `bake_directory` empty); the bake
   read correctly out of order `[exp: experiments/simulation/sim_zone.py]`.
 - Collisions and constraint iterations (repeat zones) are yours to build; 4.5 ships no node solver `[lesson]`.
 

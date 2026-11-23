@@ -10,6 +10,6 @@ Generated pages: exact for this version, because they were read from Blender its
 | [nodes-texture.md](nodes-texture.md) | 40 texture nodes (the legacy texture node editor) |
 | [modifiers.md](modifiers.md) | 83 modifier types with every setting |
 | [constraints.md](constraints.md) | 28 constraint types with every setting |
-| [settings.md](settings.md) | 20 groups of scene, render, Cycles, EEVEE, output, colour, unit, light, camera and world settings, with what a fresh file starts with |
+| [settings.md](settings.md) | 21 groups of scene, render, Cycles, EEVEE, output, colour, unit, light, camera and world settings, with what a fresh file starts with |
 | [operators.md](operators.md) | 2482 operators by namespace, one line each |
 | [python.md](python.md) | 275 functions and classes of bmesh, mathutils, bpy_extras, bpy.utils, bpy.path |

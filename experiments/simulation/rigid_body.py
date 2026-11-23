@@ -75,8 +75,9 @@ z = settle(sc, cube)
 rows.append(dict(shape="CONVEX_HULL (margin 1 mm) on a CONVEX_HULL ground (default margin)", use_margin=True, margin=0.001,
                  rest_centre_z=z, gap_m=round(z - 0.01, 4)))
 print("MARGIN", rows[-1], flush=True)
-E.fact("a 2 cm convex-hull cube at the default margin (0.04 m, use_margin off) comes to rest about 4 cm above the "
-       "ground it should touch; a 1 mm margin brings it down to the ground; a BOX shape has no gap",
+E.fact("the gap a 2 cm cube leaves above the ground it rests on, by collision shape and margin (default margin 0.04 m, "
+       "use_margin off): only the MESH shape leaves a gap at the default margin (about 37 mm); convex hull, box and "
+       "sphere rest on the ground (rows: shape, use_margin, margin, gap in m)",
        rows=[(r["shape"], r["use_margin"], r["margin"], r["gap_m"]) for r in rows])
 
 # 3. bake vs step, and jumps

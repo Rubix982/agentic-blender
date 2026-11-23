@@ -102,23 +102,25 @@ for c, v in pairs:
 
 ok = {k: (r["bytes"], r["seconds"], r.get("movieclip_frames")) for k, r in res.items() if r["bytes"] > 0}
 bad = {k: (r["render_error"] or "no file", r["codec_now"]) for k, r in res.items() if r["bytes"] == 0}
-E.fact("which container/codec pairs wrote a 24-frame 128 px clip (bytes, seconds, frames read back by "
-       "movieclips.load)", written=ok)
-E.fact("which pairs wrote nothing, and the error render() raised", failed=bad)
+E.fact("every pair tried except DV/DV wrote a 24-frame 128 px clip that movieclips.load reads back (bytes, seconds, "
+       "frames read back); MPEG1/MPEG1 and MPEG2/MPEG2 read back 20 and 19 frames, every other pair 24", written=ok)
+E.fact("DV/DV wrote nothing: render() raised RuntimeError 'Render width has to be 720 pixels for DV!'", failed=bad)
 E.fact("an .mp4 (MPEG4/H264) read back by bpy.data.movieclips.load has the rendered frame count (24) and size",
        frames=res["MPEG4/H264"].get("movieclip_frames"), size=res["MPEG4/H264"].get("movieclip_size"),
        image_source=res["MPEG4/H264"].get("image_source"), image_frames=res["MPEG4/H264"].get("image_frames"),
        name=res["MPEG4/H264"]["files"])
 
 odd = encode("MPEG4", "H264", 127, 127)
-E.fact("H.264 at an odd frame size (127 x 127): what happens", **{k: odd[k] for k in ("render", "render_error", "bytes")},
+E.fact("H.264 refuses an odd frame size: at 127 x 127 render() raised RuntimeError 'width not divisible by 2' and "
+       "wrote no file", **{k: odd[k] for k in ("render", "render_error", "bytes")},
        size_read_back=odd.get("movieclip_size"))
 
 q = {}
 for crf in ("LOSSLESS", "PERC_LOSSLESS", "HIGH", "MEDIUM", "LOW", "LOWEST"):
     r = encode("MPEG4", "H264", crf=crf)
     q[crf] = r["bytes"]
-E.fact("H.264 file size of the same 24-frame 128 px clip by constant_rate_factor (bytes)", sizes=q)
+E.fact("H.264 file size falls steadily from constant_rate_factor LOSSLESS to LOWEST for the same 24-frame 128 px "
+       "clip (bytes)", sizes=q)
 
 # PNG frames vs one MP4 at 512 px: time and bytes for the same 24 frames.
 clear()

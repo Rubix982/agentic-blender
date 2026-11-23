@@ -120,6 +120,40 @@ def func_info(f):
     return d
 
 
+# 0. Enums whose items depend on the file or the machine (read first, before any extra add-on is on: a fresh Blender's lists): ask Blender to reject a bad value; its message lists the
+# accepted ones.
+def accepted(obj, prop):
+    try:
+        setattr(obj, prop, "__not_a_value__")
+    except TypeError as e:
+        msg = str(e)
+        if "(" in msg and ")" in msg:
+            inner = msg[msg.rfind("(") + 1: msg.rfind(")")]
+            return [x.strip().strip("'") for x in inner.split(",") if x.strip()]
+        return msg
+    except Exception as e:  # noqa: BLE001
+        return repr(e)[:200]
+    return "accepted a bad value?"
+
+
+img = bpy.data.images.new("inv_probe", 4, 4)
+cyprefs = bpy.context.preferences.addons["cycles"].preferences if "cycles" in bpy.context.preferences.addons else None
+dynamic = {
+    "Scene.render.engine": accepted(bpy.context.scene.render, "engine"),
+    "ColorManagedViewSettings.view_transform": accepted(bpy.context.scene.view_settings, "view_transform"),
+    "ColorManagedViewSettings.look": accepted(bpy.context.scene.view_settings, "look"),
+    "ColorManagedDisplaySettings.display_device": accepted(bpy.context.scene.display_settings, "display_device"),
+    "ColorManagedInputColorspaceSettings.name (Image.colorspace_settings.name)": accepted(img.colorspace_settings, "name"),
+    "ColorManagedSequencerColorspaceSettings.name": accepted(bpy.context.scene.sequencer_colorspace_settings, "name"),
+}
+if cyprefs:
+    dynamic["CyclesPreferences.compute_device_type"] = accepted(cyprefs, "compute_device_type")
+    cyprefs.get_devices()
+    dynamic["CyclesPreferences.devices (this machine)"] = [dict(name=d.name, type=d.type) for d in cyprefs.devices]
+    dynamic["CyclesRenderSettings.device"] = accepted(bpy.context.scene.cycles, "device")
+    dynamic["CyclesRenderSettings.denoiser"] = accepted(bpy.context.scene.cycles, "denoiser")
+bpy.data.images.remove(img)
+
 # 1. Add-ons: what a fresh Blender has on, then everything bundled switched on.
 bpy.context.preferences.use_preferences_save = False   # enabling add-ons below must never reach the user's preferences
 SYSTEM = os.path.realpath(bpy.utils.system_resource("SCRIPTS"))
@@ -141,6 +175,8 @@ for a in bundled:
     except BaseException as e:  # noqa: BLE001
         failed[a["module"]] = repr(e)[:200]
 print("ADDONS", len(bundled), "on by default", len(default_on), "enabled", len(enabled_here), "failed", len(failed), flush=True)
+dynamic["Scene.render.engine, with every bundled add-on on (Hydra Storm is an add-on, off by default)"] = accepted(
+    bpy.context.scene.render, "engine")
 
 # 2. The factory file's values, before anything below touches the scene.
 sc = bpy.context.scene
@@ -170,7 +206,7 @@ factory = dict(
     render=values(sc.render), image_settings=values(sc.render.image_settings),
     cycles=values(getattr(sc, "cycles", None)), eevee=values(sc.eevee),
     view_settings=values(sc.view_settings), display_settings=values(sc.display_settings),
-    unit_settings=values(sc.unit_settings), scene=values(sc),
+    unit_settings=values(sc.unit_settings), scene=values(sc), bake=values(sc.render.bake),
     world=values(sc.world) if sc.world else None,
     lights={l.name: values(l) for l in bpy.data.lights}, cameras={c.name: values(c) for c in bpy.data.cameras},
     materials={m.name: dict(use_nodes=m.use_nodes, nodes=[dict(type=n.type, idname=n.bl_idname, name=n.name)
@@ -224,6 +260,32 @@ for ident in sorted(found):
     d["props"] = [prop_info(p) for p in rna.properties if p.identifier != "rna_type" and p.identifier not in base_props]
     base_funcs = {f.identifier for f in rna.base.functions} if rna.base else set()
     d["funcs"] = [func_info(f) for f in rna.functions if f.identifier not in base_funcs]
+    if cls is not None and not d.get("ui"):   # methods and properties Blender defines in Python (bpy_types), outside the RNA
+        rna_names = {p.identifier for p in rna.properties} | {f.identifier for f in rna.functions}
+        pym = []
+        for k in cls.__mro__:
+            if not str(getattr(k, "__module__", "")).startswith("bpy_types"):
+                continue
+            for mname, v in k.__dict__.items():
+                if mname.startswith("_") or mname in rna_names or mname in {m["id"] for m in pym}:
+                    continue
+                kind = ("property" if isinstance(v, property) else "classmethod" if isinstance(v, classmethod)
+                        else "staticmethod" if isinstance(v, staticmethod) else "function" if callable(v) else None)
+                if not kind:
+                    continue
+                fn = v.fget if isinstance(v, property) else getattr(v, "__func__", v)
+                e = dict(id=mname, kind=kind, defined_on=k.__name__)
+                if kind != "property":
+                    try:
+                        e["signature"] = str(inspect.signature(fn))
+                    except (TypeError, ValueError):
+                        pass
+                doc = inspect.getdoc(fn)
+                if doc:
+                    e["desc"] = doc[:1200]
+                pym.append(e)
+        if pym:
+            d["py"] = pym
     if name and name != rna.identifier:
         d["alias"] = name
     structs.append(d)
@@ -432,40 +494,6 @@ for mname in MODULES:
 print("MODULES", len(modules), sum(len(m.get("members", [])) for m in modules), round(time.time() - T0, 1), flush=True)
 
 
-# 7. Enums whose items depend on the file or the machine: ask Blender to reject a bad value; its message lists the
-# accepted ones.
-def accepted(obj, prop):
-    try:
-        setattr(obj, prop, "__not_a_value__")
-    except TypeError as e:
-        msg = str(e)
-        if "(" in msg and ")" in msg:
-            inner = msg[msg.rfind("(") + 1: msg.rfind(")")]
-            return [x.strip().strip("'") for x in inner.split(",") if x.strip()]
-        return msg
-    except Exception as e:  # noqa: BLE001
-        return repr(e)[:200]
-    return "accepted a bad value?"
-
-
-img = bpy.data.images.new("inv_probe", 4, 4)
-cyprefs = bpy.context.preferences.addons["cycles"].preferences if "cycles" in bpy.context.preferences.addons else None
-dynamic = {
-    "Scene.render.engine": accepted(sc.render, "engine"),
-    "ColorManagedViewSettings.view_transform": accepted(sc.view_settings, "view_transform"),
-    "ColorManagedViewSettings.look": accepted(sc.view_settings, "look"),
-    "ColorManagedDisplaySettings.display_device": accepted(sc.display_settings, "display_device"),
-    "ColorManagedInputColorspaceSettings.name (Image.colorspace_settings.name)": accepted(img.colorspace_settings, "name"),
-    "ColorManagedSequencerColorspaceSettings.name": accepted(sc.sequencer_colorspace_settings, "name"),
-}
-if cyprefs:
-    dynamic["CyclesPreferences.compute_device_type"] = accepted(cyprefs, "compute_device_type")
-    cyprefs.get_devices()
-    dynamic["CyclesPreferences.devices (this machine)"] = [dict(name=d.name, type=d.type) for d in cyprefs.devices]
-    dynamic["CyclesRenderSettings.device"] = accepted(sc.cycles, "device")
-    dynamic["CyclesRenderSettings.denoiser"] = accepted(sc.cycles, "denoiser")
-bpy.data.images.remove(img)
-
 # 8. Bundled assets.
 assets = {}
 base = os.path.join(bpy.utils.system_resource("DATAFILES"), "assets")
@@ -493,7 +521,8 @@ meta = dict(
                 functions=sum(len(s["funcs"]) for s in structs), operators=len(operators),
                 nodes=len(nodes), nodes_addable=sum(1 for n in nodes if n["trees"]),
                 node_sockets=sum(len(n.get("inputs", [])) + len(n.get("outputs", [])) for n in nodes),
-                python_members=sum(len(m.get("members", [])) for m in modules)),
+                python_members=sum(len(m.get("members", [])) for m in modules),
+                python_defined_on_types=sum(len(s.get("py", [])) for s in structs)),
     seconds=round(time.time() - T0, 1),
 )
 

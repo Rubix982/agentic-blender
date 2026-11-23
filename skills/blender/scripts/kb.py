@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """Look things up in Blender 4.5's own description of itself (the inventory next to this script).
 
-  kb.py find TERM [TERM...] [--kind struct|prop|op|node|py] [-n 25]   search names, identifiers and descriptions
+  kb.py find TERM [TERM...] [--kind struct|prop|op|node|py] [-n 25]   search types, properties, functions (also those
+                                   Blender defines in Python, like Mesh.from_pydata), operators, nodes, sockets, modules
   kb.py struct NAME [--all]        a type: its properties (type, default, range, enum items), functions, base, and
                                    the paths that reach it from bpy.context / bpy.data (--all: inherited ones too)
-  kb.py prop STRUCT.PROP           one property in full (every enum item with its description)
+  kb.py prop STRUCT.NAME           one property in full (every enum item), or a function or Python-defined member
   kb.py op NAME                    an operator (bpy.ops.mesh.bevel, mesh.bevel or MESH_OT_bevel): its parameters
   kb.py node NAME                  a node (ShaderNodeBsdfPrincipled, or its label "Principled BSDF"): the trees it
                                    goes in, its sockets (name, identifier, type, default), its own properties
@@ -211,6 +212,13 @@ def cmd_struct(args):
                 print(f"  {'@static ' if f.get('static') else ''}{f['id']}({args_})" + (f" -> {ret}" if ret else ""))
                 if f.get("desc"):
                     print("      " + wrap(f["desc"], 6))
+    pys = [(c["id"], m) for c in (chain(s) if show_all else [s]) for m in c.get("py", [])]
+    if pys:
+        print(f"\n  defined in Python (bpy_types; not in the RNA, so not in the API's property lists) ({len(pys)}):")
+        for owner, m in pys:
+            sig = m.get("signature", "") if m["kind"] != "property" else ""
+            first = (m.get("desc") or "").split("\n")[0][:110]
+            print(f"  {m['kind'][:4]} {m['id']}{sig}" + (f"  — {first}" if first else "") + (f"  [{owner}]" if owner != s["id"] else ""))
     if not show_all and len(bases) > 0:
         n = sum(len(c["props"]) for c in chain(s)[1:])
         print(f"\n  (+{n} inherited properties: --all)")
@@ -225,7 +233,24 @@ def cmd_prop(args):
                 print(f"{s['id']}.{pname}" + (f"  (from {c['id']})" if c is not s else ""))
                 print(fmt_prop(p, full=True, new=made_values().get(s["id"])))
                 return
-    sys.exit(f"{s['id']} has no property {pname!r}; it has: " + ", ".join(p["id"] for c in chain(s) for p in c["props"]))
+    for c in chain(s):
+        for f in c["funcs"]:
+            if f["id"] == pname:
+                args_ = ", ".join(p["id"] + ("" if p.get("required") else "=" + json.dumps(p.get("default"))) for p in f["params"])
+                print(f"{s['id']}.{pname}({args_})  (a function" + (f" of {c['id']}" if c is not s else "") + ")")
+                if f.get("desc"):
+                    print("  " + wrap(f["desc"], 2))
+                for p in f["params"] + f["returns"]:
+                    print(fmt_prop(p))
+                return
+        for m in c.get("py", []):
+            if m["id"] == pname:
+                print(f"{s['id']}.{pname}{m.get('signature', '')}  ({m['kind']} defined in Python on {m['defined_on']})")
+                if m.get("desc"):
+                    print(m["desc"])
+                return
+    sys.exit(f"{s['id']} has no property, function or Python member {pname!r}; properties: "
+             + ", ".join(p["id"] for c in chain(s) for p in c["props"]))
 
 
 def cmd_op(args):
@@ -391,6 +416,15 @@ def cmd_find(args):
                     sc = score(f"{s['id']}.{p['id']}", p.get("name"), p.get("desc"))
                     if sc:
                         rows.append((sc, "prop", f"{s['id']}.{p['id']} ({p['type'].lower()})", p.get("desc", "")))
+                for f in s["funcs"]:
+                    sc = score(f"{s['id']}.{f['id']}", f["id"], f.get("desc"))
+                    if sc:
+                        rows.append((sc, "func", f"{s['id']}.{f['id']}()", f.get("desc", "")))
+                for m in s.get("py", []):
+                    sc = score(f"{s['id']}.{m['id']}", m["id"], (m.get("desc") or "")[:300])
+                    if sc:
+                        rows.append((sc, "pydef", f"{s['id']}.{m['id']}" + ("" if m["kind"] == "property" else "()"),
+                                     (m.get("desc") or "").split("\n")[0]))
     if kind in (None, "op"):
         for o in load("operators.jsonl.gz"):
             sc = score(o["id"], o.get("name"), o.get("desc"))

@@ -256,7 +256,8 @@
   "nodes": 523,
   "nodes_addable": 510,
   "node_sockets": 2246,
-  "python_members": 611
+  "python_members": 611,
+  "python_defined_on_types": 192
  },
  "seconds": 0.8
 }

@@ -161,7 +161,7 @@ On a 2 m grid with 200 x 200 faces, an orthographic side view measured the silho
 200 mm with DISPLACEMENT and BOTH, in Cycles and in EEVEE. Displacement moves existing vertices, so the mesh must be
 dense (or subdivided). `[exp: experiments/materials/displacement.py]`
 
-Sockets: Displacement node Height, Midlevel (0.5), Scale (1.0), Normal, `space` OBJECT; Bump node Strength (1.0),
+Sockets: Displacement node Height, Midlevel (0.5), Scale (0.01 on a new node, in a material or a node group `[inv]`), Normal, `space` OBJECT; Bump node Strength (1.0),
 Distance (0.001), Filter Width (0.1), Height, Normal, `invert` False; Normal Map node Strength, Color, `space` TANGENT
 (also OBJECT, WORLD, BLENDER_OBJECT, BLENDER_WORLD). Wire Bump's or Normal Map's Normal output into the Principled
 BSDF's Normal input; a tangent-space normal map needs a UV map and a Non-Color image.
