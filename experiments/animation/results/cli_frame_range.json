@@ -1,0 +1,207 @@
+{
+ "experiment": "experiments/animation/cli_frame_range.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 5.27,
+ "facts": [
+  {
+   "fact": "-a renders the file's own range (frame_start..frame_end, 1-10 here) to its render.filepath, relative to the .blend",
+   "files": [
+    "out/f_0001.png",
+    "out/f_0002.png",
+    "out/f_0003.png",
+    "out/f_0004.png",
+    "out/f_0005.png",
+    "out/f_0006.png",
+    "out/f_0007.png",
+    "out/f_0008.png",
+    "out/f_0009.png",
+    "out/f_0010.png"
+   ],
+   "seconds": 0.49
+  },
+  {
+   "fact": "-s and -e take effect only before -a: '-s 2 -e 4 -a' renders 2-4; '-a -s 2 -e 4' renders the file's whole range",
+   "before": [
+    "out/f_0002.png",
+    "out/f_0003.png",
+    "out/f_0004.png"
+   ],
+   "after": [
+    "out/f_0001.png",
+    "out/f_0002.png",
+    "out/f_0003.png",
+    "out/f_0004.png",
+    "out/f_0005.png",
+    "out/f_0006.png",
+    "out/f_0007.png",
+    "out/f_0008.png",
+    "out/f_0009.png",
+    "out/f_0010.png"
+   ]
+  },
+  {
+   "fact": "-j 3 renders every third frame of the range",
+   "files": [
+    "out/f_0001.png",
+    "out/f_0004.png",
+    "out/f_0007.png"
+   ]
+  },
+  {
+   "fact": "-f takes one frame, a comma list with '..' ranges, or a negative number counted back from the range's end",
+   "f3": [
+    "out/f_0003.png"
+   ],
+   "f_list": [
+    "out/f_0001.png",
+    "out/f_0003.png",
+    "out/f_0005.png",
+    "out/f_0006.png"
+   ],
+   "f_minus1": [
+    "out/f_0010.png"
+   ]
+  },
+  {
+   "fact": "-o replaces the output path (// is the .blend's folder, '#' the frame padding); -F sets the format; -x 0 drops the extension",
+   "o_F": [
+    "other/g_01.jpg",
+    "other/g_02.jpg"
+   ],
+   "x0": [
+    "abs/h_0001"
+   ]
+  },
+  {
+   "fact": "-F FFMPEG on a file whose FFMPEG settings were never set: what is written",
+   "files": [
+    "out/f_0001-0010.mkv"
+   ],
+   "exit": 0,
+   "errors": []
+  }
+ ],
+ "data": {
+  "cases": {
+   "-a": {
+    "exit": 0,
+    "seconds": 0.49,
+    "files": [
+     "out/f_0001.png",
+     "out/f_0002.png",
+     "out/f_0003.png",
+     "out/f_0004.png",
+     "out/f_0005.png",
+     "out/f_0006.png",
+     "out/f_0007.png",
+     "out/f_0008.png",
+     "out/f_0009.png",
+     "out/f_0010.png"
+    ],
+    "saved_lines": 10,
+    "errors": []
+   },
+   "-s 2 -e 4 -a": {
+    "exit": 0,
+    "seconds": 0.47,
+    "files": [
+     "out/f_0002.png",
+     "out/f_0003.png",
+     "out/f_0004.png"
+    ],
+    "saved_lines": 3,
+    "errors": []
+   },
+   "-a -s 2 -e 4": {
+    "exit": 0,
+    "seconds": 0.49,
+    "files": [
+     "out/f_0001.png",
+     "out/f_0002.png",
+     "out/f_0003.png",
+     "out/f_0004.png",
+     "out/f_0005.png",
+     "out/f_0006.png",
+     "out/f_0007.png",
+     "out/f_0008.png",
+     "out/f_0009.png",
+     "out/f_0010.png"
+    ],
+    "saved_lines": 10,
+    "errors": []
+   },
+   "-s 1 -e 9 -j 3 -a": {
+    "exit": 0,
+    "seconds": 0.46,
+    "files": [
+     "out/f_0001.png",
+     "out/f_0004.png",
+     "out/f_0007.png"
+    ],
+    "saved_lines": 3,
+    "errors": []
+   },
+   "-f 3": {
+    "exit": 0,
+    "seconds": 0.46,
+    "files": [
+     "out/f_0003.png"
+    ],
+    "saved_lines": 1,
+    "errors": []
+   },
+   "-f 1,3,5..6": {
+    "exit": 0,
+    "seconds": 0.47,
+    "files": [
+     "out/f_0001.png",
+     "out/f_0003.png",
+     "out/f_0005.png",
+     "out/f_0006.png"
+    ],
+    "saved_lines": 4,
+    "errors": []
+   },
+   "-f -1 (relative to end)": {
+    "exit": 0,
+    "seconds": 0.46,
+    "files": [
+     "out/f_0010.png"
+    ],
+    "saved_lines": 1,
+    "errors": []
+   },
+   "-o //other/g_## -F JPEG -s 1 -e 2 -a": {
+    "exit": 0,
+    "seconds": 0.46,
+    "files": [
+     "other/g_01.jpg",
+     "other/g_02.jpg"
+    ],
+    "saved_lines": 2,
+    "errors": []
+   },
+   "-o /abs/h_ -x 0 -f 1": {
+    "exit": 0,
+    "seconds": 0.46,
+    "files": [
+     "abs/h_0001"
+    ],
+    "saved_lines": 1,
+    "errors": []
+   },
+   "-F FFMPEG -s 1 -e 10 -a (file never set FFMPEG)": {
+    "exit": 0,
+    "seconds": 0.48,
+    "files": [
+     "out/f_0001-0010.mkv"
+    ],
+    "saved_lines": 0,
+    "errors": []
+   }
+  }
+ },
+ "args": []
+}
