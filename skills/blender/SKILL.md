@@ -106,6 +106,9 @@ rendering it raises, and a failed render sets the exit code to 1 even if caught.
 | `areas/lines.md` | Grease Pencil strokes from Python (the 4.3+ data), its materials and rendering, Line Art, Freestyle |
 | `areas/compositing.md` | render passes, the compositor in background mode, multilayer EXR |
 | `areas/export-baking.md` | glTF, OBJ, USD, FBX, STL, PLY: what survives; baking textures |
+| `areas/animation-video.md` | rendering frame ranges headless, video containers and codecs, the sequencer (4.4+ names), turntables, motion blur, time per frame |
+| `areas/sculpt-paint.md` | which sculpt and paint operators run headless (and which crash), colour attributes, vertex groups in shaders, painting textures by pixels |
+| `areas/volumes-fluids.md` | mesh to volume and back, SDF grids, OpenVDB files, rendering volumes, Mantaflow bakes and their caches |
 | `areas/simulation.md` | cloth, rigid bodies, soft bodies, simulation zones; baking headless; caches |
 | `areas/python-extending.md` | custom properties, property groups, operators, handlers (and @persistent), timers and msgbus (not in background mode) |
 | `areas/rigging-animation.md` | armatures from Python, automatic weights, poses, keyframes and 4.4+ actions, shape keys, drivers |
@@ -178,6 +181,20 @@ What an agent's memory most often gets wrong in 4.5, one line each; the page has
 - Actions are slotted since 4.4: keyed curves live in `action.layers[...].strips[...].channelbag(slot)`; an object given
   another object's action does not move until its slot is set; shape-key animation is on the Key data-block.
   → `rigging-animation.md`
+
+**Animation, video, sculpt, volumes**
+- Keyframes made from Python are BEZIER (a turntable eases in and out: 1.8° on its first frame, 22.4° mid-way); set
+  each key's `interpolation = "LINEAR"`; the preference for new keys does not reach `keyframe_insert`. → `animation-video.md`
+- `-s 2 -e 4 -a` renders frames 2 to 4, but `-a -s 2 -e 4` renders the whole range: arguments apply in order. → `animation-video.md`
+- The sequencer's types were renamed in 4.4 (`Sequence` and friends are gone from `bpy.types`; `.sequences` still works,
+  deprecated); a new scene's `sequence_editor` is None until `sequence_editor_create()`. → `animation-video.md`
+- `scene.eevee.use_motion_blur` is gone: `render.use_motion_blur` covers both engines. → `animation-video.md`
+- The sculpt mesh filter segfaults headless unless an undo step was pushed first (`bpy.ops.ed.undo_push()`); the cloth
+  filter does nothing; `weight_paint` strokes crash. → `sculpt-paint.md`
+- EEVEE reads a vertex group through the Attribute node as 0; copy it into a FLOAT attribute. → `sculpt-paint.md`
+- Saving a volume's original data-block writes an empty `.vdb`: only the evaluated volume has grids. A Principled
+  Volume wired to Surface renders black. `fluid.bake_all` needs an active domain (`temp_override(object=...,
+  active_object=...)`), and `free_all` returns before it finishes. → `volumes-fluids.md`
 
 **Compositing and export**
 - In background mode `bpy.data.images["Render Result"]` has 0 pixels, `bpy` loads a multilayer EXR as size (0, 0), and

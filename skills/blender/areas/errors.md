@@ -119,6 +119,23 @@ elsewhere.
 - **`Error: Could not write image: internal error, see console`** — a format that can't hold the image (JPEG 2000 at
   8 px tall, here). `[exp: experiments/rendering/output_formats.py]` → `rendering.md`
 
+## Animation, video, sculpt, volumes
+
+- **`RuntimeError: Error: Render width has to be 720 pixels for DV!`** — the DV codec takes only DV frame sizes; the
+  other 18 container and codec pairs tried wrote a 128 px clip. `[exp: experiments/animation/video_codecs.py]` →
+  `animation-video.md`
+- **`Error: width not divisible by 2`** — H.264 and most codecs need even frame sizes. `[exp: experiments/animation/video_codecs.py]`
+  → `animation-video.md`
+- **`Operator bpy.ops.sequencer.image_strip_add.poll() failed`** / **`anim.keyframe_insert.poll() failed`** — use the
+  data API: `sequence_editor.strips.new_image(...)`, `obj.keyframe_insert(data_path=..., frame=...)`.
+  `[exp: experiments/animation/sequencer_join.py]` `[exp: experiments/animation/turntable.py]` → `animation-video.md`
+- **A segfault from `sculpt.mesh_filter`** — push an undo step first (`bpy.ops.ed.undo_push()`); `weight_paint` strokes
+  crash in `GPU_viewport` regardless. `[exp: experiments/sculpt/sculpt_ops_probe.py]` → `sculpt-paint.md`
+- **`RuntimeError: Error: Vertex not in group`** — `vertex_group.weight(index)` on a vertex the group doesn't hold.
+  `[exp: experiments/sculpt/vertex_groups_weights.py]` → `sculpt-paint.md`
+- **`fluid.bake_all` poll failure** — needs the domain active: `temp_override(object=dom, active_object=dom)`.
+  `[exp: experiments/volumes/fluid_bake.py]` → `volumes-fluids.md`
+
 ## Simulation and rigging
 
 - **`RuntimeError: Error: Armature 'Rig' not in edit mode, cannot add an editbone`** — `armature.edit_bones` exist only
