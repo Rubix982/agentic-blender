@@ -29,6 +29,7 @@ What is in it:
 | `kb/lessons/` | 168 lessons from real projects, 56 of them re-run here |
 | `experiments/` | the evidence: one question per script, results as JSON |
 | `tools/` | `audit_pages.py` (every number on a page against the result it cites), `recheck.py`, `gen_reference.py`, `check_private.py` |
+| `shots/` | whole pieces made by script from a written brief with only the guide, as tests of it end to end: `morning-clearing/` is a ten-second animated forest shot (build, render, check, encode) |
 | `evals/` | the test of whether the skill helps: two sets of ten tasks (one written by the guide's writer, one by an agent that never saw the guide), checks, and the runner |
 
 ## Use
