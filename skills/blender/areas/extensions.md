@@ -19,10 +19,13 @@ settings on a fresh cube. 13 of the 20 had at least one operator that finished a
 2. **Taking FINISHED as done.** Many operators finished and changed nothing: 4 of LoopTools' 9 (Bridge, Circle, Curve
    and Space need a loop or a curve selected), and A.N.T. Landscape's `mesh.landscape_add` returned `PASS_THROUGH` and
    made no terrain. Count objects, vertices or data-blocks after the call. `[exp: experiments/extensions/top_addons.py]`
+   With `refresh=True`, the flag its panel sets, it made a 16,384-vertex terrain. `[exp: experiments/extensions/targeted_addons.py]`
 3. **Panel tools in a script.** Bool Tool changed nothing in 20 operators (they need a canvas and a cutter
    selected; 5 failed their poll on one cube), and Copy Attributes Menu failed the poll on 30 of 31 (it needs two
    selected objects). These are built for a person at the screen; give them the selection they expect, or do the
-   same with the data API (`modifiers.md` for booleans). `[exp: experiments/extensions/top_addons.py]`
+   same with the data API (`modifiers.md` for booleans). `[exp: experiments/extensions/top_addons.py]` Given a canvas
+   (active) and a cutter (selected), Bool Tool's `object.boolean_auto_difference()` cut the canvas and deleted the
+   cutter. `[exp: experiments/extensions/targeted_addons.py]`
 4. **Running third-party code unguarded.** Check the package against the listing's sha256, read its
    `blender_manifest.toml` permissions, and look for network, subprocess and `exec`/`eval` calls before running it.
    Of the 20, Ucupaint imports `requests` (it declares only file access); MPFB declares optional network use for a
@@ -102,6 +105,22 @@ cube, in object mode, or in edit mode with everything selected if object mode fa
 its defaults. "Changed" means the object count, vertex count, sum of vertex coordinates or a data-block count moved.
 `[exp: experiments/extensions/top_addons.py]`
 
-Not measured: operators given the selection or settings they are made for (Bool Tool with a canvas and a cutter, F2
-with a hole's boundary selected, A.N.T. Landscape with its `refresh` flag set, Sapling with leaves). That pass runs
-the add-ons' code again and has not been run.
+## Given the input they are made for
+
+The add-ons that did nothing on one cube, run again in the same sandbox with the input each expects. Counts are read
+in object mode, before and after `[exp: experiments/extensions/targeted_addons.py]`:
+
+| Add-on | Call | Result | What changed |
+|---|---|---|---|
+| antlandscape | `mesh.landscape_add(refresh=True)` in an empty scene | ['FINISHED'] | objects +1, verts +16384, faces +16129, evaluated_verts +16384 |
+| antlandscape | `mesh.ant_displace(refresh=True)` on a 64 x 64 grid, edit mode | ['FINISHED'] | nothing |
+| bool_tool | `object.boolean_auto_difference()` with canvas active and cutter selected | ['FINISHED'] | objects -1, verts -2, faces -3, evaluated_verts -2 |
+| bool_tool | `object.boolean_brush_difference()` with canvas active and cutter selected | ['FINISHED'] | evaluated_verts +6, modifiers +1 |
+| f2 | `mesh.f2()` with a hole's boundary selected | ['PASS_THROUGH'] | nothing |
+| sapling_tree_gen | `curve.tree_add(do_update=True, showLeaves=True)` | ['FINISHED'] | objects +2, verts +7626, faces +2542, evaluated_verts +7626 |
+
+With the input they are made for, A.N.T. Landscape (`mesh.landscape_add(refresh=True)`) and Bool Tool work from a
+script, so 15 of the 20 add-ons have an operator that does. Bool Tool's auto difference applied the boolean and deleted
+the cutter; its brush difference added a Boolean modifier and kept the cutter. Sapling with `showLeaves=True` made two
+objects, `tree` and `leaves`. F2 returned `PASS_THROUGH` and filled nothing, and A.N.T.'s `mesh.ant_displace` finished
+without moving a vertex: neither works headless here. `[exp: experiments/extensions/targeted_addons.py]`

@@ -127,8 +127,10 @@ and that ambientCG's v2 API ignores its type filter.
 operators. All 20 installed and enabled in the throwaway profile; none crashed or hung; the whole probe took 73.7 s.
 The seven with none are mostly built for a selection a person makes (Bool Tool, F2, Copy Attributes Menu, Auto
 Mirror, MeasureIt) or a flag their panel sets (A.N.T. Landscape returned `PASS_THROUGH`); the importer takes a file.
-Limits: one cube and default settings for every operator, so these are lower bounds; a second pass giving those
-add-ons the input they are made for was written and not run, because it runs their code again. The run's download
+Limits: one cube and default settings for every operator, so these are lower bounds. A second pass, run on the
+user's go-ahead (`experiments/extensions/targeted_addons.py`), gave four of them the input they are made for: A.N.T.
+Landscape (with `refresh=True`) and Bool Tool (with a canvas and a cutter selected) then worked, making it 15 of 20;
+F2 and A.N.T.'s Displace still did nothing headless. The run's download
 counts were wrong (an icon's width, 100, read as the count) and were re-read from the website afterwards; the parser
 is fixed.
 

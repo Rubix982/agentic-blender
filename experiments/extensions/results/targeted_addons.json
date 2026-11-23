@@ -1,0 +1,182 @@
+{
+ "experiment": "experiments/extensions/targeted_addons.py",
+ "blender": "4.5.14",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "facts": [
+  {
+   "fact": "the four packages installed into the throwaway profile",
+   "installed": {
+    "antlandscape": true,
+    "bool-tool": true,
+    "f2": true,
+    "sapling-tree-gen": true
+   },
+   "packages": [
+    "add-on-antlandscape-v0.2.0.zip",
+    "add-on-bool-tool-v2.1.0.zip",
+    "add-on-f2-v1.8.5.zip",
+    "add-on-sapling-tree-gen-v0.3.7.zip"
+   ]
+  },
+  {
+   "fact": "antlandscape: mesh.landscape_add(refresh=True) in an empty scene",
+   "result": [
+    "FINISHED"
+   ],
+   "before": {
+    "objects": 0,
+    "verts": 0,
+    "faces": 0,
+    "evaluated_verts": 0,
+    "co": 0,
+    "modifiers": 0
+   },
+   "after": {
+    "objects": 1,
+    "verts": 16384,
+    "faces": 16129,
+    "evaluated_verts": 16384,
+    "co": 19033.169,
+    "modifiers": 0
+   },
+   "changed": true,
+   "new_objects": [
+    "Landscape"
+   ]
+  },
+  {
+   "fact": "antlandscape: mesh.ant_displace(refresh=True) on a 64 x 64 grid, edit mode",
+   "result": [
+    "FINISHED"
+   ],
+   "before": {
+    "objects": 1,
+    "verts": 4225,
+    "faces": 4096,
+    "evaluated_verts": 4225,
+    "co": 8580.0,
+    "modifiers": 0
+   },
+   "after": {
+    "objects": 1,
+    "verts": 4225,
+    "faces": 4096,
+    "evaluated_verts": 4225,
+    "co": 8580.0,
+    "modifiers": 0
+   },
+   "changed": false,
+   "new_objects": [
+    "Grid"
+   ]
+  },
+  {
+   "fact": "bool_tool: object.boolean_auto_difference() with canvas active and cutter selected",
+   "result": [
+    "FINISHED"
+   ],
+   "before": {
+    "objects": 2,
+    "verts": 16,
+    "faces": 12,
+    "evaluated_verts": 16,
+    "co": 36.0,
+    "modifiers": 0
+   },
+   "after": {
+    "objects": 1,
+    "verts": 14,
+    "faces": 9,
+    "evaluated_verts": 14,
+    "co": 36.0,
+    "modifiers": 0
+   },
+   "changed": true,
+   "new_objects": [
+    "Cube"
+   ]
+  },
+  {
+   "fact": "bool_tool: object.boolean_brush_difference() with canvas active and cutter selected",
+   "result": [
+    "FINISHED"
+   ],
+   "before": {
+    "objects": 2,
+    "verts": 16,
+    "faces": 12,
+    "evaluated_verts": 16,
+    "co": 36.0,
+    "modifiers": 0
+   },
+   "after": {
+    "objects": 2,
+    "verts": 16,
+    "faces": 12,
+    "evaluated_verts": 22,
+    "co": 36.0,
+    "modifiers": 1
+   },
+   "changed": true,
+   "new_objects": [
+    "Cube",
+    "Cube.001"
+   ]
+  },
+  {
+   "fact": "f2: mesh.f2() with a hole's boundary selected",
+   "result": [
+    "PASS_THROUGH"
+   ],
+   "before": {
+    "objects": 1,
+    "verts": 8,
+    "faces": 5,
+    "evaluated_verts": 8,
+    "co": 24.0,
+    "modifiers": 0
+   },
+   "after": {
+    "objects": 1,
+    "verts": 8,
+    "faces": 5,
+    "evaluated_verts": 8,
+    "co": 24.0,
+    "modifiers": 0
+   },
+   "changed": false,
+   "new_objects": [
+    "Cube"
+   ]
+  },
+  {
+   "fact": "sapling_tree_gen: curve.tree_add(do_update=True, showLeaves=True)",
+   "result": [
+    "FINISHED"
+   ],
+   "before": {
+    "objects": 0,
+    "verts": 0,
+    "faces": 0,
+    "evaluated_verts": 0,
+    "co": 0,
+    "modifiers": 0
+   },
+   "after": {
+    "objects": 2,
+    "verts": 7626,
+    "faces": 2542,
+    "evaluated_verts": 7626,
+    "co": 110980.176,
+    "modifiers": 0
+   },
+   "changed": true,
+   "new_objects": [
+    "leaves",
+    "tree"
+   ]
+  }
+ ],
+ "data": {}
+}

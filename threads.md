@@ -20,7 +20,7 @@ ambientCG (CC0, no account), Megascans (reported free again in November 2026, ne
 **Question:** v1 inventoried the 14 bundled add-ons only; 4.5's `BLENDER_USER_RESOURCES` and `BLENDER_USER_EXTENSIONS`
 (listed in `--help`) let extensions be installed and inventoried without changing the user's own Blender.
 **Answer:** C-003 (CARD.md): the top 20 by downloads, sandboxed; 13 have an operator that works headless with default
-settings (`areas/extensions.md`). Open: the targeted pass (each add-on given the input it is made for), not run.
+settings (`areas/extensions.md`); 15 once four were given the input they are made for (targeted_addons.py).
 
 ### T-003 · What separates a contest-level realistic environment from a merely correct one, and can an agent reach it?
 
