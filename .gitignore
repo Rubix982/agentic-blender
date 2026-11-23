@@ -5,3 +5,4 @@ __pycache__/
 *.crash.txt
 .DS_Store
 evals/runs/
+shots/*/out/

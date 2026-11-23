@@ -173,3 +173,34 @@ end at 100 m and do not shadow the sun by default, pointiness is Cycles only and
 Cycles'. What the settings leave out is what 14 and 13 of the 17 artists did: work from photographs of a real place,
 and model the main objects themselves.
 
+---
+
+### C-005 · A ten-second realistic shot from a brief, by script, overnight on this laptop
+
+**Opened:** 2026-11-23 (night, unattended)
+
+**The brief (fixed before the work):** early morning in a forest clearing. A mossy boulder beside a fallen trunk,
+ferns and small stones around it on a leaf-litter floor, light ground haze, a low sun through the trees casting
+dappled light. The camera dollies slowly towards the boulder, focused on it. 10 seconds at 24 fps (240 frames),
+1280 x 720.
+
+1. **WHERE WE ARE.** The guide has each piece measured separately: free scanned assets at real size (C-002),
+   add-ons (C-003), and the twelve realism settings (C-004). Nothing has yet been made with all of them at once, or
+   moved, or rendered as a sequence.
+2. **WHAT WE ARE DOING.** Build the brief's scene by script using only the guide (Poly Haven assets through
+   `assets.py`, scattering by painted density, a ground fog layer, a sun on the HDRI's own, a hidden plane casting the
+   dappled light, depth of field, the compositor finish with per-frame grain), render all 240 frames headless, and
+   check them by numbers.
+3. **WHY.** Unknown now: whether the measured pieces combine into an animated shot on 16 GB and an M2 Pro within one
+   night, and what breaks when they do (time, memory, flicker, a recipe that does not hold up in motion).
+4. **WHAT IS AFFECTED.** New files under `shots/morning-clearing/` (scripts committed; renders git-ignored); any gap
+   becomes an experiment and a page line in the next version.
+5. **CONCLUSION.** If all 240 frames render within 9 hours, the boulder arrives within 2 % of its stated size, and the
+   frame-to-frame flicker (each frame against the mean of its neighbours, before grain) stays at or below 0.01 on
+   average, the guide supports a realistic animated shot on this laptop, and its gaps are polish. If not, the failure
+   names the gap (time, memory, flicker, or a recipe), and that is the next experiment.
+6. **CONSEQUENCE OF NOT DOING IT.** Every measured piece stays a still, and the first real animation request finds out
+   at once whether they combine.
+
+**Result:** —
+

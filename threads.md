@@ -43,3 +43,24 @@ it, and the sun-elevation rule held back from v1.
 bearing with the sky's `sun_rotation` (`light-world-camera.md`), light and shadow linking, and looping keys and keyed
 node inputs (`animation-video.md`), each from a new experiment.
 **Status:** answered
+
+### T-005 · Blender competitions over the years: techniques as settings, procedures (operator steps) and judgement
+
+**Status:** active
+**Parent:** T-003
+**Opened:** 2026-11-23
+**Question:** the user's idea: study winners across years (Best of Blender Artists, Suzanne Awards, CG Boost, Pwnisher,
+Blender Studio's open movies) far deeper than click-by-click tutorials, writing each technique so an agent can run it.
+A research agent is gathering it (scratchpad competitions_study.md, to become kb/research/).
+**Answer:** —
+
+### T-006 · Turning a click-path tutorial into operator calls
+
+**Status:** open
+**Parent:** T-005
+**Opened:** 2026-11-23
+**Question:** YouTube teaches by clicks and hotkeys. Ways in: the user pastes Blender's Info editor log (every click as
+its Python call); or a lookup from Blender's own keymap and menu labels to operators (`kb.py keys`), built from the
+running Blender like the inventory.
+**Answer:** —
+
