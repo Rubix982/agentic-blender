@@ -64,8 +64,8 @@ area.rotation_euler = (Vector((0, 0, 1)) - area.location).to_track_quat("-Z", "Y
 scene.collection.objects.link(area)
 ```
 
-`[exp: experiments/rendering/cycles_metal_vs_cpu.py]` Measured irradiance on a floor facing the light, Cycles and EEVEE
-within 0.3 % of each other:
+(Code from `experiments/rendering/cycles_metal_vs_cpu.py`.) Measured irradiance on a floor facing the light, Cycles and
+EEVEE within 0.3 % of each other `[exp: experiments/light/light_units.py]`:
 
 | light | setting | measured E | law |
 |---|---|---|---|

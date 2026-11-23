@@ -31,9 +31,15 @@ scene.frame_start, scene.frame_end = 1, 24
 
 st = scene.render.image_settings
 ff = scene.render.ffmpeg
-E.fact("a new scene's FFMPEG settings: container MKV, codec H264, quality MEDIUM, speed GOOD, keyframe interval 25, "
-       "no audio", format=ff.format, codec=ff.codec, crf=ff.constant_rate_factor, preset=ff.ffmpeg_preset,
-       gopsize=ff.gopsize, audio_codec=ff.audio_codec)
+before = dict(file_format=st.file_format, format=ff.format, codec=ff.codec, crf=ff.constant_rate_factor,
+              preset=ff.ffmpeg_preset, gopsize=ff.gopsize, audio_codec=ff.audio_codec)
+st.file_format = "FFMPEG"
+after = dict(file_format=st.file_format, format=ff.format, codec=ff.codec, crf=ff.constant_rate_factor,
+             preset=ff.ffmpeg_preset, gopsize=ff.gopsize, audio_codec=ff.audio_codec)
+E.fact("a new scene's FFMPEG settings read MPEG1 / no codec / CRF NONE / keyframe interval 0 until file_format is set to "
+       "FFMPEG; setting it fills in MKV / H264 / MEDIUM / interval 18 (so read them after, not before)",
+       before=before, after=after)
+st.file_format = "PNG"
 
 
 def err(fn):
@@ -113,6 +119,19 @@ for crf in ("LOSSLESS", "PERC_LOSSLESS", "HIGH", "MEDIUM", "LOW", "LOWEST"):
     r = encode("MPEG4", "H264", crf=crf)
     q[crf] = r["bytes"]
 E.fact("H.264 file size of the same 24-frame 128 px clip by constant_rate_factor (bytes)", sizes=q)
+
+# PNG frames vs one MP4 at 512 px: time and bytes for the same 24 frames.
+clear()
+scene.render.resolution_x = scene.render.resolution_y = 512
+st.file_format = "PNG"
+scene.render.filepath = os.path.join(d, "f_####")
+t = time.time(); bpy.ops.render.render(animation=True); png_s = time.time() - t
+png_files = [f for f in os.listdir(d) if f.endswith(".png")]
+png_bytes = sum(os.path.getsize(os.path.join(d, f)) for f in png_files)
+mp4 = encode("MPEG4", "H264", 512, 512)
+E.fact("24 frames at 512 px (Workbench): a PNG sequence against one MP4 (H.264, MEDIUM): seconds and bytes",
+       png_seconds=round(png_s, 2), png_files=len(png_files), png_bytes=png_bytes, mp4_seconds=mp4["seconds"],
+       mp4_bytes=mp4["bytes"])
 
 shutil.rmtree(d)
 E.save(pairs=res, odd=odd, quality=q)

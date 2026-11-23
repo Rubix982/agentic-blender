@@ -3,43 +3,55 @@
  "blender": "4.5.14 LTS",
  "machine": "Darwin arm64",
  "date": "2026-11-23",
- "seconds": 2.85,
+ "seconds": 3.2,
  "facts": [
   {
-   "fact": "a new scene's FFMPEG settings: container MKV, codec H264, quality MEDIUM, speed GOOD, keyframe interval 25, no audio",
-   "format": "MPEG1",
-   "codec": "NONE",
-   "crf": "NONE",
-   "preset": "GOOD",
-   "gopsize": 0,
-   "audio_codec": "NONE"
+   "fact": "a new scene's FFMPEG settings read MPEG1 / no codec / CRF NONE / keyframe interval 0 until file_format is set to FFMPEG; setting it fills in MKV / H264 / MEDIUM / interval 18 (so read them after, not before)",
+   "before": {
+    "file_format": "PNG",
+    "format": "MPEG1",
+    "codec": "NONE",
+    "crf": "NONE",
+    "preset": "GOOD",
+    "gopsize": 0,
+    "audio_codec": "NONE"
+   },
+   "after": {
+    "file_format": "FFMPEG",
+    "format": "MKV",
+    "codec": "H264",
+    "crf": "MEDIUM",
+    "preset": "GOOD",
+    "gopsize": 18,
+    "audio_codec": "NONE"
+   }
   },
   {
    "fact": "which container/codec pairs wrote a 24-frame 128 px clip (bytes, seconds, frames read back by movieclips.load)",
    "written": {
     "MPEG4/H264": [
      2938,
-     0.194,
+     0.181,
      24
     ],
     "MPEG4/H265": [
      4583,
-     0.118,
+     0.109,
      24
     ],
     "MPEG4/AV1": [
      2724,
-     0.158,
+     0.144,
      24
     ],
     "MPEG4/MPEG4": [
      3078,
-     0.096,
+     0.093,
      24
     ],
     "MKV/H264": [
      2757,
-     0.093,
+     0.088,
      24
     ],
     "MKV/FFV1": [
@@ -49,37 +61,37 @@
     ],
     "MKV/AV1": [
      12147,
-     0.152,
+     0.15,
      24
     ],
     "WEBM/WEBM": [
      2820,
-     0.207,
+     0.193,
      24
     ],
     "WEBM/AV1": [
      12073,
-     0.157,
+     0.149,
      24
     ],
     "QUICKTIME/PRORES": [
      14551,
-     0.095,
+     0.087,
      24
     ],
     "QUICKTIME/QTRLE": [
      48286,
-     0.095,
+     0.09,
      24
     ],
     "QUICKTIME/PNG": [
      67359,
-     0.095,
+     0.09,
      24
     ],
     "QUICKTIME/H264": [
      12308,
-     0.096,
+     0.093,
      24
     ],
     "OGG/THEORA": [
@@ -89,12 +101,12 @@
     ],
     "AVI/HUFFYUV": [
      409556,
-     0.092,
+     0.091,
      24
     ],
     "MPEG2/MPEG2": [
      12288,
-     0.094,
+     0.095,
      19
     ],
     "MPEG1/MPEG1": [
@@ -104,7 +116,7 @@
     ],
     "FLASH/FLASH": [
      4785,
-     0.092,
+     0.097,
      24
     ]
    }
@@ -148,6 +160,14 @@
     "LOW": 2758,
     "LOWEST": 2500
    }
+  },
+  {
+   "fact": "24 frames at 512 px (Workbench): a PNG sequence against one MP4 (H.264, MEDIUM): seconds and bytes",
+   "png_seconds": 0.28,
+   "png_files": 24,
+   "png_bytes": 1588350,
+   "mp4_seconds": 0.188,
+   "mp4_bytes": 4785
   }
  ],
  "data": {
@@ -161,7 +181,7 @@
     "files": [
      "clip0001-0024.mp4"
     ],
-    "seconds": 0.194,
+    "seconds": 0.181,
     "bytes": 2938,
     "movieclip_frames": 24,
     "movieclip_size": [
@@ -180,7 +200,7 @@
     "files": [
      "clip0001-0024.mp4"
     ],
-    "seconds": 0.118,
+    "seconds": 0.109,
     "bytes": 4583,
     "movieclip_frames": 24,
     "movieclip_size": [
@@ -199,7 +219,7 @@
     "files": [
      "clip0001-0024.mp4"
     ],
-    "seconds": 0.158,
+    "seconds": 0.144,
     "bytes": 2724,
     "movieclip_frames": 24,
     "movieclip_size": [
@@ -218,7 +238,7 @@
     "files": [
      "clip0001-0024.mp4"
     ],
-    "seconds": 0.096,
+    "seconds": 0.093,
     "bytes": 3078,
     "movieclip_frames": 24,
     "movieclip_size": [
@@ -237,7 +257,7 @@
     "files": [
      "clip0001-0024.mkv"
     ],
-    "seconds": 0.093,
+    "seconds": 0.088,
     "bytes": 2757,
     "movieclip_frames": 24,
     "movieclip_size": [
@@ -275,7 +295,7 @@
     "files": [
      "clip0001-0024.mkv"
     ],
-    "seconds": 0.152,
+    "seconds": 0.15,
     "bytes": 12147,
     "movieclip_frames": 24,
     "movieclip_size": [
@@ -294,7 +314,7 @@
     "files": [
      "clip0001-0024.webm"
     ],
-    "seconds": 0.207,
+    "seconds": 0.193,
     "bytes": 2820,
     "movieclip_frames": 24,
     "movieclip_size": [
@@ -313,7 +333,7 @@
     "files": [
      "clip0001-0024.webm"
     ],
-    "seconds": 0.157,
+    "seconds": 0.149,
     "bytes": 12073,
     "movieclip_frames": 24,
     "movieclip_size": [
@@ -332,7 +352,7 @@
     "files": [
      "clip0001-0024.mov"
     ],
-    "seconds": 0.095,
+    "seconds": 0.087,
     "bytes": 14551,
     "movieclip_frames": 24,
     "movieclip_size": [
@@ -351,7 +371,7 @@
     "files": [
      "clip0001-0024.mov"
     ],
-    "seconds": 0.095,
+    "seconds": 0.09,
     "bytes": 48286,
     "movieclip_frames": 24,
     "movieclip_size": [
@@ -370,7 +390,7 @@
     "files": [
      "clip0001-0024.mov"
     ],
-    "seconds": 0.095,
+    "seconds": 0.09,
     "bytes": 67359,
     "movieclip_frames": 24,
     "movieclip_size": [
@@ -389,7 +409,7 @@
     "files": [
      "clip0001-0024.mov"
     ],
-    "seconds": 0.096,
+    "seconds": 0.093,
     "bytes": 12308,
     "movieclip_frames": 24,
     "movieclip_size": [
@@ -427,7 +447,7 @@
     "files": [
      "clip0001-0024.avi"
     ],
-    "seconds": 0.092,
+    "seconds": 0.091,
     "bytes": 409556,
     "movieclip_frames": 24,
     "movieclip_size": [
@@ -446,7 +466,7 @@
     "files": [
      "clip0001-0024.dvd"
     ],
-    "seconds": 0.094,
+    "seconds": 0.095,
     "bytes": 12288,
     "movieclip_frames": 19,
     "movieclip_size": [
@@ -494,7 +514,7 @@
     "files": [
      "clip0001-0024.flv"
     ],
-    "seconds": 0.092,
+    "seconds": 0.097,
     "bytes": 4785,
     "movieclip_frames": 24,
     "movieclip_size": [
