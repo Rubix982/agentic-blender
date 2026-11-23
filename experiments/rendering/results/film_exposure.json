@@ -1,0 +1,56 @@
+{
+ "experiment": "experiments/rendering/film_exposure.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 3.33,
+ "facts": [
+  {
+   "fact": "In Cycles, film_exposure multiplies the rendered values themselves, so it shows in the float EXR (0.125 at film_exposure 2 wrote 0.25); the view transform's exposure (stops) changes only the display-referred PNG and leaves the EXR at 0.125. They stack: film 2 with +1 EV wrote byte 188, the PNG of linear 0.5",
+   "emission": 0.125,
+   "film 1.0, view +0 EV": {
+    "exr": 0.125,
+    "png": 99
+   },
+   "film 2.0, view +0 EV": {
+    "exr": 0.25,
+    "png": 137
+   },
+   "film 0.5, view +0 EV": {
+    "exr": 0.0625,
+    "png": 71
+   },
+   "film 1.0, view +1 EV": {
+    "exr": 0.125,
+    "png": 137
+   },
+   "film 1.0, view -1 EV": {
+    "exr": 0.125,
+    "png": 71
+   },
+   "film 2.0, view +1 EV": {
+    "exr": 0.25,
+    "png": 188
+   }
+  },
+  {
+   "fact": "EEVEE ignores scene.cycles.film_exposure (the EXR and PNG were unchanged at film_exposure 2); the view exposure works the same as in Cycles",
+   "film 1.0, view +0 EV": {
+    "exr": 0.125,
+    "png": 99
+   },
+   "film 2.0, view +0 EV": {
+    "exr": 0.125,
+    "png": 99
+   },
+   "film 1.0, view +1 EV": {
+    "exr": 0.125,
+    "png": 137
+   }
+  }
+ ],
+ "data": {
+  "device": "METAL"
+ },
+ "args": []
+}

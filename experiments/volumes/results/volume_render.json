@@ -3,7 +3,7 @@
  "blender": "4.5.14 LTS",
  "machine": "Darwin arm64",
  "date": "2026-11-23",
- "seconds": 3.65,
+ "seconds": 3.45,
  "facts": [
   {
    "fact": "the Mesh to Volume modifier puts the volume where the source mesh is in the world: moving the Volume object (to x = 5) does not move the volume",
@@ -22,7 +22,7 @@
   {
    "fact": "a Volume object (Mesh to Volume, amount 64) and a mesh cube with Principled Volume (density 5 and 2, orange) render in Cycles and EEVEE: both differ from the bare backdrop; seconds per 128 px frame at 32 samples",
    "Cycles CPU": {
-    "seconds": 0.155,
+    "seconds": 0.13,
     "volume_obj": [
      0.438,
      0.332,
@@ -40,7 +40,7 @@
     ]
    },
    "Cycles METAL": {
-    "seconds": 0.49,
+    "seconds": 0.479,
     "volume_obj": [
      0.438,
      0.332,
@@ -58,7 +58,7 @@
     ]
    },
    "EEVEE": {
-    "seconds": 0.266,
+    "seconds": 0.259,
     "volume_obj": [
      0.577,
      0.451,
@@ -77,9 +77,9 @@
    }
   },
   {
-   "fact": "Cycles' volume_step_rate (default 1): 4 renders faster; 0.25 took no longer than 1 at this size",
+   "fact": "Cycles' volume_step_rate (default 1) at 128 px on Metal: 0.25 was the slowest, 4 about as fast as 1, and the volume's colour moved by under 0.01",
    "base": {
-    "seconds": 0.49,
+    "seconds": 0.479,
     "volume_obj": [
      0.438,
      0.332,
@@ -97,7 +97,7 @@
     ]
    },
    "Cycles METAL step_rate 0.25": {
-    "seconds": 0.777,
+    "seconds": 0.782,
     "volume_obj": [
      0.438,
      0.331,
@@ -115,7 +115,7 @@
     ]
    },
    "Cycles METAL step_rate 4.0": {
-    "seconds": 0.462,
+    "seconds": 0.439,
     "volume_obj": [
      0.445,
      0.337,
@@ -136,7 +136,7 @@
   {
    "fact": "a Volume object with no material still renders in Cycles (a default grey volume); Principled Volume wired to the Surface output renders the cube black in Cycles instead of as a volume",
    "no_material": {
-    "seconds": 0.713,
+    "seconds": 0.639,
     "volume_obj": [
      0.531,
      0.531,
@@ -154,7 +154,7 @@
     ]
    },
    "volume_into_surface": {
-    "seconds": 0.515,
+    "seconds": 0.483,
     "volume_obj": [
      0.438,
      0.332,
@@ -172,7 +172,7 @@
     ]
    },
    "volume_into_surface_eevee": {
-    "seconds": 0.166,
+    "seconds": 0.146,
     "volume_obj": [
      0.577,
      0.451,
@@ -190,7 +190,7 @@
     ]
    },
    "for_reference": {
-    "seconds": 0.49,
+    "seconds": 0.479,
     "volume_obj": [
      0.438,
      0.332,
@@ -212,7 +212,7 @@
  "data": {
   "results": {
    "Cycles CPU": {
-    "seconds": 0.155,
+    "seconds": 0.13,
     "volume_obj": [
      0.438,
      0.332,
@@ -230,7 +230,7 @@
     ]
    },
    "Cycles METAL": {
-    "seconds": 0.49,
+    "seconds": 0.479,
     "volume_obj": [
      0.438,
      0.332,
@@ -248,7 +248,7 @@
     ]
    },
    "Cycles METAL step_rate 0.25": {
-    "seconds": 0.777,
+    "seconds": 0.782,
     "volume_obj": [
      0.438,
      0.331,
@@ -266,7 +266,7 @@
     ]
    },
    "Cycles METAL step_rate 4.0": {
-    "seconds": 0.462,
+    "seconds": 0.439,
     "volume_obj": [
      0.445,
      0.337,
@@ -284,7 +284,7 @@
     ]
    },
    "EEVEE": {
-    "seconds": 0.266,
+    "seconds": 0.259,
     "volume_obj": [
      0.577,
      0.451,

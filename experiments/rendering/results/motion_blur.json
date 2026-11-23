@@ -1,0 +1,109 @@
+{
+ "experiment": "experiments/rendering/motion_blur.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 3.54,
+ "facts": [
+  {
+   "fact": "keyframe_insert from Python made BEZIER keys although preferences.edit.keyframe_new_interpolation_type was set to 'LINEAR' first; with those eased keys the square passes frame 2 faster than the 1 m per frame average, and the shutter-0.5 smear was longer than with LINEAR keys (keyframe_points[i].interpolation = 'LINEAR')",
+   "interpolation": [
+    "BEZIER"
+   ],
+   "bezier_keys": {
+    "length_m": 0.938,
+    "centre_x_m": -0.001,
+    "peak_alpha": 0.312
+   },
+   "linear_keys": {
+    "length_m": 0.688,
+    "centre_x_m": -0.001,
+    "peak_alpha": 0.453
+   }
+  },
+  {
+   "fact": "Cycles motion blur is off in a new file (render.use_motion_blur False, shutter 0.5 frames, position CENTER). Turned on, the 0.2 m square moving 1 m per frame smeared to about its size + shutter x speed (0.2 + 0.5 = 0.7 m at shutter 0.5, 1.2 m at 1.0; the measured extents include the 1.5 px pixel filter, 0.25 m with no blur), centred on where it is at the frame",
+   "defaults": {
+    "use_motion_blur": false,
+    "shutter": 0.5,
+    "position": "CENTER",
+    "object_use_motion_blur": true,
+    "positions": [
+     "START",
+     "CENTER",
+     "END"
+    ]
+   },
+   "square_m": 0.2,
+   "speed_m_per_frame": 1.0,
+   "off": {
+    "length_m": 0.25,
+    "centre_x_m": 0.0,
+    "peak_alpha": 1.0
+   },
+   "on, shutter 0.5": {
+    "length_m": 0.688,
+    "centre_x_m": -0.001,
+    "peak_alpha": 0.453
+   },
+   "on, shutter 1.0": {
+    "length_m": 1.156,
+    "centre_x_m": -0.005,
+    "peak_alpha": 0.25
+   },
+   "on, shutter 0.25": {
+    "length_m": 0.438,
+    "centre_x_m": -0.001,
+    "peak_alpha": 0.844
+   }
+  },
+  {
+   "fact": "motion_blur_position moves the shutter interval: START opens it at the frame, so the smear lies ahead of the frame's position (centre +0.25 m at shutter 0.5), END behind it (-0.25 m), CENTER around it",
+   "START": {
+    "length_m": 0.688,
+    "centre_x_m": 0.25,
+    "peak_alpha": 0.453
+   },
+   "CENTER": {
+    "length_m": 0.688,
+    "centre_x_m": -0.001,
+    "peak_alpha": 0.453
+   },
+   "END": {
+    "length_m": 0.688,
+    "centre_x_m": -0.251,
+    "peak_alpha": 0.453
+   }
+  },
+  {
+   "fact": "Per object, object.cycles.use_motion_blur = False turns the blur off for that object while the scene's is on",
+   "length_m": 0.25,
+   "centre_x_m": 0.0,
+   "peak_alpha": 1.0
+  },
+  {
+   "fact": "EEVEE reads the same scene.render.use_motion_blur and shutter (scene.eevee.use_motion_blur is gone in 4.5)",
+   "eevee_has_use_motion_blur": false,
+   "off": {
+    "length_m": 0.25,
+    "centre_x_m": -0.0,
+    "peak_alpha": 1.0
+   },
+   "on, shutter 0.5": {
+    "length_m": 0.688,
+    "centre_x_m": -0.0,
+    "peak_alpha": 0.405
+   },
+   "on, shutter 1.0": {
+    "length_m": 1.188,
+    "centre_x_m": -0.0,
+    "peak_alpha": 0.207
+   }
+  }
+ ],
+ "data": {
+  "device": "METAL",
+  "px_per_m": 32.0
+ },
+ "args": []
+}

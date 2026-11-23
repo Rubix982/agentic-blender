@@ -1,0 +1,283 @@
+{
+ "experiment": "experiments/volumes/fluid_bake.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 15.27,
+ "facts": [
+  {
+   "fact": "a new fluid domain in an unsaved file: GAS, cache type REPLAY, data cached as OpenVDB, resolution 32, frames 1-250; its cache directory is cache_fluid_<hash> inside bpy.app.tempdir (Blender's session temp folder)",
+   "domain_type": "GAS",
+   "cache_type": "REPLAY",
+   "cache_directory": "<bpy.app.tempdir>/cache_fluid_4b85f272",
+   "data_format": "OPENVDB",
+   "mesh_format": "BOBJECT",
+   "resolution_max": 32,
+   "frame_start": 1,
+   "frame_end": 250,
+   "use_mesh": true,
+   "in_app_tempdir": true,
+   "blend_saved": false
+  },
+  {
+   "fact": "in a saved file a new domain's cache directory is relative to the .blend: //cache_fluid_<hash>",
+   "cache_directory": "//cache_fluid_b5a0859b"
+  },
+  {
+   "fact": "fluid.bake_all fails its poll with no active object; with the domain active (and in a temp_override) it bakes headless and blocks until done; the override alone (nothing active in the view layer) is enough",
+   "no_context": [
+    "error",
+    "RuntimeError: Operator bpy.ops.fluid.bake_all.poll() Context missing active object"
+   ],
+   "override_only": [
+    "ok",
+    "{'FINISHED'}"
+   ],
+   "override_only_files": 20,
+   "with_domain": [
+    "ok",
+    "{'FINISHED'}"
+   ],
+   "seconds": 0.15,
+   "has_cache_baked_data": true,
+   "files": 20
+  },
+  {
+   "fact": "an ALL bake of 10 smoke frames writes a config file (.uni) and an OpenVDB data file per frame, under <cache>/config and <cache>/data",
+   "folders": [
+    "config",
+    "data"
+   ],
+   "examples": [
+    "config/config_0001.uni",
+    "config/config_0002.uni",
+    "config/config_0003.uni",
+    "data/fluid_data_0009.vdb",
+    "data/fluid_data_0010.vdb"
+   ],
+   "count": 20,
+   "bytes": 548556
+  },
+  {
+   "fact": "the last baked frame's .vdb holds the smoke's grids; density has active voxels and a positive maximum",
+   "file": "data/fluid_data_0010.vdb",
+   "grids": [
+    "density",
+    "flame",
+    "shadow",
+    "temperature",
+    "velocity"
+   ],
+   "density_active": 691,
+   "density_max": 0.9575
+  },
+  {
+   "fact": "a baked fluid .vdb imports as a Volume object with volume_import",
+   "result": [
+    "ok",
+    "{'FINISHED'}"
+   ],
+   "grids": [
+    "density",
+    "flame",
+    "shadow",
+    "temperature",
+    "velocity"
+   ]
+  },
+  {
+   "fact": "bake time and cache size for 10 frames, by resolution_max (smoke inflow; a liquid sphere falling): both grow with resolution",
+   "GAS 16": {
+    "result": "{'FINISHED'}",
+    "seconds": 0.15,
+    "files": 20,
+    "bytes": 548556
+   },
+   "GAS 32": {
+    "result": "{'FINISHED'}",
+    "seconds": 0.29,
+    "files": 20,
+    "bytes": 728803
+   },
+   "GAS 48": {
+    "result": "{'FINISHED'}",
+    "seconds": 0.56,
+    "files": 20,
+    "bytes": 1011012
+   },
+   "GAS 96": {
+    "result": "{'FINISHED'}",
+    "seconds": 5.3,
+    "files": 20,
+    "bytes": 2550835
+   },
+   "LIQUID 16": {
+    "result": "{'FINISHED'}",
+    "seconds": 0.14,
+    "files": 30,
+    "bytes": 663575,
+    "liquid_mesh_verts_frame10": 862,
+    "mesh_files": 10
+   },
+   "LIQUID 32": {
+    "result": "{'FINISHED'}",
+    "seconds": 0.35,
+    "files": 30,
+    "bytes": 2062018,
+    "liquid_mesh_verts_frame10": 3236,
+    "mesh_files": 10
+   },
+   "LIQUID 48": {
+    "result": "{'FINISHED'}",
+    "seconds": 0.76,
+    "files": 30,
+    "bytes": 4330894,
+    "liquid_mesh_verts_frame10": 6998,
+    "mesh_files": 10
+   },
+   "LIQUID 96": {
+    "result": "{'FINISHED'}",
+    "seconds": 5.27,
+    "files": 30,
+    "bytes": 17414102,
+    "liquid_mesh_verts_frame10": 27012,
+    "mesh_files": 10
+   }
+  },
+  {
+   "fact": "after a liquid ALL bake, the domain's evaluated mesh at frame 10 is the liquid surface (with use_mesh on, the default), not the domain cube's 8 points",
+   "liquid32": 3236,
+   "mesh_files": 10
+  },
+  {
+   "fact": "with the default REPLAY cache, stepping frames 1-10 simulates and writes cache files as it goes, with no bake call",
+   "seconds": 0.11,
+   "files": 20,
+   "has_cache_baked_data": false
+  },
+  {
+   "fact": "after an ALL bake ((has_cache_baked_data, file count) before and after each change, baked afresh each time): moving the flow object, changing its density or the domain's cache_frame_end keeps the bake; setting the domain's vorticity or resolution_max from Python clears the flag and deletes the cache files, as does free_all",
+   "move the flow object": {
+    "before": [
+     true,
+     20
+    ],
+    "after": [
+     true,
+     20
+    ]
+   },
+   "flow density": {
+    "before": [
+     true,
+     20
+    ],
+    "after": [
+     true,
+     20
+    ]
+   },
+   "domain vorticity": {
+    "before": [
+     true,
+     20
+    ],
+    "after": [
+     false,
+     0
+    ]
+   },
+   "domain resolution_max": {
+    "before": [
+     true,
+     20
+    ],
+    "after": [
+     false,
+     0
+    ]
+   },
+   "domain cache_frame_end": {
+    "before": [
+     true,
+     20
+    ],
+    "after": [
+     true,
+     20
+    ]
+   },
+   "fluid.free_all": {
+    "before": [
+     true,
+     22
+    ],
+    "after": [
+     false,
+     0
+    ]
+   }
+  }
+ ],
+ "data": {
+  "timing": {
+   "GAS 16": {
+    "result": "{'FINISHED'}",
+    "seconds": 0.15,
+    "files": 20,
+    "bytes": 548556
+   },
+   "GAS 32": {
+    "result": "{'FINISHED'}",
+    "seconds": 0.29,
+    "files": 20,
+    "bytes": 728803
+   },
+   "GAS 48": {
+    "result": "{'FINISHED'}",
+    "seconds": 0.56,
+    "files": 20,
+    "bytes": 1011012
+   },
+   "GAS 96": {
+    "result": "{'FINISHED'}",
+    "seconds": 5.3,
+    "files": 20,
+    "bytes": 2550835
+   },
+   "LIQUID 16": {
+    "result": "{'FINISHED'}",
+    "seconds": 0.14,
+    "files": 30,
+    "bytes": 663575,
+    "liquid_mesh_verts_frame10": 862,
+    "mesh_files": 10
+   },
+   "LIQUID 32": {
+    "result": "{'FINISHED'}",
+    "seconds": 0.35,
+    "files": 30,
+    "bytes": 2062018,
+    "liquid_mesh_verts_frame10": 3236,
+    "mesh_files": 10
+   },
+   "LIQUID 48": {
+    "result": "{'FINISHED'}",
+    "seconds": 0.76,
+    "files": 30,
+    "bytes": 4330894,
+    "liquid_mesh_verts_frame10": 6998,
+    "mesh_files": 10
+   },
+   "LIQUID 96": {
+    "result": "{'FINISHED'}",
+    "seconds": 5.27,
+    "files": 30,
+    "bytes": 17414102,
+    "liquid_mesh_verts_frame10": 27012,
+    "mesh_files": 10
+   }
+  }
+ },
+ "args": []
+}

@@ -86,22 +86,36 @@ def bake(dom):
 # 1. Defaults, and the bake operator without context.
 c1 = os.path.join(TMP, "c1")
 dom, ds, flow, defaults = scene_setup("GAS", 16, None)
-E.fact("a new fluid domain: GAS, cache type REPLAY, data cached as OpenVDB, resolution 32, frames 1-250; its cache "
-       "directory is a path in the system temp folder, not next to the .blend", **defaults,
-       abspath=bpy.path.abspath(defaults["cache_directory"]).replace(tempfile.gettempdir(), "<systemtemp>"),
-       blend_saved=bool(bpy.data.filepath))
+in_app_tempdir = defaults["cache_directory"].startswith(bpy.app.tempdir)
+defaults["cache_directory"] = defaults["cache_directory"].replace(bpy.app.tempdir, "<bpy.app.tempdir>/")
+E.fact("a new fluid domain in an unsaved file: GAS, cache type REPLAY, data cached as OpenVDB, resolution 32, frames "
+       "1-250; its cache directory is cache_fluid_<hash> inside bpy.app.tempdir (Blender's session temp folder)",
+       **defaults, in_app_tempdir=in_app_tempdir, blend_saved=bool(bpy.data.filepath))
+bpy.ops.wm.save_as_mainfile(filepath=os.path.join(TMP, "scene.blend"))
+d2 = mesh("Domain2", lambda bm: bmesh.ops.create_cube(bm, size=1.0))
+m2 = d2.modifiers.new("Fluid", "FLUID"); m2.fluid_type = "DOMAIN"
+E.fact("in a saved file a new domain's cache directory is relative to the .blend: //cache_fluid_<hash>",
+       cache_directory=m2.domain_settings.cache_directory)
+bpy.data.objects.remove(d2)
 for o in bpy.context.view_layer.objects:
     o.select_set(False)
 bpy.context.view_layer.objects.active = None
 plain = err(lambda: bpy.ops.fluid.bake_all())
 ds.cache_type = "ALL"
-ds.cache_directory = c1
+c0 = os.path.join(TMP, "c0")
+ds.cache_directory = c0
+with bpy.context.temp_override(object=dom, active_object=dom):
+    only_override = err(lambda: bpy.ops.fluid.bake_all())
+only_override_files = len(files_under(c0))
+dom, ds, flow, _ = scene_setup("GAS", 16, c1)      # a fresh domain: a baked one does not bake again (fluid_free.py)
+ds.cache_type = "ALL"
 r, dt = bake(dom)
 E.fact("fluid.bake_all fails its poll with no active object; with the domain active (and in a temp_override) it bakes "
-       "headless and blocks until done", no_context=plain, with_domain=r, seconds=dt,
+       "headless and blocks until done; the override alone (nothing active in the view layer) is enough",
+       no_context=plain, override_only=only_override, override_only_files=only_override_files, with_domain=r, seconds=dt,
        has_cache_baked_data=ds.has_cache_baked_data, files=len(files_under(c1)))
 tree = files_under(c1)
-E.fact("an ALL bake of 10 smoke frames writes a config file per frame and one OpenVDB data file per frame under "
+E.fact("an ALL bake of 10 smoke frames writes a config file (.uni) and an OpenVDB data file per frame, under "
        "<cache>/config and <cache>/data", folders=sorted({f.split(os.sep)[0] for f in tree}),
        examples=tree[:3] + tree[-2:], count=len(tree), bytes=size_under(c1))
 
@@ -126,13 +140,12 @@ E.fact("a baked fluid .vdb imports as a Volume object with volume_import", resul
 # 3. Time against resolution (smoke and liquid, 10 frames, ALL).
 timing = {}
 for kind in ("GAS", "LIQUID"):
-    for res in (16, 32, 48):
+    for res in (16, 32, 48, 96):
         d = os.path.join(TMP, f"{kind}{res}")
         dom, ds, flow, _ = scene_setup(kind, res, d)
         ds.cache_type = "ALL"
         r, dt = bake(dom)
-        info = dict(result=r[1] if r[0] == "ok" else r, seconds=dt, files=len(files_under(d)),
-                    bytes=size_under(d), domain_resolution=list(ds.domain_resolution))
+        info = dict(result=r[1] if r[0] == "ok" else r, seconds=dt, files=len(files_under(d)), bytes=size_under(d))
         if kind == "LIQUID":
             scene.frame_set(10)
             dg = bpy.context.evaluated_depsgraph_get()
@@ -160,24 +173,41 @@ dom2_jump = None
 E.fact("with the default REPLAY cache, stepping frames 1-10 simulates and writes cache files as it goes, with no bake "
        "call", seconds=round(step_s, 2), files=replay_files, has_cache_baked_data=ds.has_cache_baked_data)
 
-# 5. What invalidates a baked (ALL) cache.
+# 5. What invalidates a baked (ALL) cache: bake afresh before each change, then read the flag and the files.
 d = os.path.join(TMP, "inval")
 dom, ds, flow, _ = scene_setup("GAS", 16, d)
 ds.cache_type = "ALL"
-bake(dom)
-base = (ds.has_cache_baked_data, len(files_under(d)))
-checks = {}
-flow.location.x += 0.3
-scene.frame_set(5); scene.frame_set(1)
-checks["move the flow object"] = (ds.has_cache_baked_data, len(files_under(d)))
-ds.vorticity = 0.5
-checks["change domain vorticity"] = (ds.has_cache_baked_data, len(files_under(d)))
-ds.resolution_max = 24
-checks["change resolution_max"] = (ds.has_cache_baked_data, len(files_under(d)))
-with bpy.context.temp_override(object=dom, active_object=dom):
-    fr = err(lambda: bpy.ops.fluid.free_all())
-checks["fluid.free_all"] = (ds.has_cache_baked_data, len(files_under(d)), fr)
-E.fact("after an ALL bake, which changes clear the baked flag or the cache files (has_cache_baked_data, file count)",
-       baked=base, **checks)
+fs = flow.modifiers["Fluid"].flow_settings
+
+
+def after(change):
+    bake(dom)
+    before = (ds.has_cache_baked_data, len(files_under(d)))
+    change()
+    scene.frame_set(5); scene.frame_set(1)
+    return dict(before=before, after=(ds.has_cache_baked_data, len(files_under(d))))
+
+
+def move_flow():
+    flow.location.x += 0.1
+
+
+def free_all():
+    with bpy.context.temp_override(object=dom, active_object=dom):
+        bpy.ops.fluid.free_all()
+
+
+checks = {
+    "move the flow object": after(move_flow),
+    "flow density": after(lambda: setattr(fs, "density", fs.density * 0.5)),
+    "domain vorticity": after(lambda: setattr(ds, "vorticity", ds.vorticity + 0.1)),
+    "domain resolution_max": after(lambda: setattr(ds, "resolution_max", ds.resolution_max + 2)),
+    "domain cache_frame_end": after(lambda: setattr(ds, "cache_frame_end", ds.cache_frame_end + 1)),
+    "fluid.free_all": after(free_all),
+}
+E.fact("after an ALL bake ((has_cache_baked_data, file count) before and after each change, baked afresh each time): "
+       "moving the flow object, changing its density or the domain's cache_frame_end keeps the bake; setting the "
+       "domain's vorticity or resolution_max from Python clears the flag and deletes the cache files, as does free_all",
+       **checks)
 shutil.rmtree(TMP, ignore_errors=True)
 E.save(timing=timing)

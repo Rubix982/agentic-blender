@@ -1,0 +1,146 @@
+{
+ "experiment": "experiments/rendering/render_vs_viewport.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 2.83,
+ "facts": [
+  {
+   "fact": "A final render evaluates modifiers at their render settings: a Subdivision modifier with levels 1 and render_levels 3 rendered with the outline of level 3 in Cycles, EEVEE and Workbench, while the viewport depsgraph that Python gets (context.evaluated_depsgraph_get(), mode VIEWPORT) holds level 1",
+   "outline_by_level": {
+    "0": {
+     "vertices": 8,
+     "area_m2": 4.0
+    },
+    "1": {
+     "vertices": 26,
+     "area_m2": 2.0469
+    },
+    "2": {
+     "vertices": 98,
+     "area_m2": 2.2127
+    },
+    "3": {
+     "vertices": 386,
+     "area_m2": 2.2558
+    }
+   },
+   "viewport_depsgraph": {
+    "mode": "VIEWPORT",
+    "vertices": 26
+   },
+   "render": {
+    "CYCLES": {
+     "area_m2": 2.2557,
+     "matches_level": 3
+    },
+    "BLENDER_EEVEE_NEXT": {
+     "area_m2": 2.2558,
+     "matches_level": 3
+    },
+    "BLENDER_WORKBENCH": {
+     "area_m2": 2.2465,
+     "matches_level": 3
+    }
+   }
+  },
+  {
+   "fact": "modifier.show_render = False leaves the modifier out of renders (the plain cube's outline) while the viewport keeps it; show_viewport = False is the reverse: the viewport depsgraph lost it and the render kept level 3",
+   "show_render_false": {
+    "CYCLES": {
+     "area_m2": 4.0018,
+     "matches_level": 0
+    },
+    "BLENDER_EEVEE_NEXT": {
+     "area_m2": 3.9988,
+     "matches_level": 0
+    }
+   },
+   "show_viewport_false": {
+    "viewport_vertices": 8,
+    "cycles": {
+     "area_m2": 2.2557,
+     "matches_level": 3
+    }
+   }
+  },
+  {
+   "fact": "A frame_change_post handler that takes a depsgraph argument was called with the render's own depsgraph (mode RENDER, the cube at render_levels) during render(animation=True) and during a still render too, then once more with the viewport depsgraph (mode VIEWPORT, levels) after each render",
+   "animation_render": [
+    {
+     "mode": "RENDER",
+     "vertices": 386
+    },
+    {
+     "mode": "VIEWPORT",
+     "vertices": 26
+    }
+   ],
+   "still_render": [
+    {
+     "mode": "RENDER",
+     "vertices": 386
+    },
+    {
+     "mode": "VIEWPORT",
+     "vertices": 26
+    }
+   ]
+  },
+  {
+   "fact": "What each hide flag does to a final render (True = the object rendered) and to the viewport depsgraph: hide_render and a collection's hide_render or exclude keep an object out of renders; hide_viewport (the monitor icon) and the view layer's hide_set (the eye) do not, they only take it out of the viewport",
+   "rendered": {
+    "CYCLES": {
+     "control": true,
+     "hide_viewport": true,
+     "hide_render": false,
+     "hide_set (view layer)": true,
+     "collection excluded": false,
+     "collection hide_render": false,
+     "collection hide_viewport": true
+    },
+    "BLENDER_EEVEE_NEXT": {
+     "control": true,
+     "hide_viewport": true,
+     "hide_render": false,
+     "hide_set (view layer)": true,
+     "collection excluded": false,
+     "collection hide_render": false,
+     "collection hide_viewport": true
+    },
+    "BLENDER_WORKBENCH": {
+     "control": true,
+     "hide_viewport": true,
+     "hide_render": false,
+     "hide_set (view layer)": true,
+     "collection excluded": false,
+     "collection hide_render": false,
+     "collection hide_viewport": true
+    }
+   },
+   "in_viewport_depsgraph": {
+    "control": true,
+    "hide_viewport": false,
+    "hide_render": true,
+    "hide_set (view layer)": false,
+    "collection excluded": false,
+    "collection hide_render": true,
+    "collection hide_viewport": false
+   },
+   "visible_get": {
+    "control": true,
+    "hide_viewport": false,
+    "hide_render": true,
+    "hide_set (view layer)": false,
+    "collection excluded": false,
+    "collection hide_render": true,
+    "collection hide_viewport": false
+   }
+  }
+ ],
+ "data": {
+  "device": "METAL",
+  "resolution": 256
+ },
+ "args": []
+}

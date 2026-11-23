@@ -1,0 +1,36 @@
+{
+ "experiment": "experiments/materials/hdri_rotation.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-23",
+ "seconds": 4.77,
+ "facts": [
+  {
+   "fact": "With nothing in the Environment Texture's Vector input, the middle column of an equirectangular image (u = 0.5) lights the scene from +x (azimuth 0); Texture Coordinate Generated -> Mapping at rotation 0 gives the same",
+   "azimuth_no_vector": -0.0,
+   "azimuth_generated_mapping_0": -0.0
+  },
+  {
+   "fact": "A Mapping node of type POINT (the default) rotated +90 degrees about Z turns the lighting by -90 degrees (clockwise seen from above): the light that came from +x comes from -y. Type TEXTURE turns it the other way, by the rotation as written. The amount matches the angle in both",
+   "azimuths": {
+    "POINT +90": -89.9,
+    "POINT +30": -30.0,
+    "POINT -90": 90.0,
+    "TEXTURE +90": 90.0,
+    "TEXTURE +30": 30.0,
+    "TEXTURE -90": -89.9
+   },
+   "start": -0.0
+  }
+ ],
+ "data": {
+  "device": "METAL",
+  "hdri": {
+   "width": 256,
+   "height": 128,
+   "spot_u": 0.5,
+   "spot_elevation_deg": 30.0
+  }
+ },
+ "args": []
+}
