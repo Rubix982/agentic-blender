@@ -57,6 +57,8 @@ TONE = "--no-tone" not in argv                                        # C-013: t
 ALBEDO_NPY = os.path.join(os.path.dirname(os.path.abspath(__file__)), "out", "albedo.npy")
 USE_ALBEDO = "--no-albedo" not in argv and os.path.exists(ALBEDO_NPY)    # C-015: the stone's colour from the photo
 SPECK_MAX = float(argv[argv.index("--speck-max") + 1]) if "--speck-max" in argv else 1.6   # C-015: the specks' brightening
+SPOT_WHITE = "--fit-spot-colour" not in argv                            # C-017: fitting the spot's colour did not
+                                                                       # move the slopes (2,700 to 10,000 K), so off
 NORMALS_NPY = os.path.join(os.path.dirname(os.path.abspath(__file__)), "out", "normals.npy")
 if (FORMS == "normals" or NORMAL_MAP) and not os.path.exists(NORMALS_NPY):
     raise SystemExit("out/normals.npy is missing: run make.py, or .venv/bin/python shots/jali-match/normals.py, first "
@@ -484,6 +486,20 @@ if NORMAL_MAP:
         log["albedo"] = dict(speck_max=SPECK_MAX, map_median_linear=[round(float(v), 4) for v in med], scaled_to=[round(float(v), 4) for v in ALBEDO],
                              map_p10_p90_luminance=[round(float(np.percentile(AL[st_box] @ np.array([0.2126, 0.7152, 0.0722]), q)), 4)
                                                     for q in (10, 90)])
+# C-017: a colour multiplied into the base colour, to divide out the spot's colour (white until the spot's colour is
+# fitted below), so the lit stone keeps the photo's median colour whatever the light's temperature.
+base_link = next(l for l in nt.links if l.to_socket == bsdf.inputs["Base Color"])
+base_src = base_link.from_socket
+nt.links.remove(base_link)
+comp = nt.nodes.new("ShaderNodeRGB")
+comp.label = "light colour compensation"
+comp.outputs[0].default_value = (1.0, 1.0, 1.0, 1.0)
+cmul = nt.nodes.new("ShaderNodeMix")
+cmul.data_type, cmul.blend_type = "RGBA", "MULTIPLY"
+sock(cmul, "Factor_Float").default_value = 1.0
+L.new(base_src, sock(cmul, "A_Color"))
+L.new(comp.outputs[0], sock(cmul, "B_Color"))
+L.new(sock(cmul, "Result_Color", out=True), bsdf.inputs["Base Color"])
 screen.data.materials.append(mat)
 
 # The carved front: a grid at the photo's pixel spacing over the stone, lifted by the relief, 0.1 mm proud of the
@@ -863,6 +879,56 @@ if not FIXED_LIGHT and not reuse:
     with open(LIGHT_JSON, "w") as fjson:
         json.dump(log["light_fit"], fjson, indent=1)
 set_light(light)
+
+# --- C-017: the spot's colour -------------------------------------------------------------------------------------
+# In the photo the lit faces are paler and the shadows redder (log(R/G) falls and log(B/G) rises with luminance). A
+# spot cooler than the warm light bounced inside red stone does that, with the stone's colour divided by the spot's so
+# the lit stone keeps its colour. The spot's colour from its temperature (Helland's fit to the blackbody, linearised,
+# luminance 1); candidates rendered at FIT_PCT before the tone curve, their slopes against the photo's at that size.
+def blackbody(t):
+    t = t / 100.0
+    r = 255.0 if t <= 66 else 329.698727446 * (t - 60) ** -0.1332047592
+    g = 99.4708025861 * math.log(t) - 161.1195681661 if t <= 66 else 288.1221695283 * (t - 60) ** -0.0755148492
+    b = 255.0 if t >= 66 else (0.0 if t <= 19 else 138.5177312231 * math.log(t - 10) - 305.0447927307)
+    srgb = np.clip(np.array([r, g, b]) / 255.0, 0, 1)
+    lin = np.where(srgb <= 0.04045, srgb / 12.92, ((srgb + 0.055) / 1.055) ** 2.4)
+    return lin / float(lin @ np.array([0.2126, 0.7152, 0.0722]))
+
+
+def slopes(img_rgb):
+    b = np.stack([C.blur(img_rgb[:, :, c].astype(np.float32), 5) for c in range(3)], -1)
+    ly = np.log(np.maximum(C.luminance(b), 1e-3))[fit_mask]
+    out = []
+    for i, j in ((0, 1), (2, 1)):
+        c = np.log(np.maximum(b[:, :, i], 1e-3) / np.maximum(b[:, :, j], 1e-3))[fit_mask]
+        out.append(float(np.polyfit(ly, c, 1)[0]))
+    return out
+
+
+def set_spot_colour(t):
+    col = np.ones(3) if t is None else blackbody(t)
+    spot.color = tuple(float(c) for c in col)
+    inv = 1.0 / col
+    comp.outputs[0].default_value = tuple(float(c) for c in inv / float(inv @ np.array([0.2126, 0.7152, 0.0722]))) + (1.0,)
+
+
+SLOPES_PHOTO = slopes(C.resize(rgb.astype(np.float32), (fw, fh)))
+log["spot_colour"] = dict(photo_slopes_at_fit_size=[round(v, 4) for v in SLOPES_PHOTO], tries=[])
+best_t, best_err = None, None
+if not SPOT_WHITE:
+    for t in (None, 2700, 3500, 4500, 5500, 6500, 8000, 10000):
+        set_spot_colour(t)
+        path = os.path.join(OUT, "colour_fit.png")
+        render(path, FIT_PCT, 32)
+        sl = slopes(C.load(path))
+        err = sum(abs(math.log(max(a / b, 1e-3))) if a * b > 0 else 5.0 for a, b in zip(sl, SLOPES_PHOTO))
+        log["spot_colour"]["tries"].append(dict(kelvin=t, slopes=[round(v, 4) for v in sl], error=round(err, 4)))
+        print("SPOT", t, [round(v, 4) for v in sl], round(err, 4), flush=True)
+        if best_err is None or err < best_err:
+            best_t, best_err = t, err
+set_spot_colour(best_t)
+log["spot_colour"].update(kelvin=best_t, error=None if best_err is None else round(best_err, 4),
+                          spot_rgb=[round(float(c), 4) for c in spot.color])
 
 # --- fit the spotlight's power to the photo (the wall is set above) --------------------------------------------
 target = medians(rgb)

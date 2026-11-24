@@ -130,6 +130,19 @@ cm_box = np.zeros_like(cm); cm_box[box] = cm[box]
 fld = np.zeros_like(cm); fld[y0 + 110:y1 - 95, x0 + 130:x1 - 110] = True
 res["stone_colour"] = dict(photo_spread=round(chroma(photo, cm_box), 4), render_spread=round(chroma(render, cm_box), 4))
 res["stone_colour"]["ratio"] = round(res["stone_colour"]["render_spread"] / max(res["stone_colour"]["photo_spread"], 1e-9), 4)
+# C-017: colour against brightness. On the same stone, each blurred over 5 px: log(R/G) and log(B/G) regressed on
+# log(luminance); the slopes, and the share of each one's variance a straight line explains. In the photo the lit
+# faces are paler and the shadows redder.
+def colour_slopes(img, mask):
+    b = np.stack([C.blur(img[:, :, c].astype(np.float32), 5) for c in range(3)], -1)
+    ly = np.log(np.maximum(b @ np.array([0.2126, 0.7152, 0.0722], np.float32), 1e-3))[mask]
+    out = {}
+    for name, (i, j) in (("r_over_g", (0, 1)), ("b_over_g", (2, 1))):
+        c = np.log(np.maximum(b[:, :, i], 1e-3) / np.maximum(b[:, :, j], 1e-3))[mask]
+        k, c0 = np.polyfit(ly, c, 1)
+        out[name] = dict(slope=round(float(k), 4), explained=round(float(1 - (c - (k * ly + c0)).var() / c.var()), 4))
+    return out
+res["colour_vs_brightness"] = dict(photo=colour_slopes(photo, cm_box), render=colour_slopes(render, cm_box))
 res["frame_over_field"] = dict(photo=round(float(np.median(kp["y"][cm_box & ~fld]) / np.median(kp["y"][cm_box & fld])), 4),
                                render=round(float(np.median(kr["y"][cm_box & ~fld]) / np.median(kr["y"][cm_box & fld])), 4))
 # C-016: SSIM (a standard structural similarity of luminance, an 11 px Gaussian window), over the screen's box and over

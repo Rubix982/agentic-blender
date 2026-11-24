@@ -383,6 +383,12 @@ What the builds found, in the order a script meets it:
     looks so real". The colour spread is partly the wrong measure: about a third of the photo's colour variation goes
     with brightness (lit faces paler, shadows redder), which is light or processing, not stone.
     `[exp: shots/jali-match/intrinsics.py]` `[exp: shots/jali-match/build.py]` `[exp: shots/jali-match/compare.py]`
+24. **Paler highlights are not the light's colour once the stone's colour is fitted.** In the photo log(R/G) falls
+    and log(B/G) rises with luminance over the stone (slopes -0.0997 and 0.1133), the render's far less (-0.0311,
+    0.0249). A spot from 2700 K to 10000 K, the stone's colour divided by the spot's so the lit stone keeps its colour,
+    moved the render's slopes by under 0.03 (at 25 % size, against the photo's -0.0671 and 0.0774 there): the lit
+    faces keep their colour by design, and the shadows are lit mostly by light bounced off the same stone. Look to
+    the photo's processing instead (item 25). `[exp: shots/jali-match/build.py]` `[exp: shots/jali-match/compare.py]`
 
 ### A standard for a photo match (C-016)
 

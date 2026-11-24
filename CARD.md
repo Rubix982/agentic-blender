@@ -1180,3 +1180,51 @@ photo's (the measure C-009 set aside when it fell for one card). In one view onl
 the colour spread. `compare.py` now prints them as a `scorecard` with bars from this asset's accepted state, and the
 guards that catch a break; the accepted render meets all of it. The guide's photo section has the standard
 (`areas/production.md`); T-013 is answered, as a pattern on eight sheets of one photo, for a second asset to test.
+
+### C-017 · The light's colour: a cooler spot, the stone's colour kept, against the photo's paler lit faces
+
+**Opened:** 2026-11-24
+
+1. **WHERE WE ARE.** C-015 judged "this looks so real!" with the stone's colour spread at 0.49 of the photo's, and a
+   third of the photo's colour variation going with brightness (T-019). Measured on C-015's render before this card's
+   work: regressed on log luminance over the stone, the photo's log(R/G) falls with slope -0.100 (explaining 34.7 % of
+   its variance) and its log(B/G) rises with slope 0.113 (28.8 %): lit faces paler, shadows redder. The render's
+   slopes are -0.031 and 0.022. Its spot is white; the shadows are lit by the glowing wall and by light bounced inside
+   the red stone.
+2. **WHAT WE ARE DOING.** Give the spot a colour temperature and fit it to the photo's two slopes, with the stone's
+   colour divided by the spot's (channel by channel) so the lit stone keeps the photo's median colour.
+   - Candidates from 2,700 K to 10,000 K, the spot's colour from Planck's law (linear, normalised); each rendered at
+     25 % before the tone curve, its slopes measured on the photo's stone; the temperature whose slopes are nearest
+     the photo's, then the rest of the build as before.
+   - `build.py` (`--spot-white` keeps the white spot).
+3. **WHY.** Unknown now: whether the photo's paler highlights and redder shadows are the light's colour (a cool spot
+   over warm light bounced in red stone), which one number can give, or the phone's processing, which it cannot.
+4. **WHAT IS AFFECTED.** `build.py`; `compare.py`'s colour-against-brightness measure (added before the work);
+   `results/` (C-015's kept as `*_c015.json`), `sheet.jpg`; `areas/production.md`; T-019 (the light's half).
+5. **CONCLUSION.** The measures first, then the judge.
+   - Measures: both slopes within 30 % of the photo's (R/G -0.070 to -0.130, B/G 0.079 to 0.147). The scorecard
+     (C-016) still met, and the colour spread no lower than C-015's 0.49.
+   - If a temperature brings both slopes within 30 % and the judge sees no loss, the light's colour is the light's,
+     the guide gets it, and the light's half of T-019 is answered.
+   - If no temperature does, or it bends one slope and not the other, the paler highlights are the processing (a
+     saturation curve on luminance, C-013's kind), and that is the next card.
+6. **CONSEQUENCE OF NOT DOING IT.** The render's highlights stay as saturated as its shadows, a difference from the
+   photo the colour spread measures but the user has not named; T-019 stays open.
+
+**Known limits, stated before the run:**
+- One colour for the spot and one compensation for the whole stone; a museum's light may mix sources.
+- The slopes come from the stone's own colour variation as well, so a perfect match is not expected.
+
+**Measures (2026-11-24).** `results/*_c017_spotcolour.json`. At the fit's 25 % size the photo's slopes are -0.067
+(R/G) and 0.077 (B/G). The render's, by the spot's temperature: white -0.034 and 0.015; 2,700 K -0.028 and -0.016;
+3,500 K -0.025 and 0.010; 4,500 K -0.029 and 0.015; 5,500 K -0.032 and 0.016 (the nearest); 6,500 K -0.034 and
+0.015; 8,000 K -0.036 and 0.012; 10,000 K -0.037 and 0.010. At full size with 5,500 K: -0.031 and 0.025 against the
+photo's -0.100 and 0.113. No temperature brings either slope within 30 %; across the whole range they move less than
+0.03. Why, looked at: with the stone's colour divided by the spot's, the lit faces keep their colour by design, and
+the shadows are lit mostly by light bounced off that same stone, so they keep theirs too; only what the glowing wall
+lights changes, and that is little. The scorecard held throughout (the build changes almost nothing).
+
+**Result (2026-11-24, closed): no; the photo's paler highlights are not the light's colour.** One spot temperature,
+with the stone's colour kept, moves neither slope by more than 0.03 between 2,700 and 10,000 K, against a gap of 0.07
+and 0.09. By the card, the paler highlights are the processing, and a saturation curve on luminance is the next card
+(C-018). The search is kept, off by default (`--fit-spot-colour`). No change was shipped, so no sheet was judged.
