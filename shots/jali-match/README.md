@@ -14,17 +14,19 @@ python3.12 -m venv .venv && .venv/bin/pip install -r shots/jali-match/requiremen
 python3 shots/jali-match/make.py
 ```
 
-`make.py` runs the four steps in order and stops at the first that fails:
+`make.py` runs the steps in order (the two models first, since the photo's rule uses the normals) and stops at the first that fails:
 
 | step | runs in | writes |
 |---|---|---|
 | `read_photo.py` | Blender | the photo sorted into surround, opening and stone: `results/read_photo.json`, `out/classes.png` |
 | `normals.py` | `.venv` | Marigold's normals for the photo: `out/normals.npy`, `results/normals.json` (skipped when up to date) |
+| `intrinsics.py` | `.venv` | Marigold's albedo for the photo, the stone's colour: `out/albedo.npy` (skipped when up to date) |
 | `build.py` | Blender | the screen built, lit and rendered: `out/render.png`, `out/scene.blend`, `results/build.json` |
 | `compare.py` | Blender | the measures and the sheet: `results/compare.json`, `sheet.jpg` |
 
-The normals model (`prs-eth/marigold-normals-v1-1`, CreativeML OpenRAIL++-M) is read from the local Hugging Face
-cache. The first time, run `HF_HUB_OFFLINE=0 .venv/bin/python shots/jali-match/normals.py` to download it.
+The models (`prs-eth/marigold-normals-v1-1` and `prs-eth/marigold-iid-lighting-v1-1`, CreativeML OpenRAIL++-M) are
+read from the local Hugging Face cache. The first time, run `normals.py` and `intrinsics.py` with `HF_HUB_OFFLINE=0`
+to download them.
 
 Options after `--` go to `build.py`. The earlier builds are a switch away: `--forms shading --no-normal-map
 --photo-detail 0 --thick 0.020` gives C-009's build settings (on today's photo rule). `results/*_c00N.json` and `*_c011_*.json` keep each card's numbers.
@@ -35,7 +37,8 @@ Options after `--` go to `build.py`. The earlier builds are a switch away: `--fo
   local colour, and not much brighter or darker than that wall).
 - **Which way the carving faces**, from Marigold's normals: integrated into heights for the forms' shadows, and used
   as the front's normal map for its shading.
-- **The weathering**: the photo's own light and dark, tilting those normals.
+- **The weathering**: the photo's own light and dark (its pale specks taken out), tilting those normals.
+- **The stone's colour**: Marigold's albedo of the photo, with the photo's pale specks put back into it.
 - **The stone's hue, the wall's colour** in ten bands, and **the spotlight's power**, fitted to the stone's median.
 
 Everything else (the solid, the sandstone, the light's direction, the camera from the photo's EXIF) is made in

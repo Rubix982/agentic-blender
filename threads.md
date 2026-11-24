@@ -175,11 +175,14 @@ realistic in a passing glance". What gives it away now: the stone looks new (T-0
 
 ### T-017 · What makes carved stone look centuries old, and can the photo give the render its age?
 
-**Status:** open
+**Status:** answered
 **Parent:** T-009
 **Opened:** 2026-11-24
 **Question:** After C-013 the user found the render "VERY fresh, like it was just created": its stone is one procedural
 sandstone, even in colour, clean in its hollows; the photo's has stains, darker patches, grime in the recesses and a
 darker frame. Marigold's lighting model (`marigold-iid-lighting-v1-1`, cached) splits a photo into albedo and
 shading: is its albedo the stone's age, used as the base colour?
-**Answer:** —
+**Answer:** for this photo, yes by the judge ("this looks so real!"; C-015): the albedo as a projected base colour,
+the photo's pale specks put back into it and taken out of the relief. The colour spread reached 0.49 of the photo's,
+a measure that is partly the light's colour and noise. Untried: the light's colour (lit faces paler, shadows redder in
+the photo), grime in the hollows.

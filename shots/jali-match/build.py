@@ -54,6 +54,9 @@ CARVED_SHARE = float(argv[argv.index("--carved-share") + 1]) if "--carved-share"
 FIXED_LIGHT = "--fixed-light" in argv                                  # C-012: C-011's spot, not fitted to the pool
 REFIT_LIGHT = "--refit-light" in argv                                  # C-012: search again (else results/light_fit.json)
 TONE = "--no-tone" not in argv                                        # C-013: the photo's tone curve on the render
+ALBEDO_NPY = os.path.join(os.path.dirname(os.path.abspath(__file__)), "out", "albedo.npy")
+USE_ALBEDO = "--no-albedo" not in argv and os.path.exists(ALBEDO_NPY)    # C-015: the stone's colour from the photo
+SPECK_MAX = float(argv[argv.index("--speck-max") + 1]) if "--speck-max" in argv else 1.6   # C-015: the specks' brightening
 NORMALS_NPY = os.path.join(os.path.dirname(os.path.abspath(__file__)), "out", "normals.npy")
 if (FORMS == "normals" or NORMAL_MAP) and not os.path.exists(NORMALS_NPY):
     raise SystemExit("out/normals.npy is missing: run make.py, or .venv/bin/python shots/jali-match/normals.py, first "
@@ -400,6 +403,8 @@ if NORMAL_MAP:
     NM = np.load(os.path.join(OUT, "normals.npy"))
     if PHOTO_DETAIL:
         yph = k["y"].astype(np.float32)
+        if USE_ALBEDO:                                                 # C-015: the pale specks are colour, not relief
+            yph = C.grey_open(yph, 2)
         b5, b21 = C.blur(yph, 5), C.blur(yph, 21)
         var = sum(C.blur(NM[:, :, c] ** 2, 9) - C.blur(NM[:, :, c], 9) ** 2 for c in (0, 1))
         flatw = C.blur(np.clip(1 - np.sqrt(np.maximum(var, 0)) / 0.08, 0, 1).astype(np.float32), 9)
@@ -443,6 +448,42 @@ if NORMAL_MAP:
     unit.operation = "NORMALIZE"
     L.new(sock(nmix, "Result_Vector", out=True), unit.inputs[0])
     L.new(unit.outputs["Vector"], bump.inputs["Normal"])
+    # C-015: the stone's colour from the photo's albedo (intrinsics.py: Marigold's intrinsic decomposition), linear,
+    # scaled channel by channel so its median over the stone is the albedo used so far (the light's power and the tone
+    # curve keep their level); projected like the normal map where the surface faces the camera, the procedural colour
+    # elsewhere (a front projection smears on faces that turn away).
+    if USE_ALBEDO:
+        AL = np.load(ALBEDO_NPY).astype(np.float64)
+        st_box = np.zeros(k["stone"].shape, bool)
+        st_box[y0:y1 + 1, x0:x1 + 1] = k["stone"][y0:y1 + 1, x0:x1 + 1]
+        med = np.median(AL[st_box], axis=0)
+        AL = AL * (np.array(ALBEDO) / np.maximum(med, 1e-4))
+        # The photo's pale specks (mineral grains) are colour: the model left them out of its albedo, and the first
+        # build with it read as clean clay. Each bright dot narrower than about 2 px (the photo's luminance over its
+        # 3 x 3 grey opening) brightens the albedo by its own contrast, decoded to linear; wider bright features (lit
+        # rims) are left to the shading.
+        y_open = C.grey_open(k["y"], 1)
+        speck = np.clip(k["y"] / np.maximum(y_open, 0.03), 1.0, SPECK_MAX) ** 2.2   # at 2.5 some went white, and the
+                                                                       # render's rule took them for wall (IoU 0.795)
+        AL = np.clip(AL * np.where(st_box, speck, 1.0)[:, :, None], 0.0, 1.0)
+        aimg = bpy.data.images.new("photo albedo", W, H, alpha=False, float_buffer=True)
+        aimg.colorspace_settings.name = "Non-Color"                    # linear values, as the model gives them
+        apx = np.ones((H, W, 4), np.float32)
+        apx[:, :, :3] = AL
+        aimg.pixels.foreach_set(np.flipud(apx).ravel())
+        atex = nt.nodes.new("ShaderNodeTexImage")
+        atex.image = aimg
+        atex.interpolation = "Linear"
+        L.new(mp.outputs["Vector"], atex.inputs["Vector"])
+        amix = nt.nodes.new("ShaderNodeMix")
+        amix.data_type = "RGBA"
+        L.new(facing.outputs["Result"], sock(amix, "Factor_Float"))
+        L.new(sock(mix, "Result_Color", out=True), sock(amix, "A_Color"))
+        L.new(atex.outputs["Color"], sock(amix, "B_Color"))
+        L.new(sock(amix, "Result_Color", out=True), bsdf.inputs["Base Color"])
+        log["albedo"] = dict(speck_max=SPECK_MAX, map_median_linear=[round(float(v), 4) for v in med], scaled_to=[round(float(v), 4) for v in ALBEDO],
+                             map_p10_p90_luminance=[round(float(np.percentile(AL[st_box] @ np.array([0.2126, 0.7152, 0.0722]), q)), 4)
+                                                    for q in (10, 90)])
 screen.data.materials.append(mat)
 
 # The carved front: a grid at the photo's pixel spacing over the stone, lifted by the relief, 0.1 mm proud of the

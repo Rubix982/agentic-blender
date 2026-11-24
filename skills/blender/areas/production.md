@@ -367,6 +367,22 @@ What the builds found, in the order a script meets it:
     the render, solid there, could never match them. Apply it inside the screen's box only: turned on the whole
     image, it made the lit floor below the screen stone, and the box grew to take it in.
     `[exp: shots/jali-match/read_photo.py]` `[exp: shots/jali-match/compare.py]`
+23. **Give the stone its age from the photo's albedo, with the specks as colour, not relief.** One stone colour with
+    procedural noise read as "VERY fresh" (the user's words): the stone's colour varied 0.2914 as much as the photo's
+    (the spread of log(R/G) and log(B/G) over a 5 px blur, on the stone). Marigold's intrinsic decomposition
+    (`prs-eth/marigold-iid-lighting-v1-1`, OpenRAIL++-M; diffusers' `MarigoldIntrinsicsPipeline`) on tiles like the
+    normals, 90.5 s, tiles differing by a median 0.0109 where they overlap: its albedo comes at its true scale (the
+    shading only up to a scale per tile, so it is not used). Scale it channel by channel to the albedo already fitted,
+    so the light and the tone curve keep their level, and project it like the normal map where the surface faces the
+    camera. Two things it does not do: the photo's pale mineral specks are not in it (alone, the carving read as clean
+    clay), and dividing the photo by it does not take them out of the relief. So put the specks into the albedo (the
+    photo's luminance over its 3 x 3 grey-scale opening, capped at 1.6 times: at 2.5 some went white and the render's
+    rule took them for wall, the openings' IoU 0.7951), and take them out of the detail tilt by a 5 x 5 opening. The
+    colour spread rose to 0.4863 of the photo's, the frame's texture from 1.2179 to 1.1674 (crinkled to mottled), and
+    with the light refitted over the stained albedo the light map's error fell from 0.207 to 0.1498. Judged "this
+    looks so real". The colour spread is partly the wrong measure: about a third of the photo's colour variation goes
+    with brightness (lit faces paler, shadows redder), which is light or processing, not stone.
+    `[exp: shots/jali-match/intrinsics.py]` `[exp: shots/jali-match/build.py]` `[exp: shots/jali-match/compare.py]`
 
 ```python
 # 3: the hole's front outline from what the photo sees through it (seen: a boolean mask, H x W)
@@ -388,4 +404,6 @@ catch the light as the carving does. In C-011 the openings agreed at 0.7598 and 
 forms band was 0.6527 (partly the photo's own detail), its amplitude 0.531 of the photo's, and the bright end 0.4776
 against 0.6685: judged a photograph at a glance, with the light still even and dim where the photo's spot pools on
 the centre and lights the rims. With the pool fitted (C-012) the light map's error fell from 0.4426 to 0.1979 and the
-bright end rose to 0.5139: "it reads better". `[exp: shots/jali-match/compare.py]`
+bright end rose to 0.5139: "it reads better". With the tone curve, the borders and the albedo (C-013 to C-015) the
+bright end is 0.6732 against 0.6736 and the openings agree at 0.8215: "this looks so real!".
+`[exp: shots/jali-match/compare.py]`

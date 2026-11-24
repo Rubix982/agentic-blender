@@ -4,6 +4,7 @@
 Runs, from the repo's root:
   1. normals.py      in the repo's .venv: Marigold's normals (out/normals.npy), skipped when they are newer than the
                      photo and normals.py, unless --force-normals
+  1b. intrinsics.py in the .venv: Marigold's albedo of the photo (out/albedo.npy), skipped when up to date
   2. read_photo.py   in Blender: the photo sorted into surround, opening and stone, the normals vetoing fragments of
                      lit rim (results/read_photo.json)
   3. build.py        in Blender: the screen built, lit and rendered (out/render.png, results/build.json); anything
@@ -48,6 +49,12 @@ if force or not fresh:
     step("normals", [VENV_PY, os.path.join(HERE, "normals.py")])
 else:
     print("== normals: out/normals.npy is newer than the photo and normals.py; kept (--force-normals to redo)")
+alb = os.path.join(HERE, "out", "albedo.npy")
+ins = [os.path.join(HERE, "photo", "agra-jali.jpg"), os.path.join(HERE, "intrinsics.py")]
+if force or not (os.path.exists(alb) and os.path.getmtime(alb) > max(os.path.getmtime(p) for p in ins)):
+    step("intrinsics", [VENV_PY, os.path.join(HERE, "intrinsics.py")])  # C-015: the stone's albedo
+else:
+    print("== intrinsics: out/albedo.npy is newer than the photo and intrinsics.py; kept (--force-normals to redo)")
 step("read_photo", blender("read_photo.py", 300))                     # after the normals: its rule uses them (C-012)
 step("build", blender("build.py", 1800, build_args))
 step("compare", blender("compare.py", 300))

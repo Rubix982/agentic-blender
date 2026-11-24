@@ -1037,3 +1037,90 @@ is C-015's question.
 themselves). The surround cut from the box 2.56 % to 1.15 % (the 1 % bar missed; what is left is neutral), 8,824 px of
 false openings taken out of the frame; the openings' IoU 0.782 to 0.839, the light map 0.201 to 0.207. The guide's
 item 2 has the colour condition and item 22 the field (`areas/production.md`).
+
+### C-015 · The stone's age from the photo: a learned albedo as its colour, the specks out of its relief
+
+**Opened:** 2026-11-24
+
+1. **WHERE WE ARE.** C-013's judge named what gives the render away: it "looks VERY fresh, like it was just created".
+   Its stone is one colour, the photo's median brought to an albedo, with procedural noise and specks; the photo's has
+   stains, darker patches and grime. Measured on C-014's render before this card's work: the stone's colour varies
+   0.29 as much as the photo's (the spread of log(R/G) and log(B/G) over a 5 px blur, 0.037 against 0.127). The frame's
+   brightness against the field's already matches (0.50 against 0.50: the light does that). And the frame reads
+   crumbly (C-014's look): the detail tilt reads the photo's pale specks, which are colour, as relief (the frame's
+   texture 1.22 of the photo's in the forms band).
+2. **WHAT WE ARE DOING.** Run Marigold's intrinsic decomposition (`prs-eth/marigold-iid-lighting-v1-1`, cached;
+   CreativeML OpenRAIL++-M) on the photo, and use its albedo twice.
+   - As the stone's base colour: the albedo map, linear, scaled so its median over the stone matches the present
+     albedo (so the light and the tone curve keep their level), projected like the normal map where the surface faces
+     the camera; the present colour elsewhere.
+   - To take the specks out of the relief: the detail tilt reads the photo's luminance divided by the albedo's
+     relative luminance (the shading, in the photo's own scale), not the photo's luminance.
+   - Run in tiles like the normals, in the repo's `.venv` (`intrinsics.py`, a step in `make.py`); the light refitted
+     once, since a darker-stained frame changes where the light seems to pool.
+3. **WHY.** Unknown now: whether a learned albedo of this photo carries the stone's age (its stains, grime, discolour)
+   or only noise, and whether dividing it out leaves weathering on the frame without the crumble.
+4. **WHAT IS AFFECTED.** New `intrinsics.py`; `build.py` (`--no-albedo` keeps C-014's colour and tilt), `make.py`,
+   `compare.py`'s colour measure (added before the work); `results/` (C-014's kept as `*_c014.json`), `light_fit.json`,
+   `sheet.jpg`; `areas/production.md`; T-017.
+5. **CONCLUSION.** The measures first, then the judge.
+   - Measures: the stone's colour spread 0.8 to 1.2 of the photo's; the frame's forms-band texture back within 0.8 to
+     1.2. Guards: the bright end and contrast within their bars (the curve is refitted), the forms band's amplitude at
+     least 0.8, the openings within 0.02 of the photo's, the light map at most 0.23.
+   - The judge: whether the stone still looks new, and the card's question.
+   - If the colour comes within its bar and the judge no longer sees fresh stone, the guide gets the recipe (a
+     photo's learned albedo as a projected base colour, and divided out of the detail) and T-017 is answered.
+   - If the colour passes but the stone still looks new, age is more than colour (worn edges, grime in the hollows,
+     a duller sheen): the user's reason is the next card.
+   - If the albedo map is noise, not stains (the colour spread overshoots, or the stains do not line up with the
+     photo's), a learned albedo is not the route here, and the next card tries procedural ageing guided by the photo.
+6. **CONSEQUENCE OF NOT DOING IT.** The screen stays a new copy of an old object, the give-away the user named first.
+
+**Known limits, stated before the run:**
+- The colour spread is partly built in: the albedo comes from the photo, so a match is expected; what it cannot fit is
+  whether the stains read as age, which is the judge's.
+- Projected from the front, the albedo smears on surfaces that face away; those keep the even colour.
+
+**The albedo (2026-11-24).** Six tiles, 3-member ensembles, 4 steps: 14 s a tile, 90.5 s in all; tiles differ by a
+median 0.011 where they overlap (`results/intrinsics.json`). Seen beside the photo: the light's pool is gone from it
+(the frame no longer dark) and the frame keeps a mottled texture, but the carving comes out almost one peach colour.
+Measured on the stone, its colour varies 0.070 against the photo's 0.145 and the render's 0.037. And the pale specks
+are not in it: the model put them with the shading, so dividing the photo by the albedo would not take them out of
+the relief. That part of the plan was changed (below).
+
+**Measures (2026-11-24), in the order they were taken.** C-014: the colour spread 0.29 of the photo's, the frame's
+texture 0.92 (fine) and 1.22 (forms), the light map 0.207.
+1. The albedo as the base colour; for the specks, the detail tilt reads the photo's luminance through a 5 x 5
+   grey-scale opening (bright dots narrower than the square go, dark scratches and pits stay) instead of dividing by
+   the albedo; the light refitted (`results/*_c015_nospecks.json`). The colour spread 0.47; the frame's texture 0.52
+   and 1.11; the light map 0.148, under C-012's bar of 0.15 for the first time (the stained albedo now does some of
+   what the pool was stretched to do: a spot 3.89 m out, the pool's half-height 0.72 m), and the tone curve milder
+   (its upper exponent 1.87 against 2.37). But the carving read as clean clay, smoother than C-014's: the albedo had
+   replaced the procedural specks with near-uniform colour, and the opening took the grit out of the relief.
+2. Changed: the photo's specks put into the albedo, each bright dot narrower than about 2 px (the photo's luminance
+   over its 3 x 3 opening) brightening it by its own contrast. At up to 2.5 times (display) some went white, the
+   render's rule took them for wall, the openings' IoU fell to 0.795 and the lower openings came out 0.024 off
+   (`results/*_c015_speck25.json`).
+3. Changed: capped at 1.6 times. Now the colour spread **0.49** of the photo's (bar 0.8, missed); the frame's forms
+   texture **1.17** (bar 0.8 to 1.2, met; fine 0.73); guards: the bright end 0.673 against 0.674, the contrast 0.96,
+   the forms band's amplitude 0.807, the openings 0.011 and 0.006 off, the light map 0.150: all held. The openings'
+   IoU 0.822 (C-014 0.839). `make.py` reproduces it to four decimals.
+What the colour measure misses, looked at: in the photo a third of the colour's variation goes with brightness (35 %
+of log(R/G)'s variance, 29 % of log(B/G)'s; lit faces paler, shadows redder, at three times the render's slope),
+which is the light's colour or the phone's processing, not the stone's; with that taken out the photo still varies
+0.106 against the render's 0.059, some of it stains the albedo does not carry and some the photo's colour noise in
+its darks, in a split not measured. Seen on the sheet: the frame mottled, lighter and darker in patches as in the
+photo, no longer crinkled; the carving speckled pale like the photo's, but more even in colour than the photo's.
+
+**The judge (2026-11-24):** "this looks so real! Oh My Allah!"
+
+**Result (2026-11-24, closed): it no longer reads as new; the colour measure missed.** Marigold's intrinsic
+decomposition of the photo gives the stone its colour: its albedo as the base colour where the surface faces the
+camera, the photo's pale specks put back into it (they are colour, and the model left them out), and taken out of the
+relief by a grey-scale opening. The frame went from crinkled to mottled (its texture 1.22 to 1.17 of the photo's),
+the light map's error fell to 0.150 once the light was refitted over the stained albedo, and the guards held. The
+stone's colour spread rose from 0.29 to 0.49 of the photo's, short of the 0.8 bar; about a third of the photo's colour
+variation goes with brightness (the light's colour or its processing, not the stone's) and some is noise, so the bar
+was set on a measure that was partly the wrong thing. None of the card's branches fits exactly (the colour missed, the
+judge saw real stone); written as it fell. The guide gets the recipe with that limit (`areas/production.md`, item 23),
+and T-017 is answered for this photo.

@@ -408,3 +408,17 @@ def keep_field(k, fb, box):
     k["opening"] = k["opening"] & m
     k["stone"] = ~k["outside"] & ~k["opening"]
     return k
+
+
+def grey_open(a, r):
+    """A grey-scale opening (the minimum over a (2r+1)^2 square, then the maximum): bright features narrower than the
+    square go, dark ones stay. C-015 uses it to take the photo's pale specks out of the detail tilt."""
+    def shifted(x, f):
+        h, w = x.shape
+        p = np.pad(x, r, mode="edge")
+        out = p[r:r + h, r:r + w].copy()
+        for dy in range(-r, r + 1):
+            for dx in range(-r, r + 1):
+                out = f(out, p[r + dy:r + dy + h, r + dx:r + dx + w])
+        return out
+    return shifted(shifted(np.asarray(a, np.float32), np.minimum), np.maximum)

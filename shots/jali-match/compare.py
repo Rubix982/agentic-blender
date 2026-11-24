@@ -117,6 +117,21 @@ lmp, lmr = light_map(kp["y"], lm_mask), light_map(kr["y"], lm_mask)
 res["light_map"] = dict(photo=[[round(float(v), 3) for v in row] for row in lmp],
                         render=[[round(float(v), 3) for v in row] for row in lmr],
                         log_rms=round(float(np.sqrt(np.nanmean(np.log(lmr / lmp) ** 2))), 4))
+# C-015: the stone's colour variation (the photo's stains, grime and darker frame, against an even albedo): on stone in
+# both (3 px from any opening), each image blurred over 5 px, the chromaticity log(R / G) and log(B / G); their spread
+# (the two standard deviations combined), render over photo; and the frame's median luminance over the field's.
+def chroma(img, mask):
+    b = np.stack([C.blur(img[:, :, c].astype(np.float32), 5) for c in range(3)], -1)
+    a = np.log(np.maximum(b[:, :, 0], 1e-3) / np.maximum(b[:, :, 1], 1e-3))[mask]
+    bb = np.log(np.maximum(b[:, :, 2], 1e-3) / np.maximum(b[:, :, 1], 1e-3))[mask]
+    return float(np.sqrt(a.var() + bb.var()))
+cm = C.erode(kp["stone"], 3) & C.erode(kr["stone"], 3)
+cm_box = np.zeros_like(cm); cm_box[box] = cm[box]
+fld = np.zeros_like(cm); fld[y0 + 110:y1 - 95, x0 + 130:x1 - 110] = True
+res["stone_colour"] = dict(photo_spread=round(chroma(photo, cm_box), 4), render_spread=round(chroma(render, cm_box), 4))
+res["stone_colour"]["ratio"] = round(res["stone_colour"]["render_spread"] / max(res["stone_colour"]["photo_spread"], 1e-9), 4)
+res["frame_over_field"] = dict(photo=round(float(np.median(kp["y"][cm_box & ~fld]) / np.median(kp["y"][cm_box & fld])), 4),
+                               render=round(float(np.median(kr["y"][cm_box & ~fld]) / np.median(kr["y"][cm_box & fld])), 4))
 # C-013's guard: the openings' median luminance in the box's upper and lower halves, photo and render.
 mid = (y0 + y1) // 2
 res["openings_y_by_half"] = {h: dict(photo=round(float(np.median(kp["y"][rows, x0:x1 + 1][kp["opening"][rows, x0:x1 + 1]])), 4),
