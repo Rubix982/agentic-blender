@@ -328,3 +328,107 @@ threefold and then slept the machine for 5.7 hours in the middle of the 384-samp
 median of the frames rendered on mains power (16 of 25 for those two variants, all 25 for the rest;
 `flicker_times.py`). The per-variant means in `flicker.json` (46.5 and 920.3 s) include the slow frames and are not
 used. Flicker and detail do not depend on time.
+
+
+---
+
+### C-007 · A carved jali rebuilt from one museum photograph, judged beside it
+
+**Opened:** 2026-11-24
+
+1. **WHERE WE ARE.** C-005 passed every number on its card, yet on the sheet its subject was hidden and its moss
+   unreadable. The competitions study (section 3) finds the same split in juries' words: technique is a floor, and
+   what wins is judged by eye. Nothing in the guide has yet been set beside a real photograph, or judged by a person.
+2. **WHAT WE ARE DOING.** Rebuild one carved red-sandstone window screen (jali; Agra area, 1630–50, Louvre Abu Dhabi)
+   from one frontal photograph of it (Prof. Mortel, Flickr, CC BY 2.0; `shots/jali-match/photo/`), by script, and
+   render it from the photo's viewpoint (`read_photo.py`, `build.py`, `compare.py`).
+   - Only three things come from the photo: the outline of the stone and its openings (traced), the stone's hue (its
+     median colour), and two light powers fitted so the stone's and the openings' median brightness match.
+   - Made here: the solid (the traced outline extruded to 6.1 cm, edges rounded 3 mm), a rounded profile on the bars
+     (a height made by blurring the outline, not from the photo's shading), a procedural sandstone with pale specks, a
+     pale wall behind, a spotlight from above and in front, and a camera from the photo's EXIF (24 mm equivalent).
+   - The size is an estimate from comparable screens (1.05 m wide; `photo/CREDIT.md`).
+3. **WHY.** Unknown now: whether the guide's pieces make an object a person takes for the photographed one, and if
+   not, which part gives it away. Only a judge can answer the first; C-005 showed the numbers alone do not.
+4. **WHAT IS AFFECTED.**
+   - New: `shots/jali-match/` (scripts, the photo and its credit, `results.json`, `sheet.jpg`).
+   - A section on matching a photograph in `areas/production.md`, with whatever the build found that the guide lacked.
+   - The next card: the user's reason, if the answer is no.
+5. **CONCLUSION.** The measures come first, then the judge.
+   - Measures, inside the screen: the openings agree with the photo's at an IoU of at least 0.90, and the stone's
+     contrast (90th minus 10th percentile of luminance, which nothing is fitted to) is within 20 % of the photo's. If
+     either fails, that is fixed before the user sees the sheet, and the failure is recorded.
+   - The judge: the user sees `sheet.jpg` and answers one question: *at a glance, could the render be a photograph of
+     the same screen?*
+   - If yes, the guide gets a photo-to-model recipe for pierced work (screens, grilles, fretwork), and the next shot's
+     hero subject is built that way.
+   - If no, the user's reason is written here in their words (carving depth, stone, light, edges, or something else),
+     and it becomes the next card. The measures say whether the miss is in the shape or the tone.
+6. **CONSEQUENCE OF NOT DOING IT.** The guide's realism stays judged by numbers that C-005 showed pass shots a viewer
+   would not take for real, and the photo match stays the one check nobody has run.
+
+**Known limits, stated before the run:**
+- The openings come from the photo, so the IoU measures the build (thickness, rounding, camera), not the ability to
+  design a jali. Designing one from rules is a different question.
+- The carving on the bars' faces (incised lines, petals) is not traced; only the silhouette is. A "no" is most likely to
+  come from there.
+- The stone's and openings' median brightness are fitted, so they cannot fail; they are reported, not judged.
+
+**Measures (2026-11-24, before the judge): both fail.** `shots/jali-match/results/compare.json`, `sheet.jpg`.
+- Openings IoU 0.565 against the bar of 0.90: 0.40 in the top third, 0.69 in the middle, 0.53 at the bottom. Of the
+  photo's opening pixels the render shows 67 % as opening, 21 % as stone and 12 % as dark; 19 % of the render's
+  openings fall on the photo's stone, in slivers along the edges.
+- Stone contrast 0.315 against the photo's 0.529, a ratio of 0.59 against the bar of 0.8 to 1.2.
+- Fitted, reported only: the stone's median luminance 0.347 (photo 0.339); the openings' 0.856 (photo 0.702), brighter
+  because the fit counts dim wall by colour and the measure does not.
+
+Fixed before showing, in order, each found by looking at the sheet or the numbers:
+1. The rule for openings. Saturation below 0.22 and luminance at least 0.30 found 6.9 % openings (3.5 % in the top
+   half, against 10.9 % by the rule that replaced it), where the wall behind is dim and warm. Green over red separates them everywhere in
+   this photo (stone 0.70 to 0.80, wall 0.86 to 0.99); at 0.86 the solid frame reads 0.01 % open (`common.py`).
+2. The trace kept the plinth and the stand behind the screen. It is now cut to the screen's box. Dark pixels inside it
+   are stone, not holes: their green over red is below 0.6, the stone's colour in shadow, not the wall's.
+3. The wall was a 4 m plane, lit around the screen where the photo is dark. It is now a lit panel hidden behind the
+   screen, brighter at the bottom, its two ends fitted to the photo's openings in each half.
+4. The fill came out inside out (openings IoU 0.028). The curve's Offset broke the fill of these 600 to 800 nested
+   outlines: the front face was 0.24 m2 at -3 mm and 0.09 at +3 mm, against 1.10 at 0 (the outlines enclose 1.15).
+   Offset is 0; the traced stone is shrunk one pixel instead, and the edges rounded 1 mm. IoU 0.27.
+   `experiments/curves/curve_offset_fill.py` found why: a negative offset grows every hole, and where holes grow into
+   each other the overlaps fill in.
+5. Every opening was narrowed twice. The photo shows what can be seen through each hole, which is already narrowed by
+   the stone's depth (at 6.1 cm and 1.28 m, by up to 23 mm at the edges); extruding that narrowed it again. Each
+   traced opening is now joined with itself scaled out by the back face's projection (1 / 0.9546). IoU 0.53.
+6. The panel behind covered only 75 % of the screen as the camera sees it, so the top and bottom openings looked past
+   it into black. It now covers 95 %. IoU 0.565.
+
+Why the bars still fail:
+- The openings' bar was set without working out what one pixel costs at this scale. An opening 10 px wide shifted by
+  one pixel scores 9 / 11 = 0.82 on its own, and the photo's edges are soft over about two pixels. The misses left
+  are edge slivers on every opening, plus dark inner walls and a dim wall in the top third.
+- The photo's contrast comes from relief carving inside the stone: raised flowers and leaves over a recessed ground.
+  The build has none of it (the known limit above), so its stone is a flat slab with a rounded bump.
+
+Blender aborted once 4 s into a build (exit -6, before rendering) and ran clean on the rerun; not reproduced.
+
+**The judge (2026-11-24): no.** In the user's words, looking at the sheet: "it is looks very surreal. Bits are popping
+in and out like layers out of sand. The individual small tracing of lining on the individual pieces being connected
+are not there, and so our render renders it as something plain but it is not. It does not capture the lighting in the
+original picture, and gives us a darker muddier look."
+
+**Result (2026-11-24, closed): no. The build places the openings to within a few pixels and gets the stone's average
+colour right, and has none of the carving.** What the measures say about each of the three reasons:
+- *Plain; the lines on the individual pieces are missing.* Shape, inside the stone. In the photo each leaf, petal and
+  bar is outlined by a cut line and stands over a recessed ground. Nothing traced that (the known limit above): the
+  build's stone is one flat slab with a rounded bump.
+- *Darker and muddier.* Tone, from the same cause. The stone's median colour matched (photo 0.435, 0.322, 0.239;
+  render 0.439, 0.329, 0.251) and its median luminance was fitted equal (0.339 and 0.347). The bright end did not:
+  the photo's carving reaches 0.657 at the 90th percentile and 0.795 at the 99th, the render 0.493 and 0.575. With no
+  raised surfaces facing the light, nothing in the render catches it.
+- *Bits popping in and out like layers out of sand.* Shape, at the openings' edges: 21 % of the photo's opening pixels
+  are stone in the render, and 19 % of the render's openings are stone in the photo, in slivers along every edge.
+  Through a 6.1 cm slab each opening's inner walls also show as bands. Not checked: whether the half-resolution trace,
+  and the union with the scaled-out copy (which can give an opening a stepped double edge), make the slivers.
+
+The "no" branch applies: these reasons are the next card. The guide gains, whatever the verdict, what the build found
+on the way: `areas/production.md` ("Rebuilding a pierced object from one photograph") and `areas/curves-text.md`
+(item 8, the Offset).

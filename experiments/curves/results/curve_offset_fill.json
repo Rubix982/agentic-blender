@@ -1,0 +1,104 @@
+{
+ "experiment": "experiments/curves/curve_offset_fill.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-24",
+ "seconds": 0.08,
+ "facts": [
+  {
+   "fact": "At offset 0 the front face is the outlines' own area with the holes cut, whichever way the holes wind; the bevel widens the solid by its radius on each side",
+   "stone_m2": 0.7975,
+   "front_m2": 0.7975,
+   "width_m": 1.006
+  },
+  {
+   "fact": "A negative offset moves every outline into the solid: the outer edge in, each hole out (the bevelled width is back to 1 m at offset -3 mm with bevel 3 mm)",
+   "front_m2": 0.74,
+   "width_m": 1.0
+  },
+  {
+   "fact": "Where holes grow into each other (gaps 4 mm, offset -3 mm) the overlaps fill in: the front face roughly doubles instead of shrinking",
+   "stone_m2": 0.404,
+   "front_m2": 0.8236
+  }
+ ],
+ "data": {
+  "rows": {
+   "gap 50 mm, holes against the outer square": {
+    "stone_m2": 0.7975,
+    "offset +0 mm": {
+     "front_m2": 0.7975,
+     "width_m": 1.006,
+     "faces": 2592
+    },
+    "offset -3 mm": {
+     "front_m2": 0.74,
+     "width_m": 1.0,
+     "faces": 2592
+    },
+    "offset +3 mm": {
+     "front_m2": 0.8504,
+     "width_m": 1.012,
+     "faces": 2592
+    }
+   },
+   "gap 50 mm, holes with the outer square": {
+    "stone_m2": 0.7975,
+    "offset +0 mm": {
+     "front_m2": 0.7975,
+     "width_m": 1.006,
+     "faces": 2592
+    },
+    "offset -3 mm": {
+     "front_m2": 0.74,
+     "width_m": 1.0,
+     "faces": 2592
+    },
+    "offset +3 mm": {
+     "front_m2": 0.8504,
+     "width_m": 1.012,
+     "faces": 2592
+    }
+   },
+   "gap 4 mm, holes against the outer square": {
+    "stone_m2": 0.404,
+    "offset +0 mm": {
+     "front_m2": 0.404,
+     "width_m": 1.006,
+     "faces": 2592
+    },
+    "offset -3 mm": {
+     "front_m2": 0.8236,
+     "width_m": 1.0,
+     "faces": 2860
+    },
+    "offset +3 mm": {
+     "front_m2": 0.4879,
+     "width_m": 1.012,
+     "faces": 2592
+    }
+   },
+   "gap 4 mm, holes with the outer square": {
+    "stone_m2": 0.404,
+    "offset +0 mm": {
+     "front_m2": 0.404,
+     "width_m": 1.006,
+     "faces": 2592
+    },
+    "offset -3 mm": {
+     "front_m2": 0.8236,
+     "width_m": 1.0,
+     "faces": 2860
+    },
+    "offset +3 mm": {
+     "front_m2": 0.4879,
+     "width_m": 1.012,
+     "faces": 2592
+    }
+   }
+  },
+  "bevel_m": 0.003,
+  "extrude_m": 0.02
+ },
+ "args": []
+}

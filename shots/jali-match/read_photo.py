@@ -1,0 +1,70 @@
+"""C-007, step 1: read the photograph with the rule in common.py, before anything is built.
+
+    python3 skills/blender/scripts/run.py shots/jali-match/read_photo.py
+Writes shots/jali-match/out/classes.png (surround black, openings white, stone orange) to check the rule by eye, and
+out/photo.json (also results/read_photo.json, with the first rule's openings beside the rule's and the colour of the
+dark pixels in the carved field): the screen's extent in pixels, the openings' share of it, and the stone's luminance (10th, 50th and
+90th percentiles, and by ten horizontal bands from top to bottom)."""
+import json
+import os
+import sys
+
+import numpy as np
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, HERE)
+import common as C  # noqa: E402
+
+OUT = os.path.join(HERE, "out")
+os.makedirs(OUT, exist_ok=True)
+
+
+def stats(rgb):
+    k = C.classify(rgb)
+    rows = np.nonzero(k["stone"].mean(axis=1) > 0.2)[0]
+    cols = np.nonzero(k["stone"].mean(axis=0) > 0.2)[0]
+    y0, y1, x0, x1 = int(rows[0]), int(rows[-1]), int(cols[0]), int(cols[-1])
+    box = (slice(y0, y1 + 1), slice(x0, x1 + 1))
+    s = k["y"][box][k["stone"][box]]
+    bands = [float(np.median(k["y"][y0 + i * (y1 - y0) // 10: y0 + (i + 1) * (y1 - y0) // 10, x0:x1][
+        k["stone"][y0 + i * (y1 - y0) // 10: y0 + (i + 1) * (y1 - y0) // 10, x0:x1]])) for i in range(10)]
+    return k, dict(box=[x0, y0, x1, y1], width_px=x1 - x0 + 1, height_px=y1 - y0 + 1,
+                   opening_share=round(float(k["opening"][box].mean()), 4),
+                   outside_share=round(float(k["outside"][box].mean()), 4),
+                   stone_y=[round(float(np.percentile(s, q)), 4) for q in (10, 50, 90)],
+                   stone_y_p99=round(float(np.percentile(s, 99)), 4),
+                   stone_rgb_median=[round(float(c), 4) for c in np.median(rgb[box][k["stone"][box]], axis=0)],
+                   opening_y=round(float(np.median(k["y"][box][k["opening"][box]])), 4),
+                   stone_y_bands=[round(b, 4) for b in bands])
+
+
+if __name__ == "__main__":
+    rgb = C.load(os.path.join(HERE, "photo", "agra-jali.jpg"), C.size())
+    k, st = stats(rgb)
+    img = np.zeros(rgb.shape, np.float32)
+    img[k["opening"]] = 1.0
+    img[k["stone"]] = (0.85, 0.45, 0.2)
+    C.write_png(os.path.join(OUT, "classes.png"), img)
+    st.update(size=list(C.size()), rule=dict(dark=C.DARK, green_red=C.GREEN_RED))
+    # The first rule, kept as a measurement: openings where saturation is below 0.22 and luminance at least 0.30.
+    x0, y0, x1, y1 = st["box"]
+    mid = (y0 + y1) // 2
+    mx, mn = rgb.max(axis=2), rgb.min(axis=2)
+    sat_rule = ~k["outside"] & ((mx - mn) / np.maximum(mx, 1e-6) < 0.22) & (k["y"] >= 0.30)
+    halves = dict(top=(slice(y0, mid), slice(x0, x1 + 1)), bottom=(slice(mid, y1 + 1), slice(x0, x1 + 1)))
+    st["rules_compared"] = {
+        "saturation below 0.22, luminance at least 0.30": {h: round(float(sat_rule[b].mean()), 4) for h, b in halves.items()},
+        "green over red above 0.86": {h: round(float(k["opening"][b].mean()), 4) for h, b in halves.items()}}
+    st["rules_compared"]["saturation below 0.22, luminance at least 0.30"]["whole"] = round(
+        float(sat_rule[y0:y1 + 1, x0:x1 + 1].mean()), 4)
+    # Dark pixels inside the screen: is their colour the stone's or the wall's?
+    inner = (slice(y0 + 110, y1 - 95), slice(x0 + 130, x1 - 110))     # the carved field, inside the frame
+    d = k["outside"][inner]
+    st["dark_in_field"] = dict(share=round(float(d.mean()), 4),
+                               green_red_p50_p90=[round(float(np.percentile(k["gr"][inner][d], q)), 4) for q in (50, 90)])
+    with open(os.path.join(OUT, "photo.json"), "w") as f:
+        json.dump(st, f, indent=1)
+    os.makedirs(os.path.join(HERE, "results"), exist_ok=True)
+    with open(os.path.join(HERE, "results", "read_photo.json"), "w") as f:
+        json.dump(st, f, indent=1)
+    print("PHOTO", json.dumps(st), flush=True)

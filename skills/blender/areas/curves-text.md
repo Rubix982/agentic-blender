@@ -34,6 +34,14 @@ the attribute-based type that hair and geometry nodes use. `[exp: experiments/cu
    8-point profile) until `Fill Caps` is on, and in 4.5 the curve's point radius does nothing unless a Radius node is
    wired into the node's `Scale` input (radius 3 left the tube at 0.1 m; wired, 0.3).
    `[exp: experiments/curves/curve_to_mesh_node.py]`
+8. **Shrinking a 2D outline with holes by its Offset.** A 2D curve's fill cuts every outline nested inside another as
+   a hole, whichever way it winds, and the bevel widens the solid by its radius on each side: a 1 m square with
+   `bevel_depth` 0.003 came out 1.006 m wide. A negative `offset` pulls every outline into the solid, the outer edge in
+   and each hole out (1.0 m wide at -0.003), but where holes grow into each other the overlaps fill in: with 4 mm gaps
+   between holes, offset -0.003 took the front face from 0.404 m2 to 0.8236 instead of shrinking it. A screen traced
+   from a photograph came out inside out this way (`production.md`). Keep `offset` at 0, shrink the shape before
+   tracing it, and check the evaluated mesh's front-face area against the outlines' own.
+   `[exp: experiments/curves/curve_offset_fill.py]`
 
 ## Bezier and poly curves
 

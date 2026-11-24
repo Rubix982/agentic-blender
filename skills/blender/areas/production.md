@@ -208,3 +208,49 @@ Other consistency practice:
 | Cycles on this laptop (M2 Pro, Metal), 1280 x 720, 128 samples, a scattered forest with fog | 22.6 s (240 frames in 1.5 h; peak 3.6 GB) | C-005, `shots/morning-clearing/results.json` |
 
 Several solo entrants moved to a render farm days before their deadline `[study: B-07, B-11, B-12]`.
+
+## Rebuilding a pierced object from one photograph
+
+Card C-007 rebuilt a carved red-sandstone window screen (a jali) from one frontal museum photograph, by script: its
+openings traced from the photo, the trace extruded to the screen's thickness, lit to the photo's medians, and rendered
+from the photo's camera (`shots/jali-match/`). Judged beside the photo it failed: "very surreal", "something plain
+but it is not", "a darker muddier look" (the user's words, CARD.md). The openings landed within a few pixels; the
+carving inside the stone was never built. What the build found, in the order a script meets it:
+
+1. **Find the openings by a property that holds across the whole photo.** Light on a backdrop falls off: here the
+   wall behind the screen was white at the bottom and dim and warm at the top. Saturation below 0.22 with luminance
+   at least 0.30 found 3.5 % openings in the top half; green over red above 0.86 found 10.9 %, because the stone is red
+   at every brightness and the wall is not. Check a rule in bands from top to bottom before trusting it.
+   `[exp: shots/jali-match/read_photo.py]`
+2. **Dark pixels inside the object are its own shadows, until their colour says otherwise.** The dark pixels in the
+   carved field (5.6 % of it) had green over red of 0.355 at the median and 0.469 at the 90th percentile: stone in
+   shadow, not wall. Trace them as solid; only dark pixels connected to the photo's edge are the surround.
+   `[exp: shots/jali-match/read_photo.py]`
+3. **What a photo shows through an opening is already narrowed by the depth.** The camera sees the hole's front
+   outline overlapping its back outline, and the back appears scaled towards the picture's centre by
+   distance / (distance + thickness): 0.9546 for 6.1 cm at 1.28 m. Extrude the seen region and every hole narrows
+   twice. For straight-through holes the front outline holds both the seen region and the seen region scaled back
+   out, so trace their union. `[exp: shots/jali-match/build.py]`
+4. **Trace into a 2D curve with `offset` 0** and shrink the shape before tracing instead: a negative offset grows the
+   holes into each other and the fill turns inside out (`curves-text.md`, item 8). Set `use_smooth` on every spline;
+   flat facets on the holes' inner walls read as stripes. `[exp: experiments/curves/curve_offset_fill.py]`
+5. **Size a backdrop for its depth.** A panel the object's size, 0.4 m behind it, appeared 0.7486 of the object's size
+   from the camera, and the top and bottom openings looked past it into black. Scale it up by
+   (distance to the panel) / (distance to the object). `[exp: shots/jali-match/build.py]`
+6. **Fit the lights to the photo's medians, but find the backdrop in the render by colour alone.** With the photo's
+   brightness threshold the dim backdrop drops out of the count, and each round of the fit makes it dimmer.
+
+```python
+# 3: the hole's front outline from what the photo sees through it (seen: a boolean mask, H x W)
+k = dist / (dist + thickness)                      # the back face's size, seen from the camera, against the front's
+yy, xx = np.mgrid[0:H, 0:W]
+sy = np.clip(np.round(H / 2 + (yy - H / 2) * k).astype(int), 0, H - 1)
+sx = np.clip(np.round(W / 2 + (xx - W / 2) * k).astype(int), 0, W - 1)
+hole = seen | seen[sy, sx]
+```
+
+What the measures said about the judgement: the openings agreed at an IoU of 0.5652, with the misses in slivers
+along every edge. The stone's median colour matched the photo's (0.4392, 0.3294, 0.251 against 0.435, 0.322, 0.239),
+but its bright end did not: 0.4927 at the 90th percentile against 0.657, because a flat slab has no raised surfaces
+to catch the light. An extruded trace gives the holes and loses the carving between them.
+`[exp: shots/jali-match/compare.py]`
