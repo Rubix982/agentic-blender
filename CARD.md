@@ -1124,3 +1124,59 @@ variation goes with brightness (the light's colour or its processing, not the st
 was set on a measure that was partly the wrong thing. None of the card's branches fits exactly (the colour missed, the
 judge saw real stone); written as it fell. The guide gets the recipe with that limit (`areas/production.md`, item 23),
 and T-017 is answered for this photo.
+
+### C-016 · A standard for photo matches: which measures follow the judge's verdicts from C-007 to C-015
+
+**Opened:** 2026-11-24
+
+1. **WHERE WE ARE.** The jali went from "no" (C-007, C-008) to "this looks so real!" (C-015) over eight judged
+   sheets, each measured along the way, but by measures added one card at a time: the lines (C-008) fell as the user's
+   verdicts rose, and the forms band (C-011) became partly the photo against itself once its detail went into the
+   normals (C-011). Nothing yet says which numbers a new asset should be held to (T-013), and the user asked for a
+   standard before going on to other assets.
+2. **WHAT WE ARE DOING.** Recompute every candidate measure on the same patch of all eight committed sheets (the
+   detail crop, photo and render at full size, unchanged since C-007), and rank each against the judge's ladder.
+   - The ladder, from the verdicts in this file: C-007 and C-008 "no" (0), C-009 "much improved" (1), C-011 "yes at a
+     glance" (2), C-012 "it reads better" (3), C-013 "almost very realistic" (4), C-014 "I really love it" (5), C-015
+     "this looks so real" (6).
+   - The measures, on the crop: the openings' IoU, the forms band (correlation, amplitude), the fine band, the stone's
+     bright end and contrast against the photo's, its colour spread, the lines, the edge gradient, and SSIM (a
+     standard structural similarity, which none of the cards used).
+   - For each, Spearman's rank correlation with the ladder (for a ratio, its distance from 1, smaller is better).
+   - `shots/jali-match/measure_history.py`, `results/measure_history.json`.
+3. **WHY.** Unknown now: which numbers rose with the judge's eye across all eight verdicts, and which only looked
+   good on the card that added them, so a standard can name the first and drop the second.
+4. **WHAT IS AFFECTED.** New `measure_history.py`; `compare.py` gets a scorecard (the measures that track, with their
+   bars); `areas/production.md` a section on the standard; T-013's answer.
+5. **CONCLUSION.**
+   - If some measures follow the ladder (Spearman 0.8 or more), they are the standard, each with a bar from the
+     accepted state (C-015) and the photo's own ceiling, and T-013 is answered with them.
+   - If none does, the judge stays the standard and the numbers are guards only (each says what it cannot see), and
+     T-013 stays open with that finding.
+   - Either way, the lines measure's fate is recorded with its number.
+6. **CONSEQUENCE OF NOT DOING IT.** Every new asset would be judged by measures chosen afresh, some of which (C-008's
+   lines) moved against the judge, and the generalising cards (T-018) would have no standard to report against.
+
+**Known limits, stated before the run:**
+- Eight sheets, two of them tied, from one photo and one judge: a correlation is a pattern to keep testing, not proof.
+- The sheets are JPEGs and the crop is one patch (the carved field's middle); the frame and the borders (C-014) are
+  outside it, so C-014's rise cannot show there.
+- The ladder is ordinal and each verdict was against the one before; the steps are not equal.
+
+**Measures (2026-11-24).** `results/measure_history.json`. Spearman with the ladder, on the detail patch (full size)
+and the whole screen (half size, the frame included): SSIM 0.898 and 0.922; the render's lines near the photo's 0.886
+and 0.826; the bright end 0.874 and 0.838; the forms band's correlation 0.731 and 0.898; the colour spread 0.527 and
+0.922; the fine band's amplitude 0.766 and 0.707; the contrast 0.755 and 0.778; the forms band's amplitude 0.683 and
+0.695; the edge gradient 0.06 and 0.335; the openings' IoU -0.205 and -0.263 on the sheets, but 0.922 from the cards'
+own full-size comparisons (0.565 to 0.822: the sheets are JPEGs at half size, and the render's later tones move what
+the rule calls opening there). None rose at every step: at C-015, the highest verdict, SSIM and the forms band dipped
+a little while the colour spread jumped; shape won the early verdicts, light the middle ones, age the last. A second
+mistake caught on the way: the photo against itself 2 px off is not a ceiling for SSIM (the render scores 0.554, the
+shifted photo 0.374, since SSIM weighs fine grain that a shift destroys and the render never had).
+
+**Result (2026-11-24, closed): a standard of four measures and two candidates.** Following the verdicts in both views
+(0.8 or more): SSIM, the openings' IoU at full size, the stone's bright end, and the render's cut lines near the
+photo's (the measure C-009 set aside when it fell for one card). In one view only: the forms band's correlation and
+the colour spread. `compare.py` now prints them as a `scorecard` with bars from this asset's accepted state, and the
+guards that catch a break; the accepted render meets all of it. The guide's photo section has the standard
+(`areas/production.md`); T-013 is answered, as a pattern on eight sheets of one photo, for a second asset to test.

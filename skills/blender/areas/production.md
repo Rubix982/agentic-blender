@@ -384,6 +384,31 @@ What the builds found, in the order a script meets it:
     with brightness (lit faces paler, shadows redder), which is light or processing, not stone.
     `[exp: shots/jali-match/intrinsics.py]` `[exp: shots/jali-match/build.py]` `[exp: shots/jali-match/compare.py]`
 
+### A standard for a photo match (C-016)
+
+Which numbers say a render is nearer its photo? Every measure the cards used, recomputed on all eight judged sheets
+(C-007's "no" to C-015's "this looks so real!"), each ranked against the verdicts: Spearman 1 is in step with them,
+on the same full-size patch of the carved field and on the whole screen at half size. A measure is in the standard
+if it follows the verdicts in both views. `shots/jali-match/compare.py` prints this as `scorecard`; the bars are this
+asset's accepted state or the bars the cards set, and a second asset (T-018) will test them.
+
+| measure | sees | follows the verdicts (patch, whole) | bar | accepted |
+|---|---|---|---|---|
+| SSIM of luminance, screen's box | structure, at every scale | 0.898, 0.922 | at least 0.50 | 0.5536 |
+| openings' IoU (full size) | the outline | 0.922 (from the cards' own comparisons) | at least 0.75 | 0.8215 |
+| stone's bright end, render over photo | the light's strength | 0.874, 0.838 | 0.85 to 1.15 | 0.9994 |
+| render's cut lines within 2 px of the photo's | where the carving's dark lines fall | 0.886, 0.826 | at least 0.60 | 0.6067 |
+| forms band correlation (secondary) | the carving's light and dark | 0.731, 0.898 | at least 0.50 | 0.6433 |
+| stone's colour spread, render over photo (secondary) | stains, age | 0.527, 0.922 | at least 0.45 | 0.4863 |
+
+Guards, which did not follow the verdicts but catch a break: the contrast and the forms band's amplitude (0.8 to 1.2
+of the photo's), the thin stone shown (at least 0.90), the openings' brightness in each half (within 0.02), the light
+map (at most 0.20), the frame's texture (0.8 to 1.2). Not in it: the edge gradient (0.06, 0.335), which a lens and a
+pixel filter set, not the likeness. On the half-size sheets the rule's openings drift with the render's tones (IoU
+-0.205, -0.263 against the verdicts), so measure openings at full size. The lines measure, set aside in C-009 when it
+fell for one card, follows the verdicts over all eight. Eight sheets, one photo, one judge: a pattern to keep testing.
+`[exp: shots/jali-match/measure_history.py]` `[exp: shots/jali-match/compare.py]`
+
 ```python
 # 3: the hole's front outline from what the photo sees through it (seen: a boolean mask, H x W)
 k = dist / (dist + thickness)                      # the back face's size, seen from the camera, against the front's

@@ -231,6 +231,11 @@
   "photo": 0.5019,
   "render": 0.4883
  },
+ "ssim": {
+  "box": 0.5536,
+  "patch": 0.5489,
+  "photo_vs_itself_2px": 0.3742
+ },
  "openings_y_by_half": {
   "upper": {
    "photo": 0.4604,
@@ -240,6 +245,108 @@
    "photo": 0.8465,
    "render": 0.84
   }
+ },
+ "scorecard": {
+  "measures": {
+   "ssim": {
+    "value": 0.5536,
+    "bar": ">= 0.50",
+    "ok": true,
+    "follows_judge": {
+     "patch": 0.898,
+     "whole": 0.922
+    },
+    "tier": "core"
+   },
+   "openings_iou": {
+    "value": 0.8215,
+    "bar": ">= 0.75",
+    "ok": true,
+    "follows_judge": {
+     "full_size": 0.922
+    },
+    "tier": "core"
+   },
+   "bright_end": {
+    "value": 0.9994,
+    "bar": "0.85 to 1.15",
+    "ok": true,
+    "follows_judge": {
+     "patch": 0.874,
+     "whole": 0.838
+    },
+    "tier": "core"
+   },
+   "lines_render_near_photo": {
+    "value": 0.6067,
+    "bar": ">= 0.60",
+    "ok": true,
+    "follows_judge": {
+     "patch": 0.886,
+     "whole": 0.826
+    },
+    "tier": "core"
+   },
+   "forms_correlation": {
+    "value": 0.6433,
+    "bar": ">= 0.50",
+    "ok": true,
+    "follows_judge": {
+     "patch": 0.731,
+     "whole": 0.898
+    },
+    "tier": "secondary"
+   },
+   "colour_spread": {
+    "value": 0.4863,
+    "bar": ">= 0.45 (provisional, T-019)",
+    "ok": true,
+    "follows_judge": {
+     "patch": 0.527,
+     "whole": 0.922
+    },
+    "tier": "secondary"
+   }
+  },
+  "guards": {
+   "contrast": {
+    "value": 0.9564,
+    "bar": "0.8 to 1.2",
+    "ok": true
+   },
+   "forms_amplitude": {
+    "value": 0.8071,
+    "bar": "0.8 to 1.2",
+    "ok": true
+   },
+   "thin_stone_shown": {
+    "value": 0.968,
+    "bar": ">= 0.90",
+    "ok": true
+   },
+   "openings_y_upper": {
+    "value": 0.0111,
+    "bar": "<= 0.02 off",
+    "ok": true
+   },
+   "openings_y_lower": {
+    "value": 0.0065,
+    "bar": "<= 0.02 off",
+    "ok": true
+   },
+   "light_map": {
+    "value": 0.1498,
+    "bar": "<= 0.20",
+    "ok": true
+   },
+   "frame_texture_forms": {
+    "value": 1.1674,
+    "bar": "0.8 to 1.2",
+    "ok": true
+   }
+  },
+  "all_met": true,
+  "guards_held": true
  },
  "bar": {
   "lines_near_at_least": 0.6,

@@ -132,12 +132,69 @@ res["stone_colour"] = dict(photo_spread=round(chroma(photo, cm_box), 4), render_
 res["stone_colour"]["ratio"] = round(res["stone_colour"]["render_spread"] / max(res["stone_colour"]["photo_spread"], 1e-9), 4)
 res["frame_over_field"] = dict(photo=round(float(np.median(kp["y"][cm_box & ~fld]) / np.median(kp["y"][cm_box & fld])), 4),
                                render=round(float(np.median(kr["y"][cm_box & ~fld]) / np.median(kr["y"][cm_box & fld])), 4))
+# C-016: SSIM (a standard structural similarity of luminance, an 11 px Gaussian window), over the screen's box and over
+# the detail patch. It followed the judge's verdicts best of every measure over C-007 to C-015 (measure_history.py).
+def ssim_map(a, b):
+    c1, c2 = 0.01 ** 2, 0.03 ** 2
+    ma, mb = C.blur(a, 11), C.blur(b, 11)
+    va, vb = C.blur(a * a, 11) - ma * ma, C.blur(b * b, 11) - mb * mb
+    cov = C.blur(a * b, 11) - ma * mb
+    return ((2 * ma * mb + c1) * (2 * cov + c2)) / ((ma * ma + mb * mb + c1) * (va + vb + c2))
+yp_, yr_ = kp["y"].astype(np.float32), kr["y"].astype(np.float32)
+smap = ssim_map(yp_, yr_)
+shifted = np.roll(np.roll(yp_, 2, 0), 2, 1)
+cmap_ = ssim_map(yp_, shifted)
+DXp, DYp, DWp, DHp = 520, 330, 560, 420
+res["ssim"] = dict(box=round(float(smap[box].mean()), 4), patch=round(float(smap[DYp:DYp + DHp, DXp:DXp + DWp].mean()), 4),
+                   photo_vs_itself_2px=round(float(cmap_[box].mean()), 4))
+# (Not a ceiling: the render scores above the photo against itself 2 px off, since SSIM weighs the photo's fine grain,
+# which a shift destroys and the render never had.)
 # C-013's guard: the openings' median luminance in the box's upper and lower halves, photo and render.
 mid = (y0 + y1) // 2
 res["openings_y_by_half"] = {h: dict(photo=round(float(np.median(kp["y"][rows, x0:x1 + 1][kp["opening"][rows, x0:x1 + 1]])), 4),
                                      render=round(float(np.median(kr["y"][rows, x0:x1 + 1][kr["opening"][rows, x0:x1 + 1]])), 4))
                              for h, rows in (("upper", slice(y0, mid)), ("lower", slice(mid, y1 + 1)))}
 p90p, p90r = sp["stone_y"][2], sr["stone_y"][2]
+# C-016: the standard. The measures that followed the judge's verdicts over C-007 to C-015 (Spearman with the ladder,
+# measure_history.py and the full-size openings history), each with its bar; and the guards, which did not follow the
+# verdicts but catch a break. Bars are this asset's accepted state (C-015) or the bars the cards set.
+def _within(v, lo, hi):
+    return bool(lo <= v <= hi)
+# follows_judge: Spearman with the verdicts on the detail patch and on the whole screen (measure_history.py); the
+# openings' IoU from the full-size comparisons (the sheets are JPEGs at half size, where the rule's openings drift).
+# Core: at least 0.8 in both views. Secondary: in one view only.
+card = {
+    "ssim": dict(value=res["ssim"]["box"], bar=">= 0.50", ok=res["ssim"]["box"] >= 0.50,
+                 follows_judge=dict(patch=0.898, whole=0.922), tier="core"),
+    "openings_iou": dict(value=res["openings_iou"], bar=">= 0.75", ok=res["openings_iou"] >= 0.75,
+                         follows_judge=dict(full_size=0.922), tier="core"),
+    "bright_end": dict(value=round(p90r / p90p, 4), bar="0.85 to 1.15", ok=_within(p90r / p90p, 0.85, 1.15),
+                       follows_judge=dict(patch=0.874, whole=0.838), tier="core"),
+    "lines_render_near_photo": dict(value=res["lines"]["render_near_photo"], bar=">= 0.60",
+                                    ok=res["lines"]["render_near_photo"] >= 0.60,
+                                    follows_judge=dict(patch=0.886, whole=0.826), tier="core"),
+    "forms_correlation": dict(value=res["detail"]["forms"]["correlation"], bar=">= 0.50",
+                              ok=res["detail"]["forms"]["correlation"] >= 0.50,
+                              follows_judge=dict(patch=0.731, whole=0.898), tier="secondary"),
+    "colour_spread": dict(value=res["stone_colour"]["ratio"], bar=">= 0.45 (provisional, T-019)",
+                          ok=res["stone_colour"]["ratio"] >= 0.45, follows_judge=dict(patch=0.527, whole=0.922),
+                          tier="secondary"),
+}
+guards = {
+    "contrast": dict(value=res["spread_ratio"], bar="0.8 to 1.2", ok=_within(res["spread_ratio"], 0.8, 1.2)),
+    "forms_amplitude": dict(value=res["detail"]["forms"]["amplitude_ratio"], bar="0.8 to 1.2",
+                            ok=_within(res["detail"]["forms"]["amplitude_ratio"], 0.8, 1.2)),
+    "thin_stone_shown": dict(value=res["thin_stone_shown"], bar=">= 0.90", ok=res["thin_stone_shown"] >= 0.90),
+    "openings_y_upper": dict(value=round(abs(res["openings_y_by_half"]["upper"]["render"] - res["openings_y_by_half"]["upper"]["photo"]), 4),
+                             bar="<= 0.02 off", ok=abs(res["openings_y_by_half"]["upper"]["render"] - res["openings_y_by_half"]["upper"]["photo"]) <= 0.02),
+    "openings_y_lower": dict(value=round(abs(res["openings_y_by_half"]["lower"]["render"] - res["openings_y_by_half"]["lower"]["photo"]), 4),
+                             bar="<= 0.02 off", ok=abs(res["openings_y_by_half"]["lower"]["render"] - res["openings_y_by_half"]["lower"]["photo"]) <= 0.02),
+    "light_map": dict(value=res["light_map"]["log_rms"], bar="<= 0.20", ok=res["light_map"]["log_rms"] <= 0.20),
+    "frame_texture_forms": dict(value=res["frame_texture"]["forms"]["ratio"], bar="0.8 to 1.2",
+                                ok=_within(res["frame_texture"]["forms"]["ratio"], 0.8, 1.2)),
+}
+res["scorecard"] = dict(measures=card, guards=guards, all_met=all(v["ok"] for v in card.values()),
+                        guards_held=all(v["ok"] for v in guards.values()))
 res["bar"] = dict(lines_near_at_least=0.6, stone_p90_within=[round(0.85 * p90p, 4), round(1.15 * p90p, 4)],
                   spread_ratio_within=[0.8, 1.2], openings_iou_at_least=0.68)
 res["measures_pass"] = dict(

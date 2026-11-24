@@ -126,7 +126,7 @@ right under its own light.
 
 ### T-013 · What number says "the detail is there", so the bar is not the judge's eye alone?
 
-**Status:** open
+**Status:** answered
 **Parent:** T-009
 **Opened:** 2026-11-24
 **Question:** The lines measure fell from C-008 to C-009 while the forms got better; a measure that rewards crisp,
@@ -134,6 +134,9 @@ correctly placed relief (the render's local structure against the photo's, under
 **Answer:** — (C-011 tried a forms band, luminance blurred over 5 px less over 21 px, on stone: it rose as the user's
 judgement did, 0.399 to 0.549, with a ceiling of 0.557 at a 2 px misregistration; once the photo's own detail went into
 the normals it partly measures the photo against itself, so it is a candidate, not an answer.)
+C-016: over all eight judged sheets, SSIM, the openings' IoU (full size), the bright end and the render's cut lines
+near the photo's follow the verdicts (Spearman 0.8 or more on the patch and the whole screen); the forms band and the
+colour spread in one view only. `compare.py` prints them as a scorecard; `areas/production.md` has the standard.
 
 ### T-014 · Why does a 2D curve's fill break at 0.92 mm a point, when the same outlines in pixels fill?
 
@@ -186,3 +189,25 @@ shading: is its albedo the stone's age, used as the base colour?
 the photo's pale specks put back into it and taken out of the relief. The colour spread reached 0.49 of the photo's,
 a measure that is partly the light's colour and noise. Untried: the light's colour (lit faces paler, shadows redder in
 the photo), grime in the hollows.
+
+### T-018 · What of the jali recipe holds for another asset (another screen, or carving that is not pierced)?
+
+**Status:** parked
+**Parent:** T-009
+**Opened:** 2026-11-24
+**Question:** C-007 to C-015 built one jali from one photo to "this looks so real!", through 23 findings in
+`areas/production.md`. Which of them are about pierced carved stone in general and which about this photo? Run
+`make.py`'s chain on a second photo and see what breaks. Parked on the user's word (2026-11-24) until the remaining
+jali threads have set a standard: T-013, T-019, T-014, T-012, T-011.
+**Answer:** —
+
+### T-019 · The light's colour, and grime in the hollows: what is left of the stone's age?
+
+**Status:** open
+**Parent:** T-017
+**Opened:** 2026-11-24
+**Question:** C-015 found a third of the photo's colour variation goes with brightness (lit faces paler, shadows
+redder, at three times the render's slope): the spot's colour and a cooler fill, or the phone's processing. And dirt
+gathers in a carving's hollows, which the albedo projected from the front may not carry. Do either move the render
+nearer the photo, by the colour measures and the judge?
+**Answer:** —
