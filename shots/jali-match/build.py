@@ -53,6 +53,7 @@ PHOTO_DETAIL = PHOTO_DETAIL if NORMAL_MAP else 0.0                     # it tilt
 CARVED_SHARE = float(argv[argv.index("--carved-share") + 1]) if "--carved-share" in argv else 0.3
 FIXED_LIGHT = "--fixed-light" in argv                                  # C-012: C-011's spot, not fitted to the pool
 REFIT_LIGHT = "--refit-light" in argv                                  # C-012: search again (else results/light_fit.json)
+TONE = "--no-tone" not in argv                                        # C-013: the photo's tone curve on the render
 NORMALS_NPY = os.path.join(os.path.dirname(os.path.abspath(__file__)), "out", "normals.npy")
 if (FORMS == "normals" or NORMAL_MAP) and not os.path.exists(NORMALS_NPY):
     raise SystemExit("out/normals.npy is missing: run make.py, or .venv/bin/python shots/jali-match/normals.py, first "
@@ -484,17 +485,53 @@ def to_lin3(c):
     return np.where(c <= 0.04045, c / 12.92, ((c + 0.055) / 1.055) ** 2.4)
 
 
+# C-013: the photo's tone curve. On luminance, through 0, 1 and the pivot m (the photo's stone median, so the power fit
+# stands): a power curve below m and a mirrored one above it, exponents a and b (1 and 1 is no curve). The render
+# goes through it; the wall, seen straight through the openings, is set through its inverse, so it still shows the
+# photo's colour.
+def tone(v, m, a, b):
+    v = np.clip(np.asarray(v, np.float64), 0.0, 1.0)
+    lo = m * (np.maximum(v, 1e-6) / m) ** a
+    hi = 1 - (1 - m) * (np.maximum(1 - v, 1e-6) / (1 - m)) ** b
+    return np.where(v <= m, lo, hi)
+
+
+def tone_inv(v, m, a, b):
+    return tone(v, m, 1.0 / a, 1.0 / b)
+
+
+# Applied to luminance, R, G and B scaled together: per channel, a colour that straddles the pivot changes hue (a dim
+# grey wall turned warmer, failed the green-over-red cut, and the openings' IoU fell from 0.795 to 0.758).
+LUM = np.array([0.2126, 0.7152, 0.0722])
+
+
+def tone_rgb(rgb_, cv, inverse=False):
+    rgb_ = np.asarray(rgb_, np.float64)
+    yy = np.maximum(rgb_ @ LUM, 1e-6)
+    f = tone_inv if inverse else tone
+    return np.clip(rgb_ * (f(yy, cv["m"], cv["a"], cv["b"]) / yy)[..., None], 0.0, 1.0)
+
+
+TONE_M = float(np.median(k["y"][y0:y1 + 1, x0:x1 + 1][k["stone"][y0:y1 + 1, x0:x1 + 1]]))
+curve = dict(m=TONE_M, a=1.0, b=1.0)
 band_rows = np.array_split(np.arange(y0, y1 + 1), 10)
 ph, z_bottom = bh * 0.95 / KW, bz / KW - bh * 0.95 / KW / 2
-bands = []
-for rr in band_rows:
-    o = k["opening"][rr[0]:rr[-1] + 1, x0:x1 + 1]
-    if o.sum() < 200:
-        continue
-    lin = to_lin3(np.median(rgb[rr[0]:rr[-1] + 1, x0:x1 + 1][o], axis=0))
-    z = (cy - (rr[0] + rr[-1]) / 2) * S / KW
-    bands.append(((z - z_bottom) / ph, lin))
-bands.sort(key=lambda b: b[0])
+
+
+def wall_bands(cv):
+    out = []
+    for rr in band_rows:
+        o = k["opening"][rr[0]:rr[-1] + 1, x0:x1 + 1]
+        if o.sum() < 200:
+            continue
+        shown = np.median(rgb[rr[0]:rr[-1] + 1, x0:x1 + 1][o], axis=0)
+        lin = to_lin3(tone_rgb(shown, cv, inverse=True))
+        z = (cy - (rr[0] + rr[-1]) / 2) * S / KW
+        out.append(((z - z_bottom) / ph, lin))
+    return sorted(out, key=lambda b: b[0])
+
+
+bands = wall_bands(curve)
 WALL_MAX = float(max(b[1].max() for b in bands))
 wm = bpy.data.materials.new("lit wall")
 wm.use_nodes = True
@@ -510,9 +547,16 @@ ramp_w = wn.nodes.new("ShaderNodeValToRGB")                            # Generat
 els = ramp_w.color_ramp.elements
 while len(els) < len(bands):
     els.new(0.5)
-for el, (pos, lin) in zip(els, bands):
-    el.position = float(min(max(pos, 0.0), 1.0))
-    el.color = tuple(float(c) / WALL_MAX for c in lin) + (1.0,)
+def set_wall(bs):
+    global WALL_MAX
+    WALL_MAX = float(max(b[1].max() for b in bs))
+    em.inputs["Strength"].default_value = WALL_MAX
+    for el, (pos, lin) in zip(els, bs):
+        el.position = float(min(max(pos, 0.0), 1.0))
+        el.color = tuple(float(c) / WALL_MAX for c in lin) + (1.0,)
+
+
+set_wall(bands)
 wn.links.new(wtc.outputs["Generated"], sep.inputs["Vector"])
 wn.links.new(sep.outputs["Y"], ramp_w.inputs["Fac"])
 wn.links.new(ramp_w.outputs["Color"], em.inputs["Color"])
@@ -779,18 +823,59 @@ def gain(want, got):
     return min(10.0, max(0.1, to_lin(want) / max(to_lin(got), 1e-4)))
 
 
-for step in range(3):
-    path = os.path.join(OUT, f"fit_{step}.png")
-    sec = render(path, 25, 32)
-    st, op_lo, op_hi = medians(C.load(path, (W, H)), wall_by_colour=True)
-    log["fit"]["steps"].append(dict(spot_w=round(spot.energy, 2), stone_y=round(st, 4),
-                                    opening_y_lower=round(op_lo, 4), opening_y_upper=round(op_hi, 4),
-                                    seconds=round(sec, 1)))
-    print("FIT", log["fit"]["steps"][-1], flush=True)
-    spot.energy *= gain(target[0], st)
+def fit_power(n):
+    for step in range(n):
+        path = os.path.join(OUT, f"fit_{len(log['fit']['steps'])}.png")
+        sec = render(path, 25, 32)
+        img = tone_rgb(C.load(path, (W, H)), curve).astype(np.float32)
+        st, op_lo, op_hi = medians(img, wall_by_colour=True)
+        log["fit"]["steps"].append(dict(spot_w=round(spot.energy, 2), stone_y=round(st, 4),
+                                        opening_y_lower=round(op_lo, 4), opening_y_upper=round(op_hi, 4),
+                                        seconds=round(sec, 1), curve=[round(curve["a"], 4), round(curve["b"], 4)]))
+        print("FIT", log["fit"]["steps"][-1], flush=True)
+        spot.energy *= gain(target[0], st)
 
+
+fit_power(3)
+r.image_settings.color_depth = "16"                                    # a curve on 8 bits would band
+UNTONED = os.path.join(OUT, "render_untoned.png")
+TONE_MASK = (C.erode(k["stone"], 3) & np.pad(np.ones((y1 - y0 + 1, x1 - x0 + 1), bool), ((y0, H - y1 - 1), (x0, W - x1 - 1))))
+P10, P90 = (float(np.percentile(k["y"][TONE_MASK], q)) for q in (10, 90))
+
+
+def fit_curve(path):
+    """The two exponents that send the untoned render's stone 10th and 90th percentiles to the photo's."""
+    u = C.luminance(C.load(path))[TONE_MASK]
+    u10, u90 = float(np.percentile(u, 10)), float(np.percentile(u, 90))
+    m = curve["m"]
+    a = math.log(P10 / m) / math.log(min(u10, 0.999 * m) / m)
+    b = math.log((1 - P90) / (1 - m)) / math.log((1 - max(u90, 1.001 * m)) / (1 - m))
+    return dict(m=m, a=float(min(max(a, 0.3), 4.0)), b=float(min(max(b, 0.3), 4.0)), untoned_p10=round(u10, 4),
+                untoned_p90=round(u90, 4))
+
+
+# The curve and the wall depend on each other: the wall, set through the curve's inverse, lights the stone's sides and
+# backs, so the stone's percentiles move and the curve with them (a first try, fitted once: the openings came out 0.05
+# too bright). So: render, fit the curve, set the wall through it, fit the power again, until the curve holds still.
+if TONE:
+    log["tone"] = dict(pivot=round(curve["m"], 4), photo_p10=round(P10, 4), photo_p90=round(P90, 4), rounds=[])
+    for it in range(8):
+        render(UNTONED, 100, 64)
+        c = fit_curve(UNTONED)
+        log["tone"]["rounds"].append(dict(a=round(c["a"], 4), b=round(c["b"], 4), untoned_p10=c["untoned_p10"],
+                                          untoned_p90=c["untoned_p90"]))
+        print("TONE", it, log["tone"]["rounds"][-1], flush=True)
+        still = abs(c["a"] - curve["a"]) < 0.02 and abs(c["b"] - curve["b"]) < 0.02
+        curve.update(a=c["a"], b=c["b"])
+        set_wall(wall_bands(curve))                                    # the wall through the curve's inverse
+        fit_power(2)
+        if still:
+            break
 bpy.ops.wm.save_as_mainfile(filepath=os.path.join(OUT, "scene.blend"))
-sec = render(os.path.join(OUT, "render.png"), 100, SAMPLES)
+sec = render(UNTONED if TONE else os.path.join(OUT, "render.png"), 100, SAMPLES)
+if TONE:
+    C.write_png(os.path.join(OUT, "render.png"), tone_rgb(C.load(UNTONED), curve))
+    log["tone"].update(a=round(curve["a"], 4), b=round(curve["b"], 4))
 log["render"] = dict(seconds=round(sec, 1), samples=SAMPLES, size=[W, H], spot_w=round(spot.energy, 2),
                      wall_strength=round(WALL_MAX, 4), albedo=[round(c, 4) for c in ALBEDO], look=LOOK,
                      filter_px=FILTER_PX)

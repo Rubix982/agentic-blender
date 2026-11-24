@@ -116,6 +116,11 @@ lmp, lmr = light_map(kp["y"], lm_mask), light_map(kr["y"], lm_mask)
 res["light_map"] = dict(photo=[[round(float(v), 3) for v in row] for row in lmp],
                         render=[[round(float(v), 3) for v in row] for row in lmr],
                         log_rms=round(float(np.sqrt(np.nanmean(np.log(lmr / lmp) ** 2))), 4))
+# C-013's guard: the openings' median luminance in the box's upper and lower halves, photo and render.
+mid = (y0 + y1) // 2
+res["openings_y_by_half"] = {h: dict(photo=round(float(np.median(kp["y"][rows, x0:x1 + 1][kp["opening"][rows, x0:x1 + 1]])), 4),
+                                     render=round(float(np.median(kr["y"][rows, x0:x1 + 1][kr["opening"][rows, x0:x1 + 1]])), 4))
+                             for h, rows in (("upper", slice(y0, mid)), ("lower", slice(mid, y1 + 1)))}
 p90p, p90r = sp["stone_y"][2], sr["stone_y"][2]
 res["bar"] = dict(lines_near_at_least=0.6, stone_p90_within=[round(0.85 * p90p, 4), round(1.15 * p90p, 4)],
                   spread_ratio_within=[0.8, 1.2], openings_iou_at_least=0.68)

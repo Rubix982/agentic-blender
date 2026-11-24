@@ -162,11 +162,24 @@ map of the photo, takes the map's error from 0.443 to 0.198; judged "it reads be
 
 ### T-016 · What tone curve did the photo's processing apply, and can the render go through the same one?
 
-**Status:** active
+**Status:** answered
 **Parent:** T-015
 **Opened:** 2026-11-24
 **Question:** After C-012's fitted pool the stone's dark end is close (0.159 against 0.129) but the bright end is short
 (0.514 against 0.674) about the same median, the shape an S-curve gives; the photo was edited in Polarr. C-008 found
 Blender's contrast looks brighten the wall too, which is set exactly; a curve with the wall set through its inverse
 would not.
+**Answer:** C-013: an S-curve on luminance through the stone's median (exponents 1.020 below, 2.374 above), the wall set
+through its inverse and iterated with it; the bright end and contrast met, the openings unchanged; "almost very
+realistic in a passing glance". What gives it away now: the stone looks new (T-017), the borders vanish (C-014).
+
+### T-017 · What makes carved stone look centuries old, and can the photo give the render its age?
+
+**Status:** open
+**Parent:** T-009
+**Opened:** 2026-11-24
+**Question:** After C-013 the user found the render "VERY fresh, like it was just created": its stone is one procedural
+sandstone, even in colour, clean in its hollows; the photo's has stains, darker patches, grime in the recesses and a
+darker frame. Marigold's lighting model (`marigold-iid-lighting-v1-1`, cached) splits a photo into albedo and
+shading: is its albedo the stone's age, used as the base colour?
 **Answer:** —

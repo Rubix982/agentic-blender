@@ -902,3 +902,81 @@ pool point to (a darker bottom and brighter top about the same median). That is 
 pool stretches when its object is scaled (`experiments/light/spot_scale.py`), and the normals can veto the photo's
 rule. Guide: `areas/production.md` items 19 and 20, `areas/light-world-camera.md` (spot scale). T-015 answered for the
 pool; the tone curve is T-016.
+
+### C-013 · The photo's tone curve: the render through the same S-curve, the wall set through its inverse
+
+**Opened:** 2026-11-24
+
+1. **WHERE WE ARE.** C-012 closed "it reads better" with the spot fitted to where the photo's light pools. The stone's
+   median matches (0.342 against 0.347) and its dark end is close (10th percentile 0.159 against 0.129), but its bright
+   end is short (90th 0.514 against 0.674): a darker bottom and a brighter top about the same median, the shape an
+   S-shaped tone curve gives. The photo was edited (Polarr, by its metadata). C-008 tried Blender's contrast looks: the
+   stone's contrast rose, but so did the wall seen through the openings, which is set exactly through the plain sRGB
+   curve.
+2. **WHAT WE ARE DOING.** Put the render through a tone curve fitted to the photo, with the wall set through the
+   curve's inverse so the openings stay as the photo has them.
+   - The curve: per channel, through 0, 1 and the photo's stone median (so the light's power fit stands), a power curve
+     below that point and a mirrored one above it, two numbers fitted so the stone's 10th and 90th percentiles match
+     the photo's. Applied to the finished render in `build.py`.
+   - The wall's ten colour bands decoded through the curve's inverse before the sRGB decoding; then the spot's power
+     fitted again, and the render made again.
+3. **WHY.** Unknown now: whether the stone's missing bright end and contrast are the photo's processing (one curve
+   fixes them) or the scene (the light, the stone), and whether a curve the wall passes through unchanged reads as
+   the photo or as an edit.
+4. **WHAT IS AFFECTED.**
+   - `build.py` (`--no-tone` keeps C-012's); `results/` overwritten, C-012's kept as `*_c012.json`; `sheet.jpg`.
+   - `areas/production.md`'s photo section, and `areas/rendering.md` or `compositing.md` if the curve is a recipe a
+     script can reuse; T-016's answer.
+5. **CONCLUSION.** The measures first, then the judge.
+   - Measures: the bright end within 15 % of the photo's (0.573 to 0.776), the contrast 0.8 to 1.2 of the photo's, the
+     forms band's amplitude 0.8 to 1.2. Guards: the openings' median luminance within 0.02 of the photo's in both
+     halves, and the light map's error no worse than 0.218 (C-012's 0.198 and 0.02).
+   - The judge: *at a glance, could the render be a photograph of the same screen?*
+   - If the measures pass and the answer is yes, the guide gets the recipe (a photo's tone curve fitted, the emitters
+     set through its inverse), and T-016 is answered.
+   - If the bright end and contrast pass but the forms band's amplitude does not, the curve was the global part and
+     the local contrast is the scene's (the stone's albedo, its specks, the light's softness): that is the next card.
+   - If the curve cannot bring the bright end within its bar without breaking a guard, the missing light is in the
+     scene, not the processing.
+6. **CONSEQUENCE OF NOT DOING IT.** The render stays flatter than the photo it is set beside, and the guide's photo
+   method matches a photo's light but not the processing every photo has been through.
+
+**Known limits, stated before the run:**
+- The curve is fitted to the stone's percentiles, so the bright end and contrast are partly fitted; the forms band's
+  amplitude and the guards are the checks it cannot fit.
+- One curve for the whole picture, the same for each channel; a phone's processing is local and may differ by channel.
+
+**Measures (2026-11-24), in the order they were taken.** C-012: the bright end 0.514, the contrast 0.65 of the
+photo's, the forms band's amplitude 0.56, the light map's error 0.198.
+1. As the card said, the curve fitted once and the wall set through it (`results/*_c013_once.json`): the bright end
+   0.659, the contrast 0.92, the amplitude 0.814, all within their bars; but the openings came out 0.05 too bright in
+   both halves (guard 0.02). The wall set through the curve's inverse lights the stone's sides and backs less, so the
+   stone's percentiles moved and the curve fitted after it was stronger (its upper exponent 3.0 against 2.42) than
+   the one the wall had been set through.
+2. Changed: render, fit the curve, set the wall, fit the power, until the curve holds still. Per channel it crept and
+   did not settle in five rounds (the upper exponent 2.42, 3.00, 3.23, 3.32, 3.35); the openings came within the guard
+   (0.017 and 0.012 over), but the openings' IoU fell from 0.791 to 0.758, and it was 0.795 on the same render before
+   the curve (`results/*_c013_perchannel.json`). Per channel, a colour that straddles the pivot changes hue: the dim
+   grey wall turned warmer and failed the green-over-red cut.
+3. Changed: the curve on luminance, R, G and B scaled together. It settles in three rounds: a = 1.020 (the dark end
+   barely moves), b = 2.374 (a strong lift above the median, 0.347). Now: the bright end **0.674** against 0.674 (bar
+   0.573 to 0.776), the contrast **0.95** (bar 0.8 to 1.2), the forms band's amplitude **0.828** (bar 0.8 to 1.2);
+   guards: the openings 0.467 against 0.448 above and 0.848 against 0.843 below (within 0.02), the light map 0.201
+   (at most 0.218). The openings' IoU 0.782 (C-012 0.791).
+All three measures pass and both guards hold; the bright end and the contrast are partly fitted (the curve is fitted
+to the stone's 10th and 90th percentiles), the amplitude and the guards are not. Seen on the sheet: the lit tops of the
+carving come up to a pale cream as in the photo, the centre is brighter; the frame is still a little lighter at the
+sides than the photo's.
+
+**The judge (2026-11-24):** "This is really amazing!!!! Looks almost very realistic in a passing glance! what gives it
+away, and maybe it is opioanted and not, [...] that this looks VERY fresh, like it was just created. another thing is
+disapating edges (top left), [...] so vanishing borders is one thing."
+
+**Result (2026-11-24, closed): "almost very realistic in a passing glance", the measures met.** A tone curve fitted
+to the photo (on luminance, through the stone's median; the dark end's exponent 1.020, the bright end's 2.374), the
+render put through it and the wall set through its inverse, iterated with the wall and the light's power until the
+curve held still: the bright end 0.674 against 0.674, the contrast 0.95 of the photo's, the forms band's amplitude
+0.83, the openings within 0.02 of the photo's in both halves, the light map unchanged. By the card, the guide gets
+the recipe (`areas/production.md`, item 21) and T-016 is answered. What gives it away, in the user's words: the stone
+looks "VERY fresh", and the borders vanish at the top left. Those are the next two cards: the borders C-014, the
+stone's age C-015.

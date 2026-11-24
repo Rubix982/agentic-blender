@@ -343,6 +343,18 @@ What the builds found, in the order a script meets it:
     the wall's, on average, is stone: that took 6.16 % of the openings, and the openings' IoU went from 0.762 to 0.7914
     and the thin stone shown from 0.9586 to 0.9747. Take the wall's normal locally if the model's wall drifts across
     the picture. `[exp: shots/jali-match/read_photo.py]` `[exp: shots/jali-match/compare.py]`
+21. **Put the render through the photo's tone curve, with what emits set through its inverse.** With the light's pool
+    fitted, the stone's median matched and its bright end did not: 0.5139 against 0.6744, a darker bottom and brighter
+    top about the same median, the shape an edited photo's S-curve gives. A curve on luminance through the stone's
+    median (a power below it and a mirrored one above, the two exponents fitted to the stone's 10th and 90th
+    percentiles) brought it to 0.6743, the contrast to 0.9466 of the photo's and the forms band's amplitude to 0.8283.
+    Set anything seen directly (here the glowing wall) through the curve's inverse, then iterate: the wall lights the
+    stone's sides, so the curve moves when the wall does. Fitted once, the openings came out 0.5001 against 0.4483;
+    iterated, 0.4665 and 0.8478 against 0.8428. Apply it to luminance, R, G and B scaled together: per channel the
+    curve never settled (its upper exponent 2.4173, 3.0, 3.231, 3.3183, 3.3508) and a dim grey wall turned warm
+    enough to fail the colour rule (openings IoU 0.7576). On luminance it settled in three rounds at 1.0199 and
+    2.3742. Blender's contrast looks brighten the emitters too (item 6 sets them exactly).
+    `[exp: shots/jali-match/build.py]` `[exp: shots/jali-match/compare.py]`
 
 ```python
 # 3: the hole's front outline from what the photo sees through it (seen: a boolean mask, H x W)
