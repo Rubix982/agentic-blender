@@ -3,7 +3,8 @@
 One rule sorts the pixels of the photograph and of the render alike, so the comparison measures the build and not two
 different rules:
   outside  the dark museum surround: luminance below DARK
-  opening  the wall seen through the screen: green at least GREEN_RED of red
+  opening  the wall seen through the screen: green above GREEN_RED of red, or (C-008) smooth and within WALL_DIST
+           of the wall's colour where it is (a field estimated from the sure wall pixels)
   stone    everything else
 Values are the stored (display) values in 0..1, luminance by the Rec. 709 weights.
 
@@ -11,12 +12,20 @@ The first rule (opening: saturation below 0.22 and luminance at least 0.30) foun
 them in the upper half (3.5 % there, against 10.9 % by this rule; results/read_photo.json), where the wall behind is dim and warm (saturation 0.2 to 0.35, as low in luminance as lit
 stone). Green over red separates the two everywhere in this photo: on smooth pixels the frame's stone reads 0.70 to
 0.80, the dim upper wall about 0.86 to 0.96, the lit lower wall about 0.99. At 0.86 the frame bands are 0.01 % opening
-and the carved field 17.7 %."""
+and the carved field 17.7 %.
+
+C-008 found the cut still missing about half the wall in the middle of the screen, where it is dim and warm (green
+over red 0.82 to 0.85). The wall's colour changes slowly across the picture, so the pixels the cut is sure of give a
+colour field for the wall everywhere; a smooth pixel close to that field is wall too. Either rule makes an opening:
+13.3 % of the screen against 11.7 %, the frame still clean."""
 import numpy as np
 import OpenImageIO as oiio
 
 DARK = 0.08
 GREEN_RED = 0.86
+WALL_DIST = 0.12                    # colour distance from the local wall, as a fraction of the wall's colour
+WALL_TEX = 0.05                     # and smooth: luminance's standard deviation over about 5 px below this
+WALL_GR_MIN = 0.80                  # and not as red as stone: a render's stone is smooth, so smoothness alone let it in
 SCALE = 0.5                         # the photo is worked at half its size: 1230 x 1402
 PHOTO_W, PHOTO_H = 2460, 2803
 
@@ -42,9 +51,33 @@ def classify(rgb):
     y = luminance(rgb)
     gr = rgb[:, :, 1] / np.maximum(rgb[:, :, 0], 1e-4)
     outside = y < DARK
-    opening = ~outside & (gr > GREEN_RED)
+    sure = ~outside & (gr > GREEN_RED)
+    m1 = blur(y, 5)
+    tex = np.sqrt(np.maximum(blur(y * y, 5) - m1 * m1, 0))
+    seed = (sure & (tex < 0.03)).astype(np.float32)
+    h, w = y.shape
+    q = (max(w // 4, 1), max(h // 4, 1))                               # the wall's field, worked at quarter size
+    sq = resize(seed, q)
+    wsum = blur(sq, 15)
+    wall = np.stack([blur(resize(rgb[:, :, c] * seed, q), 15) for c in range(3)], -1) / np.maximum(wsum, 1e-4)[:, :, None]
+    wall, wsum = resize(wall, (w, h)), resize(wsum, (w, h))
+    d = np.linalg.norm(rgb - wall, axis=2) / np.maximum(np.linalg.norm(wall, axis=2), 1e-3)
+    near = ~outside & (d < WALL_DIST) & (tex < WALL_TEX) & (wsum > 0.003) & (gr > WALL_GR_MIN)
+    opening = sure | near
     stone = ~outside & ~opening
     return dict(outside=outside, opening=opening, stone=stone, y=y, gr=gr)
+
+
+def resize(a, wh):
+    """Resize a 2D or (H, W, C) float array to wh = (width, height)."""
+    a = np.asarray(a, np.float32)
+    flat = a.ndim == 2
+    a3 = a[:, :, None] if flat else a
+    h, w, c = a3.shape
+    src = oiio.ImageBuf(oiio.ImageSpec(w, h, c, oiio.FLOAT))
+    src.set_pixels(oiio.ROI(0, w, 0, h, 0, 1, 0, c), np.ascontiguousarray(a3))
+    out = oiio.ImageBufAlgo.resize(src, roi=oiio.ROI(0, wh[0], 0, wh[1], 0, 1, 0, c)).get_pixels(oiio.FLOAT)
+    return out[:, :, 0] if flat else out
 
 
 def blur(a, width):
@@ -133,6 +166,49 @@ def contours(field, level=0.5):
         x, y = min(max(x, 0), W - 1), min(max(y, 0), H - 1)
         out.append(p if f[y, x] > level else p[::-1])
     return out
+
+
+def erode(m, r=1):
+    """Shrink a boolean mask by r pixels (4-neighbour)."""
+    for _ in range(r):
+        e = m.copy()
+        e[1:] &= m[:-1]; e[:-1] &= m[1:]; e[:, 1:] &= m[:, :-1]; e[:, :-1] &= m[:, 1:]
+        m = e
+    return m
+
+
+def dilate(m, r=1):
+    """Grow a boolean mask by r pixels (4-neighbour)."""
+    for _ in range(r):
+        d = m.copy()
+        d[1:] |= m[:-1]; d[:-1] |= m[1:]; d[:, 1:] |= m[:, :-1]; d[:, :-1] |= m[:, 1:]
+        m = d
+    return m
+
+
+LINE_T = 0.15                       # darker than the surroundings by this fraction
+LINE_THIN = 2                       # a dark patch that survives this many erosions is a shadow, not a line
+LINE_NEIGHBOURS = 4                 # a line pixel with fewer line pixels in its 5 x 5 window is a speck
+LINE_RUN = 8                        # and one with fewer than this in its 9 x 9 window is a short dash: cut as a
+                                    # groove, a dash reads as a pit (C-008)
+
+
+def cut_lines(k):
+    """The carved lines inside the stone: pixels darker than their surroundings at a small scale (luminance blurred
+    3 px against 15 px, as a fraction of the latter), in dark patches thin enough to vanish under LINE_THIN erosions,
+    with specks and short dashes removed. k is classify()'s dict; openings are never lines."""
+    small, large = blur(k["y"], 3), blur(k["y"], 15)
+    valley = ((large - small) / np.maximum(large, 0.05) > LINE_T) & ~k["opening"]
+    lines = valley & ~dilate(erode(valley, LINE_THIN), LINE_THIN)
+    def count(m, r):
+        n = np.zeros(m.shape, np.int32)
+        p = np.pad(m, r)
+        for dy in range(2 * r + 1):
+            for dx in range(2 * r + 1):
+                n += p[dy:dy + m.shape[0], dx:dx + m.shape[1]]
+        return n
+    lines &= count(lines, 2) >= LINE_NEIGHBOURS + 1
+    return lines & (count(lines, 4) >= LINE_RUN + 1)
 
 
 def area(p):

@@ -1,37 +1,37 @@
 {
  "box": [
   42,
-  30,
+  32,
   1177,
   1345
  ],
  "width_px": 1136,
- "height_px": 1316,
- "opening_share": 0.1174,
- "outside_share": 0.0748,
+ "height_px": 1314,
+ "opening_share": 0.1276,
+ "outside_share": 0.0742,
  "stone_y": [
-  0.1277,
-  0.339,
-  0.6568
+  0.1272,
+  0.3367,
+  0.6557
  ],
- "stone_y_p99": 0.7946,
+ "stone_y_p99": 0.7949,
  "stone_rgb_median": [
-  0.4353,
-  0.3216,
-  0.2392
+  0.4314,
+  0.3176,
+  0.2353
  ],
- "opening_y": 0.7018,
+ "opening_y": 0.6856,
  "stone_y_bands": [
-  0.2922,
-  0.2976,
-  0.4149,
-  0.4473,
-  0.3946,
-  0.4192,
-  0.3717,
-  0.3313,
+  0.2866,
+  0.2954,
+  0.4159,
+  0.4462,
+  0.3902,
+  0.4114,
+  0.3708,
+  0.3309,
   0.3277,
-  0.2766
+  0.2768
  ],
  "size": [
   1230,
@@ -39,23 +39,39 @@
  ],
  "rule": {
   "dark": 0.08,
-  "green_red": 0.86
+  "green_red": 0.86,
+  "wall_dist": 0.12,
+  "wall_tex": 0.05,
+  "wall_green_red_min": 0.8
+ },
+ "cut_lines": {
+  "share_of_box": 0.0744,
+  "rule": {
+   "darker_by": 0.15,
+   "thin": 2,
+   "neighbours": 4,
+   "run": 8
+  }
  },
  "rules_compared": {
   "saturation below 0.22, luminance at least 0.30": {
    "top": 0.0348,
-   "bottom": 0.1023,
-   "whole": 0.0686
+   "bottom": 0.1022,
+   "whole": 0.0685
   },
   "green over red above 0.86": {
-   "top": 0.1089,
-   "bottom": 0.1258
+   "top": 0.1088,
+   "bottom": 0.1256
+  },
+  "either that or near the wall's local colour (C-008)": {
+   "top": 0.1257,
+   "bottom": 0.1296
   }
  },
  "dark_in_field": {
-  "share": 0.0558,
+  "share": 0.0543,
   "green_red_p50_p90": [
-   0.3548,
+   0.3529,
    0.4688
   ]
  }

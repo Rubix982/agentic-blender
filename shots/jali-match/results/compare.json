@@ -1,80 +1,95 @@
 {
- "openings_iou": 0.5652,
- "stone_iou": 0.8113,
+ "openings_iou": 0.7252,
+ "stone_iou": 0.8434,
  "photo": {
   "stone_y": [
-   0.1277,
-   0.339,
-   0.6568
+   0.1272,
+   0.3367,
+   0.6557
   ],
-  "stone_y_p99": 0.7946,
+  "stone_y_p99": 0.7949,
   "stone_rgb_median": [
-   0.4353,
-   0.3216,
-   0.2392
+   0.4314,
+   0.3176,
+   0.2353
   ],
-  "stone_spread": 0.5291,
-  "opening_y": 0.7018,
-  "opening_share": 0.1174,
+  "stone_spread": 0.5285,
+  "opening_y": 0.6856,
+  "opening_share": 0.1276,
   "stone_y_bands": [
-   0.2922,
-   0.2976,
-   0.4149,
-   0.4473,
-   0.3946,
-   0.4192,
-   0.3717,
-   0.3313,
+   0.2866,
+   0.2954,
+   0.4159,
+   0.4462,
+   0.3902,
+   0.4114,
+   0.3708,
+   0.3309,
    0.3277,
-   0.2766
+   0.2768
   ]
  },
  "render": {
   "stone_y": [
-   0.178,
-   0.3471,
-   0.4927
+   0.1945,
+   0.3435,
+   0.4655
   ],
-  "stone_y_p99": 0.5753,
+  "stone_y_p99": 0.5397,
   "stone_rgb_median": [
-   0.4392,
-   0.3294,
+   0.4353,
+   0.3255,
    0.251
   ],
-  "stone_spread": 0.3147,
-  "opening_y": 0.8555,
-  "opening_share": 0.1006,
+  "stone_spread": 0.271,
+  "opening_y": 0.6803,
+  "opening_share": 0.126,
   "stone_y_bands": [
-   0.4985,
-   0.4448,
-   0.4246,
-   0.3997,
-   0.3748,
-   0.3549,
-   0.3337,
-   0.3107,
-   0.2933,
-   0.281
+   0.4661,
+   0.421,
+   0.4,
+   0.3756,
+   0.3518,
+   0.3348,
+   0.314,
+   0.2984,
+   0.2782,
+   0.2648
   ]
  },
- "spread_ratio": 0.5948,
+ "spread_ratio": 0.5128,
+ "lines": {
+  "photo_share": 0.0744,
+  "render_share": 0.0536,
+  "render_near_photo": 0.5746,
+  "photo_near_render": 0.3881
+ },
  "bar": {
-  "openings_iou_at_least": 0.9,
+  "lines_near_at_least": 0.6,
+  "stone_p90_within": [
+   0.5573,
+   0.7541
+  ],
   "spread_ratio_within": [
    0.8,
    1.2
-  ]
+  ],
+  "openings_iou_at_least": 0.52
  },
- "measures_pass": false,
+ "measures_pass": {
+  "lines": false,
+  "light": false,
+  "openings_guard": true
+ },
  "photo_openings_in_render": {
-  "opening": 0.6672,
-  "stone": 0.209,
-  "dark": 0.1238
+  "opening": 0.832,
+  "stone": 0.1423,
+  "dark": 0.0257
  },
- "render_openings_on_photo_stone": 0.1887,
+ "render_openings_on_photo_stone": 0.1402,
  "openings_iou_by_third": [
-  0.4007,
-  0.6878,
-  0.5302
+  0.635,
+  0.7567,
+  0.7584
  ]
 }

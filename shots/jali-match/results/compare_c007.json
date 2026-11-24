@@ -1,0 +1,80 @@
+{
+ "openings_iou": 0.5652,
+ "stone_iou": 0.8113,
+ "photo": {
+  "stone_y": [
+   0.1277,
+   0.339,
+   0.6568
+  ],
+  "stone_y_p99": 0.7946,
+  "stone_rgb_median": [
+   0.4353,
+   0.3216,
+   0.2392
+  ],
+  "stone_spread": 0.5291,
+  "opening_y": 0.7018,
+  "opening_share": 0.1174,
+  "stone_y_bands": [
+   0.2922,
+   0.2976,
+   0.4149,
+   0.4473,
+   0.3946,
+   0.4192,
+   0.3717,
+   0.3313,
+   0.3277,
+   0.2766
+  ]
+ },
+ "render": {
+  "stone_y": [
+   0.178,
+   0.3471,
+   0.4927
+  ],
+  "stone_y_p99": 0.5753,
+  "stone_rgb_median": [
+   0.4392,
+   0.3294,
+   0.251
+  ],
+  "stone_spread": 0.3147,
+  "opening_y": 0.8555,
+  "opening_share": 0.1006,
+  "stone_y_bands": [
+   0.4985,
+   0.4448,
+   0.4246,
+   0.3997,
+   0.3748,
+   0.3549,
+   0.3337,
+   0.3107,
+   0.2933,
+   0.281
+  ]
+ },
+ "spread_ratio": 0.5948,
+ "bar": {
+  "openings_iou_at_least": 0.9,
+  "spread_ratio_within": [
+   0.8,
+   1.2
+  ]
+ },
+ "measures_pass": false,
+ "photo_openings_in_render": {
+  "opening": 0.6672,
+  "stone": 0.209,
+  "dark": 0.1238
+ },
+ "render_openings_on_photo_stone": 0.1887,
+ "openings_iou_by_third": [
+  0.4007,
+  0.6878,
+  0.5302
+ ]
+}

@@ -74,3 +74,12 @@ running Blender like the inventory.
 flicker is unknown.
 **Answer:** —
 
+### T-008 · Which enums read from `bl_rna` list only a placeholder, like the view's `look`?
+
+**Status:** open
+**Parent:** T-005
+**Opened:** 2026-11-24
+**Question:** C-008 found `ColorManagedViewSettings.bl_rna.properties["look"].enum_items` lists only NONE, while the
+Standard view takes eight looks; the guide's enum lookups (`kb.py enums`) may miss every enum filled in at run time.
+**Answer:** —
+

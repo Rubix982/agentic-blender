@@ -211,16 +211,21 @@ Several solo entrants moved to a render farm days before their deadline `[study:
 
 ## Rebuilding a pierced object from one photograph
 
-Card C-007 rebuilt a carved red-sandstone window screen (a jali) from one frontal museum photograph, by script: its
-openings traced from the photo, the trace extruded to the screen's thickness, lit to the photo's medians, and rendered
-from the photo's camera (`shots/jali-match/`). Judged beside the photo it failed: "very surreal", "something plain
-but it is not", "a darker muddier look" (the user's words, CARD.md). The openings landed within a few pixels; the
-carving inside the stone was never built. What the build found, in the order a script meets it:
+Cards C-007 and C-008 rebuilt a carved red-sandstone window screen (a jali) from one frontal museum photograph, by
+script: its openings traced from the photo, the trace extruded, lit to the photo, and rendered from the photo's camera
+(`shots/jali-match/`). Both were judged beside the photo and failed. C-007, a flat slab with holes: "very surreal",
+"something plain but it is not", "a darker muddier look". C-008, with the photo's dark lines cut as grooves into
+rounded bars: "little incisions across the model, but they don't capture the symmetrical alignment and pertuberance"
+(the user's words, CARD.md). The openings now land close; the carving is still not built. What the builds found, in
+the order a script meets it:
 
 1. **Find the openings by a property that holds across the whole photo.** Light on a backdrop falls off: here the
    wall behind the screen was white at the bottom and dim and warm at the top. Saturation below 0.22 with luminance
    at least 0.30 found 3.5 % openings in the top half; green over red above 0.86 found 10.9 %, because the stone is red
-   at every brightness and the wall is not. Check a rule in bands from top to bottom before trusting it.
+   at every brightness and the wall is not. Check a rule in bands from top to bottom before trusting it. Where the wall
+   was dim and warm the cut still missed it, so a second rule joins it: smooth, and close
+   to the wall's colour where it is, a field estimated from the pixels the cut is sure of (12.6 % in the top half). In a
+   render, where stone is smooth everywhere, that rule also needs green over red above 0.80, or it takes the stone.
    `[exp: shots/jali-match/read_photo.py]`
 2. **Dark pixels inside the object are its own shadows, until their colour says otherwise.** The dark pixels in the
    carved field (5.6 % of it) had green over red of 0.355 at the median and 0.469 at the 90th percentile: stone in
@@ -230,15 +235,26 @@ carving inside the stone was never built. What the build found, in the order a s
    outline overlapping its back outline, and the back appears scaled towards the picture's centre by
    distance / (distance + thickness): 0.9546 for 6.1 cm at 1.28 m. Extrude the seen region and every hole narrows
    twice. For straight-through holes the front outline holds both the seen region and the seen region scaled back
-   out, so trace their union. `[exp: shots/jali-match/build.py]`
+   out, so trace their union. At the catalogue's 6.1 cm this widened too far here (it took in a whole carved flower),
+   and the openings agreed better the thinner the field was assumed; either the pierced field is thinner than the
+   whole screen or its holes splay. C-008 took 20 mm (CARD.md has the sweep). `[exp: shots/jali-match/build.py]`
 4. **Trace into a 2D curve with `offset` 0** and shrink the shape before tracing instead: a negative offset grows the
    holes into each other and the fill turns inside out (`curves-text.md`, item 8). Set `use_smooth` on every spline;
    flat facets on the holes' inner walls read as stripes. `[exp: experiments/curves/curve_offset_fill.py]`
 5. **Size a backdrop for its depth.** A panel the object's size, 0.4 m behind it, appeared 0.7486 of the object's size
    from the camera, and the top and bottom openings looked past it into black. Scale it up by
    (distance to the panel) / (distance to the object). `[exp: shots/jali-match/build.py]`
-6. **Fit the lights to the photo's medians, but find the backdrop in the render by colour alone.** With the photo's
-   brightness threshold the dim backdrop drops out of the count, and each round of the fit makes it dimmer.
+6. **Set a glowing backdrop from the photo; do not fit it.** Seen straight through the openings and only emitting, its
+   colour on screen is its emission through the sRGB curve. Decode the photo's openings' median colour in bands from
+   top to bottom into a colour ramp on the panel (each row looks onto the panel at its own height over the panel's
+   scale): the openings' median luminance came out 0.6803 against the photo's 0.6856. A two-number fit, which counted
+   the dim backdrop out at the photo's brightness threshold, dimmed it each round instead.
+   `[exp: shots/jali-match/compare.py]`
+7. **Cut lines are not carving.** Tracing the photo's thin dark lines and cutting them as grooves into bars rounded by
+   distance from the openings found the shadowed sides of shapes in pieces: 57 % of the render's lines lay within 2 px
+   of the photo's and 39 % of the photo's within 2 px of the render's, and the judge saw scattered incisions with
+   neither the motifs' symmetry nor their raised forms. Letting each piece between lines rise on its own was worse:
+   the stone read as crumbled rock. `[exp: shots/jali-match/compare.py]`
 
 ```python
 # 3: the hole's front outline from what the photo sees through it (seen: a boolean mask, H x W)
@@ -249,8 +265,8 @@ sx = np.clip(np.round(W / 2 + (xx - W / 2) * k).astype(int), 0, W - 1)
 hole = seen | seen[sy, sx]
 ```
 
-What the measures said about the judgement: the openings agreed at an IoU of 0.5652, with the misses in slivers
-along every edge. The stone's median colour matched the photo's (0.4392, 0.3294, 0.251 against 0.435, 0.322, 0.239),
-but its bright end did not: 0.4927 at the 90th percentile against 0.657, because a flat slab has no raised surfaces
-to catch the light. An extruded trace gives the holes and loses the carving between them.
-`[exp: shots/jali-match/compare.py]`
+What the measures said about the judgements. In C-007 the openings agreed at an IoU of 0.5652, with the misses in
+slivers along every edge; the stone's median colour matched the photo's (0.4392, 0.3294, 0.251 against 0.435, 0.322,
+0.239), but its bright end did not: 0.4927 at the 90th percentile against 0.657, a flat slab having no raised surfaces
+to catch the light. In C-008 the openings agreed at 0.7252, and the bright end was still 0.4655 against 0.6557: rounded
+bars and grooves did not give the forms that catch the light. `[exp: shots/jali-match/compare.py]`

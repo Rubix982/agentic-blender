@@ -45,16 +45,26 @@ if __name__ == "__main__":
     img[k["opening"]] = 1.0
     img[k["stone"]] = (0.85, 0.45, 0.2)
     C.write_png(os.path.join(OUT, "classes.png"), img)
-    st.update(size=list(C.size()), rule=dict(dark=C.DARK, green_red=C.GREEN_RED))
+    lines = C.cut_lines(k)
+    ov = rgb.copy()
+    ov[lines] = (0.1, 0.9, 1.0)
+    C.write_png(os.path.join(OUT, "lines.png"), ov)                   # the cut lines over the photo, to check by eye
+    st.update(size=list(C.size()), rule=dict(dark=C.DARK, green_red=C.GREEN_RED, wall_dist=C.WALL_DIST, wall_tex=C.WALL_TEX,
+                                              wall_green_red_min=C.WALL_GR_MIN))
     # The first rule, kept as a measurement: openings where saturation is below 0.22 and luminance at least 0.30.
     x0, y0, x1, y1 = st["box"]
     mid = (y0 + y1) // 2
     mx, mn = rgb.max(axis=2), rgb.min(axis=2)
     sat_rule = ~k["outside"] & ((mx - mn) / np.maximum(mx, 1e-6) < 0.22) & (k["y"] >= 0.30)
     halves = dict(top=(slice(y0, mid), slice(x0, x1 + 1)), bottom=(slice(mid, y1 + 1), slice(x0, x1 + 1)))
+    st["cut_lines"] = dict(share_of_box=round(float(lines[y0:y1 + 1, x0:x1 + 1].mean()), 4),
+                           rule=dict(darker_by=C.LINE_T, thin=C.LINE_THIN, neighbours=C.LINE_NEIGHBOURS, run=C.LINE_RUN))
     st["rules_compared"] = {
         "saturation below 0.22, luminance at least 0.30": {h: round(float(sat_rule[b].mean()), 4) for h, b in halves.items()},
-        "green over red above 0.86": {h: round(float(k["opening"][b].mean()), 4) for h, b in halves.items()}}
+        "green over red above 0.86": {h: round(float((~k["outside"] & (k["gr"] > C.GREEN_RED))[b].mean()), 4)
+                                      for h, b in halves.items()},
+        "either that or near the wall's local colour (C-008)": {h: round(float(k["opening"][b].mean()), 4)
+                                                                 for h, b in halves.items()}}
     st["rules_compared"]["saturation below 0.22, luminance at least 0.30"]["whole"] = round(
         float(sat_rule[y0:y1 + 1, x0:x1 + 1].mean()), 4)
     # Dark pixels inside the screen: is their colour the stone's or the wall's?

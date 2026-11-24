@@ -1,0 +1,62 @@
+{
+ "box": [
+  42,
+  30,
+  1177,
+  1345
+ ],
+ "width_px": 1136,
+ "height_px": 1316,
+ "opening_share": 0.1174,
+ "outside_share": 0.0748,
+ "stone_y": [
+  0.1277,
+  0.339,
+  0.6568
+ ],
+ "stone_y_p99": 0.7946,
+ "stone_rgb_median": [
+  0.4353,
+  0.3216,
+  0.2392
+ ],
+ "opening_y": 0.7018,
+ "stone_y_bands": [
+  0.2922,
+  0.2976,
+  0.4149,
+  0.4473,
+  0.3946,
+  0.4192,
+  0.3717,
+  0.3313,
+  0.3277,
+  0.2766
+ ],
+ "size": [
+  1230,
+  1402
+ ],
+ "rule": {
+  "dark": 0.08,
+  "green_red": 0.86
+ },
+ "rules_compared": {
+  "saturation below 0.22, luminance at least 0.30": {
+   "top": 0.0348,
+   "bottom": 0.1023,
+   "whole": 0.0686
+  },
+  "green over red above 0.86": {
+   "top": 0.1089,
+   "bottom": 0.1258
+  }
+ },
+ "dark_in_field": {
+  "share": 0.0558,
+  "green_red_p50_p90": [
+   0.3548,
+   0.4688
+  ]
+ }
+}

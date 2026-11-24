@@ -432,3 +432,102 @@ colour right, and has none of the carving.** What the measures say about each of
 The "no" branch applies: these reasons are the next card. The guide gains, whatever the verdict, what the build found
 on the way: `areas/production.md` ("Rebuilding a pierced object from one photograph") and `areas/curves-text.md`
 (item 8, the Offset).
+
+---
+
+### C-008 · The jali's carved lines traced from the photo and cut into its stone, judged beside it again
+
+**Opened:** 2026-11-24
+
+1. **WHERE WE ARE.** C-007's jali was judged "plain", "darker muddier" and "like layers out of sand". Its openings
+   agree with the photo's at an IoU of 0.565 and its stone's median colour matches, but its bright end is 0.493 at the
+   90th percentile against the photo's 0.657: one flat slab, with nothing raised to catch the light.
+2. **WHAT WE ARE DOING.** Give the screen a carved front, traced from the photo the way its openings were, and
+   render it again from the same camera (`shots/jali-match/`).
+   - The cut lines: thin dark lines inside the stone, found by one rule (darker than their surroundings at a small
+     scale, and thin) applied alike to the photo and the render.
+   - The relief: every piece between cut lines and openings rises with a rounded profile, 6 mm at most, falling to
+     0 at its edges, so each line becomes a groove. All pieces rise alike: which are raised and which are ground is
+     not traced.
+   - The geometry: a grid at the photo's pixel spacing (0.92 mm) laid on the front face and lifted by that height,
+     over the extruded body from C-007, whose side walls stay. Outlines smaller than 30 px are dropped, against 12
+     before, for the slivers.
+3. **WHY.** Unknown now: whether the lines and the light the judge missed come back from traced grooves on rounded
+   pieces, or whether the look also needs the levels of the carving (raised flowers over a recessed ground), which
+   lines alone cannot give.
+4. **WHAT IS AFFECTED.**
+   - `shots/jali-match/`: `read_photo.py` traces the lines, `build.py` builds the relief, `compare.py` measures lines
+     and the bright end. Its `results/` files are overwritten; C-007's numbers stay in its card and commit (19d86a3).
+   - `areas/production.md`, "Rebuilding a pierced object from one photograph": the relief step and what it measured.
+5. **CONCLUSION.** The measures first, set by arithmetic this time, then the judge.
+   - Lines: the render's lines found within 2 px of the photo's, and the photo's within 2 px of the render's, both
+     at least 0.6. A 2 px allowance because a line is 2 to 4 px wide here, and C-007 showed a one-pixel slip costs a
+     thin shape most of an exact-overlap score.
+   - Light: the stone's 90th percentile of luminance within 15 % of the photo's 0.657 (0.56 to 0.76), and its
+     contrast (90th minus 10th percentile) within C-007's bar, 0.8 to 1.2 of the photo's.
+   - A guard: the openings' IoU stays at least 0.52, so the relief has not broken what C-007 got right.
+   - The judge: the user sees `sheet.jpg` and answers the same question, *at a glance, could the render be a
+     photograph of the same screen?* If yes, the guide gets the photo-to-model recipe for carved and pierced work
+     (trace the openings, trace the lines, rise the pieces). If no, the reason in the user's words is the next card,
+     and the measures say whether it is the lines, the light, or something they do not measure (the levels are the
+     likeliest).
+6. **CONSEQUENCE OF NOT DOING IT.** The guide can trace a carved object's silhouette and nothing inside it, so any
+   carved subject (screens, panels, reliefs, furniture) renders as a flat board with holes.
+
+**Known limits, stated before the run:**
+- The lines come from the photo's shading at a threshold, as the openings came from its colour; a groove the light
+  does not show is not traced.
+- Every piece rises the same 6 mm; the carving's levels are not modelled.
+
+**Measures (2026-11-24, before the judge): lines and light fail, the guard holds.**
+`shots/jali-match/results/compare.json`, `sheet.jpg`.
+- Lines: 57 % of the render's lines lie within 2 px of the photo's, and 39 % of the photo's within 2 px of the
+  render's, against 60 % both ways.
+- Light: the stone's 90th percentile is 0.466 against the photo's 0.656 (bar 0.557 to 0.754), and its contrast 0.51
+  of the photo's (bar 0.8 to 1.2). The median was fitted (0.344 against 0.337).
+- Guard: the openings' IoU is 0.725, above 0.52, and up from C-007's 0.565 (0.64, 0.76, 0.76 by thirds). The render
+  shows 83 % of the photo's see-through pixels as see-through; 14 % of its own fall on the photo's stone.
+- Reported: the openings' median luminance 0.680 against the photo's 0.686, now set, not fitted.
+
+Changed before showing, in order, each from the sheet or the numbers:
+1. The relief as the card wrote it (every piece between the lines rising 6 mm on its own) read as crumbled rock: the
+   lines, 6 % of the stone, cut it into hundreds of small humps. The bars now round across their width by distance
+   from the nearest opening, and the lines are cut into that surface.
+2. Distance counted by erosions stepped in blocks; it is now the stone mask blurred, eased (smoothstep).
+3. The field's thickness is fitted. Widening each opening for 6.1 cm swallowed front stone (a whole four-petal flower
+   became a hole), and the openings agree best when the field is thin: IoU 0.564 at 61 mm, 0.685 at 40, 0.721 at 30,
+   0.737 at 20, 0.746 at 15, 0.754 at 10. Either the pierced field is thinner than the catalogue's overall depth or
+   its holes splay; neither is checked. 20 mm is taken, within 0.02 of the best.
+4. The opening rule missed about half the wall in the middle of the screen, where it is dim and warm (green over red
+   0.82 to 0.85, under the 0.86 cut). A second rule now joins it: a pixel close in colour to the wall's local colour
+   (a field estimated from the sure pixels) and smooth. Smoothness alone let the render's stone in, which is smooth
+   everywhere, so the second rule also needs green over red above 0.80. Openings 12.8 % of the screen against 11.7.
+5. The wall is set from the photo in ten bands from top to bottom, not fitted: it only emits and is seen straight
+   through the openings, so its colour is its emission through the sRGB curve. C-007's two-number fit kept dimming
+   the panel's top.
+6. The carving deepened: bars 10 mm, reached 18 mm in; grooves 3 mm and wider; the spot's shadows crisper (0.02 m).
+7. Short dashes dropped from the lines (fewer than 8 line pixels in a 9 x 9 window): cut as grooves they read as pits.
+8. Tried and not kept: Blender's contrast looks, since the photo was edited (Polarr). Medium High Contrast and High
+   Contrast raised the stone's contrast to 0.56 and 0.61 of the photo's but pushed the wall to 0.73 and 0.83.
+   Reading the `look` enum from `bl_rna` lists only NONE; the eight looks appear once the view is Standard.
+
+How it looks to me, before the judge: smooth clay with pockmarks. The line rule finds the shadowed sides of shapes, in
+pieces, not their outlines, and the carved forms (domed petals and leaves over a recessed ground) are still not built.
+
+**The judge (2026-11-24): no.** In the user's words, looking at the sheet and at one junction of the lattice in each:
+"it is another no. We are not capturing that fine line of details and carvings in the stone. [...] there are little
+incisions across the model, but they don't capture the symmetrical alignment and pertuberance from the original
+picture."
+
+**Result (2026-11-24, closed): no. Traced lines cut as grooves give scattered incisions; the carving's order and its
+raised forms are not there.** The two things the judge named are both outside what the card built:
+- *Symmetrical alignment.* The photo's motifs are mirror-symmetric (the lotus at each junction of the bars, the leaves
+  either side of it) and the lattice repeats. The line rule traces each pixel's shadow on its own, so whatever symmetry
+  the stone has, the trace has only where the light happens to show it, and the lines measure says as much: 39 % of
+  the photo's lines have a render line within 2 px.
+- *Protuberance.* The photo's petals, leaves and the bars' raised rims bulge out as forms. The build has one height
+  rule for all of it (bars rounded by distance from the openings), so no form rises on its own, and the stone's
+  bright end stays low: 0.466 at the 90th percentile against 0.656.
+What did improve, and stays: the openings (IoU 0.725 against 0.565) and the wall's light, now set from the photo.
+
+The "no" branch applies again: the judge's reasons are the next card.

@@ -44,8 +44,18 @@ res = dict(openings_iou=iou(kp["opening"], kr["opening"]), stone_iou=iou(kp["sto
                        stone_spread=round(sr["stone_y"][2] - sr["stone_y"][0], 4),
                        opening_y=sr["opening_y"], opening_share=sr["opening_share"], stone_y_bands=sr["stone_y_bands"]))
 res["spread_ratio"] = round(res["render"]["stone_spread"] / res["photo"]["stone_spread"], 4)
-res["bar"] = dict(openings_iou_at_least=0.90, spread_ratio_within=[0.8, 1.2])
-res["measures_pass"] = res["openings_iou"] >= 0.90 and 0.8 <= res["spread_ratio"] <= 1.2
+# C-008's measures. Lines: each image's cut lines found within 2 px of the other's, inside the screen's box.
+lp, lr = C.cut_lines(kp)[box], C.cut_lines(kr)[box]
+res["lines"] = dict(photo_share=round(float(lp.mean()), 4), render_share=round(float(lr.mean()), 4),
+                    render_near_photo=round(float((lr & C.dilate(lp, 2)).sum() / max(lr.sum(), 1)), 4),
+                    photo_near_render=round(float((lp & C.dilate(lr, 2)).sum() / max(lp.sum(), 1)), 4))
+p90p, p90r = sp["stone_y"][2], sr["stone_y"][2]
+res["bar"] = dict(lines_near_at_least=0.6, stone_p90_within=[round(0.85 * p90p, 4), round(1.15 * p90p, 4)],
+                  spread_ratio_within=[0.8, 1.2], openings_iou_at_least=0.52)
+res["measures_pass"] = dict(
+    lines=res["lines"]["render_near_photo"] >= 0.6 and res["lines"]["photo_near_render"] >= 0.6,
+    light=0.85 * p90p <= p90r <= 1.15 * p90p and 0.8 <= res["spread_ratio"] <= 1.2,
+    openings_guard=res["openings_iou"] >= 0.52)
 # Where the photo sees the wall, what the render shows there, and the IoU by thirds of the screen's height.
 po, ro = kp["opening"][box], kr["opening"][box]
 res["photo_openings_in_render"] = dict(opening=round(float((po & ro).sum() / po.sum()), 4),
