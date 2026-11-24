@@ -7,32 +7,45 @@
  ],
  "width_px": 1136,
  "height_px": 1317,
- "opening_share": 0.0969,
+ "opening_share": 0.091,
  "outside_share": 0.075,
  "stone_y": [
-  0.1294,
-  0.347,
-  0.6744
+  0.1295,
+  0.3476,
+  0.6736
  ],
- "stone_y_p99": 0.8327,
+ "stone_y_p99": 0.8322,
  "stone_rgb_median": [
   0.4431,
   0.3294,
   0.2431
  ],
- "opening_y": 0.6724,
+ "opening_y": 0.6938,
  "stone_y_bands": [
-  0.2883,
-  0.306,
-  0.4266,
-  0.4595,
-  0.411,
+  0.2978,
+  0.3054,
+  0.4244,
+  0.458,
+  0.4109,
   0.4257,
   0.3792,
   0.3405,
   0.3534,
-  0.2766
+  0.2763
  ],
+ "field_box": [
+  160,
+  148,
+  1057,
+  1221
+ ],
+ "screen_box_for_field": [
+  42,
+  30,
+  1177,
+  1346
+ ],
+ "frame_openings_removed_px": 8824,
  "size": [
   1230,
   1402
@@ -68,16 +81,16 @@
    "bottom": 0.1262
   },
   "either that or near the wall's local colour (C-008)": {
-   "top": 0.1227,
-   "bottom": 0.1204
+   "top": 0.113,
+   "bottom": 0.1182
   },
   "the same, less what is brighter than the wall (C-009)": {
-   "top": 0.1007,
-   "bottom": 0.1181
+   "top": 0.0911,
+   "bottom": 0.116
   },
   "the same, less what is darker than the wall too (C-011)": {
-   "top": 0.1003,
-   "bottom": 0.0935
+   "top": 0.0906,
+   "bottom": 0.0913
   }
  },
  "lit_stone": {
@@ -93,10 +106,10 @@
    1.273
   ],
   "share_of_box": 0.0121,
-  "share_of_c008_openings": 0.0996,
+  "share_of_c008_openings": 0.1047,
   "share_of_c008_openings_by_half": {
-   "top": 0.1789,
-   "bottom": 0.019
+   "top": 0.1942,
+   "bottom": 0.0193
   }
  },
  "dim_stone": {
@@ -105,11 +118,11 @@
    "less": 0.03
   },
   "share_of_box": 0.0126,
-  "share_of_c009_openings": 0.1149,
+  "share_of_c009_openings": 0.1214,
   "share_of_c009_openings_by_third": [
-   0.0033,
+   0.0039,
    0.0242,
-   0.3062
+   0.3152
   ]
  },
  "veto_stone": {
@@ -119,7 +132,7 @@
   },
   "normals": true,
   "share_of_box": 0.0064,
-  "share_of_openings_before": 0.0616
+  "share_of_openings_before": 0.0654
  },
  "dark_in_field": {
   "share": 0.0557,

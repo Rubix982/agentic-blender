@@ -27,9 +27,10 @@ from read_photo import stats  # noqa: E402
 W, H = C.size()
 photo = C.load(os.path.join(HERE, "photo", "agra-jali.jpg"), (W, H))
 render = C.load(os.path.join(HERE, "out", "render.png"), (W, H))
-from read_photo import photo_normals  # noqa: E402
-kp, sp = stats(photo, photo_normals())                                 # the photo's rule with the normals' veto (C-012)
-kr, sr = stats(render)
+from read_photo import photo_normals, field  # noqa: E402
+FIELD = field()                                                        # C-014: no openings in the frame, either image
+kp, sp = stats(photo, photo_normals(), FIELD)                          # the photo's rule with the normals' veto (C-012)
+kr, sr = stats(render, None, FIELD)
 x0, y0, x1, y1 = sp["box"]
 box = (slice(y0, y1 + 1), slice(x0, x1 + 1))
 

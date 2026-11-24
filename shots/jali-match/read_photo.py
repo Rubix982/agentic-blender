@@ -22,13 +22,24 @@ os.makedirs(OUT, exist_ok=True)
 NORMALS_NPY = os.path.join(HERE, "out", "normals.npy")
 
 
+def field():
+    """The carved field's box, as read_photo.py found it (C-014), or None before it has run."""
+    path = os.path.join(HERE, "results", "read_photo.json")
+    if not os.path.exists(path):
+        return None
+    d = json.load(open(path))
+    return dict(field=d["field_box"], box=d["screen_box_for_field"]) if "field_box" in d else None
+
+
 def photo_normals():
     """Marigold's normals for the photo (normals.py), if they have been made: common.classify's veto uses them."""
     return np.load(NORMALS_NPY) if os.path.exists(NORMALS_NPY) else None
 
 
-def stats(rgb, normals=None):
+def stats(rgb, normals=None, field=None):
     k = C.classify(rgb, normals)
+    if field is not None:                                               # C-014: the frame has no openings
+        C.keep_field(k, field["field"], field["box"])
     rows = np.nonzero(k["stone"].mean(axis=1) > 0.2)[0]
     cols = np.nonzero(k["stone"].mean(axis=0) > 0.2)[0]
     y0, y1, x0, x1 = int(rows[0]), int(rows[-1]), int(cols[0]), int(cols[-1])
@@ -49,7 +60,12 @@ def stats(rgb, normals=None):
 if __name__ == "__main__":
     rgb = C.load(os.path.join(HERE, "photo", "agra-jali.jpg"), C.size())
     NM = photo_normals()
-    k, st = stats(rgb, NM)
+    k0, st0 = stats(rgb, NM)
+    FIELD = dict(field=C.field_box(k0["opening"], st0["box"]), box=st0["box"])   # C-014: the carved field
+    k, st = stats(rgb, NM, FIELD)
+    st["field_box"] = FIELD["field"]
+    st["screen_box_for_field"] = FIELD["box"]
+    st["frame_openings_removed_px"] = int(k["frame_openings"].sum())
     img = np.zeros(rgb.shape, np.float32)
     img[k["opening"]] = 1.0
     img[k["stone"]] = (0.85, 0.45, 0.2)

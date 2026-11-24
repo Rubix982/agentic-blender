@@ -372,3 +372,39 @@ def heights_from_normals(n, region, iters=3000, nz_min=0.2, screen_px=None):
         pk = r + (rr_new / rr) * pk
         rr = rr_new
     return (x * inner).astype(np.float32), dict(iterations=it + 1, residual=round(float(np.sqrt(rr / max(r0, 1e-30))), 6))
+
+
+def field_box(opening, box, min_area=400, pad=6):
+    """C-014: the carved field, as the box around every opening of min_area px or more inside the screen's box (x0, y0,
+    x1, y1), padded. The frame around it is solid: pale lit stone along its top edge passed the colour rule as wall,
+    and Marigold sees the plain frame as flat as a wall, so the normals' veto missed it."""
+    x0, y0, x1, y1 = box
+    inside = np.zeros_like(opening)
+    inside[y0:y1 + 1, x0:x1 + 1] = opening[y0:y1 + 1, x0:x1 + 1]
+    lab = label(inside)
+    area = np.bincount(lab.ravel())
+    big = area >= min_area
+    big[0] = False
+    # an opening that reaches within 20 px of the box's edge is not the field's (the frame surrounds the field): the
+    # pale band along the frame's top was one part of 2,739 px and stretched the field to the top
+    edge = np.zeros_like(opening)
+    edge[y0:y1 + 1, x0:x1 + 1] = True
+    edge[y0 + 20:y1 - 19, x0 + 20:x1 - 19] = False
+    big[np.unique(lab[edge & inside])] = False
+    big[0] = False
+    ys, xs = np.nonzero(big[lab])
+    return [int(max(xs.min() - pad, x0)), int(max(ys.min() - pad, y0)), int(min(xs.max() + pad, x1)), int(min(ys.max() + pad, y1))]
+
+
+def keep_field(k, fb, box):
+    """Inside the screen's box (x0, y0, x1, y1), openings only inside the carved field fb; the rest of the box that is
+    not the dark surround is stone. Outside the box nothing changes (a first version turned the lit floor below the
+    screen to stone, and the screen's box grew to take it in)."""
+    x0, y0, x1, y1 = fb
+    m = np.ones_like(k["opening"])
+    m[box[1]:box[3] + 1, box[0]:box[2] + 1] = False
+    m[y0:y1 + 1, x0:x1 + 1] = True
+    k["frame_openings"] = k["opening"] & ~m
+    k["opening"] = k["opening"] & m
+    k["stone"] = ~k["outside"] & ~k["opening"]
+    return k

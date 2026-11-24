@@ -980,3 +980,60 @@ curve held still: the bright end 0.674 against 0.674, the contrast 0.95 of the p
 the recipe (`areas/production.md`, item 21) and T-016 is answered. What gives it away, in the user's words: the stone
 looks "VERY fresh", and the borders vanish at the top left. Those are the next two cards: the borders C-014, the
 stone's age C-015.
+
+### C-014 · The screen's borders: shadowed frame stone kept, not cut away as the museum's dark
+
+**Opened:** 2026-11-24
+
+1. **WHERE WE ARE.** C-013 closed "almost very realistic in a passing glance"; one give-away the user named is
+   "disapating edges (top left) [...] vanishing borders". The build cuts from the screen's box every dark pixel
+   (luminance under 0.08) joined to the box's edge, taking it for the museum's dark surround: 2.56 % of the box, 23.6 %
+   of its left 60 columns, 10.1 % of its top 60 rows. In the photo much of that is the frame's stone in shadow (since
+   C-012 the light pools in the centre and leaves the corners dark): its green over red has a median of 0.667 (10th
+   percentile 0.424), where the real surround outside the box is neutral (median 1.000, 10th percentile 0.857). Where
+   the frame was cut, the glowing wall behind shows through.
+2. **WHAT WE ARE DOING.** Count a dark pixel as surround only if it is also neutral in colour (green over red above
+   0.8) or too dark for its colour to tell (luminance under 0.02); the rest of the dark inside the box is stone.
+3. **WHY.** Unknown now: whether colour alone separates the shadowed frame from the museum's dark along every edge, or
+   whether some of the edge needs the frame's shape (a rectangle) instead.
+4. **WHAT IS AFFECTED.** `build.py`'s surround (the old rule kept as `--surround-dark`); `results/` (C-013's kept as
+   `*_c013.json`), `sheet.jpg`; `areas/production.md`'s item 2, which says dark pixels joined to the edge are the
+   surround.
+5. **CONCLUSION.** The measures first, then the judge.
+   - Measures: the surround cut from the box falls below 1 %, and none of it is stone-coloured; the openings' IoU and
+     the light map no worse than C-013's (0.782, 0.201) by more than 0.01 and 0.02.
+   - The judge: whether the borders still vanish, and the card's question.
+   - If the cut falls and the borders hold, the guide's item 2 gets the colour condition. If colour leaves a ragged
+     edge, the frame's outline is drawn as the box's rectangle instead, and that is recorded.
+6. **CONSEQUENCE OF NOT DOING IT.** The frame's corners stay eaten wherever the photo's light falls off, and the wall
+   glows through them: a give-away at a glance.
+
+**Measures (2026-11-24).** The surround cut from the box 38,321 px to 17,270, 2.56 % to 1.15 % of the box (bar 1 %,
+missed); none of what is left is stone-coloured, by the rule, so it is the museum's dark inside the box. The openings'
+IoU 0.782 to 0.787, the light map 0.201 to 0.202 (guards held). Seen: the frame's top-left corner is whole, its left
+edge straight to the top, and no wall shows through; the other corners hold too.
+
+**The user's look (2026-11-24):** "some parts are still funky" (a close-up of the frame's top edge, bitten and lumpy).
+The bites were not the surround (in the photo it took only a hairline there) but holes: the frame's top edge catches
+the light, pale and greyish, and the colour rule called 5,055 px of its top 60 rows opening; over the whole frame 1.8 %,
+in 973 pieces. The normals could not veto them: Marigold sees the plain frame as flat as a wall. A jali's frame has no
+openings, so now the openings are kept only inside the carved field: the box around every opening of 400 px or more
+that does not reach within 20 px of the box's edge, padded 6 px (`common.field_box`, found by `read_photo.py` and used
+by the build and the comparison; `--frame-openings` keeps the old). Two first tries were wrong and are recorded: the
+pale band along the top was itself one opening of 2,739 px and stretched the field to the top; and turning everything
+outside the field to stone took in the lit floor below the screen too, so the screen's box grew to the image's bottom.
+The field is [160, 148, 1057, 1221]: by the share of opening per row and column, the carved field ends at about rows
+150 and 1220 and columns 172 and 1048, so the bottom row's small arches are inside it. It takes 8,824 px of frame
+"openings". Openings IoU 0.787 to 0.839, partly because those were false openings in the photo's rule that the render,
+solid there, could never match; thin stone 97.8 %; the light map 0.207 (guard 0.221 held). Seen: the top edge is
+straight and whole; the bottom row unchanged. Left: the frame's surface reads crumbly beside the photo's speckled
+stone, because the detail tilt reads the photo's specks (its colour) as relief; separating the colour from the shading
+is C-015's question.
+
+**The judge (2026-11-24):** "Thanks. This is amazing! I really love it."
+
+**Result (2026-11-24, closed): the borders hold.** Two rules in the photo's reading: the surround is dark and neutral
+(not dark alone), and the frame has no openings (openings only inside the carved field, found from the openings
+themselves). The surround cut from the box 2.56 % to 1.15 % (the 1 % bar missed; what is left is neutral), 8,824 px of
+false openings taken out of the frame; the openings' IoU 0.782 to 0.839, the light map 0.201 to 0.207. The guide's
+item 2 has the colour condition and item 22 the field (`areas/production.md`).

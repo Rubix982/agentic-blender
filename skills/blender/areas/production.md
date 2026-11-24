@@ -231,8 +231,11 @@ What the builds found, in the order a script meets it:
    `[exp: shots/jali-match/read_photo.py]`
 2. **Dark pixels inside the object are its own shadows, until their colour says otherwise.** The dark pixels in the
    carved field (5.6 % of it) had green over red of 0.355 at the median and 0.469 at the 90th percentile: stone in
-   shadow, not wall. Trace them as solid; only dark pixels connected to the photo's edge are the surround.
-   `[exp: shots/jali-match/read_photo.py]`
+   shadow, not wall. Trace them as solid; only dark pixels connected to the photo's edge are the surround, and only
+   if they are neutral too: once the light pooled in the centre, the frame's corners were dark enough to be cut away
+   with the surround, and the glowing wall showed through them. Counting a dark pixel as surround only if its green
+   over red is above 0.8 (or it is too dark to tell) took the surround cut from the box from 38321 px to 17270.
+   `[exp: shots/jali-match/read_photo.py]` `[exp: shots/jali-match/build.py]`
 3. **What a photo shows through an opening is already narrowed by the depth.** The camera sees the hole's front
    outline overlapping its back outline, and the back appears scaled towards the picture's centre by
    distance / (distance + thickness): 0.9546 for 6.1 cm at 1.28 m. Extrude the seen region and every hole narrows
@@ -355,6 +358,15 @@ What the builds found, in the order a script meets it:
     enough to fail the colour rule (openings IoU 0.7576). On luminance it settled in three rounds at 1.0199 and
     2.3742. Blender's contrast looks brighten the emitters too (item 6 sets them exactly).
     `[exp: shots/jali-match/build.py]` `[exp: shots/jali-match/compare.py]`
+22. **A pierced screen's frame has no openings: find the carved field and keep openings inside it.** The frame's top
+    edge caught the light, pale and greyish, and the colour rule cut holes along it; the normals could not veto them,
+    since a plain frame is as flat as a wall. The carved field is the box around every opening of 400 px or more that
+    does not reach within 20 px of the screen's box (a pale band along the top edge was one such part and stretched the
+    field), padded 6 px: here [160, 148, 1057, 1221], where the share of opening per row and column falls away. That
+    took 8824 px of false openings out of the frame and lifted the openings' IoU from 0.7872 to 0.8393, partly because
+    the render, solid there, could never match them. Apply it inside the screen's box only: turned on the whole
+    image, it made the lit floor below the screen stone, and the box grew to take it in.
+    `[exp: shots/jali-match/read_photo.py]` `[exp: shots/jali-match/compare.py]`
 
 ```python
 # 3: the hole's front outline from what the photo sees through it (seen: a boolean mask, H x W)

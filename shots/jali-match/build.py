@@ -89,6 +89,9 @@ LENS_MM, SENSOR_MM = 24.0, 25.96 * 2460 / 3000
 W, H = C.size()
 rgb = C.load(os.path.join(HERE, "photo", "agra-jali.jpg"), (W, H))
 k = C.classify(rgb, np.load(NORMALS_NPY) if os.path.exists(NORMALS_NPY) else None)   # C-012: with the normals' veto
+_rp = json.load(open(os.path.join(HERE, "results", "read_photo.json"))) if os.path.exists(os.path.join(HERE, "results", "read_photo.json")) else {}
+if "field_box" in _rp and "--frame-openings" not in argv:              # C-014: the frame is solid (read_photo.py)
+    C.keep_field(k, _rp["field_box"], _rp["screen_box_for_field"])
 import symmetry  # noqa: E402
 if FORMS == "shading":                                                 # C-009: the photo averaged over its repeats
     LAVG, OAVG, HSHADE, SYM = symmetry.average(rgb, k)
@@ -103,9 +106,16 @@ width_px = int(cols[-1] - cols[0] + 1)
 S = WIDTH_M / width_px                                                 # metres per pixel
 # The solid: inside the screen's box (the same box compare.py measures in), everything that is not an opening. Dark
 # pixels count as stone (deep shadow in the carving) unless they connect to the box's edge (the museum's surround).
+# C-014: and unless they are stone-coloured. Once the light pooled in the centre (C-012) the frame's corners fell into
+# shadow, and the frame was cut away there with the surround ("vanishing borders"): what was cut inside the box had
+# green over red of 0.667 at the median, the real surround outside the box 1.000. So the surround is dark and neutral
+# (green over red above 0.8, over a 5 px blur, for the noise) or too dark to tell (luminance under 0.02).
 y0, y1, x0, x1 = int(rows[0]), int(rows[-1]), int(cols[0]), int(cols[-1])
 dark = np.zeros((H, W), bool)
 dark[y0:y1 + 1, x0:x1 + 1] = k["outside"][y0:y1 + 1, x0:x1 + 1]
+if "--surround-dark" not in argv:
+    gr_blur = C.blur(rgb[:, :, 1].astype(np.float32), 5) / np.maximum(C.blur(rgb[:, :, 0].astype(np.float32), 5), 1e-4)
+    dark &= (gr_blur > 0.8) | (k["y"] < 0.02)
 sur = np.zeros_like(dark)
 sur[y0, :], sur[y1, :], sur[:, x0], sur[:, x1] = dark[y0, :], dark[y1, :], dark[:, x0], dark[:, x1]
 for _ in range(2000):                                                  # grow along dark pixels from the box's edge
