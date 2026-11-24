@@ -19,8 +19,16 @@ OUT = os.path.join(HERE, "out")
 os.makedirs(OUT, exist_ok=True)
 
 
-def stats(rgb):
-    k = C.classify(rgb)
+NORMALS_NPY = os.path.join(HERE, "out", "normals.npy")
+
+
+def photo_normals():
+    """Marigold's normals for the photo (normals.py), if they have been made: common.classify's veto uses them."""
+    return np.load(NORMALS_NPY) if os.path.exists(NORMALS_NPY) else None
+
+
+def stats(rgb, normals=None):
+    k = C.classify(rgb, normals)
     rows = np.nonzero(k["stone"].mean(axis=1) > 0.2)[0]
     cols = np.nonzero(k["stone"].mean(axis=0) > 0.2)[0]
     y0, y1, x0, x1 = int(rows[0]), int(rows[-1]), int(cols[0]), int(cols[-1])
@@ -40,7 +48,8 @@ def stats(rgb):
 
 if __name__ == "__main__":
     rgb = C.load(os.path.join(HERE, "photo", "agra-jali.jpg"), C.size())
-    k, st = stats(rgb)
+    NM = photo_normals()
+    k, st = stats(rgb, NM)
     img = np.zeros(rgb.shape, np.float32)
     img[k["opening"]] = 1.0
     img[k["stone"]] = (0.85, 0.45, 0.2)
@@ -90,6 +99,10 @@ if __name__ == "__main__":
                            share_of_c009_openings_by_third=[round(float(k["dim"][t[0]:t[-1] + 1, x0:x1 + 1].sum()
                                                                         / max(was[t[0]:t[-1] + 1, x0:x1 + 1].sum(), 1)), 4)
                                                             for t in thirds])
+    # C-012: what the normals' veto takes (none if the normals are not made yet).
+    st["veto_stone"] = dict(rule=dict(area_below_px=C.VETO_AREA, lean_above_deg=C.VETO_DEG), normals=NM is not None,
+                            share_of_box=round(float(k["veto"][box].mean()), 4),
+                            share_of_openings_before=round(float(k["veto"][box].sum() / max((k["opening"] | k["veto"])[box].sum(), 1)), 4))
     # Dark pixels inside the screen: is their colour the stone's or the wall's?
     inner = (slice(y0 + 110, y1 - 95), slice(x0 + 130, x1 - 110))     # the carved field, inside the frame
     d = k["outside"][inner]

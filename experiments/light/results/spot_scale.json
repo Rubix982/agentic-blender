@@ -1,0 +1,44 @@
+{
+ "experiment": "experiments/light/spot_scale.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-24",
+ "seconds": 1.12,
+ "facts": [
+  {
+   "fact": "Scaling a spot light's object along its local x widens the pool along x (a little less than by that factor, at half the peak); y is unchanged",
+   "round_pool_m": 1.438,
+   "cone_says_m": 1.456,
+   "scaled_x_m": 2.688,
+   "scaled_y_m": 1.438,
+   "x_ratio": 1.869
+  },
+  {
+   "fact": "Scaling along the beam (local z) narrows the pool in both directions, by about that factor (expected: little change; it is the cone's angle that is scaled)",
+   "width_x_m": 0.5,
+   "width_y_m": 0.5,
+   "ratio": 2.876
+  }
+ ],
+ "data": {
+  "rows": {
+   "scale (1, 1, 1)": {
+    "width_x_m": 1.438,
+    "width_y_m": 1.438
+   },
+   "scale (2, 1, 1)": {
+    "width_x_m": 2.688,
+    "width_y_m": 1.438
+   },
+   "scale (1, 1, 3)": {
+    "width_x_m": 0.5,
+    "width_y_m": 0.5
+   }
+  },
+  "cone_deg": 40,
+  "height_m": 2.0,
+  "metres_per_px": 0.03125,
+  "expected_round_width_m": 1.456
+ },
+ "args": []
+}

@@ -20,7 +20,9 @@ curve's bevel), a carved front over it, a procedural sandstone, a lit panel behi
 and in front, and a camera from the photo's EXIF. The size is an estimate (photo/CREDIT.md): the screen 1.05 m wide.
 
 The earlier builds stay as switches: --forms shading (C-009's forms, read from the photo averaged over its repeats),
---no-normal-map, --photo-detail 0, --screen 0 (an unscreened solve), --thick 0.020 (C-008's fit).
+--no-normal-map, --photo-detail 0, --screen 0 (an unscreened solve), --thick 0.020 (C-008's fit), --fixed-light
+(C-011's spot). The spot's pool is fitted to the photo's light map once and kept in results/light_fit.json;
+--refit-light searches again (do so after changing the geometry or the photo's rule).
 
 Writes shots/jali-match/out/: scene.blend, render.png, build.json (also results/build.json)."""
 import json
@@ -49,6 +51,8 @@ NORMAL_MAP = "--no-normal-map" not in argv                             # the nor
 PHOTO_DETAIL = float(argv[argv.index("--photo-detail") + 1]) if "--photo-detail" in argv else 8.0   # tilt; 0: none
 PHOTO_DETAIL = PHOTO_DETAIL if NORMAL_MAP else 0.0                     # it tilts the normal map, so needs it
 CARVED_SHARE = float(argv[argv.index("--carved-share") + 1]) if "--carved-share" in argv else 0.3
+FIXED_LIGHT = "--fixed-light" in argv                                  # C-012: C-011's spot, not fitted to the pool
+REFIT_LIGHT = "--refit-light" in argv                                  # C-012: search again (else results/light_fit.json)
 NORMALS_NPY = os.path.join(os.path.dirname(os.path.abspath(__file__)), "out", "normals.npy")
 if (FORMS == "normals" or NORMAL_MAP) and not os.path.exists(NORMALS_NPY):
     raise SystemExit("out/normals.npy is missing: run make.py, or .venv/bin/python shots/jali-match/normals.py, first "
@@ -83,7 +87,7 @@ LENS_MM, SENSOR_MM = 24.0, 25.96 * 2460 / 3000
 # --- the photograph ----------------------------------------------------------------------------------------------
 W, H = C.size()
 rgb = C.load(os.path.join(HERE, "photo", "agra-jali.jpg"), (W, H))
-k = C.classify(rgb)
+k = C.classify(rgb, np.load(NORMALS_NPY) if os.path.exists(NORMALS_NPY) else None)   # C-012: with the normals' veto
 import symmetry  # noqa: E402
 if FORMS == "shading":                                                 # C-009: the photo averaged over its repeats
     LAVG, OAVG, HSHADE, SYM = symmetry.average(rgb, k)
@@ -522,9 +526,19 @@ spot.spot_size = math.radians(45)
 spot.spot_blend = 0.6
 spot.shadow_soft_size = 0.02                                           # crisp shadows under the carving
 so = bpy.data.objects.new("spot", spot)
-so.location = (0, -1.2, 2.0)                                           # about 60 degrees up: lit tops, dark undersides
-so.rotation_euler = (Vector((0, 0, 0.0)) - so.location).to_track_quat("-Z", "Y").to_euler()
 scene.collection.objects.link(so)
+SPOT_EL = math.atan2(2.0, 1.2)                                         # 59 degrees up, straight on: C-007's choice,
+                                                                       # and what the photo's shading says (C-012)
+
+
+def place_spot(ax, az, d):
+    """The spot d metres from the point (ax, az) on the screen, along its fixed direction, aimed at that point."""
+    aim = Vector((ax, 0.0, az))
+    so.location = aim + d * Vector((0.0, -math.cos(SPOT_EL), math.sin(SPOT_EL)))
+    so.rotation_euler = (aim - so.location).to_track_quat("-Z", "Y").to_euler()
+
+
+place_spot(0.0, 0.0, math.hypot(1.2, 2.0))                             # C-011's spot: (0, -1.2, 2.0), at the centre
 
 world = bpy.data.worlds.new("dark")
 world.use_nodes = True
@@ -611,7 +625,151 @@ def to_lin(v):
     return v / 12.92 if v <= 0.04045 else ((v + 0.055) / 1.055) ** 2.4
 
 
-# --- fit the spotlight to the photo (the wall is set above) ------------------------------------------------------
+# --- C-012: fit where the spot pools ----------------------------------------------------------------------------
+# The light map (compare.py): the stone's median in 6 x 7 cells over the box, each over the median cell, on the photo's
+# stone (3 px from any opening), at the size the candidates are rendered. The error is the RMS of log(render / photo).
+FIT_PCT = 25
+fw, fh = W * FIT_PCT // 100, H * FIT_PCT // 100
+fit_mask = C.resize(C.erode(k["stone"], 3).astype(np.float32), (fw, fh)) > 0.9
+fit_y_photo = C.resize(k["y"].astype(np.float32), (fw, fh))
+fbx = [round(v * FIT_PCT / 100) for v in (x0, y0, x1, y1)]
+
+
+def light_map(yy):
+    xs = np.linspace(fbx[0], fbx[2] + 1, 7).astype(int)
+    ys = np.linspace(fbx[1], fbx[3] + 1, 8).astype(int)
+    out = np.full((7, 6), np.nan)
+    for j in range(7):
+        for i in range(6):
+            mm = fit_mask[ys[j]:ys[j + 1], xs[i]:xs[i + 1]]
+            if mm.sum() > 5:
+                out[j, i] = np.median(yy[ys[j]:ys[j + 1], xs[i]:xs[i + 1]][mm])
+    return out / np.nanmedian(out)
+
+
+LM_PHOTO = light_map(fit_y_photo)
+
+
+def map_error(path):
+    img = C.load(path)
+    yy = C.luminance(img) if img.shape[:2] == (fh, fw) else C.resize(C.luminance(img), (fw, fh))
+    return float(np.sqrt(np.nanmean(np.log(np.maximum(light_map(yy), 1e-3) / LM_PHOTO) ** 2)))
+
+
+# The candidates are set by where the pool falls on the screen, not by the cone's angle, so distance and pool size do
+# not fight: the aim (ax, az), the distance d, the pool's half-height rv on the screen (the cone's half-angle is
+# atan(rv sin(el) / d), the beam meeting the upright screen 59 degrees off its face, which stretches a round pool to
+# about twice as tall as wide), its width over a round pool's (sx: the spot object scaled sideways, which Blender
+# allows), and the edge's softness (blend). The first search, by cone angle and without sx, got the error to 0.327
+# and no further: a round pool from this direction is taller than the photo's.
+def half_angle(c):
+    return math.atan(c["rv"] * math.sin(SPOT_EL) / c["d"])
+
+
+light = dict(ax=0.0, az=0.0, d=math.hypot(1.2, 2.0), rv=math.hypot(1.2, 2.0) * math.tan(math.radians(22.5)) / math.sin(SPOT_EL),
+             sx=1.0, blend=0.6)                                        # C-011's spot: 45 degrees, round, 0.6
+E0 = spot.energy / light["d"] ** 2                                     # power kept in step with distance squared
+
+
+def set_light(c):
+    place_spot(c["ax"], c["az"], c["d"])
+    spot.spot_size, spot.spot_blend = 2 * half_angle(c), c["blend"]
+    so.scale = (c["sx"], 1.0, 1.0)
+    spot.energy = E0 * c["d"] ** 2
+
+
+def try_light(c):
+    set_light(c)
+    path = os.path.join(OUT, "light_fit.png")
+    render(path, FIT_PCT, 32)
+    return map_error(path)
+
+
+LIGHT_JSON = os.path.join(HERE, "results", "light_fit.json")
+reuse = not FIXED_LIGHT and not REFIT_LIGHT and os.path.exists(LIGHT_JSON)
+if reuse:                                                              # the search takes ~130 renders (2.5 min)
+    saved = json.load(open(LIGHT_JSON))
+    light = dict(saved["best"])
+    log["light_fit"] = dict(reused=LIGHT_JSON.replace(HERE + os.sep, ""), best=saved["best"],
+                            error_when_fitted=saved["best_error"], error_now=round(try_light(light), 4))
+    print("LIGHT reused", log["light_fit"], flush=True)
+else:
+    log["light_fit"] = dict(fixed=FIXED_LIGHT, start={k: round(v, 4) for k, v in light.items()},
+                            start_error=round(try_light(light), 4), steps=[])
+if not FIXED_LIGHT and not reuse:
+    grids = [dict(rv=[0.4, 0.6, 0.8, 1.0, 1.3], sx=[1.0, 1.5, 2.0, 2.5], az=[-0.25, -0.1, 0.0, 0.1, 0.2],
+                  d=[1.6, 2.33, 3.5, 5.0, 8.0], blend=[0.3, 0.6, 1.0], ax=[-0.06, 0.0, 0.06]),
+             dict(rv=[0.85, 0.92, 1.08, 1.15], sx=[0.85, 0.92, 1.08, 1.15], az=[-0.08, -0.04, 0.04, 0.08],
+                  d=[0.7, 0.85, 1.2, 1.4], blend=[-0.2, -0.1, 0.1], ax=[-0.03, 0.03]),
+             dict(rv=[0.95, 1.05], sx=[0.95, 1.05], az=[-0.02, 0.02], d=[0.9, 1.1], blend=[-0.05, 0.05], ax=[-0.015, 0.015])]
+    best_e = log["light_fit"]["start_error"]
+    for rnd, grid in enumerate(grids):
+        for key, vals in grid.items():
+            for v in vals:
+                c = dict(light)
+                c[key] = v if rnd == 0 else (light[key] * v if key in ("d", "rv", "sx") else light[key] + v)
+                c["blend"] = min(max(c["blend"], 0.0), 1.0)
+                if c == light or math.degrees(2 * half_angle(c)) > 170:
+                    continue
+                e = try_light(c)
+                log["light_fit"]["steps"].append(dict(round=rnd, key=key, value=round(c[key], 4), error=round(e, 4)))
+                if e < best_e:
+                    best_e, light = e, c
+            print("LIGHT", rnd, key, {k: round(v, 3) for k, v in light.items()}, round(best_e, 4), flush=True)
+    # Then all six together (Nelder-Mead from the grids' best): one at a time, the search stalls where they trade off.
+    keys = ["ax", "az", "d", "rv", "sx", "blend"]
+    logk = {"d", "rv", "sx"}
+
+    def unpack(x):
+        c = {k: (math.exp(v) if k in logk else v) for k, v in zip(keys, x)}
+        c["blend"] = min(max(c["blend"], 0.0), 1.0)
+        return c
+
+    def f(x):
+        c = unpack(x)
+        if math.degrees(2 * half_angle(c)) > 170 or c["sx"] > 4 or c["sx"] < 0.25:
+            return 9.0
+        e = try_light(c)
+        log["light_fit"]["steps"].append(dict(round="nm", **{k: round(v, 4) for k, v in c.items()}, error=round(e, 4)))
+        return e
+
+    x0n = np.array([math.log(light[k]) if k in logk else light[k] for k in keys])
+    steps = np.array([0.05, 0.08, 0.3, 0.2, 0.25, 0.2])
+    simplex = [x0n] + [x0n + np.eye(6)[i] * steps[i] for i in range(6)]
+    fs = [best_e] + [f(x) for x in simplex[1:]]
+    for _ in range(60):                                                # about 70 renders in all
+        order = np.argsort(fs)
+        simplex, fs = [simplex[i] for i in order], [fs[i] for i in order]
+        cen = np.mean(simplex[:-1], axis=0)
+        xr = cen + (cen - simplex[-1])
+        fr = f(xr)
+        if fr < fs[0]:
+            xe = cen + 2 * (cen - simplex[-1])
+            fe = f(xe)
+            simplex[-1], fs[-1] = (xe, fe) if fe < fr else (xr, fr)
+        elif fr < fs[-2]:
+            simplex[-1], fs[-1] = xr, fr
+        else:
+            xc = cen + 0.5 * (simplex[-1] - cen)
+            fc = f(xc)
+            if fc < fs[-1]:
+                simplex[-1], fs[-1] = xc, fc
+            else:                                                      # shrink towards the best
+                simplex = [simplex[0]] + [simplex[0] + 0.5 * (x - simplex[0]) for x in simplex[1:]]
+                fs = [fs[0]] + [f(x) for x in simplex[1:]]
+        if max(fs) - min(fs) < 0.003:
+            break
+    i = int(np.argmin(fs))
+    if fs[i] < best_e:
+        best_e, light = fs[i], unpack(simplex[i])
+    print("LIGHT nm", {k: round(v, 3) for k, v in light.items()}, round(best_e, 4), flush=True)
+    log["light_fit"].update(best={k: round(v, 4) for k, v in light.items()}, best_error=round(best_e, 4),
+                            cone_deg=round(math.degrees(2 * half_angle(light)), 2), renders=len(log["light_fit"]["steps"]) + 1)
+    with open(LIGHT_JSON, "w") as fjson:
+        json.dump(log["light_fit"], fjson, indent=1)
+set_light(light)
+
+# --- fit the spotlight's power to the photo (the wall is set above) --------------------------------------------
 target = medians(rgb)
 log["fit"] = dict(target_stone_y=round(target[0], 4), target_opening_y_lower=round(target[1], 4),
                   target_opening_y_upper=round(target[2], 4), steps=[])

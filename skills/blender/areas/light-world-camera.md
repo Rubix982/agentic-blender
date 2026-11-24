@@ -85,6 +85,12 @@ EEVEE within 0.3 % of each other `[exp: experiments/light/light_units.py]`:
 
 `[exp: experiments/light/light_units.py]`
 
+A spot's pool can be stretched by scaling its object, since the scale applies to the cone. A spot 2 m above a floor,
+cone 40 degrees, hard edge: the pool (half the peak) is 1.438 m across, where the cone says 1.456; scaled (2, 1, 1) it is
+2.688 m along x (1.869 times) and still 1.438 m along y; scaled 3 along the beam (local z) it narrows to 0.5 m both ways
+(2.876 times). An oval museum spot is one spot scaled sideways (`production.md`, item 19).
+`[exp: experiments/light/spot_scale.py]`
+
 Soft shadows. A 2 m plate 1 m above the floor, sun straight down, the shadow edge's 5-95 % width (2.3 mm per pixel; a
 uniform disc predicts 0.805 of the full penumbra 2 h tan(angle / 2)):
 

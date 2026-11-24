@@ -812,3 +812,93 @@ forms band 0.653 (partly the photo against itself now). Of the card's measures t
 failed: the forms band's amplitude 0.53 (bar 0.8 to 1.2) and the stone's bright end 0.478 against 0.669 (bar 0.567 to
 0.767). So the guide gets the recipe, with the light as its stated limit (`areas/production.md`, items 13 to 18), and
 T-010 is answered yes for Marigold. The light, which the user names as what would make it better, is T-015.
+
+### C-012 · The museum's light fitted: where the spot pools, not only how bright it is
+
+**Opened:** 2026-11-24
+
+1. **WHERE WE ARE.** C-011 closed "at a glance, yes", the light named as what would make it better. Measured before
+   this card's work, on C-011's render: the stone's bright end 0.478 against the photo's 0.669, its contrast 0.51 of
+   the photo's. A new light map (the stone's median in 6 x 7 cells over the screen, each over the median cell) shows
+   why: the photo's light pools in the upper middle (1.19 to 1.51) and falls to 0.36 to 0.79 at the sides and 0.39
+   to 0.82 along the bottom; the render's falls evenly from top (1.26 to 1.35) to bottom (0.69 to 0.76) and not at all
+   from side to side. The error, the RMS of log(render / photo) over the cells, is 0.443. The light's direction is not
+   the problem: the shading Marigold's normals give under each direction matches the photo's best at 55 to 60 degrees
+   up and 0 to 10 degrees to the right (0.598), and the spot's own (59 degrees up, straight on) gives 0.596.
+2. **WHAT WE ARE DOING.** Fit the spotlight's aim on the screen, its distance, its cone and its blend so the render's
+   light map matches the photo's, keeping its direction, then its power to the stone's median as before.
+   - Each candidate rendered at 25 % size and 32 samples; its light map from the photo's stone mask at that size; a
+     coordinate search over the four (two rounds, a handful of values each), the error as above.
+   - In `build.py`, in place of the fixed spot (which stays as `--fixed-light`); the final render as before.
+3. **WHY.** Unknown now: whether one spot can make this photo's pool, and if it does, how much of the missing bright
+   end and contrast was the pool and how much is left for the phone's tone curve or a second light.
+4. **WHAT IS AFFECTED.**
+   - `build.py`'s light (`--fixed-light` keeps C-011's); `compare.py`'s light map (added before the work).
+   - `results/` overwritten; C-011's kept as `*_c011.json`. `sheet.jpg`. `areas/production.md`'s photo section either
+     way; `areas/lighting.md` if the fit is a recipe a script can reuse. T-015's answer.
+5. **CONCLUSION.** The measures first, then the judge.
+   - Measures: the light map's error at most 0.15; then, reported against the bars C-009 set and C-011 kept: the bright
+     end within 15 % of the photo's (0.567 to 0.767), the contrast 0.8 to 1.2 of the photo's, and the forms band's
+     amplitude 0.8 to 1.2.
+   - The judge: *at a glance, could the render be a photograph of the same screen?*, and whether the light now reads
+     as the photo's.
+   - If the map fits and the bright end and contrast come within their bars, the guide gets the recipe (fit where a
+     light pools by a light map, not only its power), and T-015 is answered.
+   - If the map fits but the bright end or contrast does not, the pool was only part of it: what is left (the tone
+     curve, a second light, the stone's albedo) is the next card, with the numbers that say which.
+   - If the map's error stays above 0.15, one spot cannot make this light, and the next card tries two lights or a
+     textured one.
+6. **CONSEQUENCE OF NOT DOING IT.** The screen stays lit evenly from the top, its frame as bright as its centre, and
+   the guide's photo method fits a light's power but never where it falls.
+
+**Known limits, stated before the run:**
+- The light map is read from 42 cells; it says where the light pools, not how sharp its edge is.
+- The search is coarse and the renders at 25 % are noisy; a fit within the noise is reported as such.
+- The photo's processing (the phone's and an editor's tone curve) is not modelled here; the bright end may need it.
+
+**Measures (2026-11-24), in the order they were taken.** C-011's light: map error 0.443, bright end 0.478, contrast
+0.51 of the photo's, the forms band's amplitude 0.53. Errors are at the fit's 25 % size, then at full size.
+1. As the card said (aim, distance, cone angle, blend; 31 renders): 0.327, 0.322. It aimed lower and softened the
+   edge (blend 1.0), and never narrowed the cone. The beam meets the upright screen 59 degrees off its face, which
+   stretches a round pool to about twice as tall as wide, and the photo's pool is about as wide as tall; and with the
+   cone set by its angle, distance and pool size fought.
+2. Changed: the candidates set by the pool's half-height on the screen and its width over a round pool's (the spot
+   object scaled sideways), with the aim, distance and blend (53 renders): 0.275, 0.263 (`results/*_c012_grid.json`).
+3. Changed: then all six together by Nelder-Mead from that best (126 renders in all, 2.5 minutes): 0.206, **0.198**.
+   The spot 4.69 m out, a 13.1 degree cone 1.11 times as wide as round, its edge fully soft, aimed 0.09 m above the
+   centre. Kept in `results/light_fit.json`; later builds reuse it (`--refit-light` searches again), 34 s a build.
+Against the bars: the map's error 0.198 (bar 0.15) fails; the bright end 0.514 against 0.669 (bar 0.567 to 0.767)
+fails; the contrast 0.66 of the photo's (bar 0.8) fails; the forms band's amplitude 0.58 (bar 0.8) fails. All four
+moved the right way, and the dark end came close (0.159 against 0.129). What is left of the map is the frame's sides
+(the photo's 0.39 to 0.59 against the render's 0.45 to 0.71 on the right) and the top left; inside the pool the bright
+end is still short, a darker bottom and a brighter top around the same median, which is what an S-shaped tone curve
+does (the photo was edited in Polarr; C-008's contrast looks raised the stone's contrast but brightened the wall,
+which is set exactly through the plain sRGB curve). Seen on the sheet: the frame falls into shadow at its corners and
+sides and the light gathers on the carved field, as in the photo; the photo's frame is darker still, and its carving
+brighter in the centre.
+
+**The judge (2026-11-24):** "yes, it reads better; let's do the tone curve next. also, the light is exposing some
+missing portions we failed to capture through the pipeline" (a close-up of white flecks on the bars, lower middle).
+
+**The flecks.** They were holes: small fragments of lit rim along the upper edges of openings that the photo's rule
+still called wall (in the lit middle the wall is bright, and lit stone only 7 to 13 % brighter than it, under the lit
+test's 12 % plus 0.03). Marigold sees the wall through an opening as one flat surface facing the camera, and these
+fragments sit on bars that face up: of the openings of 400 px or more, the median one's normals lean 5.1 degrees from
+the wall's (the 99th percentile 10.4). Now an opening under 400 px whose normals lean more than 15 degrees on average
+is stone (`common.classify`, given the photo's normals; the normals step now runs first). It takes 6.2 % of what was
+called opening. In the close-up the render is open where the photo is stone on 415 px in all, in pieces of 30 px or
+less, every one at an opening's edge. Openings IoU 0.762 to 0.791; thin stone 95.9 % to 97.5 %. Not done: the wall's
+normal is taken over the whole photo, and real openings in the lower part lean 10 to 15 degrees from it (Marigold's
+wall drifts), so a local wall normal would be safer; and the labelling adds about 14 s to each step that reads the
+photo.
+
+**Result (2026-11-24, closed): judged better, the bars not met.** One spot, fitted to where the photo's light pools (a
+light map of 6 x 7 cells) by a search over its aim, distance, pool size, pool width and edge, the six together at the
+end: 4.69 m out, a 13.1 degree cone 1.11 times as wide as round, fully soft, aimed 0.09 m above the centre. The map's
+error from 0.443 to 0.198 (bar 0.15); the bright end 0.514 against 0.674 (bar 0.573 to 0.776); the contrast 0.65 of
+the photo's and the forms band's amplitude 0.56 (bars 0.8). By the card the map's miss says one spot cannot make all of
+this light and the next card would try two lights; the user chose the tone curve, which is what the misses inside the
+pool point to (a darker bottom and brighter top about the same median). That is C-013. Found on the way: a spot's
+pool stretches when its object is scaled (`experiments/light/spot_scale.py`), and the normals can veto the photo's
+rule. Guide: `areas/production.md` items 19 and 20, `areas/light-world-camera.md` (spot scale). T-015 answered for the
+pool; the tone curve is T-016.

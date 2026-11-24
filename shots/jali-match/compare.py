@@ -8,6 +8,7 @@ Reads photo/agra-jali.jpg (at half size) and out/render.png. Measures, inside th
   stone_spread     90th minus 10th percentile: the stone's contrast, which nothing was fitted to
   stone_y_bands    the stone's median luminance in ten bands from top to bottom
   detail           (C-011) the carving's light and dark against the photo's, in a fine and a forms band
+  light_map        (C-012) where the light pools: the stone's median in 6 x 7 cells, render against photo
 Writes shots/jali-match/sheet.jpg (the two side by side, and the same detail of each at full size) and
 results/compare.json."""
 import json
@@ -26,7 +27,8 @@ from read_photo import stats  # noqa: E402
 W, H = C.size()
 photo = C.load(os.path.join(HERE, "photo", "agra-jali.jpg"), (W, H))
 render = C.load(os.path.join(HERE, "out", "render.png"), (W, H))
-kp, sp = stats(photo)
+from read_photo import photo_normals  # noqa: E402
+kp, sp = stats(photo, photo_normals())                                 # the photo's rule with the normals' veto (C-012)
 kr, sr = stats(render)
 x0, y0, x1, y1 = sp["box"]
 box = (slice(y0, y1 + 1), slice(x0, x1 + 1))
@@ -96,6 +98,24 @@ fr = (C.erode(kp["stone"], 3) & C.erode(kr["stone"], 3) & ~inner)[box]
 res["frame_texture"] = {name: dict(photo=round(float(bp[name][box][fr].std()), 4), render=round(float(br[name][box][fr].std()), 4),
                                    ratio=round(float(br[name][box][fr].std() / max(bp[name][box][fr].std(), 1e-9)), 4))
                         for name in ("fine", "forms")}
+# C-012: the light map. The stone's median luminance (on stone in both, 3 px from any opening) in 6 x 7 cells over the
+# screen's box, each over its image's median cell: where the light pools. Its error is the RMS of log(render / photo)
+# over the cells.
+def light_map(yy, mask, gx=6, gy=7):
+    xs = np.linspace(x0, x1 + 1, gx + 1).astype(int)
+    ys = np.linspace(y0, y1 + 1, gy + 1).astype(int)
+    out = np.full((gy, gx), np.nan)
+    for j in range(gy):
+        for i in range(gx):
+            mm = mask[ys[j]:ys[j + 1], xs[i]:xs[i + 1]]
+            if mm.sum() > 50:
+                out[j, i] = np.median(yy[ys[j]:ys[j + 1], xs[i]:xs[i + 1]][mm])
+    return out / np.nanmedian(out)
+lm_mask = C.erode(kp["stone"], 3) & C.erode(kr["stone"], 3)
+lmp, lmr = light_map(kp["y"], lm_mask), light_map(kr["y"], lm_mask)
+res["light_map"] = dict(photo=[[round(float(v), 3) for v in row] for row in lmp],
+                        render=[[round(float(v), 3) for v in row] for row in lmr],
+                        log_rms=round(float(np.sqrt(np.nanmean(np.log(lmr / lmp) ** 2))), 4))
 p90p, p90r = sp["stone_y"][2], sr["stone_y"][2]
 res["bar"] = dict(lines_near_at_least=0.6, stone_p90_within=[round(0.85 * p90p, 4), round(1.15 * p90p, 4)],
                   spread_ratio_within=[0.8, 1.2], openings_iou_at_least=0.68)

@@ -44,6 +44,8 @@ LIT = 0.12                          # C-009: brighter than the local wall by mor
 LIT_ABS = 0.03
 DIM = 0.15                          # C-011: darker than the local wall by more than this fraction, less DIM_ABS, is stone
 DIM_ABS = 0.03
+VETO_AREA = 400                     # C-012: an opening smaller than this (px) whose normals lean more than VETO_DEG from
+VETO_DEG = 15.0                     # the wall's is lit stone (when the photo's normals are given)
 SCALE = 0.5                         # the photo is worked at half its size: 1230 x 1402
 PHOTO_W, PHOTO_H = 2460, 2803
 
@@ -65,7 +67,7 @@ def luminance(rgb):
     return rgb @ np.array([0.2126, 0.7152, 0.0722], np.float32)
 
 
-def classify(rgb):
+def classify(rgb, normals=None):
     y = luminance(rgb)
     gr = rgb[:, :, 1] / np.maximum(rgb[:, :, 0], 1e-4)
     outside = y < DARK
@@ -85,9 +87,52 @@ def classify(rgb):
     d = np.linalg.norm(rgb - wall, axis=2) / np.maximum(np.linalg.norm(wall, axis=2), 1e-3)
     near = ~outside & (d < WALL_DIST) & (tex < WALL_TEX) & (wsum > 0.003) & (gr > WALL_GR_MIN)
     opening = (sure | near) & ~lit & ~dim
+    veto = np.zeros_like(opening)
+    if normals is not None:                                            # C-012: fragments of lit rim the tests missed
+        veto = veto_openings(opening, normals)
+        opening &= ~veto
     stone = ~outside & ~opening
     return dict(outside=outside, opening=opening, stone=stone, y=y, gr=gr, lit=lit & ~outside & (sure | near),
-                dim=dim & ~lit & ~outside & (sure | near), sure=sure, wall_y=luminance(wall))
+                dim=dim & ~lit & ~outside & (sure | near), sure=sure, wall_y=luminance(wall), veto=veto)
+
+
+def label(mask):
+    """Connected parts of a boolean mask (4-neighbour): each pixel's label is the smallest index + 1 in its part, 0
+    outside. Neighbours' minimum, with pointer jumping (each label replaced by its own pixel's label) to converge fast."""
+    h, w = mask.shape
+    big = np.int64(h * w + 1)
+    lab = np.where(mask, np.arange(1, h * w + 1, dtype=np.int64).reshape(h, w), 0)
+    while True:
+        l2 = np.where(mask, lab, big)
+        m = l2.copy()
+        m[1:] = np.minimum(m[1:], l2[:-1])
+        m[:-1] = np.minimum(m[:-1], l2[1:])
+        m[:, 1:] = np.minimum(m[:, 1:], l2[:, :-1])
+        m[:, :-1] = np.minimum(m[:, :-1], l2[:, 1:])
+        m = np.where(mask, m, 0)
+        flat = m.ravel()
+        jumped = np.where(mask, flat[np.maximum(m, 1) - 1].reshape(h, w), 0)
+        jumped = np.minimum(jumped, m)
+        if (jumped == lab).all():
+            return lab
+        lab = jumped
+
+
+def veto_openings(opening, normals):
+    """C-012: the openings that are lit stone. Marigold sees the wall through an opening as one flat surface facing the
+    camera; a fragment of lit rim the colour tests missed sits on a bar that faces up. Of the photo's openings of 400 px
+    or more, the median one's normals lean 5.1 degrees from the wall's (the 99th percentile 10.4); so a smaller opening
+    whose normals lean more than VETO_DEG on average is stone. Returns the pixels to make stone."""
+    lab = label(opening)
+    core = erode(opening, 3)
+    nw = np.median(normals[core], axis=0)
+    nw = nw / max(float(np.linalg.norm(nw)), 1e-6)
+    ang = np.degrees(np.arccos(np.clip(normals @ nw, -1, 1)))
+    area = np.bincount(lab.ravel())
+    lean = np.bincount(lab.ravel(), weights=ang.ravel()) / np.maximum(area, 1)
+    bad = (area < VETO_AREA) & (lean > VETO_DEG)
+    bad[0] = False
+    return bad[lab]
 
 
 def wall_field(rgb, seed):

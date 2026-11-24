@@ -1,0 +1,545 @@
+{
+ "thin_stone": {
+  "photo_px": 45801,
+  "kept_by_widening": 0.8575,
+  "kept_by_trace": 0.8049
+ },
+ "normals": {
+  "solve": {
+   "iterations": 397,
+   "residual": 1e-05
+  },
+  "screen_px": 30.0,
+  "p99_m": 0.00985,
+  "p1_m": -0.00224,
+  "below_front_share": 0.0974,
+  "scale": 1.0
+ },
+ "sizes": {
+  "width_m": 1.05,
+  "thick_m": 0.01,
+  "thick_cm": 1.0,
+  "bevel_m": 0.0005
+ },
+ "outlines": {
+  "count": 467,
+  "points": 63058,
+  "metres_per_px": 0.000924,
+  "screen_width_px": 1136,
+  "box": [
+   42,
+   30,
+   1177,
+   1346
+  ],
+  "dark_in_box_made_stone": 73896,
+  "surround_in_box": 38321,
+  "back_face_scale": 0.9923,
+  "seen_opening_share": 0.1032,
+  "hole_share": 0.129,
+  "cut_line_share": 0.0567
+ },
+ "fill_repairs": [],
+ "photo_detail": {
+  "tilt_per_unit": 8.0,
+  "carved_share": 0.3,
+  "flat_share_of_stone": 0.2898,
+  "detail_std": 0.0274
+ },
+ "relief": {
+  "forms": "normals",
+  "normal_map": true,
+  "bars_m": 0.005,
+  "reach_px": 20,
+  "forms_m_at_p99": 0.004,
+  "height_max_m": 0.01734,
+  "vertices": 1137509,
+  "faces": 1097834
+ },
+ "symmetry": {
+  "skipped": "the forms come from the normals (--forms normals)"
+ },
+ "wall": {
+  "panel_seen_from_camera_at": 0.7599,
+  "panel_covers_box": 0.95,
+  "bands": [
+   {
+    "at": 0.026,
+    "linear_rgb": [
+     0.0307,
+     0.0319,
+     0.0262
+    ]
+   },
+   {
+    "at": 0.1307,
+    "linear_rgb": [
+     0.9301,
+     0.9734,
+     0.9387
+    ]
+   },
+   {
+    "at": 0.2354,
+    "linear_rgb": [
+     0.807,
+     0.807,
+     0.7454
+    ]
+   },
+   {
+    "at": 0.3405,
+    "linear_rgb": [
+     0.7084,
+     0.6376,
+     0.5271
+    ]
+   },
+   {
+    "at": 0.446,
+    "linear_rgb": [
+     0.6172,
+     0.5089,
+     0.3864
+    ]
+   },
+   {
+    "at": 0.5516,
+    "linear_rgb": [
+     0.4233,
+     0.3372,
+     0.2462
+    ]
+   },
+   {
+    "at": 0.6571,
+    "linear_rgb": [
+     0.2623,
+     0.1946,
+     0.1329
+    ]
+   },
+   {
+    "at": 0.7626,
+    "linear_rgb": [
+     0.1812,
+     0.1413,
+     0.0953
+    ]
+   },
+   {
+    "at": 0.8681,
+    "linear_rgb": [
+     0.1144,
+     0.0953,
+     0.063
+    ]
+   },
+   {
+    "at": 0.9736,
+    "linear_rgb": [
+     0.1878,
+     0.1329,
+     0.0844
+    ]
+   }
+  ]
+ },
+ "camera": {
+  "lens_mm": 24.0,
+  "sensor_mm": 21.287,
+  "distance_m": 1.2818,
+  "frame_width_m": 1.1369
+ },
+ "mesh": {
+  "vertices": 756696,
+  "faces": 695414,
+  "front_face_m2": 1.0877,
+  "front_face_m2_if_built_in_metres": 1.0877,
+  "metres_per_curve_unit": 0.000924,
+  "outlines_enclose_m2": 1.1528
+ },
+ "light_fit": {
+  "fixed": false,
+  "start": {
+   "ax": 0.0,
+   "az": 0.0,
+   "d": 2.3324,
+   "rv": 1.1267,
+   "sx": 1.0,
+   "blend": 0.6
+  },
+  "start_error": 0.4431,
+  "steps": [
+   {
+    "round": 0,
+    "key": "rv",
+    "value": 0.4,
+    "error": 1.7312
+   },
+   {
+    "round": 0,
+    "key": "rv",
+    "value": 0.6,
+    "error": 1.0032
+   },
+   {
+    "round": 0,
+    "key": "rv",
+    "value": 0.8,
+    "error": 0.3654
+   },
+   {
+    "round": 0,
+    "key": "rv",
+    "value": 1.0,
+    "error": 0.4309
+   },
+   {
+    "round": 0,
+    "key": "rv",
+    "value": 1.3,
+    "error": 0.446
+   },
+   {
+    "round": 0,
+    "key": "sx",
+    "value": 1.5,
+    "error": 0.4372
+   },
+   {
+    "round": 0,
+    "key": "sx",
+    "value": 2.0,
+    "error": 0.4445
+   },
+   {
+    "round": 0,
+    "key": "sx",
+    "value": 2.5,
+    "error": 0.4457
+   },
+   {
+    "round": 0,
+    "key": "az",
+    "value": -0.25,
+    "error": 1.0822
+   },
+   {
+    "round": 0,
+    "key": "az",
+    "value": -0.1,
+    "error": 0.6147
+   },
+   {
+    "round": 0,
+    "key": "az",
+    "value": 0.1,
+    "error": 0.4035
+   },
+   {
+    "round": 0,
+    "key": "az",
+    "value": 0.2,
+    "error": 0.4199
+   },
+   {
+    "round": 0,
+    "key": "d",
+    "value": 1.6,
+    "error": 0.6646
+   },
+   {
+    "round": 0,
+    "key": "d",
+    "value": 2.33,
+    "error": 0.365
+   },
+   {
+    "round": 0,
+    "key": "d",
+    "value": 3.5,
+    "error": 0.3889
+   },
+   {
+    "round": 0,
+    "key": "d",
+    "value": 5.0,
+    "error": 0.3997
+   },
+   {
+    "round": 0,
+    "key": "d",
+    "value": 8.0,
+    "error": 0.4049
+   },
+   {
+    "round": 0,
+    "key": "blend",
+    "value": 0.3,
+    "error": 0.4089
+   },
+   {
+    "round": 0,
+    "key": "blend",
+    "value": 1.0,
+    "error": 0.2753
+   },
+   {
+    "round": 0,
+    "key": "ax",
+    "value": -0.06,
+    "error": 0.5181
+   },
+   {
+    "round": 0,
+    "key": "ax",
+    "value": 0.06,
+    "error": 0.4468
+   },
+   {
+    "round": 1,
+    "key": "rv",
+    "value": 0.68,
+    "error": 0.7181
+   },
+   {
+    "round": 1,
+    "key": "rv",
+    "value": 0.736,
+    "error": 0.5191
+   },
+   {
+    "round": 1,
+    "key": "rv",
+    "value": 0.864,
+    "error": 0.3267
+   },
+   {
+    "round": 1,
+    "key": "rv",
+    "value": 0.92,
+    "error": 0.3567
+   },
+   {
+    "round": 1,
+    "key": "sx",
+    "value": 0.85,
+    "error": 0.6494
+   },
+   {
+    "round": 1,
+    "key": "sx",
+    "value": 0.92,
+    "error": 0.3784
+   },
+   {
+    "round": 1,
+    "key": "sx",
+    "value": 1.08,
+    "error": 0.3121
+   },
+   {
+    "round": 1,
+    "key": "sx",
+    "value": 1.15,
+    "error": 0.3344
+   },
+   {
+    "round": 1,
+    "key": "az",
+    "value": -0.08,
+    "error": 0.5051
+   },
+   {
+    "round": 1,
+    "key": "az",
+    "value": -0.04,
+    "error": 0.2988
+   },
+   {
+    "round": 1,
+    "key": "az",
+    "value": 0.04,
+    "error": 0.295
+   },
+   {
+    "round": 1,
+    "key": "az",
+    "value": 0.08,
+    "error": 0.3219
+   },
+   {
+    "round": 1,
+    "key": "d",
+    "value": 1.631,
+    "error": 0.6059
+   },
+   {
+    "round": 1,
+    "key": "d",
+    "value": 1.9805,
+    "error": 0.3181
+   },
+   {
+    "round": 1,
+    "key": "d",
+    "value": 2.796,
+    "error": 0.2776
+   },
+   {
+    "round": 1,
+    "key": "d",
+    "value": 3.262,
+    "error": 0.2831
+   },
+   {
+    "round": 1,
+    "key": "blend",
+    "value": 0.8,
+    "error": 0.3217
+   },
+   {
+    "round": 1,
+    "key": "blend",
+    "value": 0.9,
+    "error": 0.2992
+   },
+   {
+    "round": 1,
+    "key": "ax",
+    "value": -0.03,
+    "error": 0.3404
+   },
+   {
+    "round": 1,
+    "key": "ax",
+    "value": 0.03,
+    "error": 0.2905
+   },
+   {
+    "round": 2,
+    "key": "rv",
+    "value": 0.76,
+    "error": 0.3269
+   },
+   {
+    "round": 2,
+    "key": "rv",
+    "value": 0.84,
+    "error": 0.307
+   },
+   {
+    "round": 2,
+    "key": "sx",
+    "value": 0.95,
+    "error": 0.2886
+   },
+   {
+    "round": 2,
+    "key": "sx",
+    "value": 1.05,
+    "error": 0.2978
+   },
+   {
+    "round": 2,
+    "key": "az",
+    "value": -0.02,
+    "error": 0.2757
+   },
+   {
+    "round": 2,
+    "key": "az",
+    "value": 0.02,
+    "error": 0.2836
+   },
+   {
+    "round": 2,
+    "key": "d",
+    "value": 2.097,
+    "error": 0.2891
+   },
+   {
+    "round": 2,
+    "key": "d",
+    "value": 2.563,
+    "error": 0.2751
+   },
+   {
+    "round": 2,
+    "key": "blend",
+    "value": 0.95,
+    "error": 0.2881
+   },
+   {
+    "round": 2,
+    "key": "ax",
+    "value": -0.015,
+    "error": 0.2803
+   },
+   {
+    "round": 2,
+    "key": "ax",
+    "value": 0.015,
+    "error": 0.2777
+   }
+  ],
+  "best": {
+   "ax": 0.0,
+   "az": 0.0,
+   "d": 2.563,
+   "rv": 0.8,
+   "sx": 1.0,
+   "blend": 1.0
+  },
+  "best_error": 0.2751,
+  "cone_deg": 29.97,
+  "renders": 53
+ },
+ "fit": {
+  "target_stone_y": 0.3448,
+  "target_opening_y_lower": 0.8355,
+  "target_opening_y_upper": 0.4523,
+  "steps": [
+   {
+    "spot_w": 483.01,
+    "stone_y": 0.449,
+    "opening_y_lower": 0.7042,
+    "opening_y_upper": 0.4046,
+    "seconds": 1.2
+   },
+   {
+    "spot_w": 276.99,
+    "stone_y": 0.3502,
+    "opening_y_lower": 0.6584,
+    "opening_y_upper": 0.4074,
+    "seconds": 1.2
+   },
+   {
+    "spot_w": 268.12,
+    "stone_y": 0.3451,
+    "opening_y_lower": 0.6557,
+    "opening_y_upper": 0.4074,
+    "seconds": 1.2
+   }
+  ]
+ },
+ "render": {
+  "seconds": 11.5,
+  "samples": 256,
+  "size": [
+   1230,
+   1402
+  ],
+  "spot_w": 267.56,
+  "wall_strength": 0.9734,
+  "albedo": [
+   0.45,
+   0.2402,
+   0.1338
+  ],
+  "look": "None",
+  "filter_px": 1.8
+ },
+ "seconds": 93.7
+}

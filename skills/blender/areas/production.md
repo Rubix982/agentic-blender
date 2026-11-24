@@ -325,6 +325,24 @@ What the builds found, in the order a script meets it:
     `[exp: shots/jali-match/compare.py]`
 18. **Check the fill after every build.** A traced curve's fill can fail on one small outline, at any scale
     (`curves-text.md`, item 9); `build.py` halves the outlines to find it and swaps in its unsmoothed outline.
+19. **Fit where the light pools, not only its power.** Matching the stone's median brightness left the photo's light
+    wrong in place: a light map (the stone's median in 6 x 7 cells, each over the median cell) of the photo pooled in
+    the upper middle and fell away at the sides, while the render's fell evenly from top to bottom, an error (the RMS
+    of log(render / photo) over the cells) of 0.4426. The spot's direction was right, since the photo's shading under
+    Marigold's normals matched best within a few degrees of it; its pool was not. Rendering candidates at 25 % size
+    and searching the spot's aim, distance, the pool's half-height on the screen, its width (the spot object scaled
+    sideways; `light-world-camera.md`) and its edge: 0.2629 one setting at a time, then 0.2063 at that size with the
+    six together (Nelder-Mead, 126 renders), 0.1979 at full size: a spot 4.6936 m out, its pool 1.1079 times as wide
+    as round, fully soft, aimed 0.0923 m above the centre. Set the pool by its size on the screen, not the cone's
+    angle, or distance and pool size fight; a beam from 59 degrees up stretches a round pool to about twice as tall
+    as wide. The bright end (0.5139 against 0.6744) and the contrast (0.6517 of the photo's) stayed short.
+    `[exp: shots/jali-match/build.py]` `[exp: shots/jali-match/compare.py]`
+20. **Let the normals veto the colour rule.** Brighter light showed holes the colour rule had cut: fragments of lit
+    rim, a few per cent brighter than a bright wall. Marigold sees an opening's wall as one flat surface facing the
+    camera; the fragments sit on bars facing up. An opening under 400 px whose normals lean more than 15 degrees from
+    the wall's, on average, is stone: that took 6.16 % of the openings, and the openings' IoU went from 0.762 to 0.7914
+    and the thin stone shown from 0.9586 to 0.9747. Take the wall's normal locally if the model's wall drifts across
+    the picture. `[exp: shots/jali-match/read_photo.py]` `[exp: shots/jali-match/compare.py]`
 
 ```python
 # 3: the hole's front outline from what the photo sees through it (seen: a boolean mask, H x W)
@@ -345,4 +363,5 @@ render's lines lay within 2 px of the photo's and 24.85 % the other way; and the
 catch the light as the carving does. In C-011 the openings agreed at 0.7598 and 95.89 % of the thin pieces showed; the
 forms band was 0.6527 (partly the photo's own detail), its amplitude 0.531 of the photo's, and the bright end 0.4776
 against 0.6685: judged a photograph at a glance, with the light still even and dim where the photo's spot pools on
-the centre and lights the rims. `[exp: shots/jali-match/compare.py]`
+the centre and lights the rims. With the pool fitted (C-012) the light map's error fell from 0.4426 to 0.1979 and the
+bright end rose to 0.5139: "it reads better". `[exp: shots/jali-match/compare.py]`

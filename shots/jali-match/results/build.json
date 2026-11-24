@@ -1,18 +1,18 @@
 {
  "thin_stone": {
-  "photo_px": 45801,
-  "kept_by_widening": 0.8575,
-  "kept_by_trace": 0.8049
+  "photo_px": 38610,
+  "kept_by_widening": 0.8844,
+  "kept_by_trace": 0.8307
  },
  "normals": {
   "solve": {
-   "iterations": 397,
+   "iterations": 400,
    "residual": 1e-05
   },
   "screen_px": 30.0,
-  "p99_m": 0.00985,
-  "p1_m": -0.00224,
-  "below_front_share": 0.0974,
+  "p99_m": 0.00994,
+  "p1_m": -0.00304,
+  "below_front_share": 0.1033,
   "scale": 1.0
  },
  "sizes": {
@@ -22,8 +22,8 @@
   "bevel_m": 0.0005
  },
  "outlines": {
-  "count": 467,
-  "points": 63058,
+  "count": 386,
+  "points": 56006,
   "metres_per_px": 0.000924,
   "screen_width_px": 1136,
   "box": [
@@ -35,15 +35,15 @@
   "dark_in_box_made_stone": 73896,
   "surround_in_box": 38321,
   "back_face_scale": 0.9923,
-  "seen_opening_share": 0.1032,
-  "hole_share": 0.129,
-  "cut_line_share": 0.0567
+  "seen_opening_share": 0.0969,
+  "hole_share": 0.1187,
+  "cut_line_share": 0.0586
  },
  "fill_repairs": [],
  "photo_detail": {
   "tilt_per_unit": 8.0,
   "carved_share": 0.3,
-  "flat_share_of_stone": 0.2898,
+  "flat_share_of_stone": 0.2882,
   "detail_std": 0.0274
  },
  "relief": {
@@ -52,9 +52,9 @@
   "bars_m": 0.005,
   "reach_px": 20,
   "forms_m_at_p99": 0.004,
-  "height_max_m": 0.01734,
-  "vertices": 1137509,
-  "faces": 1097834
+  "height_max_m": 0.01758,
+  "vertices": 1177501,
+  "faces": 1142970
  },
  "symmetry": {
   "skipped": "the forms come from the normals (--forms normals)"
@@ -66,49 +66,49 @@
    {
     "at": 0.026,
     "linear_rgb": [
-     0.0307,
-     0.0319,
-     0.0262
+     0.0252,
+     0.0273,
+     0.0222
     ]
    },
    {
     "at": 0.1307,
     "linear_rgb": [
      0.9301,
-     0.9734,
-     0.9387
+     0.9823,
+     0.9473
     ]
    },
    {
     "at": 0.2354,
     "linear_rgb": [
      0.807,
-     0.807,
-     0.7454
+     0.8228,
+     0.7605
     ]
    },
    {
     "at": 0.3405,
     "linear_rgb": [
      0.7084,
-     0.6376,
-     0.5271
+     0.6445,
+     0.5333
     ]
    },
    {
     "at": 0.446,
     "linear_rgb": [
-     0.6172,
-     0.5089,
-     0.3864
+     0.6105,
+     0.5029,
+     0.3813
     ]
    },
    {
     "at": 0.5516,
     "linear_rgb": [
-     0.4233,
-     0.3372,
-     0.2462
+     0.4179,
+     0.3325,
+     0.2423
     ]
    },
    {
@@ -122,8 +122,8 @@
    {
     "at": 0.7626,
     "linear_rgb": [
-     0.1812,
-     0.1413,
+     0.1779,
+     0.1384,
      0.0953
     ]
    },
@@ -139,7 +139,7 @@
     "at": 0.9736,
     "linear_rgb": [
      0.1878,
-     0.1329,
+     0.1301,
      0.0844
     ]
    }
@@ -152,12 +152,25 @@
   "frame_width_m": 1.1369
  },
  "mesh": {
-  "vertices": 756696,
-  "faces": 695414,
-  "front_face_m2": 1.0877,
-  "front_face_m2_if_built_in_metres": 1.0877,
+  "vertices": 672072,
+  "faces": 617526,
+  "front_face_m2": 1.0972,
+  "front_face_m2_if_built_in_metres": 1.0972,
   "metres_per_curve_unit": 0.000924,
-  "outlines_enclose_m2": 1.1528
+  "outlines_enclose_m2": 1.1526
+ },
+ "light_fit": {
+  "reused": "results/light_fit.json",
+  "best": {
+   "ax": -0.0111,
+   "az": 0.0923,
+   "d": 4.6936,
+   "rv": 0.6275,
+   "sx": 1.1079,
+   "blend": 1.0
+  },
+  "error_when_fitted": 0.2063,
+  "error_now": 0.2064
  },
  "fit": {
   "target_stone_y": 0.3448,
@@ -165,44 +178,44 @@
   "target_opening_y_upper": 0.4523,
   "steps": [
    {
-    "spot_w": 400.0,
-    "stone_y": 0.5305,
-    "opening_y_lower": 0.7088,
-    "opening_y_upper": 0.4377,
-    "seconds": 1.2
+    "spot_w": 1619.84,
+    "stone_y": 0.4186,
+    "opening_y_lower": 0.6989,
+    "opening_y_upper": 0.3985,
+    "seconds": 1.6
    },
    {
-    "spot_w": 160.1,
-    "stone_y": 0.3541,
-    "opening_y_lower": 0.6338,
-    "opening_y_upper": 0.4307,
-    "seconds": 1.2
+    "spot_w": 1078.6,
+    "stone_y": 0.3502,
+    "opening_y_lower": 0.6656,
+    "opening_y_upper": 0.4007,
+    "seconds": 1.3
    },
    {
-    "spot_w": 151.48,
-    "stone_y": 0.3449,
-    "opening_y_lower": 0.6295,
-    "opening_y_upper": 0.4298,
+    "spot_w": 1044.37,
+    "stone_y": 0.3454,
+    "opening_y_lower": 0.6631,
+    "opening_y_upper": 0.401,
     "seconds": 1.2
    }
   ]
  },
  "render": {
-  "seconds": 11.0,
+  "seconds": 12.0,
   "samples": 256,
   "size": [
    1230,
    1402
   ],
-  "spot_w": 151.38,
-  "wall_strength": 0.9734,
+  "spot_w": 1040.18,
+  "wall_strength": 0.9823,
   "albedo": [
    0.45,
-   0.2402,
-   0.1338
+   0.2416,
+   0.1313
   ],
   "look": "None",
   "filter_px": 1.8
  },
- "seconds": 30.6
+ "seconds": 48.0
 }

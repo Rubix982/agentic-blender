@@ -2,9 +2,10 @@
 
     python3 shots/jali-match/make.py [--force-normals] [-- build.py's options]
 Runs, from the repo's root:
-  1. read_photo.py   in Blender: the photo sorted into surround, opening and stone (results/read_photo.json)
-  2. normals.py      in the repo's .venv: Marigold's normals (out/normals.npy), skipped when they are newer than the
+  1. normals.py      in the repo's .venv: Marigold's normals (out/normals.npy), skipped when they are newer than the
                      photo and normals.py, unless --force-normals
+  2. read_photo.py   in Blender: the photo sorted into surround, opening and stone, the normals vetoing fragments of
+                     lit rim (results/read_photo.json)
   3. build.py        in Blender: the screen built, lit and rendered (out/render.png, results/build.json); anything
                      after -- is passed to it (e.g. --forms shading --no-normal-map for C-009's version)
   4. compare.py      in Blender: the measures and the sheet (results/compare.json, sheet.jpg)
@@ -38,7 +39,6 @@ def blender(script, timeout, extra=()):
     return [sys.executable, RUN, os.path.join(HERE, script), "--timeout", str(timeout)] + (["--", *extra] if extra else [])
 
 
-step("read_photo", blender("read_photo.py", 300))
 npy = os.path.join(HERE, "out", "normals.npy")
 inputs = [os.path.join(HERE, "photo", "agra-jali.jpg"), os.path.join(HERE, "normals.py")]
 fresh = os.path.exists(npy) and os.path.getmtime(npy) > max(os.path.getmtime(p) for p in inputs)
@@ -48,6 +48,7 @@ if force or not fresh:
     step("normals", [VENV_PY, os.path.join(HERE, "normals.py")])
 else:
     print("== normals: out/normals.npy is newer than the photo and normals.py; kept (--force-normals to redo)")
+step("read_photo", blender("read_photo.py", 300))                     # after the normals: its rule uses them (C-012)
 step("build", blender("build.py", 1800, build_args))
 step("compare", blender("compare.py", 300))
 res = json.load(open(os.path.join(HERE, "results", "compare.json")))

@@ -149,11 +149,24 @@ broke it either way. The build now finds and repairs such a loop by halving; the
 
 ### T-015 · What light does the museum's photo have, and can the render's be fitted to it?
 
-**Status:** open
+**Status:** answered
 **Parent:** T-009
 **Opened:** 2026-11-24
 **Question:** C-011 closed "yes, at a glance" with the light named as what would make it better: the photo's spot pools
 on the centre and leaves the frame dark, and lights the rims cream; the render's is even and dim (the stone's bright
 end 0.478 against 0.669, the forms band's amplitude 0.53 of the photo's). Fit the spot's direction, cone and falloff,
 not only its power, to the photo, now that the normals make the shading comparable.
+**Answer:** for the pool, C-012: one spot 4.69 m out, a 13.1 degree cone slightly wider than round, fitted to a light
+map of the photo, takes the map's error from 0.443 to 0.198; judged "it reads better". What is left inside the pool
+(the bright end, the contrast) is T-016.
+
+### T-016 · What tone curve did the photo's processing apply, and can the render go through the same one?
+
+**Status:** active
+**Parent:** T-015
+**Opened:** 2026-11-24
+**Question:** After C-012's fitted pool the stone's dark end is close (0.159 against 0.129) but the bright end is short
+(0.514 against 0.674) about the same median, the shape an S-curve gives; the photo was edited in Polarr. C-008 found
+Blender's contrast looks brighten the wall too, which is set exactly; a curve with the wall set through its inverse
+would not.
 **Answer:** —
