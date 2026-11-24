@@ -5,7 +5,8 @@
 
 For every `[exp: path]` tag: the experiment exists and has a result. For every number in the same paragraph or list
 item as that tag: it appears in one of the cited results (to the precision written, as a value or within a string), or
-is listed as not found. Also counts paragraphs that state numbers with no tag at all. Prints a line per page and the
+is listed as not found (card and thread ids, like C-011, and references to numbered items are not numbers). Also
+counts paragraphs that state numbers with no tag at all. Prints a line per page and the
 totals; -v lists every number not found. Numbers below 10 with no decimal point are skipped (counts like "3 islands"
 are checked only when they have a decimal or are 10 or more), as are years and version numbers.
 """
@@ -108,6 +109,8 @@ def audit(page, verbose):
         claim = re.sub(r"`[^`]*`", "", claim)               # identifiers and code spans
         claim = re.sub(r"\[(?:inv|lesson|doc:[^\]]*|study:[^\]]*)\]", "", claim)
         claim = re.sub(r"https?://\S+", "", claim)
+        claim = re.sub(r"\b[CT]-\d{3}\b", "", claim)                    # card and thread ids are names, not claims
+        claim = re.sub(r"\bitems? \d+(?:\s*(?:to|and|,)\s*\d+)*", "", claim)   # cross-references to list items
         claim = re.sub(r"\b[234]\.\d+(?:\.\d+)?\b(?:\s*LTS)?", "", claim)   # Blender versions
         nums = [n for n in NUM.findall(claim) if "." in n or float(n.replace(",", "")) >= 10]
         nums = [n for n in nums if not (1900 <= float(n.replace(",", "")) <= 2100 and "." not in n)]

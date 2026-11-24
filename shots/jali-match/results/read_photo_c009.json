@@ -1,0 +1,103 @@
+{
+ "box": [
+  42,
+  30,
+  1177,
+  1346
+ ],
+ "width_px": 1136,
+ "height_px": 1317,
+ "opening_share": 0.1157,
+ "outside_share": 0.075,
+ "stone_y": [
+  0.1281,
+  0.341,
+  0.6669
+ ],
+ "stone_y_p99": 0.8241,
+ "stone_rgb_median": [
+  0.4392,
+  0.3216,
+  0.2392
+ ],
+ "opening_y": 0.6614,
+ "stone_y_bands": [
+  0.2883,
+  0.3053,
+  0.4249,
+  0.4584,
+  0.4073,
+  0.4161,
+  0.3708,
+  0.3309,
+  0.3286,
+  0.2763
+ ],
+ "size": [
+  1230,
+  1402
+ ],
+ "rule": {
+  "dark": 0.08,
+  "green_red": 0.86,
+  "wall_dist": 0.12,
+  "wall_tex": 0.05,
+  "wall_green_red_min": 0.8,
+  "lit": 0.12,
+  "lit_abs": 0.03
+ },
+ "cut_lines": {
+  "share_of_box": 0.0743,
+  "rule": {
+   "darker_by": 0.15,
+   "thin": 2,
+   "neighbours": 4,
+   "run": 8
+  }
+ },
+ "rules_compared": {
+  "saturation below 0.22, luminance at least 0.30": {
+   "top": 0.035,
+   "bottom": 0.102,
+   "whole": 0.0685
+  },
+  "green over red above 0.86": {
+   "top": 0.1091,
+   "bottom": 0.1262
+  },
+  "either that or near the wall's local colour (C-008)": {
+   "top": 0.1257,
+   "bottom": 0.1301
+  },
+  "the same, less what is brighter than the wall (C-009)": {
+   "top": 0.1038,
+   "bottom": 0.1275
+  }
+ },
+ "lit_stone": {
+  "rule": {
+   "brighter_than_wall_by": 0.12,
+   "plus": 0.03
+  },
+  "sure_over_wall_p10_p25_p50_p75_p90": [
+   0.796,
+   0.982,
+   1.005,
+   1.045,
+   1.275
+  ],
+  "share_of_box": 0.0122,
+  "share_of_c008_openings": 0.0957,
+  "share_of_c008_openings_by_half": {
+   "top": 0.1745,
+   "bottom": 0.0195
+  }
+ },
+ "dark_in_field": {
+  "share": 0.0557,
+  "green_red_p50_p90": [
+   0.3548,
+   0.4688
+  ]
+ }
+}

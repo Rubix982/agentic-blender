@@ -1,21 +1,26 @@
-"""C-007, step 2: rebuild the carved jali from its photograph, light it like the photo, and render it from the photo's
-viewpoint.
+"""C-007 to C-011: rebuild the carved jali from its photograph, light it like the photo, and render it from the photo's
+viewpoint. Usually run by make.py, after read_photo.py and normals.py:
 
     python3 skills/blender/scripts/run.py shots/jali-match/build.py [-- --samples 256]
 
 What comes from the photograph, and nothing else:
   - the outline of the stone and of every opening (inside the screen's box, every pixel common.classify does not call
-    an opening, less the dark surround reaching in from the box's edge; blurred 3 px and traced at 0.5 by marching
-    squares);
-  - the carved lines inside the stone (common.cut_lines; C-008), which become grooves in a relief;
+    an opening, less the dark surround reaching in from the box's edge; blurred 3 px, traced at 0.5 by marching
+    squares, smoothed);
+  - which way the carving faces at every pixel: Marigold's normals (normals.py, out/normals.npy), integrated into
+    heights for the forms' shadows and used as the front's normal map for its shading (C-011);
+  - the weathering: the photo's own light and dark, tilting those normals (C-011);
   - the stone's hue (its median colour, brought to an albedo of 0.45 at the brightest channel);
   - the wall's colour in ten bands from top to bottom (the openings' median colour in each), set exactly: the wall
     only emits and is seen straight through the openings;
   - the spotlight's power, fitted by rendering so the stone's median luminance matches the photo's;
-  - the pierced field's thickness, 20 mm, chosen because the openings agree best when it is thin (C-008).
+  - the pierced field's thickness, 10 mm, chosen because the openings agree best when it is thin (C-008, C-011).
 Everything else is made here: the solid (a 2D curve, extruded to the screen's thickness, every edge rounded by the
-curve's bevel), a carved front over it (every piece between the lines rising with a rounded profile), a procedural sandstone, a lit panel behind the screen, a spotlight from above and in front, and a
-camera from the photo's EXIF. The size is an estimate (photo/CREDIT.md): the screen 1.05 m wide, 6.1 cm thick.
+curve's bevel), a carved front over it, a procedural sandstone, a lit panel behind the screen, a spotlight from above
+and in front, and a camera from the photo's EXIF. The size is an estimate (photo/CREDIT.md): the screen 1.05 m wide.
+
+The earlier builds stay as switches: --forms shading (C-009's forms, read from the photo averaged over its repeats),
+--no-normal-map, --photo-detail 0, --screen 0 (an unscreened solve), --thick 0.020 (C-008's fit).
 
 Writes shots/jali-match/out/: scene.blend, render.png, build.json (also results/build.json)."""
 import json
@@ -36,6 +41,18 @@ argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
 SAMPLES = int(argv[argv.index("--samples") + 1]) if "--samples" in argv else 256
 THICK_ARG = float(argv[argv.index("--thick") + 1]) if "--thick" in argv else None
 LOOK = argv[argv.index("--look") + 1] if "--look" in argv else "None"
+# C-011's settings are the defaults; each earlier build is a switch away.
+FORMS = argv[argv.index("--forms") + 1] if "--forms" in argv else "normals"   # or "shading" (C-009)
+SCREEN_PX = float(argv[argv.index("--screen") + 1]) if "--screen" in argv else 30.0   # the normals' solve; 0: none
+SCREEN_PX = SCREEN_PX or None
+NORMAL_MAP = "--no-normal-map" not in argv                             # the normals also shade the front
+PHOTO_DETAIL = float(argv[argv.index("--photo-detail") + 1]) if "--photo-detail" in argv else 8.0   # tilt; 0: none
+PHOTO_DETAIL = PHOTO_DETAIL if NORMAL_MAP else 0.0                     # it tilts the normal map, so needs it
+CARVED_SHARE = float(argv[argv.index("--carved-share") + 1]) if "--carved-share" in argv else 0.3
+NORMALS_NPY = os.path.join(os.path.dirname(os.path.abspath(__file__)), "out", "normals.npy")
+if (FORMS == "normals" or NORMAL_MAP) and not os.path.exists(NORMALS_NPY):
+    raise SystemExit("out/normals.npy is missing: run make.py, or .venv/bin/python shots/jali-match/normals.py, first "
+                     "(or build C-009's version with --forms shading --no-normal-map)")
 FILTER_PX = float(argv[argv.index("--filter") + 1]) if "--filter" in argv else 1.8   # Cycles' pixel filter width:
 # the render's edges were 1.072 x as sharp as the photo's at 1.5 px and 0.853 x at 2.5 (compare.json, edge_gradient)
 OUT = os.path.join(HERE, "out")
@@ -44,9 +61,11 @@ T0 = time.time()
 log = {}
 
 WIDTH_M = 1.05                         # the screen's width (estimate, photo/CREDIT.md)
-THICK_M = THICK_ARG or 0.020          # the pierced field's thickness, fitted in C-008 (--thick to try another):
-                                       # the openings agree best when it is thin (IoU 0.564 at the catalogue's 61 mm,
-                                       # 0.737 at 20, 0.754 at 10); 20 mm is within 0.02 of the best
+THICK_M = THICK_ARG or 0.010          # the pierced field's thickness (--thick to try another). C-008: the openings
+                                       # agree best when it is thin (IoU 0.564 at the catalogue's 61 mm, 0.737 at 20,
+                                       # 0.754 at 10), and took 20. C-011, with the lit and dim tests in the photo's
+                                       # rule: 0.7596 at 10, 0.7501 at 15, 0.7354 at 20, 0.715 at 25; now 10 (at 5 the
+                                       # curve's fill broke past repair)
 BEVEL_M = 0.0005                       # the radius every edge is rounded to (it widens the outline by this). C-007 to
                                        # C-009 used 1 mm and shrank the traced stone by a pixel to make up for it; the
                                        # shrink took the photo's thin connecting pieces (6.8 % of them survived it)
@@ -66,7 +85,11 @@ W, H = C.size()
 rgb = C.load(os.path.join(HERE, "photo", "agra-jali.jpg"), (W, H))
 k = C.classify(rgb)
 import symmetry  # noqa: E402
-LAVG, OAVG, HSHADE, SYM = symmetry.average(rgb, k)                     # C-009: the photo averaged over its repeats
+if FORMS == "shading":                                                 # C-009: the photo averaged over its repeats
+    LAVG, OAVG, HSHADE, SYM = symmetry.average(rgb, k)
+else:                                                                  # unused by the normals' forms: skipped (55 s)
+    HSHADE = np.zeros(k["y"].shape, np.float32)
+    SYM = dict(skipped="the forms come from the normals (--forms normals)")
 # The openings stay the photo's own: the averaged mask, tried first, smoothed every repeat's edges and, in the arch at
 # the top, mixed in copies that do not belong (openings IoU 0.55, 0.29 in the top third, against 0.725).
 rows = np.nonzero(k["stone"].mean(axis=1) > 0.2)[0]
@@ -120,6 +143,7 @@ def taubin(p, n=20, lam=0.5, mu=-0.53):                               # 6 passes
     return p
 
 
+loops_raw = list(loops)                                                # kept: the fill's repair falls back on them
 loops = [taubin(p) if len(p) >= 8 else p for p in loops]
 thin_in = thin & np.pad(np.ones((y1 - y0 + 1, x1 - x0 + 1), bool), ((y0, H - y1 - 1), (x0, W - x1 - 1)))
 log["thin_stone"] = dict(photo_px=int(thin_in.sum()), kept_by_widening=round(float((thin_in & solid).sum() / max(thin_in.sum(), 1)), 4),
@@ -149,6 +173,19 @@ forms = np.clip(hs / max(p99, 1e-6), -1.5, 1.5) * FORMS_M
 e = np.clip((C.blur(skin.astype(np.float32), 9) - 0.5) * 2, 0, 1)
 edge = e * e * (3 - 2 * e)
 height = np.maximum(prof * RELIEF_M + forms, 0) * edge
+# C-011: --forms normals. The heights come from Marigold's normals (normals.py), integrated over the skin and held at 0
+# on its edge, in pixels of height per pixel, so in metres with no scale fitted unless their 99th percentile falls
+# outside 2 to 12 mm (then scaled to FORMS_M, and logged). The bars' rounded profile is dropped: the normals carry it.
+if FORMS == "normals":
+    NRM = np.load(os.path.join(OUT, "normals.npy"))
+    hn_px, nsolve = C.heights_from_normals(NRM, skin, screen_px=SCREEN_PX)
+    hn = hn_px * S
+    p99n = float(np.percentile(hn[skin], 99))
+    scale_n = 1.0 if 0.002 <= p99n <= 0.012 else FORMS_M / max(p99n, 1e-9)
+    height = np.maximum(hn * scale_n, 0) * edge
+    log["normals"] = dict(solve=nsolve, screen_px=SCREEN_PX, p99_m=round(p99n, 5), p1_m=round(float(np.percentile(hn[skin], 1)), 5),
+                          below_front_share=round(float((hn[skin] < 0).mean()), 4), scale=round(scale_n, 4))
+    print("NORMALS", log["normals"], flush=True)
 height = (C.blur(height.astype(np.float32), 3) * edge * skin).astype(np.float32)
 C.write_png(os.path.join(OUT, "height.png"), height / max(float(height.max()), 1e-6))
 log["sizes"] = dict(width_m=WIDTH_M, thick_m=THICK_M, thick_cm=THICK_M * 100, bevel_m=BEVEL_M)
@@ -172,34 +209,86 @@ scene = bpy.context.scene
 # edges became stone); the same outlines fill as they should at 1 or 0.01 units a pixel (probably the fill merges points
 # closer than a fixed distance; not checked). The mesh, not the object, is scaled, because the stone's texture is read
 # in object coordinates.
-cu = bpy.data.curves.new("jali", "CURVE")
-cu.dimensions = "2D"
-cu.fill_mode = "BOTH"
-cu.resolution_u = 1
-cu.extrude = (THICK_M / 2 - BEVEL_M) / S
-cu.bevel_depth = BEVEL_M / S
-cu.bevel_resolution = 3
-# cu.offset stays 0: any other value broke the fill of these nested outlines (front face 0.24 m2 at -3 mm, 0.09 at
-# +3 mm, against 1.10 at 0; the outlines enclose 1.15 m2).
 cx, cy = W / 2, H / 2
-for p in loops:
-    sp = cu.splines.new("POLY")
-    sp.points.add(len(p) - 1)
-    co = np.zeros((len(p), 4), np.float32)
-    co[:, 0] = p[:, 0] - cx
-    co[:, 1] = cy - p[:, 1]
-    co[:, 3] = 1.0
-    sp.points.foreach_set("co", co.ravel())
-    sp.use_cyclic_u = True
-    sp.use_smooth = True                                               # flat facets striped the holes' side walls
-trace = bpy.data.objects.new("jali trace", cu)
-scene.collection.objects.link(trace)
-me_c = bpy.data.meshes.new_from_object(trace.evaluated_get(bpy.context.evaluated_depsgraph_get()))
+
+
+def trace_mesh(L, flat=False):
+    """The outlines as a 2D curve in pixels, filled (and, unless flat, extruded and bevelled), made a mesh."""
+    cu = bpy.data.curves.new("jali", "CURVE")
+    cu.dimensions = "2D"
+    cu.fill_mode = "BOTH"
+    cu.resolution_u = 1
+    if not flat:
+        cu.extrude = (THICK_M / 2 - BEVEL_M) / S
+        cu.bevel_depth = BEVEL_M / S
+        cu.bevel_resolution = 3
+    # cu.offset stays 0: any other value broke the fill of these nested outlines (front face 0.24 m2 at -3 mm, 0.09 at
+    # +3 mm, against 1.10 at 0; the outlines enclose 1.15 m2).
+    for p in L:
+        sp = cu.splines.new("POLY")
+        sp.points.add(len(p) - 1)
+        co = np.zeros((len(p), 4), np.float32)
+        co[:, 0] = p[:, 0] - cx
+        co[:, 1] = cy - p[:, 1]
+        co[:, 3] = 1.0
+        sp.points.foreach_set("co", co.ravel())
+        sp.use_cyclic_u = True
+        sp.use_smooth = True                                           # flat facets striped the holes' side walls
+    trace = bpy.data.objects.new("jali trace", cu)
+    scene.collection.objects.link(trace)
+    me = bpy.data.meshes.new_from_object(trace.evaluated_get(bpy.context.evaluated_depsgraph_get()))
+    bpy.data.objects.remove(trace)
+    bpy.data.curves.remove(cu)
+    return me
+
+
+def front_px(me):
+    return sum(f.area for f in me.polygons if f.normal.z > 0.99)
+
+
+# The fill can still fail in pixels (C-011, at 15 mm: front face 0.280 m2 of 1.145), and both times it was one small
+# smoothed island, at about (981, 141), that filled correctly unsmoothed; why is not known (T-014). So when the fill
+# falls short, the outlines are halved until the one that breaks it is found, it is swapped for its unsmoothed outline,
+# and that is logged; if the same outline is found again, it is dropped (at 5 mm a 120 px hole broke the fill either
+# way). At most five times, then the build stops.
+me_c = trace_mesh(loops)
+repairs = []
+if front_px(me_c) < 0.85 * abs(sum(C.area(p) for p in loops)):
+    bpy.data.meshes.remove(me_c)
+    outer = max(range(len(loops)), key=lambda i: abs(C.area(loops[i])))
+
+    def fills(ids):
+        L = [loops[outer]] + [loops[i] for i in ids]
+        me = trace_mesh(L, flat=True)
+        a = front_px(me)
+        bpy.data.meshes.remove(me)
+        return a > 0.85 * abs(sum(C.area(p) for p in L))
+    for _ in range(5):
+        cand = [i for i in range(len(loops)) if i != outer]
+        if fills(cand):
+            break
+        while len(cand) > 1:
+            half = cand[:len(cand) // 2]
+            cand = half if not fills(half) else cand[len(cand) // 2:]
+        i = cand[0]
+        again = any(r["loop"] == i for r in repairs)                   # its unsmoothed outline broke it too: drop it
+        repairs.append(dict(loop=i, centre_px=[round(float(v), 1) for v in loops[i].mean(0)],
+                            area_px=round(float(abs(C.area(loops[i]))), 1), action="dropped" if again else "unsmoothed"))
+        loops[i] = loops_raw[i] if not again else None
+        if again:
+            keep = [j for j in range(len(loops)) if loops[j] is not None]
+            loops = [loops[j] for j in keep]
+            loops_raw = [loops_raw[j] for j in keep]
+            outer = max(range(len(loops)), key=lambda j: abs(C.area(loops[j])))
+            for r in repairs:                                          # indices shift after a drop
+                r["loop"] = -1 if r["loop"] == i else r["loop"] - (r["loop"] > i)
+    me_c = trace_mesh(loops)
 me_c.transform(Matrix.Scale(S, 4))
-bpy.data.objects.remove(trace)
-bpy.data.curves.remove(cu)
 expected = abs(sum(C.area(p) for p in loops)) * S * S
 front_m2 = sum(f.area for f in me_c.polygons if f.normal.z > 0.99)
+log["fill_repairs"] = repairs
+if repairs:
+    print("FILL REPAIRED", repairs, flush=True)
 if front_m2 < 0.85 * expected:                                         # a broken fill: stop before rendering it
     raise RuntimeError(f"the curve's fill failed: front face {front_m2:.3f} m2 of {expected:.3f}")
 # Kept as a measurement: the same outlines built in metres, as before C-009's fix, and their front face.
@@ -279,6 +368,66 @@ L.new(grain.outputs["Fac"], add.inputs[2])
 L.new(add.outputs["Value"], bump.inputs["Height"])
 L.new(bump.outputs["Normal"], bsdf.inputs["Normal"])                  # (C-007's bump from a blurred outline is gone:
 bsdf.inputs["Roughness"].default_value = 0.9                           #  the relief below is geometry)
+# C-011, --normal-map: the model's normals also shade the front, as an object-space normal map. Integrated into heights
+# they lost most of the carving (the solve smooths it, and the skin's edge fade takes all the relief off a bar under
+# ~12 px wide); used as normals they keep it, and the heights still give the forms their shadows. Marigold's frame (x
+# right, y up, z towards the viewer) is the screen's own: it stands facing the camera. A point's object position gives
+# its pixel in the photo; the map is used only where the surface faces the camera (the openings' inner walls keep their
+# own normals).
+# C-011, --photo-detail A: the weathering, from the photo itself. Marigold's normals are flat on the frame (their y part
+# varies 0.07 there against 0.28 in the carved field) and the user saw it "VERY smooth" against the photo's scratches
+# and uneven indentations. So each normal is tilted towards the light from above by A x the photo's own light and dark:
+# its fine band (luminance less its blur over 5 px) on all stone, at CARVED_SHARE of A where the normals are not flat;
+# its forms band (blur over 5 less over 21 px) only where they are flat, so the carving's shading is not counted twice. A bump from the same light and dark,
+# tried first (dark as low), put each scratch's light and dark half a feature off the photo's: a bump's shading
+# follows its slope, not its height (the fine band's correlation went to -0.20).
+if NORMAL_MAP:
+    NM = np.load(os.path.join(OUT, "normals.npy"))
+    if PHOTO_DETAIL:
+        yph = k["y"].astype(np.float32)
+        b5, b21 = C.blur(yph, 5), C.blur(yph, 21)
+        var = sum(C.blur(NM[:, :, c] ** 2, 9) - C.blur(NM[:, :, c], 9) ** 2 for c in (0, 1))
+        flatw = C.blur(np.clip(1 - np.sqrt(np.maximum(var, 0)) / 0.08, 0, 1).astype(np.float32), 9)
+        # On the carving, where the normals already carry the forms, the fine band is used at CARVED_SHARE: at full
+        # strength there the photo's pale specks became bumps and the carving read as crusted (C-011, strength 8).
+        detail = ((yph - b5) * (CARVED_SHARE + (1 - CARVED_SHARE) * flatw) + (b5 - b21) * flatw) * k["stone"]
+        NM = NM.copy()
+        NM[:, :, 1] += PHOTO_DETAIL * detail
+        NM /= np.maximum(np.linalg.norm(NM, axis=2, keepdims=True), 1e-6)
+        log["photo_detail"] = dict(tilt_per_unit=PHOTO_DETAIL, carved_share=CARVED_SHARE, flat_share_of_stone=round(float((flatw[k["stone"]] > 0.5).mean()), 4),
+                                   detail_std=round(float(detail[k["stone"]].std()), 4))
+    nimg = bpy.data.images.new("marigold normals", W, H, alpha=False, float_buffer=True)
+    nimg.colorspace_settings.name = "Non-Color"
+    px = np.ones((H, W, 4), np.float32)
+    px[:, :, :3] = NM * 0.5 + 0.5
+    nimg.pixels.foreach_set(np.flipud(px).ravel())                     # Blender's rows start at the bottom
+    tex = nt.nodes.new("ShaderNodeTexImage")
+    tex.image = nimg
+    tex.interpolation = "Linear"
+    mp = nt.nodes.new("ShaderNodeMapping")
+    mp.inputs["Scale"].default_value = (1 / (S * W), 1 / (S * H), 1.0)
+    mp.inputs["Location"].default_value = ((cx + 0.5) / W, 1 - (cy + 0.5) / H, 0.0)
+    L.new(tc.outputs["Object"], mp.inputs["Vector"])
+    L.new(mp.outputs["Vector"], tex.inputs["Vector"])
+    nmap = nt.nodes.new("ShaderNodeNormalMap")
+    nmap.space = "OBJECT"
+    L.new(tex.outputs["Color"], nmap.inputs["Color"])
+    geo = nt.nodes.new("ShaderNodeNewGeometry")
+    sep = nt.nodes.new("ShaderNodeSeparateXYZ")
+    L.new(geo.outputs["Normal"], sep.inputs["Vector"])
+    facing = nt.nodes.new("ShaderNodeMapRange")                       # world -Y is towards the camera
+    facing.inputs["From Min"].default_value, facing.inputs["From Max"].default_value = -0.95, -0.8
+    facing.inputs["To Min"].default_value, facing.inputs["To Max"].default_value = 1.0, 0.0
+    L.new(sep.outputs["Y"], facing.inputs["Value"])
+    nmix = nt.nodes.new("ShaderNodeMix")
+    nmix.data_type = "VECTOR"
+    L.new(facing.outputs["Result"], sock(nmix, "Factor_Float"))
+    L.new(geo.outputs["Normal"], sock(nmix, "A_Vector"))
+    L.new(nmap.outputs["Normal"], sock(nmix, "B_Vector"))
+    unit = nt.nodes.new("ShaderNodeVectorMath")
+    unit.operation = "NORMALIZE"
+    L.new(sock(nmix, "Result_Vector", out=True), unit.inputs[0])
+    L.new(unit.outputs["Vector"], bump.inputs["Normal"])
 screen.data.materials.append(mat)
 
 # The carved front: a grid at the photo's pixel spacing over the stone, lifted by the relief, 0.1 mm proud of the
@@ -305,7 +454,7 @@ me_s.materials.append(mat)
 front = bpy.data.objects.new("carved front", me_s)
 front.rotation_euler = screen.rotation_euler
 scene.collection.objects.link(front)
-log["relief"] = dict(bars_m=RELIEF_M, reach_px=RELIEF_PX, forms_m_at_p99=FORMS_M, height_max_m=round(float(height.max()), 5),
+log["relief"] = dict(forms=FORMS, normal_map=NORMAL_MAP, bars_m=RELIEF_M, reach_px=RELIEF_PX, forms_m_at_p99=FORMS_M, height_max_m=round(float(height.max()), 5),
                      vertices=len(co), faces=len(quads))
 log["symmetry"] = SYM
 

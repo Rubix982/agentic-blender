@@ -86,21 +86,25 @@ Standard view takes eight looks; the guide's enum lookups (`kb.py enums`) may mi
 
 ### T-009 · How can one photograph give a carving's fine relief: crisp edges, incised rims, raised forms?
 
-**Status:** active
+**Status:** answered
 **Parent:** T-005
 **Opened:** 2026-11-24
 **Question:** C-007 to C-009 got the jali's openings and symmetry from its photo but not its relief: one top-lit photo
 gives only the up-down slope of the surface, and our shading-to-height step rounds every step into a soft slope.
-**Answer:** —
+**Answer:** C-011 (CARD.md; `areas/production.md`, items 13 to 18): a learned normal map of the photo, used as the
+front's normals with heights from it for the shadows, and the photo's own light and dark for the weathering; judged
+"at a glance, yes". The light is still off (T-015).
 
 ### T-010 · Does a free, local normal-map model, run on the averaged motif, give crisp carving?
 
-**Status:** open
+**Status:** answered
 **Parent:** T-009
 **Opened:** 2026-11-24
 **Question:** Models trained on many images (Marigold, DSINE, Depth Anything V2) predict which way each bit of surface
 faces; which runs on this laptop, under a licence we can use, and keeps the rims and edges?
-**Answer:** —
+**Answer:** yes, for Marigold normals v1.1 (CreativeML OpenRAIL++-M; diffusers, in the repo's .venv), run on the photo
+itself, not the averaged motif: 8.3 s a 768 px tile on this laptop's GPU, and the forms band 0.549 against C-009's
+0.399 once used as a normal map (C-011). DSINE and Depth Anything V2 were not tried. It flattens plain weathered stone.
 
 ### T-011 · Can the relief be fitted so that its render matches the photo (inverse rendering)?
 
@@ -127,7 +131,9 @@ right under its own light.
 **Opened:** 2026-11-24
 **Question:** The lines measure fell from C-008 to C-009 while the forms got better; a measure that rewards crisp,
 correctly placed relief (the render's local structure against the photo's, under the same light) is missing.
-**Answer:** —
+**Answer:** — (C-011 tried a forms band, luminance blurred over 5 px less over 21 px, on stone: it rose as the user's
+judgement did, 0.399 to 0.549, with a ceiling of 0.557 at a 2 px misregistration; once the photo's own detail went into
+the normals it partly measures the photo against itself, so it is a candidate, not an answer.)
 
 ### T-014 · Why does a 2D curve's fill break at 0.92 mm a point, when the same outlines in pixels fill?
 
@@ -136,5 +142,18 @@ correctly placed relief (the render's local structure against the photo's, under
 **Opened:** 2026-11-24
 **Question:** C-009's trace (420 outlines) filled 0.3116 m2 of front face built in metres and 1.0485 m2 built in pixels;
 one smoothed 15 x 4 px island did it. Is it the fill merging points closer than a fixed distance (Blender's scanfill),
-and at what spacing does it start?
+and at what spacing does it start? C-011 found it is not the scale alone: at 15 mm the same island (about 981, 141),
+smoothed, broke the fill in pixels too, and filled unsmoothed; at 5 mm several holes near (884, 440) and (922, 441)
+broke it either way. The build now finds and repairs such a loop by halving; the cause is still open.
+**Answer:** —
+
+### T-015 · What light does the museum's photo have, and can the render's be fitted to it?
+
+**Status:** open
+**Parent:** T-009
+**Opened:** 2026-11-24
+**Question:** C-011 closed "yes, at a glance" with the light named as what would make it better: the photo's spot pools
+on the centre and leaves the frame dark, and lights the rims cream; the render's is even and dim (the stone's bright
+end 0.478 against 0.669, the forms band's amplitude 0.53 of the photo's). Fit the spot's direction, cone and falloff,
+not only its power, to the photo, now that the normals make the shading comparable.
 **Answer:** —

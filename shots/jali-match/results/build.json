@@ -1,18 +1,29 @@
 {
  "thin_stone": {
-  "photo_px": 47195,
-  "kept_by_widening": 0.8142,
-  "kept_by_trace": 0.757
+  "photo_px": 45801,
+  "kept_by_widening": 0.8575,
+  "kept_by_trace": 0.8049
+ },
+ "normals": {
+  "solve": {
+   "iterations": 397,
+   "residual": 1e-05
+  },
+  "screen_px": 30.0,
+  "p99_m": 0.00985,
+  "p1_m": -0.00224,
+  "below_front_share": 0.0974,
+  "scale": 1.0
  },
  "sizes": {
   "width_m": 1.05,
-  "thick_m": 0.02,
-  "thick_cm": 2.0,
+  "thick_m": 0.01,
+  "thick_cm": 1.0,
   "bevel_m": 0.0005
  },
  "outlines": {
-  "count": 420,
-  "points": 68426,
+  "count": 467,
+  "points": 63058,
   "metres_per_px": 0.000924,
   "screen_width_px": 1136,
   "box": [
@@ -23,176 +34,73 @@
   ],
   "dark_in_box_made_stone": 73896,
   "surround_in_box": 38321,
-  "back_face_scale": 0.9846,
-  "seen_opening_share": 0.1157,
-  "hole_share": 0.1603,
-  "cut_line_share": 0.0524
+  "back_face_scale": 0.9923,
+  "seen_opening_share": 0.1032,
+  "hole_share": 0.129,
+  "cut_line_share": 0.0567
+ },
+ "fill_repairs": [],
+ "photo_detail": {
+  "tilt_per_unit": 8.0,
+  "carved_share": 0.3,
+  "flat_share_of_stone": 0.2898,
+  "detail_std": 0.0274
  },
  "relief": {
+  "forms": "normals",
+  "normal_map": true,
   "bars_m": 0.005,
   "reach_px": 20,
   "forms_m_at_p99": 0.004,
-  "height_max_m": 0.01096,
-  "vertices": 1078669,
-  "faces": 1037141
+  "height_max_m": 0.01734,
+  "vertices": 1137509,
+  "faces": 1097834
  },
  "symmetry": {
-  "repeat_vectors_px": [
-   [
-    141.06,
-    -177.12
-   ],
-   [
-    146.15,
-    173.27
-   ]
-  ],
-  "autocorrelation_peaks": [
-   [
-    0.369,
-    286.6,
-    -3.8
-   ],
-   [
-    0.324,
-    146.2,
-    173.3
-   ],
-   [
-    0.311,
-    141.1,
-    -177.1
-   ],
-   [
-    0.238,
-    5.4,
-    349.8
-   ],
-   [
-    0.176,
-    29.1,
-    -0.7
-   ],
-   [
-    0.166,
-    433.9,
-    168.5
-   ],
-   [
-    0.16,
-    292.3,
-    346.7
-   ],
-   [
-    0.157,
-    427.9,
-    -181.3
-   ]
-  ],
-  "mirror_axis_x": 613,
-  "mirror_correlation": 0.3596,
-  "translates": 37,
-  "patch_distance_scale": 0.13952,
-  "heights_solve": {
-   "iterations": 290,
-   "residual": 1e-05
-  },
-  "repeat_vs_average_correlation": {
-   "median": 0.4911,
-   "n": 33,
-   "all": [
-    -0.091,
-    0.138,
-    0.147,
-    0.203,
-    0.215,
-    0.233,
-    0.311,
-    0.32,
-    0.338,
-    0.349,
-    0.447,
-    0.451,
-    0.462,
-    0.467,
-    0.483,
-    0.488,
-    0.491,
-    0.498,
-    0.504,
-    0.527,
-    0.566,
-    0.577,
-    0.587,
-    0.602,
-    0.615,
-    0.631,
-    0.635,
-    0.651,
-    0.652,
-    0.687,
-    0.7,
-    0.724,
-    0.732
-   ],
-   "median_by_steps_apart": {
-    "1": {
-     "median": 0.6436,
-     "n": 6
-    },
-    "2": {
-     "median": 0.4947,
-     "n": 12
-    },
-    "3": {
-     "median": 0.4665,
-     "n": 15
-    }
-   }
-  }
+  "skipped": "the forms come from the normals (--forms normals)"
  },
  "wall": {
-  "panel_seen_from_camera_at": 0.7576,
+  "panel_seen_from_camera_at": 0.7599,
   "panel_covers_box": 0.95,
   "bands": [
    {
     "at": 0.026,
     "linear_rgb": [
      0.0307,
-     0.0331,
+     0.0319,
      0.0262
     ]
    },
    {
     "at": 0.1307,
     "linear_rgb": [
-     0.6654,
-     0.6105,
-     0.5333
+     0.9301,
+     0.9734,
+     0.9387
     ]
    },
    {
     "at": 0.2354,
     "linear_rgb": [
-     0.7758,
-     0.7758,
-     0.7084
+     0.807,
+     0.807,
+     0.7454
     ]
    },
    {
     "at": 0.3405,
     "linear_rgb": [
-     0.7011,
-     0.6308,
-     0.521
+     0.7084,
+     0.6376,
+     0.5271
     ]
    },
    {
     "at": 0.446,
     "linear_rgb": [
      0.6172,
-     0.5029,
-     0.3813
+     0.5089,
+     0.3864
     ]
    },
    {
@@ -200,7 +108,7 @@
     "linear_rgb": [
      0.4233,
      0.3372,
-     0.2423
+     0.2462
     ]
    },
    {
@@ -231,7 +139,7 @@
     "at": 0.9736,
     "linear_rgb": [
      0.1878,
-     0.1301,
+     0.1329,
      0.0844
     ]
    }
@@ -244,57 +152,57 @@
   "frame_width_m": 1.1369
  },
  "mesh": {
-  "vertices": 821112,
-  "faces": 754234,
-  "front_face_m2": 1.0485,
-  "front_face_m2_if_built_in_metres": 0.3116,
+  "vertices": 756696,
+  "faces": 695414,
+  "front_face_m2": 1.0877,
+  "front_face_m2_if_built_in_metres": 1.0877,
   "metres_per_curve_unit": 0.000924,
-  "outlines_enclose_m2": 1.1463
+  "outlines_enclose_m2": 1.1528
  },
  "fit": {
-  "target_stone_y": 0.341,
-  "target_opening_y_lower": 0.7974,
-  "target_opening_y_upper": 0.4522,
+  "target_stone_y": 0.3448,
+  "target_opening_y_lower": 0.8355,
+  "target_opening_y_upper": 0.4523,
   "steps": [
    {
     "spot_w": 400.0,
-    "stone_y": 0.5157,
-    "opening_y_lower": 0.6999,
+    "stone_y": 0.5305,
+    "opening_y_lower": 0.7088,
     "opening_y_upper": 0.4377,
-    "seconds": 1.9
+    "seconds": 1.2
    },
    {
-    "spot_w": 166.44,
-    "stone_y": 0.3502,
-    "opening_y_lower": 0.6578,
-    "opening_y_upper": 0.4388,
-    "seconds": 1.3
+    "spot_w": 160.1,
+    "stone_y": 0.3541,
+    "opening_y_lower": 0.6338,
+    "opening_y_upper": 0.4307,
+    "seconds": 1.2
    },
    {
-    "spot_w": 157.53,
-    "stone_y": 0.3415,
-    "opening_y_lower": 0.6554,
-    "opening_y_upper": 0.4385,
+    "spot_w": 151.48,
+    "stone_y": 0.3449,
+    "opening_y_lower": 0.6295,
+    "opening_y_upper": 0.4298,
     "seconds": 1.2
    }
   ]
  },
  "render": {
-  "seconds": 12.1,
+  "seconds": 11.0,
   "samples": 256,
   "size": [
    1230,
    1402
   ],
-  "spot_w": 157.06,
-  "wall_strength": 0.7758,
+  "spot_w": 151.38,
+  "wall_strength": 0.9734,
   "albedo": [
    0.45,
-   0.2389,
-   0.1321
+   0.2402,
+   0.1338
   ],
   "look": "None",
   "filter_px": 1.8
  },
- "seconds": 77.2
+ "seconds": 30.6
 }

@@ -25,7 +25,13 @@ around them. Of the pixels the cut was sure of, the middle half lie between 0.98
 and the top tenth above 1.27. So a pixel more than LIT above the local wall's luminance, plus LIT_ABS for the noise in
 the dim wall, is lit stone, whatever its colour, and the field is worked again without those pixels among its seeds. It
 takes 9.6 % of what C-008 called opening: 17.5 % in the top half, where the light catches the bars' upper edges against
-a dim wall, and 2.0 % in the bottom (results/read_photo.json, lit_stone)."""
+a dim wall, and 2.0 % in the bottom (results/read_photo.json, lit_stone).
+
+C-011 found the mirror error at the bottom, where the wall behind is lit almost white: pale, greyish lit stone passed
+the cut as wall while darker than the wall around it. The user saw the bottom row's arches missing. Of what the cut
+called opening there, 47 % lay more than 15 % below the local wall's luminance, against 0.8 % in the top half, where
+smooth wall pixels never went below 0.95 of it (5th percentile). So a pixel more than DIM below the local wall, less
+DIM_ABS, is stone too (results/read_photo.json, dim_stone)."""
 import numpy as np
 import OpenImageIO as oiio
 
@@ -36,6 +42,8 @@ WALL_TEX = 0.05                     # and smooth: luminance's standard deviation
 WALL_GR_MIN = 0.80                  # and not as red as stone: a render's stone is smooth, so smoothness alone let it in
 LIT = 0.12                          # C-009: brighter than the local wall by more than this fraction, plus LIT_ABS, is lit stone
 LIT_ABS = 0.03
+DIM = 0.15                          # C-011: darker than the local wall by more than this fraction, less DIM_ABS, is stone
+DIM_ABS = 0.03
 SCALE = 0.5                         # the photo is worked at half its size: 1230 x 1402
 PHOTO_W, PHOTO_H = 2460, 2803
 
@@ -66,15 +74,20 @@ def classify(rgb):
     tex = np.sqrt(np.maximum(blur(y * y, 5) - m1 * m1, 0))
     seed = sure & (tex < 0.03)
     wall, wsum = wall_field(rgb, seed)
-    lit = (wsum > 0.003) & (y > luminance(wall) * (1 + LIT) + LIT_ABS)
-    wall, wsum = wall_field(rgb, seed & ~lit)                          # again, without the lit stone among the seeds
-    lit = (wsum > 0.003) & (y > luminance(wall) * (1 + LIT) + LIT_ABS)
+
+    def off_wall(wall, wsum):
+        wy = luminance(wall)
+        return ((wsum > 0.003) & (y > wy * (1 + LIT) + LIT_ABS),
+                (wsum > 0.003) & (y < wy * (1 - DIM) - DIM_ABS))
+    lit, dim = off_wall(wall, wsum)
+    wall, wsum = wall_field(rgb, seed & ~lit & ~dim)                   # again, without that stone among the seeds
+    lit, dim = off_wall(wall, wsum)
     d = np.linalg.norm(rgb - wall, axis=2) / np.maximum(np.linalg.norm(wall, axis=2), 1e-3)
     near = ~outside & (d < WALL_DIST) & (tex < WALL_TEX) & (wsum > 0.003) & (gr > WALL_GR_MIN)
-    opening = (sure | near) & ~lit
+    opening = (sure | near) & ~lit & ~dim
     stone = ~outside & ~opening
     return dict(outside=outside, opening=opening, stone=stone, y=y, gr=gr, lit=lit & ~outside & (sure | near),
-                sure=sure, wall_y=luminance(wall))
+                dim=dim & ~lit & ~outside & (sure | near), sure=sure, wall_y=luminance(wall))
 
 
 def wall_field(rgb, seed):
@@ -262,3 +275,55 @@ def load_array_resized(a, wh):
     src = oiio.ImageBuf(oiio.ImageSpec(w, h, c, oiio.FLOAT))
     src.set_pixels(oiio.ROI(0, w, 0, h, 0, 1, 0, c), np.ascontiguousarray(a.astype(np.float32)))
     return oiio.ImageBufAlgo.resize(src, roi=oiio.ROI(0, wh[0], 0, wh[1], 0, 1, 0, c)).get_pixels(oiio.FLOAT)
+
+
+def heights_from_normals(n, region, iters=3000, nz_min=0.2, screen_px=None):
+    """C-011: heights, in pixels, whose slopes are the normals' (n: H x W x 3; x right, y up, z towards the viewer).
+    Slopes: along a row -nx / nz, down a column +ny / nz (rows count downwards), with nz held at nz_min or more so the
+    steep sides at the openings do not dominate. Only slopes between two pixels of the region count; the region's edge
+    pixels are held at 0 and everything outside it is 0. Least squares by conjugate gradients, matrix-free, so a bias in
+    the normals (the whole picture facing a little up, say) cannot run on across a bar pinned at both its edges.
+    screen_px: if given, each height is also pulled towards 0 with weight 1 / screen_px^2 (a screened solve), so slope
+    errors cannot add up over more than about that distance: the first C-011 build, unscreened, came out as broad
+    bulges about a hundred pixels across that hid the carving."""
+    m = region.astype(np.float64)
+    inner = (region & erode(region, 1)).astype(np.float64)              # the unknowns: the edge stays at 0
+    nz = np.maximum(n[:, :, 2].astype(np.float64), nz_min)
+    p = -n[:, :, 0] / nz
+    q = n[:, :, 1] / nz
+    wu = m[:, 1:] * m[:, :-1]
+    wv = m[1:] * m[:-1]
+    gu = 0.5 * (p[:, 1:] + p[:, :-1]) * wu
+    gv = 0.5 * (q[1:] + q[:-1]) * wv
+    h_, w_ = m.shape
+
+    def dt(ru, rv):
+        out = np.zeros((h_, w_))
+        out[:, :-1] -= ru
+        out[:, 1:] += ru
+        out[:-1] -= rv
+        out[1:] += rv
+        return out
+
+    def A(x):
+        x = x * inner
+        return dt(wu * (x[:, 1:] - x[:, :-1]), wv * (x[1:] - x[:-1])) * inner + mu * x
+
+    mu = 1.0 / screen_px ** 2 if screen_px else 1e-6
+    b = dt(gu, gv) * inner
+    x = np.zeros_like(m)
+    r = b.copy()
+    pk = r.copy()
+    rr = r0 = float((r * r).sum())
+    it = 0
+    for it in range(iters):
+        Ap = A(pk)
+        alpha = rr / max(float((pk * Ap).sum()), 1e-30)
+        x += alpha * pk
+        r -= alpha * Ap
+        rr_new = float((r * r).sum())
+        if rr_new < 1e-10 * r0:
+            break
+        pk = r + (rr_new / rr) * pk
+        rr = rr_new
+    return (x * inner).astype(np.float32), dict(iterations=it + 1, residual=round(float(np.sqrt(rr / max(r0, 1e-30))), 6))

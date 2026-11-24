@@ -211,15 +211,15 @@ Several solo entrants moved to a render farm days before their deadline `[study:
 
 ## Rebuilding a pierced object from one photograph
 
-Cards C-007 to C-009 rebuilt a carved red-sandstone window screen (a jali) from one frontal museum photograph, by
+Cards C-007 to C-011 rebuilt a carved red-sandstone window screen (a jali) from one frontal museum photograph, by
 script: its openings traced from the photo, the trace extruded, lit to the photo, and rendered from the photo's camera
-(`shots/jali-match/`). Each was judged beside the photo. C-007, a flat slab with holes: "very surreal", "something
-plain but it is not", "a darker muddier look". C-008, with the photo's dark lines cut as grooves into rounded bars:
-"little incisions across the model, but they don't capture the symmetrical alignment and pertuberance". C-009, its
-motif averaged over its own repeats and heights read from the shading: "much better", and after three rounds of fixes
-"vastly improved even further", though not yet taken for the photo (the user's words, CARD.md). The openings land
-close and the motif's order is there; the relief is still soft. What the builds found, in the order a script meets
-it:
+(`shots/jali-match/`; `make.py` runs it). Each was judged beside the photo. C-007, a flat slab with holes: "very
+surreal", "something plain but it is not", "a darker muddier look". C-008, with the photo's dark lines cut as grooves
+into rounded bars: "little incisions across the model, but they don't capture the symmetrical alignment and
+pertuberance". C-009, its motif averaged over its own repeats and heights read from the shading: "vastly improved even
+further", though not taken for the photo. C-011, with a learned normal map of the photo and its own weathering: "At a
+glance, yes, it seems like, it would become better if we worked on the lighting part" (the user's words, CARD.md).
+What the builds found, in the order a script meets it:
 
 1. **Find the openings by a property that holds across the whole photo.** Light on a backdrop falls off: here the
    wall behind the screen was white at the bottom and dim and warm at the top. Saturation below 0.22 with luminance
@@ -291,6 +291,40 @@ it:
     opening, 17.45 % in the top half, where the light catches the bars' upper edges against a dim wall, and 1.95 % in
     the bottom. Rebuilding from it, the trace broke Blender's fill at metre scale (`curves-text.md`, item 9).
     `[exp: shots/jali-match/read_photo.py]`
+13. **Stone can also be darker than the wall behind it.** At the bottom of this photo the wall was lit almost white,
+    and the pale, greyish stone in front of it passed the colour cut as wall; the user saw the bottom row's arches
+    missing. A pixel more than 15 % below the local wall's luminance, less 0.03, is stone too: that took 10.86 % of
+    what the rule had called opening, 0.32 %, 2.25 % and 28.84 % by thirds from the top. Test a pale-backdrop rule
+    both ways. `[exp: shots/jali-match/read_photo.py]`
+14. **A learned normal map gives the carving that one photo's shading cannot.** Marigold normals v1.1
+    (`prs-eth/marigold-normals-v1-1`, CreativeML OpenRAIL++-M, through `diffusers`; it needs PyTorch, so it runs in its
+    own Python environment, not Blender's, and hands the build an `.npy`). On overlapping 768 px tiles of the photo
+    at the working size 1230 x 1402, so nothing is shrunk to fit one pass, with ensembles of three and the model's
+    four steps: 8.3 s a tile on this laptop's GPU, 53.4 s for the six, and tiles disagree by a median 6.22 degrees
+    where they overlap. Its frame (x right, y up, z towards the viewer) is the object's own when the object faces the
+    camera. Plain weathered stone comes out flat (item 17). `[exp: shots/jali-match/normals.py]`
+15. **Use the normals as normals; integrate them only for the shadows.** Integrated into heights by least squares,
+    they came out as broad bulges about a hundred pixels across, slope errors summed over the wide stone: a 99th
+    percentile of 0.0148 m, and scaled down to fit, the carving went flat (the forms band 0.2797, under the shading
+    method's 0.3986). Screened (each height also pulled to 0 with weight 1 / 30 px squared), 0.00885 m and 0.3796:
+    the solve and the relief's fade at the edges still took the carving. As the front's object-space normal map, used
+    only where the surface faces the camera, with the screened heights kept for the forms' shadows: 0.5487, where the
+    photo against itself 2 px off scores 0.5571. `[exp: shots/jali-match/build.py]` `[exp: shots/jali-match/compare.py]`
+16. **Re-fit the depth whenever the rule that reads the photo changes.** The same rule reads the render, and with item
+    13 it counted the darkened inner walls of every hole as stone, as they are; the thickness fitted under the old rule
+    left the render's openings too small. Swept again at 0.010, 0.015, 0.020 and 0.025 m: openings IoU 0.7596, 0.7501,
+    0.7354, 0.715. `[exp: shots/jali-match/build.py]` `[exp: shots/jali-match/compare.py]`
+17. **Weathering the model smoothed away: tilt its normals by the photo's own light and dark.** On the plain frame the
+    normals were flat, and the render's fine texture there was 0.2594 of the photo's. A bump from the photo's light and
+    dark (dark as low) gave texture in the wrong place: a bump's shading follows its slope, not its height, so each
+    feature's light and dark land half a feature off (the fine band's correlation -0.1973, the forms band 0.485 from
+    0.5481). Tilting each normal towards the light from above by A x the photo's band puts them in place: at A = 2, 4,
+    8 and 12 the frame's fine texture came to 0.358, 0.5521, 0.9389 and 1.2504 of the photo's. Where the normals carry
+    carving, the fine band at 0.3 of A: at full strength the photo's pale specks read as crust. From here the detail
+    measure partly measures the photo against itself. `[exp: shots/jali-match/build.py]`
+    `[exp: shots/jali-match/compare.py]`
+18. **Check the fill after every build.** A traced curve's fill can fail on one small outline, at any scale
+    (`curves-text.md`, item 9); `build.py` halves the outlines to find it and swaps in its unsmoothed outline.
 
 ```python
 # 3: the hole's front outline from what the photo sees through it (seen: a boolean mask, H x W)
@@ -308,4 +342,7 @@ to catch the light. In C-008 the openings agreed at 0.7252, and the bright end w
 bars and grooves did not give the forms that catch the light. In C-009 the openings agreed at 0.7641; 41.93 % of the
 render's lines lay within 2 px of the photo's and 24.85 % the other way; and the bright end was 0.4652 against 0.6669
 (the photo's rose when its lit edges became stone): the averaged motif placed the forms, but they are too soft to
-catch the light as the carving does. `[exp: shots/jali-match/compare.py]`
+catch the light as the carving does. In C-011 the openings agreed at 0.7598 and 95.89 % of the thin pieces showed; the
+forms band was 0.6527 (partly the photo's own detail), its amplitude 0.531 of the photo's, and the bright end 0.4776
+against 0.6685: judged a photograph at a glance, with the light still even and dim where the photo's spot pools on
+the centre and lights the rims. `[exp: shots/jali-match/compare.py]`

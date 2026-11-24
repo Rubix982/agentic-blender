@@ -7,6 +7,7 @@ Reads photo/agra-jali.jpg (at half size) and out/render.png. Measures, inside th
   stone_y          the stone's luminance, 10th / 50th / 90th percentiles (the 50th was fitted by the lights)
   stone_spread     90th minus 10th percentile: the stone's contrast, which nothing was fitted to
   stone_y_bands    the stone's median luminance in ten bands from top to bottom
+  detail           (C-011) the carving's light and dark against the photo's, in a fine and a forms band
 Writes shots/jali-match/sheet.jpg (the two side by side, and the same detail of each at full size) and
 results/compare.json."""
 import json
@@ -62,6 +63,39 @@ def edge_gradient(kk):
     return float(g[box][e].mean())
 res["edge_gradient"] = dict(photo=round(edge_gradient(kp), 4), render=round(edge_gradient(kr), 4))
 res["edge_gradient"]["render_over_photo"] = round(res["edge_gradient"]["render"] / res["edge_gradient"]["photo"], 3)
+# C-011: the carving's detail. On stone in both images, at least 3 px from any opening (so the openings' edges do not
+# count), each image's luminance split into two bands: fine (minus its own blur over 5 px) and forms (blur over 5 px
+# minus blur over 21 px). For each band, the correlation between photo and render (1 when every light and dark falls
+# where the photo's does) and the render's amplitude over the photo's (its standard deviation, render over photo).
+def bands(yy):
+    b5, b21 = C.blur(yy, 5), C.blur(yy, 21)
+    return dict(fine=yy - b5, forms=b5 - b21)
+both = (C.erode(kp["stone"], 3) & C.erode(kr["stone"], 3))[box]
+bp, br = bands(kp["y"]), bands(kr["y"])
+res["detail"] = {}
+for name in ("fine", "forms"):
+    a, b = bp[name][box][both], br[name][box][both]
+    res["detail"][name] = dict(correlation=round(float(np.corrcoef(a, b)[0, 1]), 4),
+                               amplitude_ratio=round(float(b.std() / max(a.std(), 1e-9)), 4))
+res["detail"]["pixels"] = int(both.sum())
+# What the measure gives the photo against itself shifted diagonally by 1 and 2 px: a render that lands a pixel or two
+# off the photo cannot score more, so these are its ceilings.
+res["detail"]["photo_vs_itself_shifted"] = {}
+for dpx in (1, 2):
+    ys = np.roll(np.roll(kp["y"], dpx, 0), dpx, 1)
+    ks = np.roll(np.roll(kp["stone"], dpx, 0), dpx, 1)
+    sb = (C.erode(kp["stone"], 3) & C.erode(ks, 3))[box]
+    bs = bands(ys)
+    res["detail"]["photo_vs_itself_shifted"][f"{dpx}px"] = {
+        n: round(float(np.corrcoef(bp[n][box][sb], bs[n][box][sb])[0, 1]), 4) for n in ("fine", "forms")}
+# C-011, the user's second look: the frame's weathering. On stone in both images in the frame (the screen's box less
+# the carved field, as read_photo.py's dark_in_field draws it), each band's standard deviation, render over photo.
+inner = np.zeros(kp["y"].shape, bool)
+inner[y0 + 110:y1 - 95, x0 + 130:x1 - 110] = True
+fr = (C.erode(kp["stone"], 3) & C.erode(kr["stone"], 3) & ~inner)[box]
+res["frame_texture"] = {name: dict(photo=round(float(bp[name][box][fr].std()), 4), render=round(float(br[name][box][fr].std()), 4),
+                                   ratio=round(float(br[name][box][fr].std() / max(bp[name][box][fr].std(), 1e-9)), 4))
+                        for name in ("fine", "forms")}
 p90p, p90r = sp["stone_y"][2], sr["stone_y"][2]
 res["bar"] = dict(lines_near_at_least=0.6, stone_p90_within=[round(0.85 * p90p, 4), round(1.15 * p90p, 4)],
                   spread_ratio_within=[0.8, 1.2], openings_iou_at_least=0.68)

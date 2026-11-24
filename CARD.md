@@ -670,3 +670,145 @@ re-ran to repeat vectors (141.1, -177.1) and (146.2, 173.3) px, the mirror axis 
 repeats at a median 0.491 against the average (0.64, 0.49, 0.47 at one, two and three steps;
 `results/symmetry.json`). The guide's photo section has the findings (`areas/production.md`, items 8 to 12), and
 `areas/curves-text.md` the fill that broke at millimetre scale (item 9).
+
+### C-011 · The jali's relief from a learned normal map of its photo, judged beside the photo
+
+**Opened:** 2026-11-24 (C-010 stays reserved for the interface test)
+
+1. **WHERE WE ARE.** C-009 closed not a yes: openings at an IoU of 0.764, but the relief soft and the lit rims unlit.
+   Its forms are heights summed from the shading's up-down slope, which rounds every carved step (`production.md`,
+   item 9). A new detail measure, taken on C-009's render before this card's build: in a forms band (luminance blurred
+   over 5 px minus over 21 px, on stone at least 3 px from any opening), the render correlates with the photo at
+   0.399 with 0.495 of its amplitude. The photo against itself shifted 2 px diagonally gives 0.549, 1 px gives 0.858.
+2. **WHAT WE ARE DOING.** Predict which way the carving's surface faces at every pixel of the photo with Marigold
+   normals v1.1 (`prs-eth/marigold-normals-v1-1`, in `diffusers`, already in this laptop's model cache), integrate
+   those normals into heights, and build, light and render the jali with them in place of C-009's forms.
+   - The model runs on the photo at the working size (1230 x 1402) in overlapping tiles at its own processing size, so
+     the detail is not shrunk to fit one pass; the tiles are blended with feathered weights.
+   - Heights: least squares on the slopes the normals give, over the stone, 0 at the openings, in pixels of height per
+     pixel, so in metres with no scale fitted. If their 99th percentile falls outside 2 to 12 mm, they are scaled to
+     C-009's 4 mm instead, and that is recorded.
+   - The openings stay the photo's own, and the bars' rounded profile is dropped: the normals carry it.
+   - Built, lit (the spot fitted to the stone's median, as before) and rendered from the same camera.
+3. **WHY.** Unknown now: whether a model trained on many images gives this carving's steps and rims from one top-lit
+   photo, at this scale and on this laptop, or rounds them as the shading integration does.
+4. **WHAT IS AFFECTED.**
+   - New: `shots/jali-match/normals.py` (run in the repo's own `.venv`, not Blender; its requirements pinned beside it)
+     and `.venv/` in `.gitignore`. `build.py` takes `--forms normals` (C-009's stays as `--forms shading`, the default
+     until this card closes). `compare.py`'s detail measure, added before the run.
+   - `results/` overwritten; C-009's kept as `*_c009.json`. `sheet.jpg`.
+   - `areas/production.md`'s photo section, either way; T-010's answer; T-013 gets the forms band as a first candidate.
+5. **CONCLUSION.** The measures first, then the judge.
+   - Measures: the forms band's correlation at least 0.50 and its amplitude 0.8 to 1.2 of the photo's; the stone's
+     90th percentile within 15 % of the photo's (0.567 to 0.767). Reported, not judged: the fine band (the photo
+     against itself 1 px off gives 0.128 there, so it is grain), the lines, and the openings' IoU, which should stay
+     within 0.01 of 0.764 as a check that only the relief changed.
+   - The judge: *at a glance, could the render be a photograph of the same screen?*
+   - If the measures pass and the answer is yes, the guide gets the recipe (relief from one photo by a learned normal
+     map, integrated), and T-010 is answered yes.
+   - If the forms band rises to 0.50 but the answer is no, the user's reason is the next card.
+   - If the forms band does not rise above 0.399, this model at this scale does not give this carving's relief:
+     T-010 is answered no for Marigold, and the next card tries another model or T-011.
+6. **CONSEQUENCE OF NOT DOING IT.** The relief stays soft, and the guide's photo method can place a carving's openings
+   but not carve it.
+
+**Known limits, stated before the run:**
+- The normals are what the model believes, not measured. It was trained mostly on synthetic scenes, and a weathered
+  carving lit from above may be outside them.
+- Tiles can disagree where they meet; the feathering hides a small disagreement, not a large one.
+- The photo's own normals are used, not averaged over the repeats: its irregularities come back with its detail.
+
+**The normals (2026-11-24).** Six tiles of 768 px, 3-member ensembles, 4 steps, fp16 on the laptop's GPU: 9 s a tile,
+56 s in all (`results/normals.json`). Where tiles overlap they disagree by a median 6.2 degrees (90th percentile 16).
+The up-facing part correlates with the photo's forms band at 0.34 (the light is from above, so the sign is right).
+Seen as an image they carry the carving: bars, petals, flower centres, scrolls, the incised lines along the bars.
+
+**Measures (2026-11-24), in the order they were taken.** C-009's render: forms band 0.399, amplitude 0.495, the
+bright end 0.465.
+1. As the card specified (`results/*_c011_first.json`): the heights' 99th percentile came out 14.8 mm, outside the
+   2 to 12 mm window, so they were scaled to 4 mm (x 0.27). The forms band fell to 0.280 (amplitude 0.272), under
+   C-009's 0.399: by the card's third branch, a no. Looking before taking it: the heights were broad bulges about a
+   hundred pixels across, slope errors summed over the wide stone, and they set the 99th percentile; scaled to fit,
+   the carving under them was flattened to a quarter.
+2. Changed: the solve screened at 30 px (each height also pulled towards 0 with weight 1/30^2, so slope errors cannot
+   add up over more than about that). The heights' 99th percentile 8.85 mm, inside the window, so no scale
+   (`results/*_c011_screened.json`). The forms band 0.380, amplitude 0.374: about C-009's, not above it. Looking
+   again: the normals, and the shading they imply under a light from above and in front, carry the carving almost
+   exactly; the heights made from them do not. The solve smooths it, and the skin's edge fade takes all the relief
+   off any bar under about 12 px wide.
+3. Changed, past what the card said it would do: the normals also shade the front, as an object-space normal map
+   (`--normal-map`), used only where the surface faces the camera; the screened heights still give the forms their
+   shadows. The forms band **0.549** (the photo against itself 2 px off gives 0.549), amplitude **0.417**; the fine
+   band 0.097 (C-009 0.066); the bright end **0.470** against 0.667; contrast 0.46 of the photo's; lines 49 % and 25 %;
+   openings IoU 0.761 (C-009 0.764, so only the relief changed).
+So: the forms band passes (0.50), its amplitude fails (0.8 to 1.2), and the bright end fails (0.567 to 0.767). The
+carving's light and dark now fall where the photo's do, at less than half the strength. Both failures are the light:
+the photo's spot pools on the centre and leaves the frame dark, and lights the rims cream; the render's is even and
+dim. Seen on the sheet: the flower, its petals and centre, the fleur, the scrolls read; the frame is as bright as the
+centre, and nothing catches the light as the photo's rims do.
+
+**The user's first look (2026-11-24):** "this is really nice now! can we work on the bottom part? [...] still some
+remants of the missing arches" (a close-up of the bottom row: stubs where the photo has small arches and lobes).
+1. The rule that sorts the photo called that stone wall, the mirror of C-009's lit edges. At the bottom the wall
+   behind is lit almost white, and the stone in front of it is pale and greyish, so it passed the green-over-red cut;
+   but it is darker than the wall around it. Of what the cut called opening, 47 % lay more than 15 % below the local
+   wall's luminance in the bottom band, against 0.8 % in the top half, where smooth wall pixels never went below
+   0.95 of it (5th percentile). Now a pixel more than 15 % (less 0.03) below the local wall is stone too
+   (`common.classify`): it takes 10.9 % of what C-009's rule called opening, 0.3 %, 2.3 % and 28.8 % by thirds from
+   the top. Zoomed in, what it takes are the pale lobes and arches; the openings left are the photo's bright gaps.
+2. The openings' IoU fell to 0.735, in the bottom third most (0.774 to 0.729). In the render the same rule now calls
+   the darkened inner walls of every hole stone, which they are, and the render showed more of them than the photo
+   does: 22 % of the photo's openings were stone in the render, against 16 %. The field's thickness, fitted in C-008
+   under the old rule, was swept again: openings IoU 0.7596 at 10 mm, 0.7501 at 15, 0.7354 at 20, 0.715 at 25
+   (`results/compare_c011_t*.json`). It is now 10 mm (`--thick 0.010`). At 5 mm the fill broke at several holes and
+   could not be repaired, so the sweep stops at 10.
+3. At 15 mm the curve's fill broke again, in pixels this time, at the same small smoothed island as in C-009 (about
+   981, 141), so building in pixels was not the cure C-009 took it for. The build now repairs it: halving the
+   outlines finds the one that breaks the fill, which is swapped for its unsmoothed outline (dropped if that breaks
+   it too), and the repair is logged (`results/build_c011_t015.json`). Why it breaks is still T-014.
+Now (10 mm): openings IoU 0.760 (thirds 0.684, 0.802, 0.772), thin stone shown 96 % (89 % before), the forms band
+0.548 with 0.44 of the photo's amplitude, the bright end 0.478 against 0.669, lines 50 % and 22 %. The bottom row's
+arches and lobes now run along the frame as in the photo.
+
+**The user's second look (2026-11-24):** "It is really better now! Great stuff! One last thing to add further ... the
+original has this kind of "scratches" all around, like the sides have these uneven indentations [...] but ours is VERY
+smooth" (close-ups of the frame's lower band).
+1. Marigold's normals are flat on the frame: their up-down part varies 0.07 there against 0.28 in the carved field; the
+   model sees a plain band and gives it a smooth surface. A new measure, the frame's texture (each band's spread on the
+   frame's stone, render over photo): 0.26 in the fine band, 0.56 in the forms band (that one includes the mouldings).
+2. Tried first: the photo's own light and dark as a bump, dark as low. At 5 mm per unit the frame's fine texture came to
+   0.81 of the photo's, but the fine band's correlation went to -0.20 and the forms band's fell to 0.485: a bump's
+   shading follows its slope, not its height, so each scratch's light and dark landed half a feature off the photo's
+   (`results/*_c011_bump005.json`).
+3. Instead the normals are tilted towards the light from above by A x the photo's light and dark (`--photo-detail A`):
+   its fine band on all stone, its forms band only where the normals are flat. Swept: at A = 2, 4, 8, 12 the frame's
+   fine texture came to 0.36, 0.55, 0.94, 1.25 of the photo's and its forms texture to 0.63, 0.76, 1.05, 1.30
+   (`results/*_c011_tilt*.json`). At 8, on the carving, the photo's pale specks became bumps and it read as crusted;
+   so the fine band is used at 0.3 of A where the normals are not flat.
+Now (A = 8, 0.3 on the carving): the frame's texture 0.75 and 0.99 of the photo's; openings IoU 0.760; thin stone
+96 %; the bright end 0.478 against 0.669. The detail measure is no longer independent of the photo: its light and dark
+are now partly built in, so the forms band (0.653) and the fine band (0.352, where the photo against itself 1 px off
+gives 0.128) partly measure the photo against itself. The frame and the bars now carry pits and scratches.
+
+**Integrated (2026-11-24).** These settings are now `build.py`'s defaults (normals' forms screened at 30 px, the normal
+map, the photo's detail at 8 and 0.3 on the carving, 10 mm), each earlier build a switch away; the build skips the
+symmetry pass the normals do not use (32 s against 85) and stops with a message if the normals are missing.
+`make.py` runs the chain (read_photo, normals, build, compare; the normals only when out of date), and
+`shots/jali-match/README.md` says how. Run from scratch with the normals recomputed, it gave the same numbers to four
+decimals (the normals identical to the last bit); `-- --forms shading --no-normal-map --photo-detail 0 --thick 0.020`
+still builds C-009's version (openings 0.735, forms band 0.421, frame texture 0.30 and 0.55).
+
+**The judge (2026-11-24):** "At a glance, yes, it seems like, it would become better if we worked on the lighting part,
+but that is already documented."
+
+**Result (2026-11-24, closed): yes, at a glance, with the light as its limit.** A learned normal map of the photo
+(Marigold normals v1.1, run locally) gives the carving that one top-lit photo's shading could not: used as the front's
+normals, with heights integrated from them (screened at 30 px) for the forms' shadows, the forms band rose from C-009's
+0.399 to 0.549 before the photo's own detail was added, where the photo against itself 2 px off gives 0.557. Then,
+from the user's two looks: the dim test in the photo's rule (the bottom row's arches), the thickness re-fitted to
+10 mm, the fill repaired by halving, and the weathering from the photo's own light and dark tilting the normals (the
+frame's texture 0.75 and 0.99 of the photo's, from 0.26 and 0.56). Final: openings IoU 0.760, thin stone 96 %, the
+forms band 0.653 (partly the photo against itself now). Of the card's measures the forms band passed and the light
+failed: the forms band's amplitude 0.53 (bar 0.8 to 1.2) and the stone's bright end 0.478 against 0.669 (bar 0.567 to
+0.767). So the guide gets the recipe, with the light as its stated limit (`areas/production.md`, items 13 to 18), and
+T-010 is answered yes for Marigold. The light, which the user names as what would make it better, is T-015.
