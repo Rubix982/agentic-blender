@@ -1,0 +1,315 @@
+{
+ "experiment": "experiments/animation/flicker_times.py",
+ "source": "the Blender log of flicker.py's run (Time: and Saved: lines)",
+ "excluded_positions": [
+  92,
+  109
+ ],
+ "variants": {
+  "baseline": {
+   "frames": 25,
+   "kept_seconds": [
+    23.46,
+    22.47,
+    22.56,
+    22.48,
+    22.44,
+    22.41,
+    22.57,
+    22.82,
+    22.47,
+    22.52,
+    22.53,
+    22.45,
+    22.58,
+    22.45,
+    22.44,
+    22.51,
+    22.5,
+    22.55,
+    22.49,
+    22.45,
+    22.54,
+    22.54,
+    22.52,
+    22.53,
+    22.58
+   ],
+   "excluded": [],
+   "median_seconds": 22.52,
+   "mean_all_seconds": 22.55
+  },
+  "animated seed": {
+   "frames": 25,
+   "kept_seconds": [
+    22.9,
+    22.55,
+    22.39,
+    22.37,
+    22.38,
+    22.51,
+    22.52,
+    22.45,
+    22.49,
+    22.13,
+    22.16,
+    21.99,
+    22.0,
+    22.04,
+    22.02,
+    22.11,
+    22.01,
+    22.04,
+    22.01,
+    21.94,
+    22.01,
+    21.97,
+    22.13,
+    22.09,
+    21.99
+   ],
+   "excluded": [],
+   "median_seconds": 22.11,
+   "mean_all_seconds": 22.21
+  },
+  "no denoise": {
+   "frames": 25,
+   "kept_seconds": [
+    20.66,
+    20.37,
+    20.39,
+    20.44,
+    20.39,
+    20.4,
+    20.4,
+    20.46,
+    20.39,
+    20.37,
+    20.4,
+    20.39,
+    20.43,
+    20.38,
+    20.42,
+    20.42,
+    20.38,
+    20.4,
+    20.39,
+    20.37,
+    20.41,
+    20.41,
+    20.43,
+    20.43,
+    20.38
+   ],
+   "excluded": [],
+   "median_seconds": 20.4,
+   "mean_all_seconds": 20.41
+  },
+  "super-res 141 % at 64 samples": {
+   "frames": 25,
+   "kept_seconds": [
+    27.54,
+    27.53,
+    26.91,
+    26.91,
+    26.85,
+    26.9,
+    27.05,
+    27.18,
+    26.97,
+    27.28,
+    26.91,
+    26.95,
+    27.08,
+    27.05,
+    27.08,
+    27.05
+   ],
+   "excluded": [
+    {
+     "frame": 117,
+     "seconds": 72.3,
+     "why": "battery throttle or sleep"
+    },
+    {
+     "frame": 118,
+     "seconds": 84.77,
+     "why": "battery throttle or sleep"
+    },
+    {
+     "frame": 119,
+     "seconds": 82.51,
+     "why": "battery throttle or sleep"
+    },
+    {
+     "frame": 120,
+     "seconds": 79.15,
+     "why": "battery throttle or sleep"
+    },
+    {
+     "frame": 121,
+     "seconds": 85.16,
+     "why": "battery throttle or sleep"
+    },
+    {
+     "frame": 122,
+     "seconds": 80.51,
+     "why": "battery throttle or sleep"
+    },
+    {
+     "frame": 123,
+     "seconds": 83.84,
+     "why": "battery throttle or sleep"
+    },
+    {
+     "frame": 124,
+     "seconds": 79.19,
+     "why": "battery throttle or sleep"
+    },
+    {
+     "frame": 125,
+     "seconds": 82.31,
+     "why": "battery throttle or sleep"
+    }
+   ],
+   "median_seconds": 27.05,
+   "mean_all_seconds": 46.52
+  },
+  "384 samples": {
+   "frames": 25,
+   "kept_seconds": [
+    60.75,
+    62.47,
+    60.58,
+    62.32,
+    60.99,
+    59.83,
+    59.98,
+    59.6,
+    63.05,
+    65.03,
+    65.63,
+    64.53,
+    63.6,
+    64.07,
+    63.63,
+    64.95
+   ],
+   "excluded": [
+    {
+     "frame": 101,
+     "seconds": 173.14,
+     "why": "battery throttle or sleep"
+    },
+    {
+     "frame": 102,
+     "seconds": 167.79,
+     "why": "battery throttle or sleep"
+    },
+    {
+     "frame": 103,
+     "seconds": 167.62,
+     "why": "battery throttle or sleep"
+    },
+    {
+     "frame": 104,
+     "seconds": 174.35,
+     "why": "battery throttle or sleep"
+    },
+    {
+     "frame": 105,
+     "seconds": 169.46,
+     "why": "battery throttle or sleep"
+    },
+    {
+     "frame": 106,
+     "seconds": 169.97,
+     "why": "battery throttle or sleep"
+    },
+    {
+     "frame": 107,
+     "seconds": 168.54,
+     "why": "battery throttle or sleep"
+    },
+    {
+     "frame": 108,
+     "seconds": 183.79,
+     "why": "battery throttle or sleep"
+    },
+    {
+     "frame": 109,
+     "seconds": 20631.53,
+     "why": "battery throttle or sleep"
+    }
+   ],
+   "median_seconds": 62.76,
+   "mean_all_seconds": 920.29
+  },
+  "raw with passes": {
+   "frames": 25,
+   "kept_seconds": [
+    24.08,
+    23.26,
+    21.51,
+    21.59,
+    21.55,
+    21.51,
+    21.53,
+    21.59,
+    21.56,
+    21.43,
+    21.46,
+    21.56,
+    21.55,
+    21.47,
+    21.54,
+    21.21,
+    20.94,
+    21.01,
+    20.97,
+    20.97,
+    20.97,
+    20.99,
+    20.98,
+    20.96,
+    20.95
+   ],
+   "excluded": [],
+   "median_seconds": 21.47,
+   "mean_all_seconds": 21.49
+  },
+  "1024 samples (floor)": {
+   "frames": 25,
+   "kept_seconds": [
+    156.63,
+    157.73,
+    155.78,
+    155.5,
+    156.46,
+    155.38,
+    155.76,
+    155.51,
+    155.7,
+    155.84,
+    157.0,
+    155.23,
+    156.24,
+    155.48,
+    155.33,
+    155.3,
+    155.43,
+    155.32,
+    155.38,
+    155.38,
+    155.3,
+    155.33,
+    155.62,
+    156.96,
+    155.21
+   ],
+   "excluded": [],
+   "median_seconds": 155.5,
+   "mean_all_seconds": 155.79
+  }
+ }
+}

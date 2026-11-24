@@ -189,7 +189,10 @@ Only 4 of the 49 sources discuss flicker, and only A-01 in depth. What they repo
 5. Anything procedural must stick to the surface. A paper texture went in the shader, not the compositor (A-08), and
    brushstrokes on a deforming mesh need a rest position (A-12) `[study: A-08, A-12]`.
 
-What this machine measured is in `animation-video.md` (flicker), from card C-006.
+This machine measured the first three on a moving forest shot (card C-006; `animation-video.md`, "Flicker in a
+moving shot"). At 128 samples with OpenImageDenoise the noise was 2.5 % of the flicker and the rest was motion; only
+samples lowered it; an animated seed raised it by 21 %; and `bpy.ops.cycles.denoise_animation` was not temporal with
+OpenImageDenoise. `[exp: experiments/animation/flicker.py]`
 
 Other consistency practice:
 - In EEVEE, light probes are baked per shot, and a baked probe cannot be shared between scenes `[study: A-10]`.

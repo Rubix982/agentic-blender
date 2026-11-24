@@ -1,0 +1,28 @@
+{
+ "experiment": "experiments/animation/flicker_sheet.py",
+ "frames": [
+  113,
+  114
+ ],
+ "crop_x_y_w_h": [
+  120,
+  400,
+  480,
+  270
+ ],
+ "mean_change_113_to_114": {
+  "baseline": 0.01021,
+  "animated seed": 0.01154,
+  "no denoise": 0.01539,
+  "super-res 141 % at 64 samples": 0.01099,
+  "384 samples": 0.01018,
+  "denoise_animation": 0.0102,
+  "1024 samples (floor)": 0.01014,
+  "raw with passes": 0.01536
+ },
+ "oiio_render_text": {
+  "returned": false,
+  "error": "OpenImageIO was not compiled with FreeType for font rendering"
+ },
+ "sheet": "flicker_sheet.jpg"
+}

@@ -120,6 +120,11 @@ scene.cycles.denoising_use_gpu = True           # faster only at larger sizes he
 scene.cycles.denoising_quality = "HIGH"         # HIGH, BALANCED, FAST
 ```
 
+In animation, these settings at 128 samples left 2.5 % of a moving forest shot's flicker to noise; the rest was the
+scene moving. Samples were the only thing that lowered it (384 samples: 39 % less noise flicker at 2.8x the time), an
+animated seed raised it, and `bpy.ops.cycles.denoise_animation` was not temporal on this Mac. Details in
+`animation-video.md` ("Flicker in a moving shot"). `[exp: experiments/animation/flicker.py]`
+
 ## Light paths (bounces)
 
 Defaults: `max_bounces` 12, `diffuse_bounces` 4, `glossy_bounces` 4, `transmission_bounces` 12, `volume_bounces` 0,

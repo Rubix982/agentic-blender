@@ -64,3 +64,13 @@ its Python call); or a lookup from Blender's own keymap and menu labels to opera
 running Blender like the inventory.
 **Answer:** —
 
+### T-007 · How much frame-to-frame change does the compositor grain add to a moving shot?
+
+**Status:** open
+**Parent:** T-005
+**Opened:** 2026-11-24
+**Question:** C-006 found the render's noise adds 0.00018 to a forest dolly's flicker at 128 samples; C-005's grain
+(Overlay 0.06, a new pattern every frame) was measured only as graded against clean on one frame (0.0088), so its own
+flicker is unknown.
+**Answer:** —
+

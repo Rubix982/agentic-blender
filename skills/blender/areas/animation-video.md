@@ -52,6 +52,9 @@ runs moved by up to 2x. Keyframes and slotted actions in general: `rigging-anima
     (`node.inputs["Strength"].keyframe_insert("default_value")`) puts the action on `mat.node_tree`;
     `mat.animation_data` stays None. While the material is on no object, `frame_set` leaves the input at the last value
     set; `fcurve.evaluate(frame)` reads the curve. `[exp: experiments/animation/loops_and_node_keys.py]`
+13. **Animating the seed to hide noise in a moving shot.** In a forest dolly at 128 samples, denoised,
+    `use_animated_seed` raised frame-to-frame flicker by 21 %, and the noise was only 2.5 % of the flicker to begin
+    with. See "Flicker in a moving shot". `[exp: experiments/animation/flicker.py]`
 
 ## Render a frame range from Python
 
@@ -286,6 +289,53 @@ the `render_pre` and `render_post` handlers. No denoising, no adaptive sampling.
 `[exp: experiments/animation/engine_frame_time.py]` EEVEE's first frame was slower than the rest only in the first
 EEVEE run (16 samples); that this is shader compilation was not checked. For a quick preview of motion, Workbench at
 0.007 s a frame is two orders of magnitude cheaper than either renderer. `[exp: experiments/animation/engine_frame_time.py]`
+
+## Flicker in a moving shot
+
+Frames 101 to 125 of a forest dolly (C-005's shot: 1280 x 720, Cycles on Metal, OpenImageDenoise, a constant seed
+unless stated), rendered in seven variants over the same frames. Flicker is each frame against the mean of its two
+neighbours (mean absolute difference over pixels, display values). That also counts the camera's motion, so the
+1,024-sample render is the floor: a variant's excess is its flicker minus the floor's. Seconds are the median frame
+rendered on mains power. `[exp: experiments/animation/flicker.py]`
+
+| Variant | flicker | excess over the floor | seconds a frame | detail, against the floor |
+|---|---|---|---|---|
+| 128 samples, denoised, constant seed | 0.00725 | 0.00018 | 22.5 | 0.98 |
+| the same with `use_animated_seed` | 0.00878 | 0.00171 | 22.1 | 0.98 |
+| 128 samples, not denoised | 0.01206 | 0.00499 | 20.4 | 2.93 (the noise) |
+| 141 % resolution at 64 samples, scaled down | 0.00788 | 0.00081 | 27.1 | 1.07 |
+| 384 samples | 0.00718 | 0.00011 | 62.8 | 0.99 |
+| raw frames through `bpy.ops.cycles.denoise_animation` | 0.00726 | 0.00019 | 22.7 | 0.98 |
+| 1,024 samples | 0.00707 | 0 | 155.5 | 1.00 |
+
+`[exp: experiments/animation/flicker.py]` What to do with it:
+- **Keep 128 samples, denoised, with a constant seed** for a shot like this. The noise it leaves is 2.5 % of the
+  flicker; the rest is the scene moving. Every variant's noise threshold scaled with its samples
+  (`adaptive_threshold = 0.03 * sqrt(128 / samples)`). `[exp: experiments/animation/flicker.py]`
+- **Samples are the only thing that lowered it.** 384 samples cut the excess by 39 % at 2.8x the time, and moved the
+  total flicker by 1 %. `[exp: experiments/animation/flicker.py]`
+- **Do not animate the seed for a moving camera.** It raised flicker by 21 %. Super-resolution (more pixels, fewer
+  samples, scaled down) raised it by 9 %. `[exp: experiments/animation/flicker.py]`
+- **`denoise_animation` is not temporal on this Mac.** It ran headless on 25 frames in 31.9 s and changed flicker by
+  +0.14 %. On frames rendered without the passes below it raised `RuntimeError: Error: Could not find a render layer
+  containing denoising data and motion vector passes`. `[exp: experiments/animation/flicker.py]`
+
+```python
+vl = scene.view_layers[0]
+scene.cycles.use_denoising = False         # render raw
+vl.cycles.denoising_store_passes = True    # the denoiser's inputs, stored in the EXR
+vl.use_pass_vector = True                  # motion vectors: the operator refuses frames without them
+scene.render.image_settings.file_format = "OPEN_EXR_MULTILAYER"
+scene.render.filepath = raw_dir + "/"
+bpy.ops.render.render(animation=True)
+bpy.ops.cycles.denoise_animation(output_filepath=out_dir + "/")   # reads scene.render.filepath's frames
+```
+
+`[exp: experiments/animation/flicker.py]` Limit: the measure counts change between frames, so a noise pattern that
+stays fixed in the picture while the scene moves under it (the constant seed) is undercounted. Whether that pattern
+reads as dirt on the lens was not judged in motion. The change maps of frames 113 to 114 are on
+`experiments/animation/results/flicker_sheet.jpg`. In the foreground plants, the 128-sample render flickered slightly
+less than the floor (0.00872 against 0.00882): the denoiser smooths away a little of the leaves' real change.
 
 ## Reference: containers and codecs, measured
 

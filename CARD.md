@@ -231,7 +231,7 @@ Seen on the sheet, not measured. These are polish for the next shot, not failure
 
 ### C-006 · What lowers flicker in a moving-camera shot on this laptop, and at what cost
 
-**Opened:** 2026-11-24 (night, unattended)
+**Opened:** 2026-11-24 (night, unattended) · **Closed:** 2026-11-24
 
 1. **WHERE WE ARE.** C-005's forest shot measured 0.0076 of flicker before grain (each frame against the mean of its
    neighbours, mean over pixels). That figure also contains the camera's motion. The competitions study (section 6)
@@ -281,4 +281,50 @@ Seen on the sheet, not measured. These are polish for the next shot, not failure
 picture while the scene moves under it (the constant seed's "dirty lens") changes little from frame to frame and is
 undercounted, so the animated seed may score worse here than it looks.
 
-**Result:** —
+**Result (2026-11-24, closed): no variant is a fix, because at 128 samples there was almost nothing left to fix.**
+The 1,024-sample floor flickered 0.00707, which is 97.5 % of the baseline's 0.00725. So the noise left in this moving
+shot at 128 samples, denoised, with a constant seed, adds 0.00018 to its flicker, and the rest is the camera and the
+haze moving. Numbers: `experiments/animation/results/flicker.json`, `flicker_times.json`, `flicker_verdict.json`;
+the change between frames 113 and 114 of every variant is on `flicker_sheet.jpg`.
+
+| Variant | flicker | excess over the floor | seconds a frame | detail, against the floor |
+|---|---|---|---|---|
+| baseline: 128 samples, denoised, constant seed | 0.00725 | 0.00018 | 22.5 | 0.98 |
+| animated seed | 0.00878 | 0.00171 | 22.1 | 0.98 |
+| no denoising | 0.01206 | 0.00499 | 20.4 | 2.93 (the noise) |
+| 141 % at 64 samples, scaled down | 0.00788 | 0.00081 | 27.1 | 1.07 |
+| 384 samples | 0.00718 | 0.00011 | 62.8 | 0.99 |
+| raw frames through `denoise_animation` | 0.00726 | 0.00019 | 22.7 | 0.98 |
+| 1,024 samples (the floor) | 0.00707 | 0 | 155.5 | 1.00 |
+
+The three clauses, as `flicker_verdict.py` applies them:
+- **A fix that works: none.** Only samples lowered the excess: 384 samples to 0.61 of the baseline's at 2.8x the
+  time. Everything else raised flicker: the animated seed by 21 %, 141 % at 64 samples by 9 %, no denoising by 66 %.
+  So the guide gives the branch the card named: the only cure measured is samples, at 22.5 / 62.8 / 155.5 s a frame
+  for 128 / 384 / 1,024. It adds what the card did not foresee, that in a shot like this one 128 samples leave
+  little to cure.
+- **`denoise_animation`: not temporal here.** Its flicker was the baseline's within 0.14 %, so the study's claim
+  that temporal denoising comes from outside Blender stands for 4.5 on this Mac (OpenImageDenoise; OptiX not tested).
+  The per-frame clause came out false, but the clause was wrong before the run. It asked the frames to differ from
+  the baseline's by less than a tenth of the baseline's excess (0.000018), and any two renders of the same frame
+  differ by about 0.005 whatever the setting: a reseeded render by 0.0052, 384 samples by 0.0050, the floor by
+  0.0049. `denoise_animation`'s frames differ by 0.0054, inside that band. That is consistent with per-frame
+  denoising; the clause as written cannot confirm it.
+- **C-005's figure: mostly motion.** The floor is 0.975 of the baseline, above the half the card set. Future bars
+  are set as excess over a floor rendered over the same frames.
+
+In the foreground plants the floor flickered more than the baseline (0.00882 against 0.00872). At 128 samples the
+denoiser smooths away a little of the leaves' real change between frames; the baseline's detail, 0.98 of the floor's,
+says the same.
+
+The known limit held in the direction it warned of: the animated seed scored worst of the denoised variants, and
+this measure cannot say whether the constant seed's fixed pattern reads as dirt on the lens. The change maps on the
+sheet show the same leaf edges and ground texture for the baseline, 384 samples, `denoise_animation` and the floor,
+and speckle across the ground without denoising, but a fixed pattern would not show in a change map either. It was
+not judged in motion.
+
+The run was on battery, which I had not checked. From the 92nd frame rendered on, macOS slowed the GPU about
+threefold and then slept the machine for 5.7 hours in the middle of the 384-sample variant. Seconds a frame are the
+median of the frames rendered on mains power (16 of 25 for those two variants, all 25 for the rest;
+`flicker_times.py`). The per-variant means in `flicker.json` (46.5 and 920.3 s) include the slow frames and are not
+used. Flicker and detail do not depend on time.

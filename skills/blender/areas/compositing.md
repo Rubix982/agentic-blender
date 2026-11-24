@@ -83,6 +83,22 @@ The whole multilayer file is one subimage. `[exp: experiments/compositing/multil
 OpenImageIO puts the top row first, while `bpy` `Image.pixels` start at the bottom row.
 `[exp: experiments/compositing/passes_and_compositor.py]` (the Viewer comparison flips rows with `[::-1]`).
 
+Labelling a sheet: Blender's OpenImageIO is built without FreeType, so `ImageBufAlgo.render_text` returns False with
+"OpenImageIO was not compiled with FreeType for font rendering". Blender's own `blf` draws into an image buffer
+headless; the buffer's origin is its bottom-left corner. `[exp: experiments/animation/flicker_sheet.py]`
+
+```python
+import blf, imbuf
+ib = imbuf.load(png_path)
+fid = blf.load("/System/Library/Fonts/Supplemental/Arial.ttf")    # 0 is Blender's own font
+with blf.bind_imbuf(fid, ib):
+    blf.size(fid, 18)
+    blf.color(fid, 1, 1, 1, 1)
+    blf.position(fid, 8, ib.size[1] - 21, 0)                       # 21 px down from the top
+    blf.draw_buffer(fid, "label")
+imbuf.write(ib, filepath=png_path)
+```
+
 ## The compositor in background mode
 
 ```python

@@ -1233,6 +1233,12 @@ Each is stated in the source named. "Why" is the source's reason where one is gi
 7. **Motion blur is where frame-sampling bugs show.** Constraint switches streak (A-04). Motion-blurred hair dominated Agent 327's render time (A-05). Next Gen used rendered 3D blur on every shot, and accepted that Embree's object blur is linear, not arced (A-15).
 8. **Shot-to-shot consistency is managed with shared rigs and review.** Shared light values, a contact sheet, and water checked against adjacent shots (A-03, A-04, A-07, A-09). Simulations baked to cache play back the same each time (B-02).
 
+**Measured afterwards on this laptop** (card C-006, `experiments/animation/flicker.py`): 25 frames of a forest dolly at 1280 x 720, Cycles on Metal, each variant's flicker set against a 1,024-sample render of the same frames.
+- Claim 1: at 128 samples with OpenImageDenoise the noise was 2.5 % of the flicker (0.00018 of 0.00725). Tripling the samples moved the total by 1 %. That matches A-01's observation that more samples did not cure it, but here there was little noise flicker to cure. A-01 does not say how much of its flicker was noise.
+- Claim 2: animating the seed raised flicker by 21 % in this moving shot. The measure undercounts a pattern that stays fixed in the picture, so it does not test whether a fixed pattern visibly slides.
+- Claim 3: Blender 4.5 has `bpy.ops.cycles.denoise_animation`, and it runs headless, but with OpenImageDenoise it changed flicker by +0.14 %. The claim stands on this Mac; OptiX was not tested.
+- Claim 4 was not tested. The foreground plants changed more than the whole frame (0.00872 against 0.00725), but they are also nearest the camera, so they move most.
+
 The gap is plain. None of the placed contest entries in part B states its denoiser, seed or any flicker handling. Several of them rendered 120–220 frames on a single GPU. Either their scenes did not show flicker at their sample counts, or they did not report how they handled it. The sources cannot tell these apart.
 
 ### 7. Limits of this study

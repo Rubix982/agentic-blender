@@ -1,0 +1,109 @@
+{
+ "floor_flicker": 0.00707,
+ "baseline_flicker": 0.00725,
+ "baseline_excess": 0.00018,
+ "floor_over_baseline": 0.975,
+ "noise_share_of_baseline_pct": 2.5,
+ "c005_mostly_motion": true,
+ "fixes_that_work": [],
+ "denoise_animation": {
+  "difference_from_baseline": 0.00541,
+  "tenth_of_baseline_excess": 1.8e-05,
+  "per_frame_by_the_card": false,
+  "flicker_change": 0.0014,
+  "temporal_by_the_card": false
+ },
+ "rows": {
+  "baseline": {
+   "flicker": 0.00725,
+   "excess": 0.00018,
+   "seconds": 22.52,
+   "time_ratio": 1.0,
+   "excess_ratio": 1.0,
+   "detail_ratio": 0.983,
+   "plants": 0.00872,
+   "difference_from_baseline": null,
+   "flicker_change_pct": 0.0,
+   "excess_cut_pct": 0.0,
+   "fix_that_works": false
+  },
+  "animated seed": {
+   "flicker": 0.00878,
+   "excess": 0.00171,
+   "seconds": 22.11,
+   "time_ratio": 0.98,
+   "excess_ratio": 9.5,
+   "detail_ratio": 0.981,
+   "plants": 0.00942,
+   "difference_from_baseline": 0.00522,
+   "flicker_change_pct": 21.1,
+   "excess_cut_pct": -850.0,
+   "fix_that_works": false
+  },
+  "no denoise": {
+   "flicker": 0.01206,
+   "excess": 0.00499,
+   "seconds": 20.4,
+   "time_ratio": 0.91,
+   "excess_ratio": 27.72,
+   "detail_ratio": 2.925,
+   "plants": 0.01644,
+   "difference_from_baseline": 0.01818,
+   "flicker_change_pct": 66.34,
+   "excess_cut_pct": -2672.2,
+   "fix_that_works": false
+  },
+  "super-res 141 % at 64 samples": {
+   "flicker": 0.00788,
+   "excess": 0.00081,
+   "seconds": 27.05,
+   "time_ratio": 1.2,
+   "excess_ratio": 4.5,
+   "detail_ratio": 1.072,
+   "plants": 0.00957,
+   "difference_from_baseline": 0.00562,
+   "flicker_change_pct": 8.69,
+   "excess_cut_pct": -350.0,
+   "fix_that_works": false
+  },
+  "384 samples": {
+   "flicker": 0.00718,
+   "excess": 0.00011,
+   "seconds": 62.76,
+   "time_ratio": 2.79,
+   "excess_ratio": 0.61,
+   "detail_ratio": 0.995,
+   "plants": 0.00882,
+   "difference_from_baseline": 0.00497,
+   "flicker_change_pct": -0.97,
+   "excess_cut_pct": 38.9,
+   "fix_that_works": false
+  },
+  "denoise_animation": {
+   "flicker": 0.00726,
+   "excess": 0.00019,
+   "seconds": 22.746,
+   "time_ratio": 1.01,
+   "excess_ratio": 1.06,
+   "detail_ratio": 0.981,
+   "plants": 0.00873,
+   "difference_from_baseline": 0.00541,
+   "flicker_change_pct": 0.14,
+   "excess_cut_pct": -5.6,
+   "fix_that_works": false
+  },
+  "1024 samples (floor)": {
+   "flicker": 0.00707,
+   "excess": 0.0,
+   "seconds": 155.5,
+   "time_ratio": 6.9,
+   "excess_ratio": 0.0,
+   "detail_ratio": 1.0,
+   "plants": 0.00882,
+   "difference_from_baseline": 0.00494,
+   "flicker_change_pct": -2.48,
+   "excess_cut_pct": 100.0,
+   "fix_that_works": false
+  }
+ }
+}
