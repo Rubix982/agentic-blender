@@ -403,6 +403,12 @@ What the builds found, in the order a script meets it:
     (0.3825); 41 px, within the stone only, took them out (0.467), the fine detail left to the photo's own specks.
     Blurring across the openings spread the wall's grey into the stone (openings' IoU 0.7779).
     `[exp: shots/jali-match/compare.py]` `[exp: shots/jali-match/build.py]`
+27. **Measure the hollows before adding grime.** Recesses from heights integrated from the normals (each pixel's depth
+    below its surroundings, 6 px or more from any opening): the median log(render / photo) is -0.0373 over the carved
+    field's stone, and on the deepest 3 % of its recesses 0.0103 at an 11 px scale and -0.0291 at 21 px. The render's
+    shadows already darken its hollows about as much as the photo's, so no grime was added. Take the recesses from
+    heights, not from where the normals converge: that picked the openings' edges.
+    `[exp: shots/jali-match/compare.py]`
 
 ### A standard for a photo match (C-016)
 

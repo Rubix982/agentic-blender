@@ -129,6 +129,29 @@ def crisp(yy):
     band_ = (slice(34, 72), slice(200, 1000))
     return round(float(f[band_].std() / max(m[band_].std(), 1e-9)), 4)
 res["frame_crispness"] = dict(photo=crisp(kp["y"].astype(np.float32)), render=crisp(kr["y"].astype(np.float32)))
+# C-019: grime in the hollows, and the openings' edges. Recesses from heights integrated from the photo's normals
+# (screened at 30 px, as the build does), each pixel's height below its masked mean over 11 and 21 px; on stone in both
+# 6 px from any opening, inside the carved field: the median log(render / photo) on the deepest 3 % of the recesses
+# against the stone's median. And the same on the stone's band 1 to 4 px from an opening against 6 px or more inside.
+NMc = photo_normals()
+if NMc is not None and FIELD is not None:
+    skin_c = C.erode(kp["stone"], 2)
+    hgt, _ = C.heights_from_normals(NMc, skin_c, screen_px=30)
+    stc = skin_c.astype(np.float32)
+    fx0, fy0, fx1, fy1 = FIELD["field"]
+    infield = np.zeros_like(skin_c); infield[fy0:fy1 + 1, fx0:fx1 + 1] = True
+    deep_m = infield & C.erode(kp["stone"], 6) & C.erode(kr["stone"], 6)
+    lr_all = np.log(np.maximum(kr["y"], 1e-3) / np.maximum(kp["y"], 1e-3))
+    res["recesses"] = {}
+    for w_ in (11, 21):
+        rec = np.clip(C.blur(hgt * stc, w_) / np.maximum(C.blur(stc, w_), 1e-3) - hgt, 0, None)
+        q97 = np.percentile(rec[deep_m], 97)
+        res["recesses"][f"window_{w_}px"] = dict(
+            deepest_3pct=round(float(np.median(lr_all[deep_m & (rec >= q97)])), 4),
+            all_stone=round(float(np.median(lr_all[deep_m])), 4))
+    edge_band = infield & kp["stone"] & kr["stone"] & ~C.erode(kp["stone"], 4) & C.erode(kp["stone"], 1)
+    res["opening_edges"] = dict(edge_band=round(float(np.median(lr_all[edge_band])), 4),
+                                inside=round(float(np.median(lr_all[deep_m])), 4))
 # C-015: the stone's colour variation (the photo's stains, grime and darker frame, against an even albedo): on stone in
 # both (3 px from any opening), each image blurred over 5 px, the chromaticity log(R / G) and log(B / G); their spread
 # (the two standard deviations combined), render over photo; and the frame's median luminance over the field's.

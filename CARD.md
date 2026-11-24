@@ -1314,3 +1314,37 @@ frame, which was Marigold's albedo blobs; the albedo is now blurred over 41 px w
 photo's own specks (crispness 0.392 to 0.467, the photo 0.683). Two guards missed narrowly and are left, not tuned:
 the forms band's amplitude 0.772 (bar 0.8) and the upper openings' brightness 0.025 off (bar 0.02). Guide items 25 and
 26 (`areas/production.md`); T-019's colour half is answered, its grime half open.
+
+### C-019 · Grime in the hollows: are the render's recesses lighter than the photo's?
+
+**Opened and closed:** 2026-11-24
+
+1. **WHERE WE ARE.** C-018 closed "so realistic". T-019's other half was untested: dirt gathers in a carving's hollows,
+   and the albedo, projected from the front and blurred over 41 px, may not carry it.
+2. **WHAT WE ARE DOING.** Before adding anything, measure the render's brightness against the photo's from raised stone
+   to the deepest recesses, away from the openings; add grime only if the render's recesses are lighter than the
+   photo's.
+3. **WHY.** Unknown: whether the photo's hollows hold dirt the render lacks, or the render's shadows already darken
+   them as much as the photo's do.
+4. **WHAT IS AFFECTED.** `compare.py` (the recess and edge measures, kept); `build.py` only if grime is added;
+   `areas/production.md`; T-019.
+5. **CONCLUSION.** If the deepest recesses are clearly lighter in the render than its stone overall (against the
+   photo), grime is added and fitted to that gap; if not, none is, and T-019 is answered without it.
+6. **CONSEQUENCE OF NOT DOING IT.** Grime would be added on a guess, darkening hollows the photo may not darken.
+
+Written after the first measurement (a spike, as the cards' baselines were), so no bar was set in advance; the numbers
+are stated as they fell and the decision follows them.
+
+**Measures (2026-11-24).** `results/compare_c019.json`. A first probe took the hollows from where Marigold's normals
+converge: its deepest 3 % were 13 % lighter in the render, but those pixels lay along the openings' edges, where the
+normals turn in towards the holes, not in the carving's recesses. Then, from heights integrated from the normals
+(screened at 30 px), each pixel's depth below its surroundings, on stone 6 px or more from any opening in the carved
+field: the median log(render / photo) is -0.037 over all of it; on the deepest 3 % of the recesses it is 0.010 at an
+11 px scale (the render 4.8 % lighter there) and -0.029 at 21 px (0.8 %). On the stone's band 1 to 4 px from an
+opening it is -0.004 (3.3 % lighter than inside).
+
+**Result (2026-11-24, closed): no grime added; the photo's hollows are not measurably dirtier than the render's.** The
+render's shadows darken its recesses about as much as the photo's darken its own: at most 4.8 % lighter, on the
+deepest 3 % of the smallest recesses, and nothing at the larger scale. The openings' edges are 3.3 % lighter in the
+render. Both are small; nothing was changed, so no sheet was judged. If the user sees grime missing, this card is the
+place to reopen. T-019 is answered (the colour by the processing, C-018; no grime needed here).

@@ -226,6 +226,20 @@
   "photo": 0.6831,
   "render": 0.467
  },
+ "recesses": {
+  "window_11px": {
+   "deepest_3pct": 0.0103,
+   "all_stone": -0.0373
+  },
+  "window_21px": {
+   "deepest_3pct": -0.0291,
+   "all_stone": -0.0373
+  }
+ },
+ "opening_edges": {
+  "edge_band": -0.004,
+  "inside": -0.0373
+ },
  "stone_colour": {
   "photo_spread": 0.1286,
   "render_spread": 0.0959,

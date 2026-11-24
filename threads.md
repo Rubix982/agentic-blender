@@ -203,7 +203,7 @@ jali threads have set a standard: T-013, T-019, T-014, T-012, T-011.
 
 ### T-019 · The light's colour, and grime in the hollows: what is left of the stone's age?
 
-**Status:** open
+**Status:** answered
 **Parent:** T-017
 **Opened:** 2026-11-24
 **Question:** C-015 found a third of the photo's colour variation goes with brightness (lit faces paler, shadows
@@ -211,7 +211,9 @@ redder, at three times the render's slope): the spot's colour and a cooler fill,
 gathers in a carving's hollows, which the albedo projected from the front may not carry. Do either move the render
 nearer the photo, by the colour measures and the judge?
 **Answer:** — (the colour half: not the light's colour, C-017; the photo's processing, a saturation curve on
-luminance, C-018: the slopes within 6 %, the colour spread 0.48 to 0.75, "so realistic". Grime in the hollows: open.)
+luminance, C-018: the slopes within 6 %, the colour spread 0.48 to 0.75, "so realistic". Grime in the hollows: not
+measurably missing, C-019: the render's deepest recesses at most 4.8 % lighter than the photo's against its stone
+overall, so none was added.)
 
 ### T-020 · Does this guide's method add anything when the vendor ships its own agent skills?
 
