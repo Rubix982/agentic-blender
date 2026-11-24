@@ -309,7 +309,8 @@ object. `[exp: experiments/rendering/motion_blur.py]`
 | `scene.render.engine` | `BLENDER_EEVEE_NEXT` | also `CYCLES`, `BLENDER_WORKBENCH` `[inv]` |
 | `scene.render.resolution_x/_y`, `resolution_percentage` | 1920, 1080, 100 | `[inv]` |
 | `scene.render.film_transparent` | False | alpha background |
-| `scene.render.filter_size` | 1.5 px | pixel filter width `[inv]` |
+| `scene.render.filter_size` | 1.5 px | pixel filter width for EEVEE and Workbench; Cycles ignores it (below) `[inv]` |
+| `scene.cycles.filter_width`, `pixel_filter_type` | 1.5 px, BLACKMAN_HARRIS | Cycles' own pixel filter `[exp: experiments/rendering/cycles_pixel_filter.py]` |
 | `scene.render.dither_intensity` | 1.0 | noise added to 8-bit output `[inv]` |
 | `scene.render.use_persistent_data` | False | `[exp: experiments/rendering/cycles_persistent_data.py]` |
 | `scene.render.threads_mode`, `threads` | AUTO, 12 here | `[inv]` |
@@ -320,3 +321,8 @@ object. `[exp: experiments/rendering/motion_blur.py]`
 | `scene.cycles.film_exposure` | 1.0 | a multiplier on the rendered values: it reaches the EXR, the view's exposure does not; EEVEE ignores it `[exp: experiments/rendering/film_exposure.py]` |
 | `scene.view_settings.view_transform` | AgX | |
 | `scene.display.shading.light`, `color_type` | STUDIO, MATERIAL | Workbench `[exp: experiments/rendering/workbench.py]` |
+
+A hard edge rendered in Cycles (64 x 16 px, 64 samples, no denoising) spread over 0.481 px (the standard deviation of
+its slope) at the defaults, the same 0.481 with `render.filter_size` at 4.0, and 1.142 with `cycles.filter_width` at
+4.0. To soften Cycles' edges, for instance to match a photograph's lens, set `cycles.filter_width`.
+`[exp: experiments/rendering/cycles_pixel_filter.py]`

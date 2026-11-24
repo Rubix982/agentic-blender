@@ -17,7 +17,15 @@ and the carved field 17.7 %.
 C-008 found the cut still missing about half the wall in the middle of the screen, where it is dim and warm (green
 over red 0.82 to 0.85). The wall's colour changes slowly across the picture, so the pixels the cut is sure of give a
 colour field for the wall everywhere; a smooth pixel close to that field is wall too. Either rule makes an opening:
-13.3 % of the screen against 11.7 %, the frame still clean."""
+13.3 % of the screen against 11.7 %, the frame still clean.
+
+C-009 found the reverse error, which the user saw on the sheet: the lit top edges of the bars, and some thin pale stems,
+are pale enough to pass as grey (green over red 0.87 to 0.92) and were called wall. They are brighter than the wall
+around them. Of the pixels the cut was sure of, the middle half lie between 0.98 and 1.05 of the local wall's luminance
+and the top tenth above 1.27. So a pixel more than LIT above the local wall's luminance, plus LIT_ABS for the noise in
+the dim wall, is lit stone, whatever its colour, and the field is worked again without those pixels among its seeds. It
+takes 9.6 % of what C-008 called opening: 17.5 % in the top half, where the light catches the bars' upper edges against
+a dim wall, and 2.0 % in the bottom (results/read_photo.json, lit_stone)."""
 import numpy as np
 import OpenImageIO as oiio
 
@@ -26,6 +34,8 @@ GREEN_RED = 0.86
 WALL_DIST = 0.12                    # colour distance from the local wall, as a fraction of the wall's colour
 WALL_TEX = 0.05                     # and smooth: luminance's standard deviation over about 5 px below this
 WALL_GR_MIN = 0.80                  # and not as red as stone: a render's stone is smooth, so smoothness alone let it in
+LIT = 0.12                          # C-009: brighter than the local wall by more than this fraction, plus LIT_ABS, is lit stone
+LIT_ABS = 0.03
 SCALE = 0.5                         # the photo is worked at half its size: 1230 x 1402
 PHOTO_W, PHOTO_H = 2460, 2803
 
@@ -54,18 +64,28 @@ def classify(rgb):
     sure = ~outside & (gr > GREEN_RED)
     m1 = blur(y, 5)
     tex = np.sqrt(np.maximum(blur(y * y, 5) - m1 * m1, 0))
-    seed = (sure & (tex < 0.03)).astype(np.float32)
-    h, w = y.shape
-    q = (max(w // 4, 1), max(h // 4, 1))                               # the wall's field, worked at quarter size
-    sq = resize(seed, q)
-    wsum = blur(sq, 15)
-    wall = np.stack([blur(resize(rgb[:, :, c] * seed, q), 15) for c in range(3)], -1) / np.maximum(wsum, 1e-4)[:, :, None]
-    wall, wsum = resize(wall, (w, h)), resize(wsum, (w, h))
+    seed = sure & (tex < 0.03)
+    wall, wsum = wall_field(rgb, seed)
+    lit = (wsum > 0.003) & (y > luminance(wall) * (1 + LIT) + LIT_ABS)
+    wall, wsum = wall_field(rgb, seed & ~lit)                          # again, without the lit stone among the seeds
+    lit = (wsum > 0.003) & (y > luminance(wall) * (1 + LIT) + LIT_ABS)
     d = np.linalg.norm(rgb - wall, axis=2) / np.maximum(np.linalg.norm(wall, axis=2), 1e-3)
     near = ~outside & (d < WALL_DIST) & (tex < WALL_TEX) & (wsum > 0.003) & (gr > WALL_GR_MIN)
-    opening = sure | near
+    opening = (sure | near) & ~lit
     stone = ~outside & ~opening
-    return dict(outside=outside, opening=opening, stone=stone, y=y, gr=gr)
+    return dict(outside=outside, opening=opening, stone=stone, y=y, gr=gr, lit=lit & ~outside & (sure | near),
+                sure=sure, wall_y=luminance(wall))
+
+
+def wall_field(rgb, seed):
+    """The wall's colour everywhere, from the seed pixels: their colour blurred over about 60 px, worked at quarter
+    size, and the seeds' blurred weight (where it is near 0 there is no wall nearby to judge by)."""
+    seed = seed.astype(np.float32)
+    h, w = seed.shape
+    q = (max(w // 4, 1), max(h // 4, 1))
+    wsum = blur(resize(seed, q), 15)
+    wall = np.stack([blur(resize(rgb[:, :, c] * seed, q), 15) for c in range(3)], -1) / np.maximum(wsum, 1e-4)[:, :, None]
+    return resize(wall, (w, h)), resize(wsum, (w, h))
 
 
 def resize(a, wh):

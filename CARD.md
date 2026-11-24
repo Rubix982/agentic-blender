@@ -531,3 +531,142 @@ raised forms are not there.** The two things the judge named are both outside wh
 What did improve, and stays: the openings (IoU 0.725 against 0.565) and the wall's light, now set from the photo.
 
 The "no" branch applies again: the judge's reasons are the next card.
+
+---
+
+### C-009 · The jali rebuilt from one motif, averaged over its repeats and mirror halves, judged beside the photo
+
+**Opened:** 2026-11-24
+
+1. **WHERE WE ARE.** C-008's jali was judged "little incisions [...] they don't capture the symmetrical alignment and
+   pertuberance". Its openings agree with the photo's at an IoU of 0.725, but 39 % of the photo's cut lines have a
+   render line within 2 px, and the stone's bright end is 0.466 against 0.656: each pixel's shadow was traced on its
+   own, and every bar got the same rounded rise.
+2. **WHAT WE ARE DOING.** Rebuild the carved field from the photo's own symmetry (`shots/jali-match/`).
+   - Find the lattice's two repeat vectors (the peaks of the openings' autocorrelation) and the screen's vertical
+     mirror axis (where the field best matches its own mirror image).
+   - Average the photo over every repeat that falls in the lattice, and the result with its mirror image, after
+     dividing out the light's slow change across the screen. Outside the lattice (the arch and its scrolls at the
+     top) only the mirror is averaged.
+   - From that average: the openings (the averaged opening mask at 0.5), and the raised forms, as heights read from
+     the averaged shading with the light from above. A surface lit brighter than its surroundings faces up, so the
+     height is the shading integrated down each column of stone, brought back to 0 at the openings.
+   - Build, light and render as in C-008, from the same camera.
+3. **WHY.** Unknown now: whether the photo's motif, cleaned of noise and of the light's gradient by averaging its
+   repeats, carries the carving's order and its raised forms well enough to read heights from, or whether the
+   repeats differ too much (it is carved by hand) for an average to stand for them.
+4. **WHAT IS AFFECTED.**
+   - `shots/jali-match/`: a new `symmetry.py` (the repeat, the axis, the averaged field), `build.py` building from it,
+     `compare.py` with the measures below. Its `results/` files are overwritten; C-008's are kept as `*_c008.json`.
+   - `areas/production.md`'s photo section: the averaging step and what it measured.
+5. **CONCLUSION.**
+   - The repeat first: each repeat's opening mask against the average's, as a correlation. If the median is below
+     0.5, the lattice is not one repeated motif in this photo; the card stops there with that number, and the next
+     card works from the mirror alone.
+   - Then the measures, as C-008 set them: the cut lines within 2 px both ways at least 0.6; the stone's 90th
+     percentile within 15 % of the photo's 0.656 and its contrast within 0.8 to 1.2 of the photo's; and a guard, the
+     openings' IoU at least 0.68 (an average smooths each repeat's own edges, so some loss is expected).
+   - Then the judge, the same question. If yes, the guide gets the photo-to-model recipe for carved repeating work
+     (find the repeat, average it, read the relief, build it once and repeat it). If no, the user's reason in their
+     words is the next card, and the measures say whether it was the motif (the repeat's correlation, the lines) or
+     its relief (the light).
+6. **CONSEQUENCE OF NOT DOING IT.** The guide's photo method stops at outlines and one rounded rise, and any carved,
+   repeating subject renders as incisions on a board.
+
+**Known limits, stated before the run:**
+- Heights from shading assume one light from above and stone of one colour; dark weathering reads as a hollow.
+- An average is regular where the hand-carved original is not. A render more perfect than the stone may itself read
+  as false.
+- The arch and scrolls at the top are averaged only with their mirror, so they keep more of the photo's noise.
+
+**The repeat (2026-11-24): the stop rule fired, and was recorded as mis-specified on the user's choice.** The lattice's
+repeat vectors are (141.2, -176.9) and (146.3, 173.0) px, a staggered lattice whose sum (286.4, -3.6) is the strongest
+autocorrelation peak (0.354); the mirror axis is x = 612, 3 px left of centre (mirror correlation 0.355). (A first pick
+took a weak short peak, 0.18 at 29 px, an echo inside each motif; the vectors now come from the strong peaks only.)
+Each repeat's openings against the average's, median 0.485, under the card's 0.5. Split by how far apart the copies
+are, the rule mixed two things: one step 0.61, two 0.63, three 0.55, four 0.42, five 0.44, six 0.17. Neighbours agree;
+far copies, which were most of the pool, do not, which fits effects that change across the screen (the light, the depth
+narrowing the openings, a fraction of a pixel of error in the vectors growing with each step). The user chose to record
+the rule as mis-specified and continue with repeats up to 3 steps away: median 0.586 over those as first
+averaged, 0.502 once each copy was registered (0.64, 0.50, 0.48 at one, two and three steps).
+
+**Measures (2026-11-24, before the judge): lines and light fail, the guard holds.** `results/compare.json`,
+`results/symmetry.json`, `sheet.jpg`.
+- Lines: 49 % of the render's within 2 px of the photo's, 30 % the other way (bar 60 %); C-008 had 57 and 39.
+- Light: the stone's 90th percentile 0.457 against 0.656 (bar 0.557 to 0.754); contrast 0.44 of the photo's (bar 0.8).
+- Guard: openings IoU 0.726 (bar 0.68).
+
+Changed before showing, in order:
+1. The average first blurred and ghosted the motif: 37 copies a few pixels out of register (the lattice is not exact
+   across a hand-carved screen seen in perspective). Each copy is now registered per pixel, the best match of its
+   15 x 15 neighbourhood within 3 px, and weighted more sharply. The averaged shading then shows the motif cleanly: the
+   flower, the bars' incised rims, the leaves, with the photo's specks gone (`out/symmetry.png`).
+2. Heights integrated down each column alone came out in vertical streaks; they are now one least-squares solve over
+   all the stone (conjugate gradients, 288 iterations), the slope down the picture following the shading and
+   neighbouring columns asked to agree.
+3. The averaged openings, used first, smoothed every repeat's edges and in the arch mixed in copies that do not belong
+   (IoU 0.55, 0.29 in the top third). The openings are the photo's own again; the average gives only the heights.
+4. The forms at 6 mm (99th percentile) reached 17 mm and read as melted; now 4 mm, clipped at 6.
+
+How it looks to me, before the judge: sculpted, with raised forms where C-008 had pits, but soft, like melted wax. The
+averaged shading has the crisp edges and rims; the step from shading to height loses them.
+
+**The user's first look (2026-11-24):** "The sheet is much better than before, though i see missing pieces in between
+like this example" (a thin connecting stem broken, wall showing where the photo has stone). Measured before changing
+anything, on the photo's thin stone (strips about 4 px wide or less, 2.3 % of the field's stone): the widening for depth
+kept 61.5 % of it, the one-pixel shrink kept for C-007's bevel left 6.8 %, the trace's blur 2.4 %, and the render
+showed 39 % of it as stone. The shrink is gone (the bevel is 0.5 mm and nothing makes up for it): the render now shows
+89 % of the thin stone as stone, the openings' IoU is 0.725, the lines 49 % and 32 %, the bright end 0.457.
+`--thin-protect` also keeps the widening off thin stone (94 % shown) but costs the openings 0.05 (0.678); it is off.
+Still broken: the finest stems, a pixel or two wide at the half resolution this works at.
+
+**The user's second look (2026-11-24):** "better, but rough around the edges" (a close-up of stepped, notched opening
+edges). What it was, found by zooming 6x on one edge, photo beside render:
+1. The carved skin overhung the smooth outline. It was built from the stone mask after a closing (dilate 2, erode 2)
+   meant to fill pin-prick holes, which also bridged every opening under ~4 px wide; there the skin's pixel-stepped
+   edge stood out against the wall. Now only holes the stone nearly closes over are filled, and the skin stays 2 px
+   inside the stone, its relief faded to 0 over its last ~4 px, so the visible edge is the body's outline.
+2. The outlines followed the mask's pixel noise; they are now smoothed without shrinking (Taubin, 20 passes). Six
+   passes made no visible change.
+3. The render's edges were crisper than the photo's, which a lens and a phone soften over about two pixels: the
+   gradient on the openings' edges was 1.072 x the photo's. `render.filter_size` did nothing (Cycles ignores it,
+   `experiments/rendering/cycles_pixel_filter.py`); `cycles.filter_width` at 1.8 px makes it 1.001 x.
+Now: openings IoU 0.735, thin stone shown 88 %, lines 41 % and 25 %, the bright end 0.454.
+
+**The user's third look (2026-11-24):** "one interesting case here -- it assumed that the line shown onto the original
+was actually a gap, but if we look at it carefully, it is just a highly shown part of the frame, it is not empty space"
+(a close-up of a bar's pale, lit edge, open in the render). What it was, and what it led to:
+1. The rule that sorts the photo called the lit edge wall. Lit sandstone is pale enough to pass the green-over-red cut
+   (0.87 to 0.92 against the cut's 0.86), and that cut never asked whether a pixel looked like the wall around it. It
+   is brighter than the wall: of the pixels the cut was sure of, the middle half lie between 0.98 and 1.05 of the
+   local wall's luminance and the top tenth above 1.27. Now a pixel more than 12 % (plus 0.03) above the local wall is
+   lit stone, and the wall's colour field is worked again without those pixels (`common.classify`). It takes 9.6 % of
+   what was called opening: 17.5 % in the top half, where the light catches the bars' upper edges against a dim wall,
+   and 2.0 % in the bottom. The same close-ups showed some thin pale stems in the top half going the same way, so
+   this is probably part of the first look's "missing pieces" too.
+2. The first rebuild came out inside out (openings IoU 0.03). Halving the outlines down to one, a smoothed island of
+   15 x 4 px (at 983, 138) broke the fill of the whole curve at 0.92 mm a pixel (front face 0.31 m2 of 1.15), and the
+   same pair filled correctly at 1 and at 0.01 units a pixel, and unsmoothed. Probably the fill merges points closer
+   than a fixed distance; that is not checked. The same outlines fill correctly in pixels, so
+   the curve is now built in pixels and its mesh scaled to metres; the build stops if the front face falls below
+   85 % of what the outlines enclose. The fill had been losing a little stone before too: its front face is 1.048 m2
+   now against 1.028. (Rasterised, the fill in pixels covers every pixel of the traced solid; the 8 % gap to "what
+   the outlines enclose" is that sum over-counting, not missing stone.)
+Now: openings IoU 0.764 (thirds 0.668, 0.812, 0.777), thin stone shown 89 %, lines 42 % and 25 %, the bright end
+0.465 against the photo's 0.667 (the photo's own bright end rose, as its lit edges joined the stone). The render's
+edges are stone there now, but not lit cream as the photo's are: the bright end is the open miss.
+
+**The judge (2026-11-24):** "It has vastly improved even further." The user closed the card there, to take up the
+research threads opened today (T-009 to T-013). The card's question was not answered yes.
+
+**Result (2026-11-24, closed): not a yes, but judged much improved; the measures still fail on the lines and the
+light.** The motif averaged over its near repeats and its mirror half, the heights solved from its shading, and the
+fixes the user's three looks led to (thin pieces kept, edges smoothed and softened, lit edges made stone) give openings
+at an IoU of 0.764 (guard 0.68), 89 % of the photo's thin pieces shown, and edges 1.04 times as soft as the photo's.
+What fails is what C-008 failed on: 42 % of the render's lines lie within 2 px of the photo's and 25 % the other way
+(bar 60 %), and the stone's bright end is 0.465 against 0.667 (bar 0.567 to 0.767), its contrast 0.43 of the photo's.
+The relief is still soft and the lit rims are not lit: that is T-009. On the final classification the symmetry
+re-ran to repeat vectors (141.1, -177.1) and (146.2, 173.3) px, the mirror axis at x = 613 (0.360), and registered
+repeats at a median 0.491 against the average (0.64, 0.49, 0.47 at one, two and three steps;
+`results/symmetry.json`). The guide's photo section has the findings (`areas/production.md`, items 8 to 12), and
+`areas/curves-text.md` the fill that broke at millimetre scale (item 9).

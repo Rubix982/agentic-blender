@@ -42,6 +42,13 @@ the attribute-based type that hair and geometry nodes use. `[exp: experiments/cu
    from a photograph came out inside out this way (`production.md`). Keep `offset` at 0, shrink the shape before
    tracing it, and check the evaluated mesh's front-face area against the outlines' own.
    `[exp: experiments/curves/curve_offset_fill.py]`
+9. **Build a traced curve at one unit a pixel, and scale its mesh.** A 2D curve of 420 outlines traced from a photo,
+   built in metres at 0.000924 m a pixel, filled to a front face of 0.3116 m2; the same outlines built in pixels gave
+   1.0485 m2. Halving the outlines down to the one that broke it found a small smoothed island (15 x 4 px), and it
+   broke the fill of the whole curve. Build the curve in pixels (extrude and bevel divided by the scale too), make a
+   mesh of it with `bpy.data.meshes.new_from_object`, and scale the mesh, not the object, when a material reads object
+   coordinates. Then check the front face against the outlines' area, as in item 8. Why the fill breaks in metres is
+   not checked; the fill merging points closer than a fixed distance would fit it. `[exp: shots/jali-match/build.py]`
 
 ## Bezier and poly curves
 

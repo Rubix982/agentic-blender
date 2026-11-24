@@ -211,13 +211,15 @@ Several solo entrants moved to a render farm days before their deadline `[study:
 
 ## Rebuilding a pierced object from one photograph
 
-Cards C-007 and C-008 rebuilt a carved red-sandstone window screen (a jali) from one frontal museum photograph, by
+Cards C-007 to C-009 rebuilt a carved red-sandstone window screen (a jali) from one frontal museum photograph, by
 script: its openings traced from the photo, the trace extruded, lit to the photo, and rendered from the photo's camera
-(`shots/jali-match/`). Both were judged beside the photo and failed. C-007, a flat slab with holes: "very surreal",
-"something plain but it is not", "a darker muddier look". C-008, with the photo's dark lines cut as grooves into
-rounded bars: "little incisions across the model, but they don't capture the symmetrical alignment and pertuberance"
-(the user's words, CARD.md). The openings now land close; the carving is still not built. What the builds found, in
-the order a script meets it:
+(`shots/jali-match/`). Each was judged beside the photo. C-007, a flat slab with holes: "very surreal", "something
+plain but it is not", "a darker muddier look". C-008, with the photo's dark lines cut as grooves into rounded bars:
+"little incisions across the model, but they don't capture the symmetrical alignment and pertuberance". C-009, its
+motif averaged over its own repeats and heights read from the shading: "much better", and after three rounds of fixes
+"vastly improved even further", though not yet taken for the photo (the user's words, CARD.md). The openings land
+close and the motif's order is there; the relief is still soft. What the builds found, in the order a script meets
+it:
 
 1. **Find the openings by a property that holds across the whole photo.** Light on a backdrop falls off: here the
    wall behind the screen was white at the bottom and dim and warm at the top. Saturation below 0.22 with luminance
@@ -255,6 +257,40 @@ the order a script meets it:
    of the photo's and 39 % of the photo's within 2 px of the render's, and the judge saw scattered incisions with
    neither the motifs' symmetry nor their raised forms. Letting each piece between lines rise on its own was worse:
    the stone read as crumbled rock. `[exp: shots/jali-match/compare.py]`
+8. **Average the object's own repeats: the near ones only, each registered.** A carved lattice repeats. The peaks of
+   its openings' autocorrelation gave two repeat vectors, (141.06, -177.12) and (146.15, 173.27) px, and the best
+   match with its own mirror image put the axis at x = 613 (correlation 0.3596). Averaging the photo over its copies
+   takes out noise and the light's slow change, but copies far apart differ (the light, the depth narrowing the
+   openings, a fraction of a pixel of error in the vectors growing at every step): registered against the average,
+   copies one step away agree at a median 0.6436, two steps 0.4947, three 0.4665, and farther ones less. Average
+   only up to three steps, with the mirror half, and register each copy to the reference pixel by pixel within 3 px,
+   weighted by how well it matched; unregistered, 37 copies a few pixels apart blurred and ghosted the motif. Keep the
+   openings the photo's own: the averaged openings smoothed each repeat's edges and, in the arch at the top, mixed in
+   copies that do not belong. `[exp: shots/jali-match/symmetry.py]`
+9. **Solve the heights from the shading; do not sum them down each column.** Lit from above, a surface brighter than
+   its surroundings faces up, so the averaged shading is the height's up-down slope. Summed down each column, every
+   error ran on to the column's end as a streak. Solved by least squares over the whole field (conjugate gradients,
+   290 iterations), the streaks went. Then scale them: about 4 mm at the 99th percentile, clipped at one and a half
+   times that, read as raised forms; higher and unclipped, they read as melted. Even so the forms come out soft: a
+   slope summed into a height rounds every carved step. `[exp: shots/jali-match/symmetry.py]`
+10. **Do not shrink the solid to make room for the bevel.** A one-pixel shrink, so the half-millimetre bevel would not
+    widen the stone, took most of the photo's thin connecting strips (4 px wide or less), which the user saw as missing
+    pieces. Without it, 89 % of the thin stone shows in the render (0.8949). `[exp: shots/jali-match/compare.py]`
+11. **Keep every layer inside the outline, smooth the outline, and soften the render as the lens did.** The user saw
+    rough edges, and there were three causes at once. A carved skin, built from the stone mask after a closing that
+    bridged every narrow opening, stood past the outline with its pixel steps. The outline followed the mask's pixel
+    noise. And the render's edges were crisper than the photo's. Fill only the holes the stone nearly closes over,
+    keep the skin 2 px inside the stone with its relief faded out towards its edge, smooth the outline without
+    shrinking it (Taubin smoothing), and widen Cycles' pixel filter to 1.8 px with `scene.cycles.filter_width` (Cycles
+    ignores `render.filter_size`; `rendering.md`): the openings' edge gradient came out 1.038 times the photo's.
+    `[exp: shots/jali-match/build.py]` `[exp: shots/jali-match/compare.py]`
+12. **Lit edges are stone, however pale.** Lit sandstone washes towards cream and passed item 1's cut as wall: the user
+    saw a bar's lit edge rendered as a gap. Wall pixels sit near the local wall's brightness: of those the cut was sure
+    of, the middle half lie between 0.982 and 1.045 of the local wall's luminance, and the top tenth above 1.275. A
+    pixel more than 12 % plus 0.03 above the local wall is now stone. That took 9.57 % of what the cut had called
+    opening, 17.45 % in the top half, where the light catches the bars' upper edges against a dim wall, and 1.95 % in
+    the bottom. Rebuilding from it, the trace broke Blender's fill at metre scale (`curves-text.md`, item 9).
+    `[exp: shots/jali-match/read_photo.py]`
 
 ```python
 # 3: the hole's front outline from what the photo sees through it (seen: a boolean mask, H x W)
@@ -269,4 +305,7 @@ What the measures said about the judgements. In C-007 the openings agreed at an 
 slivers along every edge; the stone's median colour matched the photo's (0.4392, 0.3294, 0.251 against 0.435, 0.322,
 0.239), but its bright end did not: 0.4927 at the 90th percentile against 0.657, a flat slab having no raised surfaces
 to catch the light. In C-008 the openings agreed at 0.7252, and the bright end was still 0.4655 against 0.6557: rounded
-bars and grooves did not give the forms that catch the light. `[exp: shots/jali-match/compare.py]`
+bars and grooves did not give the forms that catch the light. In C-009 the openings agreed at 0.7641; 41.93 % of the
+render's lines lay within 2 px of the photo's and 24.85 % the other way; and the bright end was 0.4652 against 0.6669
+(the photo's rose when its lit edges became stone): the averaged motif placed the forms, but they are too soft to
+catch the light as the carving does. `[exp: shots/jali-match/compare.py]`

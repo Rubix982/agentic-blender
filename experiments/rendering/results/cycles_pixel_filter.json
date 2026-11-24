@@ -1,0 +1,76 @@
+{
+ "experiment": "experiments/rendering/cycles_pixel_filter.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-24",
+ "seconds": 0.85,
+ "facts": [
+  {
+   "fact": "A new scene's pixel filter: render.filter_size, cycles.filter_width, cycles.pixel_filter_type",
+   "filter_size": 1.5,
+   "filter_width": 1.5,
+   "pixel_filter_type": "BLACKMAN_HARRIS"
+  },
+  {
+   "fact": "Cycles ignores render.filter_size; cycles.filter_width sets its pixel filter",
+   "defaults_px": 0.481,
+   "render_filter_size_4_px": 0.481,
+   "cycles_filter_width_4_px": 1.142
+  }
+ ],
+ "data": {
+  "rows": {
+   "both 1.5 (defaults)": {
+    "render_filter_size": 1.5,
+    "cycles_filter_width": 1.5,
+    "edge_spread_px": 0.481,
+    "profile": [
+     0.0,
+     0.0,
+     0.0,
+     0.116,
+     0.885,
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "render.filter_size 4.0": {
+    "render_filter_size": 4.0,
+    "cycles_filter_width": 1.5,
+    "edge_spread_px": 0.481,
+    "profile": [
+     0.0,
+     0.0,
+     0.0,
+     0.116,
+     0.885,
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "cycles.filter_width 4.0": {
+    "render_filter_size": 1.5,
+    "cycles_filter_width": 4.0,
+    "edge_spread_px": 1.142,
+    "profile": [
+     0.0,
+     0.013,
+     0.09,
+     0.329,
+     0.677,
+     0.91,
+     0.99,
+     1.0
+    ]
+   }
+  },
+  "size_px": [
+   64,
+   16
+  ],
+  "samples": 64
+ },
+ "args": []
+}

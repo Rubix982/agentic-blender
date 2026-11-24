@@ -26,7 +26,7 @@ import time
 
 import bpy
 import numpy as np
-from mathutils import Vector
+from mathutils import Matrix, Vector
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
@@ -36,6 +36,8 @@ argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
 SAMPLES = int(argv[argv.index("--samples") + 1]) if "--samples" in argv else 256
 THICK_ARG = float(argv[argv.index("--thick") + 1]) if "--thick" in argv else None
 LOOK = argv[argv.index("--look") + 1] if "--look" in argv else "None"
+FILTER_PX = float(argv[argv.index("--filter") + 1]) if "--filter" in argv else 1.8   # Cycles' pixel filter width:
+# the render's edges were 1.072 x as sharp as the photo's at 1.5 px and 0.853 x at 2.5 (compare.json, edge_gradient)
 OUT = os.path.join(HERE, "out")
 os.makedirs(OUT, exist_ok=True)
 T0 = time.time()
@@ -45,12 +47,16 @@ WIDTH_M = 1.05                         # the screen's width (estimate, photo/CRE
 THICK_M = THICK_ARG or 0.020          # the pierced field's thickness, fitted in C-008 (--thick to try another):
                                        # the openings agree best when it is thin (IoU 0.564 at the catalogue's 61 mm,
                                        # 0.737 at 20, 0.754 at 10); 20 mm is within 0.02 of the best
-BEVEL_M = 0.001                        # the radius every edge is rounded to; the bevel widens the outline by this,
-                                       # so the traced stone is first shrunk by one pixel (0.92 mm)
-MIN_AREA_PX = 30                       # outlines smaller than this (slivers, dust) are dropped; 12 left slivers (C-007)
-RELIEF_M = 0.010                       # C-008: how far the bars rise at most, rounded across their width
+BEVEL_M = 0.0005                       # the radius every edge is rounded to (it widens the outline by this). C-007 to
+                                       # C-009 used 1 mm and shrank the traced stone by a pixel to make up for it; the
+                                       # shrink took the photo's thin connecting pieces (6.8 % of them survived it)
+MIN_AREA_PX = 30                       # holes smaller than this (slivers, dust) are dropped; 12 left slivers (C-007)
+MIN_ISLAND_PX = 30                     # stone pieces down to this size are kept: small leaf tips are pieces too
+RELIEF_M = 0.005                       # C-008: how far the bars rise at most, rounded across their width (C-009: 5 mm,
+                                       # under the forms read from the shading)
 RELIEF_PX = 20                         # how far in from an opening or the outline (18 mm) they reach that height
-GROOVE_M = 0.003                       # how deep the traced cut lines are cut into that surface
+FORMS_M = 0.004                        # C-009: the forms read from the averaged shading, at their 99th percentile,
+                                       # clipped at 1.5 x that (at 6 mm unclipped they reached 17 mm and read as melted)
 # The camera: a Samsung SM-G998B main camera, 24 mm equivalent (EXIF). Assumed: a 12 MP 3000 x 4000 portrait frame
 # cropped to 2460 px wide, so the crop spans 2460 / 3000 of the 25.96 mm equivalent short side of a 4:3 frame.
 LENS_MM, SENSOR_MM = 24.0, 25.96 * 2460 / 3000
@@ -59,6 +65,10 @@ LENS_MM, SENSOR_MM = 24.0, 25.96 * 2460 / 3000
 W, H = C.size()
 rgb = C.load(os.path.join(HERE, "photo", "agra-jali.jpg"), (W, H))
 k = C.classify(rgb)
+import symmetry  # noqa: E402
+LAVG, OAVG, HSHADE, SYM = symmetry.average(rgb, k)                     # C-009: the photo averaged over its repeats
+# The openings stay the photo's own: the averaged mask, tried first, smoothed every repeat's edges and, in the arch at
+# the top, mixed in copies that do not belong (openings IoU 0.55, 0.29 in the top third, against 0.725).
 rows = np.nonzero(k["stone"].mean(axis=1) > 0.2)[0]
 cols = np.nonzero(k["stone"].mean(axis=0) > 0.2)[0]
 width_px = int(cols[-1] - cols[0] + 1)
@@ -86,28 +96,61 @@ KB = DIST / (DIST + THICK_M)
 yy, xx = np.mgrid[0:H, 0:W]
 sy = np.clip(np.round(H / 2 + (yy - H / 2) * KB).astype(int), 0, H - 1)
 sx = np.clip(np.round(W / 2 + (xx - W / 2) * KB).astype(int), 0, W - 1)
-hole = k["opening"] | k["opening"][sy, sx]
+# Thin stone in the photo (strips about 4 px wide or less): connecting pieces. The user saw them missing in C-009; the
+# one-pixel shrink, not the widening, was what took them (see BEVEL_M). --thin-protect also keeps the widening off them:
+# it shows 94 % of them against 89 %, but costs the openings 0.05 of IoU (0.678 against 0.725), so it is off by default.
+stone_ph = ~k["opening"] & ~k["outside"]
+thin = stone_ph & ~C.dilate(C.erode(stone_ph, 2), 2)
+hole = k["opening"] | (k["opening"][sy, sx] & (~thin if "--thin-protect" in argv else True))
 solid = np.zeros((H, W), bool)
 solid[y0:y1 + 1, x0:x1 + 1] = True
 solid &= ~hole & ~sur
-shrunk = solid.copy()                                                  # one pixel off every edge, for the bevel
-shrunk[1:] &= solid[:-1]; shrunk[:-1] &= solid[1:]; shrunk[:, 1:] &= solid[:, :-1]; shrunk[:, :-1] &= solid[:, 1:]
-field = C.blur(shrunk.astype(np.float32), 3)
-loops = [p for p in C.contours(field, 0.5) if abs(C.area(p)) >= MIN_AREA_PX]
+field = C.blur(solid.astype(np.float32), 3)
+loops = C.contours(field, 0.5)
+outer_sign = np.sign(C.area(max(loops, key=lambda p: abs(C.area(p)))))   # the frame's outline winds as stone does
+loops = [p for p in loops if abs(C.area(p)) >= (MIN_ISLAND_PX if np.sign(C.area(p)) == outer_sign else MIN_AREA_PX)]
+
+
+def taubin(p, n=20, lam=0.5, mu=-0.53):                               # 6 passes left 1-2 px notches
+    """Smooth a closed outline without shrinking it (Taubin): each point moves towards its neighbours' mean, then back
+    a little further. The user saw the openings' edges as rough (C-009): the trace followed the mask's pixel noise."""
+    for _ in range(n):
+        for f in (lam, mu):
+            p = p + f * ((np.roll(p, 1, 0) + np.roll(p, -1, 0)) / 2 - p)
+    return p
+
+
+loops = [taubin(p) if len(p) >= 8 else p for p in loops]
+thin_in = thin & np.pad(np.ones((y1 - y0 + 1, x1 - x0 + 1), bool), ((y0, H - y1 - 1), (x0, W - x1 - 1)))
+log["thin_stone"] = dict(photo_px=int(thin_in.sum()), kept_by_widening=round(float((thin_in & solid).sum() / max(thin_in.sum(), 1)), 4),
+                         kept_by_trace=round(float((thin_in & (field > 0.5)).sum() / max(thin_in.sum(), 1)), 4))
 # C-008: the carving. The bars round across their width: the height rises with distance from the nearest opening or
 # outline, RELIEF_M at most, about RELIEF_PX in. The distance is smooth: the stone mask blurred over 2 x RELIEF_PX reads
 # 0.5 at an edge and 1 deep inside, so (b - 0.5) x 2, eased, goes 0 to 1. The cut lines traced from the photo
 # (common.cut_lines) are cut GROOVE_M into that surface.
 # Two first versions, recorded in the card: every piece between the lines rising on its own (the lines cut the stone
 # into hundreds of small humps; it read as crumbled rock), and the distance counted by erosions (it stepped in blocks).
-closed = C.erode(C.dilate(solid, 2), 2) | solid                       # pin-prick holes (dropped from the trace) filled
-skin = C.erode(closed, 1)                                              # stays inside the curve's outline
-lines = C.cut_lines(k) & skin
+# C-009: the forms. The averaged shading, integrated down each column of stone (symmetry.average), scaled so its 99th
+# percentile is FORMS_M, is added to the rounded bars; C-008's grooves from traced lines are gone.
+# Pin-prick holes (dropped from the trace) are filled where the stone around them nearly closes over them. A closing
+# (dilate 2, erode 2), used first, also bridged every opening under ~4 px wide, and the skin overhung the smooth outline
+# there with its pixel-stepped edge: the "rough edges" the user saw. The skin also stays 2 px inside the stone, where
+# its relief has faded to 0, so the visible edge is the body's smoothed outline.
+closed = solid | (C.blur(solid.astype(np.float32), 5) > 0.85)
+skin = C.erode(closed, 2)
+lines = C.cut_lines(k) & skin                                          # kept for the log; no longer cut
 b = np.clip((C.blur(skin.astype(np.float32), 2 * RELIEF_PX) - 0.5) * 2, 0, 1)
 prof = b * b * (3 - 2 * b)                                             # smoothstep
-groove = np.clip(C.blur(lines.astype(np.float32), 5) * 2.0, 0, 1)
-height = (np.maximum(prof * RELIEF_M - groove * GROOVE_M, 0) * skin).astype(np.float32)
-C.write_png(os.path.join(OUT, "height.png"), height / RELIEF_M)
+hs = HSHADE * skin
+p99 = float(np.percentile(np.abs(hs[hs != 0]), 99)) if (hs != 0).any() else 1.0
+forms = np.clip(hs / max(p99, 1e-6), -1.5, 1.5) * FORMS_M
+# The skin's edge is stepped (it is built on the pixel grid); everything on it fades to 0 over the last ~4 px, so the
+# steps sit flat on the body's front face instead of catching light. Then a light smoothing of the heights.
+e = np.clip((C.blur(skin.astype(np.float32), 9) - 0.5) * 2, 0, 1)
+edge = e * e * (3 - 2 * e)
+height = np.maximum(prof * RELIEF_M + forms, 0) * edge
+height = (C.blur(height.astype(np.float32), 3) * edge * skin).astype(np.float32)
+C.write_png(os.path.join(OUT, "height.png"), height / max(float(height.max()), 1e-6))
 log["sizes"] = dict(width_m=WIDTH_M, thick_m=THICK_M, thick_cm=THICK_M * 100, bevel_m=BEVEL_M)
 log["outlines"] = dict(count=len(loops), points=int(sum(len(p) for p in loops)), metres_per_px=round(S, 6),
                        screen_width_px=width_px, box=[x0, y0, x1, y1], dark_in_box_made_stone=int((dark & ~sur).sum()),
@@ -124,12 +167,17 @@ ALBEDO = tuple(float(c) for c in lin / lin.max() * 0.45)
 # --- the scene ---------------------------------------------------------------------------------------------------
 bpy.ops.wm.read_factory_settings(use_empty=True)
 scene = bpy.context.scene
+# The curve is built in pixels and only its mesh is scaled to metres. At 0.92 mm a pixel one smoothed island of
+# 15 x 4 px turned the whole fill inside out (front face 0.31 m2 of the 1.15 the outlines enclose; C-009, when the lit
+# edges became stone); the same outlines fill as they should at 1 or 0.01 units a pixel (probably the fill merges points
+# closer than a fixed distance; not checked). The mesh, not the object, is scaled, because the stone's texture is read
+# in object coordinates.
 cu = bpy.data.curves.new("jali", "CURVE")
 cu.dimensions = "2D"
 cu.fill_mode = "BOTH"
 cu.resolution_u = 1
-cu.extrude = THICK_M / 2 - BEVEL_M
-cu.bevel_depth = BEVEL_M
+cu.extrude = (THICK_M / 2 - BEVEL_M) / S
+cu.bevel_depth = BEVEL_M / S
 cu.bevel_resolution = 3
 # cu.offset stays 0: any other value broke the fill of these nested outlines (front face 0.24 m2 at -3 mm, 0.09 at
 # +3 mm, against 1.10 at 0; the outlines enclose 1.15 m2).
@@ -138,13 +186,42 @@ for p in loops:
     sp = cu.splines.new("POLY")
     sp.points.add(len(p) - 1)
     co = np.zeros((len(p), 4), np.float32)
-    co[:, 0] = (p[:, 0] - cx) * S
-    co[:, 1] = (cy - p[:, 1]) * S
+    co[:, 0] = p[:, 0] - cx
+    co[:, 1] = cy - p[:, 1]
     co[:, 3] = 1.0
     sp.points.foreach_set("co", co.ravel())
     sp.use_cyclic_u = True
     sp.use_smooth = True                                               # flat facets striped the holes' side walls
-screen = bpy.data.objects.new("jali", cu)
+trace = bpy.data.objects.new("jali trace", cu)
+scene.collection.objects.link(trace)
+me_c = bpy.data.meshes.new_from_object(trace.evaluated_get(bpy.context.evaluated_depsgraph_get()))
+me_c.transform(Matrix.Scale(S, 4))
+bpy.data.objects.remove(trace)
+bpy.data.curves.remove(cu)
+expected = abs(sum(C.area(p) for p in loops)) * S * S
+front_m2 = sum(f.area for f in me_c.polygons if f.normal.z > 0.99)
+if front_m2 < 0.85 * expected:                                         # a broken fill: stop before rendering it
+    raise RuntimeError(f"the curve's fill failed: front face {front_m2:.3f} m2 of {expected:.3f}")
+# Kept as a measurement: the same outlines built in metres, as before C-009's fix, and their front face.
+cu_m = bpy.data.curves.new("jali in metres", "CURVE")
+cu_m.dimensions, cu_m.fill_mode, cu_m.resolution_u = "2D", "BOTH", 1
+cu_m.extrude, cu_m.bevel_depth, cu_m.bevel_resolution = THICK_M / 2 - BEVEL_M, BEVEL_M, 3
+for p in loops:
+    sp = cu_m.splines.new("POLY")
+    sp.points.add(len(p) - 1)
+    co = np.zeros((len(p), 4), np.float32)
+    co[:, 0], co[:, 1], co[:, 3] = (p[:, 0] - cx) * S, (cy - p[:, 1]) * S, 1.0
+    sp.points.foreach_set("co", co.ravel())
+    sp.use_cyclic_u = True
+ob_m = bpy.data.objects.new("jali in metres", cu_m)
+scene.collection.objects.link(ob_m)
+ev_m = ob_m.evaluated_get(bpy.context.evaluated_depsgraph_get())
+me_m = ev_m.to_mesh()
+front_in_metres_m2 = sum(f.area for f in me_m.polygons if f.normal.z > 0.99)
+ev_m.to_mesh_clear()
+bpy.data.objects.remove(ob_m)
+bpy.data.curves.remove(cu_m)
+screen = bpy.data.objects.new("jali", me_c)
 scene.collection.objects.link(screen)
 screen.rotation_euler = (math.radians(90), 0, 0)                      # stands up, facing -Y
 
@@ -202,7 +279,7 @@ L.new(grain.outputs["Fac"], add.inputs[2])
 L.new(add.outputs["Value"], bump.inputs["Height"])
 L.new(bump.outputs["Normal"], bsdf.inputs["Normal"])                  # (C-007's bump from a blurred outline is gone:
 bsdf.inputs["Roughness"].default_value = 0.9                           #  the relief below is geometry)
-cu.materials.append(mat)
+screen.data.materials.append(mat)
 
 # The carved front: a grid at the photo's pixel spacing over the stone, lifted by the relief, 0.1 mm proud of the
 # curve's front face so the two never fight. Its edge stays a pixel inside the outline, where the height is 0.
@@ -228,7 +305,9 @@ me_s.materials.append(mat)
 front = bpy.data.objects.new("carved front", me_s)
 front.rotation_euler = screen.rotation_euler
 scene.collection.objects.link(front)
-log["relief"] = dict(max_m=RELIEF_M, reach_px=RELIEF_PX, groove_m=GROOVE_M, vertices=len(co), faces=len(quads))
+log["relief"] = dict(bars_m=RELIEF_M, reach_px=RELIEF_PX, forms_m_at_p99=FORMS_M, height_max_m=round(float(height.max()), 5),
+                     vertices=len(co), faces=len(quads))
+log["symmetry"] = SYM
 
 # The wall: a panel 0.4 m behind the screen, as in the photo, where the surround is dark and the wall shows only
 # through the openings. Seen from the camera it covers 95 % of the screen's box: past the carved field, so every opening
@@ -320,6 +399,8 @@ r.engine = "CYCLES"
 r.resolution_x, r.resolution_y = W, H
 r.image_settings.file_format = "PNG"
 scene.view_settings.view_transform = "Standard"
+r.filter_size = FILTER_PX                                              # does nothing in Cycles (C-009: identical at 1.5,
+scene.cycles.filter_width = FILTER_PX                                  # 2.5, 3.5); Cycles reads its own filter_width
 scene.view_settings.look = LOOK                                         # the photo was edited (Polarr): --look tries a curve
 cyc = scene.cycles
 prefs = bpy.context.preferences.addons["cycles"].preferences
@@ -339,9 +420,8 @@ cyc.use_denoising = True
 depsgraph = bpy.context.evaluated_depsgraph_get()
 ev = screen.evaluated_get(depsgraph)
 me = ev.to_mesh()
-expected = abs(sum(C.area(p) for p in loops)) * S * S
-front = sum(f.area for f in me.polygons if f.normal.z > 0.99)
-log["mesh"] = dict(vertices=len(me.vertices), faces=len(me.polygons), front_face_m2=round(front, 4),
+log["mesh"] = dict(vertices=len(me.vertices), faces=len(me.polygons), front_face_m2=round(front_m2, 4),
+                   front_face_m2_if_built_in_metres=round(front_in_metres_m2, 4), metres_per_curve_unit=round(S, 6),
                    outlines_enclose_m2=round(expected, 4))
 ev.to_mesh_clear()
 print("MESH", log["mesh"], "CAMERA", log["camera"], flush=True)
@@ -405,7 +485,8 @@ for step in range(3):
 bpy.ops.wm.save_as_mainfile(filepath=os.path.join(OUT, "scene.blend"))
 sec = render(os.path.join(OUT, "render.png"), 100, SAMPLES)
 log["render"] = dict(seconds=round(sec, 1), samples=SAMPLES, size=[W, H], spot_w=round(spot.energy, 2),
-                     wall_strength=round(WALL_MAX, 4), albedo=[round(c, 4) for c in ALBEDO], look=LOOK)
+                     wall_strength=round(WALL_MAX, 4), albedo=[round(c, 4) for c in ALBEDO], look=LOOK,
+                     filter_px=FILTER_PX)
 log["seconds"] = round(time.time() - T0, 1)
 for path in (os.path.join(OUT, "build.json"), os.path.join(HERE, "results", "build.json")):
     os.makedirs(os.path.dirname(path), exist_ok=True)

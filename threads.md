@@ -83,3 +83,58 @@ flicker is unknown.
 Standard view takes eight looks; the guide's enum lookups (`kb.py enums`) may miss every enum filled in at run time.
 **Answer:** —
 
+
+### T-009 · How can one photograph give a carving's fine relief: crisp edges, incised rims, raised forms?
+
+**Status:** active
+**Parent:** T-005
+**Opened:** 2026-11-24
+**Question:** C-007 to C-009 got the jali's openings and symmetry from its photo but not its relief: one top-lit photo
+gives only the up-down slope of the surface, and our shading-to-height step rounds every step into a soft slope.
+**Answer:** —
+
+### T-010 · Does a free, local normal-map model, run on the averaged motif, give crisp carving?
+
+**Status:** open
+**Parent:** T-009
+**Opened:** 2026-11-24
+**Question:** Models trained on many images (Marigold, DSINE, Depth Anything V2) predict which way each bit of surface
+faces; which runs on this laptop, under a licence we can use, and keeps the rims and edges?
+**Answer:** —
+
+### T-011 · Can the relief be fitted so that its render matches the photo (inverse rendering)?
+
+**Status:** open
+**Parent:** T-009
+**Opened:** 2026-11-24
+**Question:** Adjust the height map until a render of it under the fitted light matches the averaged motif, with the
+symmetry and "edges are steps" as constraints (SIRFS-style, or Mitsuba 3's differentiable renderer).
+**Answer:** —
+
+### T-012 · Are there other photos of the same screen, from other angles or under other light?
+
+**Status:** open
+**Parent:** T-009
+**Opened:** 2026-11-24
+**Question:** Two or more views give real depth (photogrammetry: COLMAP, Meshroom); one view can only give what looks
+right under its own light.
+**Answer:** —
+
+### T-013 · What number says "the detail is there", so the bar is not the judge's eye alone?
+
+**Status:** open
+**Parent:** T-009
+**Opened:** 2026-11-24
+**Question:** The lines measure fell from C-008 to C-009 while the forms got better; a measure that rewards crisp,
+correctly placed relief (the render's local structure against the photo's, under the same light) is missing.
+**Answer:** —
+
+### T-014 · Why does a 2D curve's fill break at 0.92 mm a point, when the same outlines in pixels fill?
+
+**Status:** open
+**Parent:** T-005
+**Opened:** 2026-11-24
+**Question:** C-009's trace (420 outlines) filled 0.3116 m2 of front face built in metres and 1.0485 m2 built in pixels;
+one smoothed 15 x 4 px island did it. Is it the fill merging points closer than a fixed distance (Blender's scanfill),
+and at what spacing does it start?
+**Answer:** —

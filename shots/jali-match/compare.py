@@ -49,13 +49,26 @@ lp, lr = C.cut_lines(kp)[box], C.cut_lines(kr)[box]
 res["lines"] = dict(photo_share=round(float(lp.mean()), 4), render_share=round(float(lr.mean()), 4),
                     render_near_photo=round(float((lr & C.dilate(lp, 2)).sum() / max(lr.sum(), 1)), 4),
                     photo_near_render=round(float((lp & C.dilate(lr, 2)).sum() / max(lp.sum(), 1)), 4))
+# The photo's thin stone (strips about 4 px wide or less): how much of it the render shows as stone, not opening.
+stone_ph = ~kp["opening"] & ~kp["outside"]
+thin = (stone_ph & ~C.dilate(C.erode(stone_ph, 2), 2))[box]
+res["thin_stone_shown"] = round(float((thin & ~kr["opening"][box]).sum() / max(thin.sum(), 1)), 4)
+# Edge softness: the luminance gradient's mean on each image's own opening edges (a pixel either side of the mask's
+# boundary). The photo's edges are soft over about two pixels (lens and phone processing); a crisper render reads rough.
+def edge_gradient(kk):
+    yy = kk["y"]
+    g = np.hypot(np.gradient(yy, axis=0), np.gradient(yy, axis=1))
+    e = (C.dilate(kk["opening"], 1) & ~C.erode(kk["opening"], 1))[box]
+    return float(g[box][e].mean())
+res["edge_gradient"] = dict(photo=round(edge_gradient(kp), 4), render=round(edge_gradient(kr), 4))
+res["edge_gradient"]["render_over_photo"] = round(res["edge_gradient"]["render"] / res["edge_gradient"]["photo"], 3)
 p90p, p90r = sp["stone_y"][2], sr["stone_y"][2]
 res["bar"] = dict(lines_near_at_least=0.6, stone_p90_within=[round(0.85 * p90p, 4), round(1.15 * p90p, 4)],
-                  spread_ratio_within=[0.8, 1.2], openings_iou_at_least=0.52)
+                  spread_ratio_within=[0.8, 1.2], openings_iou_at_least=0.68)
 res["measures_pass"] = dict(
     lines=res["lines"]["render_near_photo"] >= 0.6 and res["lines"]["photo_near_render"] >= 0.6,
     light=0.85 * p90p <= p90r <= 1.15 * p90p and 0.8 <= res["spread_ratio"] <= 1.2,
-    openings_guard=res["openings_iou"] >= 0.52)
+    openings_guard=res["openings_iou"] >= 0.68)
 # Where the photo sees the wall, what the render shows there, and the IoU by thirds of the screen's height.
 po, ro = kp["opening"][box], kr["opening"][box]
 res["photo_openings_in_render"] = dict(opening=round(float((po & ro).sum() / po.sum()), 4),

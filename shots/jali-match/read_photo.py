@@ -50,7 +50,7 @@ if __name__ == "__main__":
     ov[lines] = (0.1, 0.9, 1.0)
     C.write_png(os.path.join(OUT, "lines.png"), ov)                   # the cut lines over the photo, to check by eye
     st.update(size=list(C.size()), rule=dict(dark=C.DARK, green_red=C.GREEN_RED, wall_dist=C.WALL_DIST, wall_tex=C.WALL_TEX,
-                                              wall_green_red_min=C.WALL_GR_MIN))
+                                              wall_green_red_min=C.WALL_GR_MIN, lit=C.LIT, lit_abs=C.LIT_ABS))
     # The first rule, kept as a measurement: openings where saturation is below 0.22 and luminance at least 0.30.
     x0, y0, x1, y1 = st["box"]
     mid = (y0 + y1) // 2
@@ -63,10 +63,22 @@ if __name__ == "__main__":
         "saturation below 0.22, luminance at least 0.30": {h: round(float(sat_rule[b].mean()), 4) for h, b in halves.items()},
         "green over red above 0.86": {h: round(float((~k["outside"] & (k["gr"] > C.GREEN_RED))[b].mean()), 4)
                                       for h, b in halves.items()},
-        "either that or near the wall's local colour (C-008)": {h: round(float(k["opening"][b].mean()), 4)
-                                                                 for h, b in halves.items()}}
+        "either that or near the wall's local colour (C-008)": {h: round(float((k["opening"] | k["lit"])[b].mean()), 4)
+                                                                 for h, b in halves.items()},
+        "the same, less what is brighter than the wall (C-009)": {h: round(float(k["opening"][b].mean()), 4)
+                                                                  for h, b in halves.items()}}
     st["rules_compared"]["saturation below 0.22, luminance at least 0.30"]["whole"] = round(
         float(sat_rule[y0:y1 + 1, x0:x1 + 1].mean()), 4)
+    # C-009: the pixels the cut was sure were wall, by their luminance over the local wall's; and what the lit test takes.
+    box = (slice(y0, y1 + 1), slice(x0, x1 + 1))
+    ratio = (k["y"] / np.maximum(k["wall_y"], 1e-3))[box][k["sure"][box]]
+    st["lit_stone"] = dict(rule=dict(brighter_than_wall_by=C.LIT, plus=C.LIT_ABS),
+                           sure_over_wall_p10_p25_p50_p75_p90=[round(float(np.percentile(ratio, q)), 3)
+                                                               for q in (10, 25, 50, 75, 90)],
+                           share_of_box=round(float(k["lit"][box].mean()), 4),
+                           share_of_c008_openings=round(float(k["lit"][box].sum() / (k["opening"] | k["lit"])[box].sum()), 4),
+                           share_of_c008_openings_by_half={h: round(float(k["lit"][b].sum() / (k["opening"] | k["lit"])[b].sum()), 4)
+                                                           for h, b in halves.items()})
     # Dark pixels inside the screen: is their colour the stone's or the wall's?
     inner = (slice(y0 + 110, y1 - 95), slice(x0 + 130, x1 - 110))     # the carved field, inside the frame
     d = k["outside"][inner]
