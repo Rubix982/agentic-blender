@@ -1228,3 +1228,89 @@ lights changes, and that is little. The scorecard held throughout (the build cha
 with the stone's colour kept, moves neither slope by more than 0.03 between 2,700 and 10,000 K, against a gap of 0.07
 and 0.09. By the card, the paler highlights are the processing, and a saturation curve on luminance is the next card
 (C-018). The search is kept, off by default (`--fit-spot-colour`). No change was shipped, so no sheet was judged.
+
+### C-018 · The photo's processing, its colour: saturation falling with brightness, fitted to the photo's slopes
+
+**Opened:** 2026-11-24
+
+1. **WHERE WE ARE.** C-017 found the photo's paler highlights and redder shadows are not the light's colour: one spot
+   temperature, the stone's colour kept, moved the colour-against-brightness slopes by under 0.03, against gaps of
+   0.07 (R/G: photo -0.100, render -0.031) and 0.09 (B/G: 0.113 against 0.025). C-013 found the photo's processing in
+   its luminance (an S-curve); a phone's processing also takes colour out of highlights.
+2. **WHAT WE ARE DOING.** After the tone curve, scale each pixel's colour (its distance from grey at the same
+   luminance) by (Y / m)^-k, m the stone's median (above it less colour, below it more), with k fitted so the stone's
+   two slopes come nearest the photo's; luminance unchanged.
+   - Fitted on the finished render, no renders added; in `build.py` (`--no-saturation` keeps C-017's).
+3. **WHY.** Unknown now: whether one number for the processing's colour gives both slopes (so the paler highlights
+   are the processing), and whether it reads as the photo or as an edit.
+4. **WHAT IS AFFECTED.** `build.py`; `results/` (C-017's kept as `*_c017_spotcolour.json`), `sheet.jpg`;
+   `areas/production.md` item 25; T-019's light half.
+5. **CONCLUSION.** The measures first, then the judge.
+   - Measures: both slopes within 30 % of the photo's; the colour spread up from 0.48; the scorecard met and its guards
+     held (the openings' brightness is untouched: the curve keeps luminance).
+   - If both slopes come within 30 % and the judge sees no loss, the paler highlights are the processing, the guide
+     gets it (item 25), and T-019's colour half is answered.
+   - If one number cannot give both slopes, the colour is in the stone after all (or a mixed light), and that is
+     written as the next card's question.
+6. **CONSEQUENCE OF NOT DOING IT.** The highlights stay as saturated as the shadows, unlike the photo.
+
+**Known limits, stated before the run:**
+- k is fitted to the slopes, so meeting them is partly by construction; the colour spread and the judge are the
+  checks it cannot fit.
+- One curve for the whole picture; a phone's colour processing is local.
+
+**Measures (2026-11-24), in the order they were taken.** C-017: the slopes -0.031 and 0.025 against the photo's
+-0.100 and 0.113, the colour spread 0.48.
+1. As the card said, k fitted on the photo's stone (`results/*_c018_photomask.json`): k = 0.10, and the build measured
+   the slopes within 12 % of the photo's; but `compare.py`, on stone in both images, measured -0.056 and 0.055, half.
+   The photo's stone takes in the render's wall at the openings' edges, bright and grey, which steepened the build's
+   slopes by itself. The lower openings came out 0.0202 off (guard 0.02).
+2. Changed: k fitted on stone in both images, as `compare.py` measures: k = 0.25; the slopes -0.094 and 0.108 against
+   -0.099 and 0.113 (within 6 %); the colour spread 0.48 to **0.75**; the scorecard met. But the openings' brightness
+   came out 0.027 and 0.032 off and their IoU fell from 0.824 to 0.770 (`results/compare_c018_noveto.json`): the
+   render's lit faces, now paler and greyer like the photo's, were taken for wall by the colour rule, as the photo's
+   had been before the normals' veto (C-012).
+3. Changed: `compare.py` applies the photo's normals' veto to the render's rule too (the render shares the photo's
+   geometry and camera). Now: the slopes -0.095 and 0.108, the colour spread **0.757**; the scorecard met (SSIM 0.554,
+   openings' IoU 0.809, bright end 0.999, lines 0.607, forms band 0.642); guards held but one: the upper openings'
+   brightness 0.022 off (bar 0.02), the lower 0.011. The curve keeps luminance, so the miss is the rule's: some paler
+   lit stone joined to real openings is now counted as opening. `make.py` reproduces it.
+Seen on the sheet: the lit faces paler and a little greyer, the shadows redder, the whole a touch more muted, nearer
+the photo's pinkish grey.
+
+**The user's look (2026-11-24):** "there is a bit of bluriness around these edges" (a close-up of the frame's top
+band). The edge itself is not soft (its rise takes about 6 rows against the photo's 10); the surface is. On that band
+the photo's fine texture is 0.735 of its mid-scale texture, the render's 0.421, its mid-scale texture 0.041 against
+the photo's 0.022: soft blobs where the photo has fine grain and small sharp specks. In the order tried:
+1. The albedo blurred over 9 px: no change (0.429). Read wrongly then as "the blobs are not the albedo's".
+2. The mid-scale tilt halved: 0.459; the blobs stayed.
+3. Taken apart layer by layer: Marigold's albedo on the frame is soft round blobs 8 to 15 px across (larger than
+   the 9 px blur, which is why step 1 did nothing); the speck map lifted 38 % of the band's pixels, noise included;
+   and the tilt, read through a square grey opening, had square plateaus.
+4. All three fixed at once (the albedo blurred over 41 px, a 0.05 noise floor for the specks, the tilt reading the
+   photo's own pixels wherever darker than the smoothed opening): the blobs went (mid-scale 0.024), but the albedo's
+   blur spread the wall's pale grey from the openings into the stone around them, and the openings' IoU fell to
+   0.778 with both openings' brightness 0.03 off (`results/*_c018_blur41.json`).
+5. The blur kept within the stone (a masked blur): IoU 0.789, the openings still 0.026 and 0.025 off
+   (`results/*_c018_threefixes.json`). Four changes at once, and the saturation refitted after each: no telling which
+   cost what.
+6. Isolated: only the masked albedo blur, C-015's tilt and specks restored (the floor and the darker-pixels tilt kept
+   as switches, off). The blobs are gone: the band's fine texture 0.0159 against the photo's 0.0164, fine over mid
+   0.509 (0.421 before, the photo's 0.735). The scorecard met (SSIM 0.543, openings' IoU 0.796, bright end 0.999,
+   lines 0.621, forms band 0.624, colour spread 0.746); the slopes -0.100 and 0.120 against -0.100 and 0.114 (k now
+   0.30). Two guards missed: the forms band's amplitude 0.772 (bar 0.8; the blobs had been adding mid-scale contrast to
+   the carving too), the upper openings' brightness 0.025 off (bar 0.02; with less colour left in the albedo the
+   saturation fitted stronger and paled a little more lit stone into "wall"); the lower 0.014.
+A crispness measure added to `compare.py` for the record (the frame's top band, fine band over forms band): the photo
+0.683; C-015 and C-018's first build 0.392; the 9 px blur 0.383; the masked 41 px blur 0.467
+(`results/compare_c018_crispness.json`). `make.py` reproduces the final build.
+
+**The judge (2026-11-24):** "This is so realistic! Oh My! I feel actual progress! It is much better, thank you."
+
+**Result (2026-11-24, closed): yes; the paler highlights are the processing.** One saturation curve on luminance,
+fitted on stone in both images (k = 0.30), gives both colour-against-brightness slopes within 6 % of the photo's and
+lifts the stone's colour spread from 0.48 to 0.75 of the photo's; the scorecard met. The user's look found blur on the
+frame, which was Marigold's albedo blobs; the albedo is now blurred over 41 px within the stone, the fine detail the
+photo's own specks (crispness 0.392 to 0.467, the photo 0.683). Two guards missed narrowly and are left, not tuned:
+the forms band's amplitude 0.772 (bar 0.8) and the upper openings' brightness 0.025 off (bar 0.02). Guide items 25 and
+26 (`areas/production.md`); T-019's colour half is answered, its grime half open.

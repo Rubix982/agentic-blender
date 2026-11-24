@@ -57,6 +57,11 @@ TONE = "--no-tone" not in argv                                        # C-013: t
 ALBEDO_NPY = os.path.join(os.path.dirname(os.path.abspath(__file__)), "out", "albedo.npy")
 USE_ALBEDO = "--no-albedo" not in argv and os.path.exists(ALBEDO_NPY)    # C-015: the stone's colour from the photo
 SPECK_MAX = float(argv[argv.index("--speck-max") + 1]) if "--speck-max" in argv else 1.6   # C-015: the specks' brightening
+SATURATION = "--no-saturation" not in argv                             # C-018: colour falling with brightness
+ALBEDO_BLUR = int(argv[argv.index("--albedo-blur") + 1]) if "--albedo-blur" in argv else 41  # C-018: the albedo's stains
+MID_W = float(argv[argv.index("--mid-tilt") + 1]) if "--mid-tilt" in argv else 1.0   # C-018: the forms band's tilt weight
+SPECK_FLOOR = float(argv[argv.index("--speck-floor") + 1]) if "--speck-floor" in argv else 0.0   # C-018: tried 0.05
+TILT_MIN = "--tilt-min" in argv                                         # C-018: tried; see the card
 SPOT_WHITE = "--fit-spot-colour" not in argv                            # C-017: fitting the spot's colour did not
                                                                        # move the slopes (2,700 to 10,000 K), so off
 NORMALS_NPY = os.path.join(os.path.dirname(os.path.abspath(__file__)), "out", "normals.npy")
@@ -406,17 +411,21 @@ if NORMAL_MAP:
     if PHOTO_DETAIL:
         yph = k["y"].astype(np.float32)
         if USE_ALBEDO:                                                 # C-015: the pale specks are colour, not relief
-            yph = C.grey_open(yph, 2)
+            # (C-018) the photo's own pixels wherever darker than the smoothed opening: scratches and pits keep their
+            # shape exactly and only bright dots are lowered; the opening alone left square plateaus (blocky crumbs)
+            yph = np.minimum(yph, C.blur(C.grey_open(yph, 2), 5)) if TILT_MIN else C.grey_open(yph, 2)
         b5, b21 = C.blur(yph, 5), C.blur(yph, 21)
         var = sum(C.blur(NM[:, :, c] ** 2, 9) - C.blur(NM[:, :, c], 9) ** 2 for c in (0, 1))
         flatw = C.blur(np.clip(1 - np.sqrt(np.maximum(var, 0)) / 0.08, 0, 1).astype(np.float32), 9)
         # On the carving, where the normals already carry the forms, the fine band is used at CARVED_SHARE: at full
         # strength there the photo's pale specks became bumps and the carving read as crusted (C-011, strength 8).
-        detail = ((yph - b5) * (CARVED_SHARE + (1 - CARVED_SHARE) * flatw) + (b5 - b21) * flatw) * k["stone"]
+        # The forms band at MID_W: at full weight the photo's larger specks (too big for the opening) made soft lit
+        # bumps on the frame, the user's "bluriness" (the frame's top band had 1.85 times the photo's mid-scale texture)
+        detail = ((yph - b5) * (CARVED_SHARE + (1 - CARVED_SHARE) * flatw) + MID_W * (b5 - b21) * flatw) * k["stone"]
         NM = NM.copy()
         NM[:, :, 1] += PHOTO_DETAIL * detail
         NM /= np.maximum(np.linalg.norm(NM, axis=2, keepdims=True), 1e-6)
-        log["photo_detail"] = dict(tilt_per_unit=PHOTO_DETAIL, carved_share=CARVED_SHARE, flat_share_of_stone=round(float((flatw[k["stone"]] > 0.5).mean()), 4),
+        log["photo_detail"] = dict(tilt_per_unit=PHOTO_DETAIL, carved_share=CARVED_SHARE, mid_weight=MID_W, flat_share_of_stone=round(float((flatw[k["stone"]] > 0.5).mean()), 4),
                                    detail_std=round(float(detail[k["stone"]].std()), 4))
     nimg = bpy.data.images.new("marigold normals", W, H, alpha=False, float_buffer=True)
     nimg.colorspace_settings.name = "Non-Color"
@@ -456,6 +465,14 @@ if NORMAL_MAP:
     # elsewhere (a front projection smears on faces that turn away).
     if USE_ALBEDO:
         AL = np.load(ALBEDO_NPY).astype(np.float64)
+        # Only the albedo's slow change (stains, discolour) is kept: at the fine scale the model draws soft round
+        # blobs 8 to 15 px across, which on the plain frame read as the user's "bluriness". A 9 px blur, tried first,
+        # was smaller than the blobs and changed nothing (the frame's fine-to-mid texture 0.421 to 0.429).
+        if ALBEDO_BLUR:                                                # within the stone only: across the openings
+            sm = k["stone"].astype(np.float32)                         # the wall's pale grey leaked into the stone
+            den = np.maximum(C.blur(sm, ALBEDO_BLUR), 1e-3)            # (the openings' IoU fell from 0.809 to 0.778)
+            AL = np.stack([np.where(k["stone"], C.blur(AL[:, :, c].astype(np.float32) * sm, ALBEDO_BLUR) / den, AL[:, :, c])
+                           for c in range(3)], -1).astype(np.float64)
         st_box = np.zeros(k["stone"].shape, bool)
         st_box[y0:y1 + 1, x0:x1 + 1] = k["stone"][y0:y1 + 1, x0:x1 + 1]
         med = np.median(AL[st_box], axis=0)
@@ -465,7 +482,7 @@ if NORMAL_MAP:
         # 3 x 3 grey opening) brightens the albedo by its own contrast, decoded to linear; wider bright features (lit
         # rims) are left to the shading.
         y_open = C.grey_open(k["y"], 1)
-        speck = np.clip(k["y"] / np.maximum(y_open, 0.03), 1.0, SPECK_MAX) ** 2.2   # at 2.5 some went white, and the
+        speck = np.clip(k["y"] / np.maximum(y_open, 0.03) - SPECK_FLOOR, 1.0, SPECK_MAX) ** 2.2   # at 2.5 some went white, and the
                                                                        # render's rule took them for wall (IoU 0.795)
         AL = np.clip(AL * np.where(st_box, speck, 1.0)[:, :, None], 0.0, 1.0)
         aimg = bpy.data.images.new("photo albedo", W, H, alpha=False, float_buffer=True)
@@ -483,7 +500,7 @@ if NORMAL_MAP:
         L.new(sock(mix, "Result_Color", out=True), sock(amix, "A_Color"))
         L.new(atex.outputs["Color"], sock(amix, "B_Color"))
         L.new(sock(amix, "Result_Color", out=True), bsdf.inputs["Base Color"])
-        log["albedo"] = dict(speck_max=SPECK_MAX, map_median_linear=[round(float(v), 4) for v in med], scaled_to=[round(float(v), 4) for v in ALBEDO],
+        log["albedo"] = dict(blur_px=ALBEDO_BLUR, speck_max=SPECK_MAX, speck_floor=SPECK_FLOOR, map_median_linear=[round(float(v), 4) for v in med], scaled_to=[round(float(v), 4) for v in ALBEDO],
                              map_p10_p90_luminance=[round(float(np.percentile(AL[st_box] @ np.array([0.2126, 0.7152, 0.0722]), q)), 4)
                                                     for q in (10, 90)])
 # C-017: a colour multiplied into the base colour, to divide out the spot's colour (white until the spot's colour is
@@ -991,7 +1008,40 @@ if TONE:
 bpy.ops.wm.save_as_mainfile(filepath=os.path.join(OUT, "scene.blend"))
 sec = render(UNTONED if TONE else os.path.join(OUT, "render.png"), 100, SAMPLES)
 if TONE:
-    C.write_png(os.path.join(OUT, "render.png"), tone_rgb(C.load(UNTONED), curve))
+    toned = tone_rgb(C.load(UNTONED), curve)
+    # C-018: the processing's colour. Each pixel's colour (its distance from grey at the same luminance) scaled by
+    # (Y / m)^-k: less above the stone's median, more below, luminance kept. In the photo log(R/G) falls and log(B/G)
+    # rises with luminance over the stone (-0.100, 0.113), the render's far less; a cooler spot did not do it (C-017).
+    # k is the one that brings the stone's two slopes nearest the photo's, the slopes measured as compare.py does.
+    if SATURATION:
+        def saturate(img, kk):
+            yy = np.maximum(img @ LUM, 1e-6)[..., None]
+            f = (np.maximum(yy, 1e-3) / curve["m"]) ** -kk
+            return np.clip(yy + (img - yy) * f, 0.0, 1.0)
+
+        # on stone in both images (3 px from any opening), as compare.py measures: a first fit on the photo's stone
+        # alone took in the render's wall at the openings' edges, bright and grey, and fitted k = 0.10 where
+        # compare.py then measured half the photo's slopes
+        sat_mask = TONE_MASK & C.erode(C.classify(toned.astype(np.float32))["stone"], 3)
+
+        def full_slopes(img):
+            b = np.stack([C.blur(img[:, :, c].astype(np.float32), 5) for c in range(3)], -1)
+            ly = np.log(np.maximum(C.luminance(b), 1e-3))[sat_mask]
+            return [float(np.polyfit(ly, np.log(np.maximum(b[:, :, i], 1e-3) / np.maximum(b[:, :, 1], 1e-3))[sat_mask], 1)[0])
+                    for i in (0, 2)]
+        sat_photo = full_slopes(rgb)
+        tries = []
+        for kk in np.arange(0.0, 1.21, 0.05):
+            sl = full_slopes(saturate(toned, kk))
+            err = sum(abs(math.log(max(a / b, 1e-3))) if a * b > 0 else 5.0 for a, b in zip(sl, sat_photo))
+            tries.append((err, float(kk), sl))
+        err, k_sat, sl = min(tries)
+        toned = saturate(toned, k_sat)
+        log["saturation"] = dict(k=round(k_sat, 3), photo_slopes=[round(v, 4) for v in sat_photo],
+                                 render_slopes=[round(v, 4) for v in sl], error=round(err, 4),
+                                 tries=[dict(k=round(t[1], 3), slopes=[round(v, 4) for v in t[2]]) for t in sorted(tries, key=lambda t: t[1])])
+        print("SATURATION", {k: v for k, v in log["saturation"].items() if k != "tries"}, flush=True)
+    C.write_png(os.path.join(OUT, "render.png"), toned)
     log["tone"].update(a=round(curve["a"], 4), b=round(curve["b"], 4))
 log["render"] = dict(seconds=round(sec, 1), samples=SAMPLES, size=[W, H], spot_w=round(spot.energy, 2),
                      wall_strength=round(WALL_MAX, 4), albedo=[round(c, 4) for c in ALBEDO], look=LOOK,

@@ -210,4 +210,15 @@ jali threads have set a standard: T-013, T-019, T-014, T-012, T-011.
 redder, at three times the render's slope): the spot's colour and a cooler fill, or the phone's processing. And dirt
 gathers in a carving's hollows, which the albedo projected from the front may not carry. Do either move the render
 nearer the photo, by the colour measures and the judge?
+**Answer:** — (the colour half: not the light's colour, C-017; the photo's processing, a saturation curve on
+luminance, C-018: the slopes within 6 %, the colour spread 0.48 to 0.75, "so realistic". Grime in the hollows: open.)
+
+### T-020 · Does this guide's method add anything when the vendor ships its own agent skills?
+
+**Status:** open
+**Parent:** C-001
+**Opened:** 2026-11-24
+**Question:** Blender had no official skill to compare against. Mapbox publishes 27 (MIT), with evals that grade prose
+answers rather than run code. Test case: `~/code/agentic-mapbox`, C-001 (ten blind GL JS tasks, run in headless
+Chromium, with and without Mapbox's skills).
 **Answer:** —

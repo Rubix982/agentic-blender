@@ -389,6 +389,20 @@ What the builds found, in the order a script meets it:
     moved the render's slopes by under 0.03 (at 25 % size, against the photo's -0.0671 and 0.0774 there): the lit
     faces keep their colour by design, and the shadows are lit mostly by light bounced off the same stone. Look to
     the photo's processing instead (item 25). `[exp: shots/jali-match/build.py]` `[exp: shots/jali-match/compare.py]`
+25. **The photo's processing takes colour out of its highlights: one saturation curve on luminance.** After the tone
+    curve, each pixel's distance from grey (luminance kept) scaled by (Y / m)^-k, m the stone's median: less colour above
+    it, more below. Fitted on stone in both images, k = 0.3 brought the slopes to -0.0997 and 0.1196 against the photo's
+    -0.0998 and 0.1134 (from -0.0311 and 0.0222), and the stone's colour spread from 0.4839 of the photo's to 0.7457.
+    Fit it where the comparison measures: on the photo's stone alone it took in the render's wall at the openings'
+    edges and fitted k = 0.1, which the comparison then measured at -0.0557 and 0.055. And give the render the photo's
+    normals' veto too (item 20): its lit faces, now paler like the photo's, otherwise read as wall (openings' IoU
+    0.7701). Judged "so realistic". `[exp: shots/jali-match/build.py]` `[exp: shots/jali-match/compare.py]`
+26. **Keep only a learned albedo's slow change.** Marigold's albedo of a plain stone surface is soft round blobs 8 to 15
+    px across; projected on the frame they read as blur (the user's "bluriness"). The frame's top band, its fine band
+    over its forms band: the photo 0.6831, the render 0.3922. A 9 px blur, smaller than the blobs, changed nothing
+    (0.3825); 41 px, within the stone only, took them out (0.467), the fine detail left to the photo's own specks.
+    Blurring across the openings spread the wall's grey into the stone (openings' IoU 0.7779).
+    `[exp: shots/jali-match/compare.py]` `[exp: shots/jali-match/build.py]`
 
 ### A standard for a photo match (C-016)
 

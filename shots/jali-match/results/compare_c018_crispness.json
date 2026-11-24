@@ -1,0 +1,10 @@
+{
+ "measure": "frame_crispness: the frame's top band, fine band over forms band (compare.py)",
+ "renders": {
+  "photo": 0.6831,
+  "C-015": 0.3921,
+  "C-018 first": 0.3922,
+  "C-018 albedo blurred 9 px": 0.3825,
+  "C-018 albedo blurred 41 px in the stone": 0.467
+ }
+}

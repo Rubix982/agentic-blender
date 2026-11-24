@@ -30,7 +30,10 @@ render = C.load(os.path.join(HERE, "out", "render.png"), (W, H))
 from read_photo import photo_normals, field  # noqa: E402
 FIELD = field()                                                        # C-014: no openings in the frame, either image
 kp, sp = stats(photo, photo_normals(), FIELD)                          # the photo's rule with the normals' veto (C-012)
-kr, sr = stats(render, None, FIELD)
+# C-018: the render shares the photo's geometry and camera, so the normals' veto (C-012) applies to its rule too:
+# once its lit faces were desaturated like the photo's, the colour rule took some of them for wall, as it had the
+# photo's before the veto.
+kr, sr = stats(render, photo_normals(), FIELD)
 x0, y0, x1, y1 = sp["box"]
 box = (slice(y0, y1 + 1), slice(x0, x1 + 1))
 
@@ -117,6 +120,15 @@ lmp, lmr = light_map(kp["y"], lm_mask), light_map(kr["y"], lm_mask)
 res["light_map"] = dict(photo=[[round(float(v), 3) for v in row] for row in lmp],
                         render=[[round(float(v), 3) for v in row] for row in lmr],
                         log_rms=round(float(np.sqrt(np.nanmean(np.log(lmr / lmp) ** 2))), 4))
+# C-018: the frame's crispness. On the frame's top band (inside the box, the top 34 to 72 rows of the image, x 200 to
+# 1000), each image's fine band (less its blur over 1 sigma) over its forms band (1 to 3.5 sigma): the photo's fine
+# grain and small sharp specks against soft blobs (the user's "bluriness": Marigold's albedo blobs, C-018).
+def crisp(yy):
+    f = yy - C.blur(yy, 5)
+    m = C.blur(yy, 5) - C.blur(yy, 21)
+    band_ = (slice(34, 72), slice(200, 1000))
+    return round(float(f[band_].std() / max(m[band_].std(), 1e-9)), 4)
+res["frame_crispness"] = dict(photo=crisp(kp["y"].astype(np.float32)), render=crisp(kr["y"].astype(np.float32)))
 # C-015: the stone's colour variation (the photo's stains, grime and darker frame, against an even albedo): on stone in
 # both (3 px from any opening), each image blurred over 5 px, the chromaticity log(R / G) and log(B / G); their spread
 # (the two standard deviations combined), render over photo; and the frame's median luminance over the field's.
