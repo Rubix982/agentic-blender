@@ -1,0 +1,166 @@
+{
+ "experiment": "experiments/curves/curve_fill_knife_edge.py",
+ "blender": "4.5.14 LTS",
+ "machine": "Darwin arm64",
+ "date": "2026-11-24",
+ "seconds": 0.99,
+ "facts": [
+  {
+   "fact": "A 2D curve's fill broke on these two outlines at some scales and not others, not by size; the curve faces it made also changed with scale",
+   "broken_scales": "scale 0.1 per px",
+   "faces_range": "7352 to 11238"
+  },
+  {
+   "fact": "Moving the island by fractions of a thousandth of a pixel turned the break on and off",
+   "broken_shifts": "-0.0005 px, +0.0005 px",
+   "whole_shifts": "-0.002 px, -0.001 px, +0 px, +0.001 px, +0.002 px"
+  },
+  {
+   "fact": "Rounding the same coordinates one decimal coarser (to 1e-5 px) moved which scales and shifts break: the break turns on the points' exact floating-point values",
+   "broken_scales_rounded": "scale 0.005 per px, scale 0.01 per px, scale 0.1 per px",
+   "broken_shifts_rounded": "-0.0005 px, +0.0005 px"
+  },
+  {
+   "fact": "Geometry Nodes' Fill Curve filled the same outlines whole every time",
+   "node_share_min": 1.0
+  }
+ ],
+ "data": {
+  "rows": {
+   "scale 0.0001 per px": {
+    "curve_fill": 1.0,
+    "curve_faces": 11234,
+    "fill_curve_node": 1.0,
+    "node_faces": 11232
+   },
+   "scale 0.0003 per px": {
+    "curve_fill": 1.0,
+    "curve_faces": 11232,
+    "fill_curve_node": 1.0,
+    "node_faces": 11232
+   },
+   "scale 0.0006 per px": {
+    "curve_fill": 1.0,
+    "curve_faces": 11232,
+    "fill_curve_node": 1.0,
+    "node_faces": 11232
+   },
+   "scale 0.000924296 per px": {
+    "curve_fill": 1.0,
+    "curve_faces": 11236,
+    "fill_curve_node": 1.0,
+    "node_faces": 11232
+   },
+   "scale 0.002 per px": {
+    "curve_fill": 1.0,
+    "curve_faces": 11238,
+    "fill_curve_node": 1.0,
+    "node_faces": 11232
+   },
+   "scale 0.005 per px": {
+    "curve_fill": 1.0,
+    "curve_faces": 11236,
+    "fill_curve_node": 1.0,
+    "node_faces": 11232
+   },
+   "scale 0.01 per px": {
+    "curve_fill": 1.0,
+    "curve_faces": 11236,
+    "fill_curve_node": 1.0,
+    "node_faces": 11232
+   },
+   "scale 0.1 per px": {
+    "curve_fill": 0.0877,
+    "curve_faces": 7352,
+    "fill_curve_node": 1.0,
+    "node_faces": 11232
+   },
+   "scale 1 per px": {
+    "curve_fill": 1.0,
+    "curve_faces": 11232,
+    "fill_curve_node": 1.0,
+    "node_faces": 11232
+   }
+  },
+  "island_shifts_at_build_scale": {
+   "-0.002 px": 1.0,
+   "-0.001 px": 1.0,
+   "-0.0005 px": 0.0877,
+   "+0 px": 1.0,
+   "+0.0005 px": 0.0877,
+   "+0.001 px": 1.0,
+   "+0.002 px": 1.0
+  },
+  "rows_rounded_1e5": {
+   "scale 0.0001 per px": {
+    "curve_fill": 1.0,
+    "curve_faces": 11232,
+    "fill_curve_node": 1.0,
+    "node_faces": 11232
+   },
+   "scale 0.0003 per px": {
+    "curve_fill": 1.0,
+    "curve_faces": 11232,
+    "fill_curve_node": 1.0,
+    "node_faces": 11232
+   },
+   "scale 0.0006 per px": {
+    "curve_fill": 1.0,
+    "curve_faces": 11232,
+    "fill_curve_node": 1.0,
+    "node_faces": 11232
+   },
+   "scale 0.000924296 per px": {
+    "curve_fill": 1.0,
+    "curve_faces": 11236,
+    "fill_curve_node": 1.0,
+    "node_faces": 11232
+   },
+   "scale 0.002 per px": {
+    "curve_fill": 1.0,
+    "curve_faces": 11238,
+    "fill_curve_node": 1.0,
+    "node_faces": 11232
+   },
+   "scale 0.005 per px": {
+    "curve_fill": 0.0877,
+    "curve_faces": 7352,
+    "fill_curve_node": 1.0,
+    "node_faces": 11232
+   },
+   "scale 0.01 per px": {
+    "curve_fill": 0.0877,
+    "curve_faces": 7352,
+    "fill_curve_node": 1.0,
+    "node_faces": 11232
+   },
+   "scale 0.1 per px": {
+    "curve_fill": 0.0877,
+    "curve_faces": 7352,
+    "fill_curve_node": 1.0,
+    "node_faces": 11232
+   },
+   "scale 1 per px": {
+    "curve_fill": 1.0,
+    "curve_faces": 11234,
+    "fill_curve_node": 1.0,
+    "node_faces": 11232
+   }
+  },
+  "island_shifts_rounded_1e5": {
+   "-0.002 px": 1.0,
+   "-0.001 px": 1.0,
+   "-0.0005 px": 0.0877,
+   "+0 px": 1.0,
+   "+0.0005 px": 0.0877,
+   "+0.001 px": 1.0,
+   "+0.002 px": 1.0
+  },
+  "enclosed_px": 1447485.6,
+  "points": [
+   11194,
+   38
+  ]
+ },
+ "args": []
+}

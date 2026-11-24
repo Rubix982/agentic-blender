@@ -79,7 +79,7 @@
    "correlation": 0.6241,
    "amplitude_ratio": 0.7717
   },
-  "pixels": 851094,
+  "pixels": 851095,
   "photo_vs_itself_shifted": {
    "1px": {
     "fine": 0.1378,
@@ -279,7 +279,7 @@
  "openings_y_by_half": {
   "upper": {
    "photo": 0.4604,
-   "render": 0.4856
+   "render": 0.4855
   },
   "lower": {
    "photo": 0.8465,
@@ -365,7 +365,7 @@
     "ok": true
    },
    "openings_y_upper": {
-    "value": 0.0252,
+    "value": 0.0251,
     "bar": "<= 0.02 off",
     "ok": false
    },

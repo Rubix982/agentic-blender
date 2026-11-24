@@ -237,11 +237,11 @@ scene = bpy.context.scene
 cx, cy = W / 2, H / 2
 
 
-def trace_mesh(L, flat=False):
+def trace_mesh(L, flat=False, fill="BOTH"):
     """The outlines as a 2D curve in pixels, filled (and, unless flat, extruded and bevelled), made a mesh."""
     cu = bpy.data.curves.new("jali", "CURVE")
     cu.dimensions = "2D"
-    cu.fill_mode = "BOTH"
+    cu.fill_mode = fill
     cu.resolution_u = 1
     if not flat:
         cu.extrude = (THICK_M / 2 - BEVEL_M) / S
@@ -271,13 +271,71 @@ def front_px(me):
     return sum(f.area for f in me.polygons if f.normal.z > 0.99)
 
 
+# C-020: Blender's curve fill (its scan-fill) can break on a few outlines, at some scales and positions and not others:
+# moving one island by 0.0005 px, or rounding the points to 1e-5 px, turns the break on and off (experiments/curves/
+# curve_fill_knife_edge.py). Geometry Nodes' Fill Curve (constrained Delaunay) filled the same outlines every time. So
+# the repair keeps the curve's extruded, bevelled walls with its fill off, and takes the front and back from Fill Curve
+# at the walls' top and bottom.
+FILL_NG = bpy.data.node_groups.new("fill curve", "GeometryNodeTree")
+FILL_NG.interface.new_socket("Geometry", in_out="INPUT", socket_type="NodeSocketGeometry")
+FILL_NG.interface.new_socket("Geometry", in_out="OUTPUT", socket_type="NodeSocketGeometry")
+_gi, _go, _fc = FILL_NG.nodes.new("NodeGroupInput"), FILL_NG.nodes.new("NodeGroupOutput"), FILL_NG.nodes.new("GeometryNodeFillCurve")
+FILL_NG.links.new(_gi.outputs[0], _fc.inputs[0])
+FILL_NG.links.new(_fc.outputs[0], _go.inputs[0])
+
+
+def trace_mesh_cdt(L):
+    import bmesh
+    walls = trace_mesh(L, fill="NONE")
+    zc = max(v.co.z for v in walls.vertices)                            # the walls' top: where the curve's cap sits
+    cu = bpy.data.curves.new("caps", "CURVE")
+    cu.dimensions, cu.fill_mode, cu.resolution_u = "2D", "NONE", 1
+    for p in L:
+        sp = cu.splines.new("POLY")
+        sp.points.add(len(p) - 1)
+        co = np.zeros((len(p), 4), np.float32)
+        co[:, 0], co[:, 1], co[:, 3] = p[:, 0] - cx, cy - p[:, 1], 1.0
+        sp.points.foreach_set("co", co.ravel())
+        sp.use_cyclic_u = True
+    ob = bpy.data.objects.new("caps", cu)
+    scene.collection.objects.link(ob)
+    ob.modifiers.new("fill", "NODES").node_group = FILL_NG
+    cap = bpy.data.meshes.new_from_object(ob.evaluated_get(bpy.context.evaluated_depsgraph_get()))
+    bpy.data.objects.remove(ob)
+    bpy.data.curves.remove(cu)
+    bm = bmesh.new()
+    bm.from_mesh(walls)
+    for sign in (1.0, -1.0):
+        part = bmesh.new()
+        part.from_mesh(cap)
+        for v in part.verts:
+            v.co.z = sign * zc
+        if sign < 0:
+            bmesh.ops.reverse_faces(part, faces=part.faces)
+        tmp = bpy.data.meshes.new("cap part")
+        part.to_mesh(tmp)
+        part.free()
+        bm.from_mesh(tmp)
+        bpy.data.meshes.remove(tmp)
+    out = bpy.data.meshes.new("jali")
+    bm.to_mesh(out)
+    bm.free()
+    bpy.data.meshes.remove(walls)
+    bpy.data.meshes.remove(cap)
+    return out
+
+
 # The fill can still fail in pixels (C-011, at 15 mm: front face 0.280 m2 of 1.145), and both times it was one small
 # smoothed island, at about (981, 141), that filled correctly unsmoothed; why is not known (T-014). So when the fill
 # falls short, the outlines are halved until the one that breaks it is found, it is swapped for its unsmoothed outline,
 # and that is logged; if the same outline is found again, it is dropped (at 5 mm a 120 px hole broke the fill either
 # way). At most five times, then the build stops.
-me_c = trace_mesh(loops)
+me_c = trace_mesh_cdt(loops) if "--cdt-caps" in argv else trace_mesh(loops)
 repairs = []
+if front_px(me_c) < 0.85 * abs(sum(C.area(p) for p in loops)):         # C-020: first the constrained Delaunay caps
+    bpy.data.meshes.remove(me_c)
+    me_c = trace_mesh_cdt(loops)
+    repairs.append(dict(action="caps from Fill Curve (constrained Delaunay)"))
 if front_px(me_c) < 0.85 * abs(sum(C.area(p) for p in loops)):
     bpy.data.meshes.remove(me_c)
     outer = max(range(len(loops)), key=lambda i: abs(C.area(loops[i])))

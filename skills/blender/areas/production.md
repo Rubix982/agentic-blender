@@ -326,8 +326,9 @@ What the builds found, in the order a script meets it:
     carving, the fine band at 0.3 of A: at full strength the photo's pale specks read as crust. From here the detail
     measure partly measures the photo against itself. `[exp: shots/jali-match/build.py]`
     `[exp: shots/jali-match/compare.py]`
-18. **Check the fill after every build.** A traced curve's fill can fail on one small outline, at any scale
-    (`curves-text.md`, item 9); `build.py` halves the outlines to find it and swaps in its unsmoothed outline.
+18. **Check the fill after every build.** A traced curve's fill can fail on one small outline, at any scale, by its
+    exact arithmetic (`curves-text.md`, item 9); `build.py` then takes the front and back from Geometry Nodes' Fill
+    Curve, keeping the curve's bevelled walls.
 19. **Fit where the light pools, not only its power.** Matching the stone's median brightness left the photo's light
     wrong in place: a light map (the stone's median in 6 x 7 cells, each over the median cell) of the photo pooled in
     the upper middle and fell away at the sides, while the render's fell evenly from top to bottom, an error (the RMS

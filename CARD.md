@@ -1348,3 +1348,46 @@ render's shadows darken its recesses about as much as the photo's darken its own
 deepest 3 % of the smallest recesses, and nothing at the larger scale. The openings' edges are 3.3 % lighter in the
 render. Both are small; nothing was changed, so no sheet was judged. If the user sees grime missing, this card is the
 place to reopen. T-019 is answered (the colour by the processing, C-018; no grime needed here).
+
+### C-020 · Why a 2D curve's fill breaks on a few traced outlines, and a fill that does not
+
+**Opened and closed:** 2026-11-24
+
+1. **WHERE WE ARE.** T-014: C-009's traced outlines filled to 0.3116 m2 of front face built in metres and 1.0485 in
+   pixels; at 15 mm (C-011) the same small smoothed island broke the fill in pixels too. The build repairs it by
+   halving to the outline and swapping in its unsmoothed version, which C-011 found does not always work (at 5 mm it
+   failed). The guide said the fill "merges points closer than a fixed distance" would fit; that was never checked.
+2. **WHAT WE ARE DOING.** Read Blender's fill (4.5's scan-fill source), reproduce the break from C-009's own code, and
+   find what turns it on and off; then a repair that does not depend on luck.
+3. **WHY.** Unknown: the cause, and so whether any repair short of another fill can be trusted on a new asset.
+4. **WHAT IS AFFECTED.** `curves-text.md` item 9 (its "probably" replaced by what was measured); a new experiment
+   `experiments/curves/curve_fill_knife_edge.py` with the outlines it needs as data; `build.py`'s repair;
+   `production.md` item 18; T-014.
+5. **CONCLUSION.** If the break is a tolerance merging close points, a scale-aware repair fits; if it is the exact
+   arithmetic of the fill, only a different fill is dependable, and the build should use one when the curve's fails.
+6. **CONSEQUENCE OF NOT DOING IT.** A new asset's trace can come out inside out, and the repair is a guess.
+
+As with C-019, measured before the card was written; the numbers are stated as they fell.
+
+**Measures (2026-11-24).** The source (`blenlib/intern/scanfill.cc`, 4.5): its only tolerance, `SF_EPSILON` 0.00003
+in the curve's own units, joins a vertex to an edge only for vertices with a single edge, which closed outlines do not
+have; outlines whose bounding boxes overlap are merged into one polygon; the triangles are found by exact arithmetic
+(which side of an edge a point lies on), and the loop has two silent exits, a cap at twice as many triangles as
+vertices ("Fill error: endless loop") and a skip for "a serial of overlapping edges". C-009's code, rebuilt from its
+commit: its 420 outlines fill 0.2718 of their area in metres and 0.9146 in pixels; the island and the outline around it
+alone break at 0.000924 and at 0.1 units a pixel and fill at 0.0001, 0.0003, 0.0006, 0.002, 0.005, 0.01 and 1; moving
+the island 0.0005 px either way makes them fill; the broken fill stops at 7,352 triangles, under the cap of 22,464, so
+it is not the cap; no coordinate of the island equals one of the outline's exactly. Moving the whole set did not
+help, and giving each outline its own random offset up to 0.001 px fixed it for 3 seeds of 4. The experiment, on the
+pair saved to a millionth of a pixel: broken at 0.1 a pixel and with the island moved 0.0005 px either way, whole
+otherwise; rounded to 1e-5 px, broken at 0.005, 0.01 and 0.1 instead. Geometry Nodes' Fill Curve (constrained Delaunay)
+filled every case whole, the full 420 too (0.9146 at every scale). The build forced through Fill Curve caps on today's
+outlines: front face 1.1248 m2 both ways, the render's measures the same to the third decimal (997,284 faces against
+549,170).
+
+**Result (2026-11-24, closed): the fill's own exact arithmetic, not a tolerance.** Whether Blender's curve fill breaks
+on these outlines turns on the points' exact floating-point values: a scale, a shift of 0.0005 px or a rounding to
+1e-5 px switches it on or off, and no tolerance is involved for closed outlines. The dependable fill is Geometry Nodes'
+Fill Curve, which never broke here. The build now repairs a short fill by keeping the curve's bevelled walls with its
+fill off and taking the front and back from Fill Curve (the halving search kept as a last resort). T-014 is answered;
+`curves-text.md` item 9 and `production.md` item 18 say so.

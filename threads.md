@@ -140,7 +140,7 @@ colour spread in one view only. `compare.py` prints them as a scorecard; `areas/
 
 ### T-014 · Why does a 2D curve's fill break at 0.92 mm a point, when the same outlines in pixels fill?
 
-**Status:** open
+**Status:** answered
 **Parent:** T-005
 **Opened:** 2026-11-24
 **Question:** C-009's trace (420 outlines) filled 0.3116 m2 of front face built in metres and 1.0485 m2 built in pixels;
@@ -148,7 +148,9 @@ one smoothed 15 x 4 px island did it. Is it the fill merging points closer than 
 and at what spacing does it start? C-011 found it is not the scale alone: at 15 mm the same island (about 981, 141),
 smoothed, broke the fill in pixels too, and filled unsmoothed; at 5 mm several holes near (884, 440) and (922, 441)
 broke it either way. The build now finds and repairs such a loop by halving; the cause is still open.
-**Answer:** —
+**Answer:** C-020: not a tolerance (the scan-fill's only tolerance does not touch closed outlines) but its exact
+arithmetic: a scale, a 0.0005 px shift or rounding to 1e-5 px turns the break on and off
+(`experiments/curves/curve_fill_knife_edge.py`). Geometry Nodes' Fill Curve never broke; the build's repair uses it.
 
 ### T-015 · What light does the museum's photo have, and can the render's be fitted to it?
 

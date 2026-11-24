@@ -42,15 +42,18 @@ the attribute-based type that hair and geometry nodes use. `[exp: experiments/cu
    from a photograph came out inside out this way (`production.md`). Keep `offset` at 0, shrink the shape before
    tracing it, and check the evaluated mesh's front-face area against the outlines' own.
    `[exp: experiments/curves/curve_offset_fill.py]`
-9. **A traced curve's fill can fail on one outline: check it every build, and find the outline by halving.** A 2D
-   curve of 420 outlines traced from a photo, built in metres at 0.000924 m a pixel, filled to a front face of
-   0.3116 m2, where the same outlines built in pixels gave 1.0485 m2. Halving the outlines found one small smoothed
-   island (15 x 4 px) breaking the fill of the whole curve. Building in pixels was not the cure: at another thickness
-   the same island, smoothed, broke the fill in pixels too (it sat at 981.5, 140.7, with an area of 65.2 px), and its
-   unsmoothed outline filled; with 467 outlines, metres and pixels both gave 1.0877 m2. So after every build compare
-   the evaluated front face with the outlines' area; when it falls short, halve the outlines until the one that breaks
-   it is found and swap it for its unsmoothed outline. Build in pixels and scale the mesh (not the object, when a
-   material reads object coordinates) all the same. Why the fill breaks is not known. `[exp: shots/jali-match/build.py]`
+9. **A 2D curve's fill can break on a few outlines, by its exact arithmetic: check it, and fall back on Fill Curve.**
+   Blender's curve fill is its scan-fill, which decides which side of an edge a point lies on exactly; its one
+   tolerance (`SF_EPSILON`, 0.00003 in the curve's units) does not apply to closed outlines. On two traced outlines (an
+   island and the outline around it) it filled the whole area at most scales but 0.0877 of it at 0.1 units a pixel;
+   moving the island 0.0005 px either way broke it too, and rounding the points to 1e-5 px moved the break to 0.005,
+   0.01 and 0.1. Geometry Nodes' Fill Curve (constrained Delaunay) filled them whole every time
+   (`[exp: experiments/curves/curve_fill_knife_edge.py]`). So after every build compare the evaluated front face with
+   the outlines' area; when it falls short, keep the curve's extruded, bevelled walls with `fill_mode` "NONE" and take
+   the front and back faces from a Fill Curve modifier at the walls' top and bottom. On a healthy trace that gives the
+   same front face (1.1248 m2 either way) with more faces. Building in pixels rather than metres is not a cure: on one
+   trace it filled 1.0485 m2 in pixels and 0.3116 in metres, on another the break came in pixels.
+   `[exp: shots/jali-match/build.py]`
 
 ## Bezier and poly curves
 
