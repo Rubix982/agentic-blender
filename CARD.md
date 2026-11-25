@@ -1498,9 +1498,15 @@ near the wall's colour above 0.80) called 33.5 % of the band opening, and the fi
 field from the openings, was stretched by them into the frame (its top at y 68 against the box's 52).
 
 My reading of the sheets, before the user's (the user's glance decides field 5): 01, 02 and 11 read as their photos;
-04 keeps the tree but loses the screen's fine holes; 05 and 17 in part; 03, 06, 07, 09, 12, 15 and 16 do not. Where it
-reads, the photo is like ours: a front-lit screen whose openings show a wall or a dim room. It fails on pale stone (the
-colour rule), backlit screens, fine lattices, and photos where the screen is a small part of a building. The contact
-sheets: `shots/jali-batch/contact_1.jpg` to `contact_3.jpg` (no measures on them); the measures: `measures.json`.
+04 keeps the tree but loses the screen's fine holes; 05 and 17 in part; 03, 06, 07, 09, 12, 15 and 16 do not. The
+reading sheets (`reading_1.jpg` to `reading_3.jpg`: each photo beside how `read_photo.py` sorted it) place most of the
+failures in that first step, and say how. The rule expects red stone in front of a lit, neutral wall, and the photos
+break it in four ways: a pale stone or patina is taken for wall (01's frame, 06's columns, 11's inlay); with a dim room
+behind, the reading inverts, the pale bars called wall and the dark holes stone (12, 15, 16); holes that show sunlight
+are brighter than any wall and are taken for lit stone (09); a backdrop of red sandstone cannot be told from the screen
+(17). Two read about right and still render poorly, 03 and 05 (the tree of life from outside, in sun), so theirs is
+later, in the light, the tone curve or the wall behind the holes; I first put 03 down to the colour rule, and its
+reading sheet says otherwise. 02 reads right and renders right. The contact sheets: `shots/jali-batch/contact_1.jpg`
+to `contact_3.jpg` (no measures on them); the measures: `measures.json`.
 
 **Result:** waiting on the user's glance at the contact sheets.

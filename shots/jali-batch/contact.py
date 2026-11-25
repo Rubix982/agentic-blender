@@ -1,10 +1,12 @@
 """C-022: every shot's photo beside its render, for the user to judge at a glance, and a table of the measures.
 
-    .venv/bin/python shots/jali-batch/contact.py
+    .venv/bin/python shots/jali-batch/contact.py [--classes]
 Writes contact_1.jpg, contact_2.jpg, ... (six shots a page: the photo left, the render right, at the same size,
 numbered as the shot's folder; a shot that did not reach a render shows its photo and the step it failed at) and
 measures.json (the standard's measures and guards from each compare.json, with status.json's outcome). The pages
-carry no measures, so the glance is not led by them."""
+carry no measures, so the glance is not led by them. With --classes: reading_1.jpg, ... instead, each photo beside
+read_photo.py's map of it (out/classes.png: openings white, stone orange, the dark surround black), to see where the
+reading went wrong."""
 import json
 import os
 
@@ -21,16 +23,20 @@ def font(size):
     return ImageFont.load_default()
 
 
+CLASSES = __import__("sys").argv[1:].count("--classes") > 0
+
+
 def pair(slug, status):
     folder = os.path.join(HERE, "shots", slug)
     meta = json.load(open(os.path.join(folder, "shot.json")))
     photo = Image.open(os.path.join(folder, "photo", meta["photo"])).convert("RGB")
     w = round(photo.width * CELL_H / photo.height)
     photo = photo.resize((w, CELL_H), Image.LANCZOS)
-    render_path = os.path.join(folder, "out", "render.png")
+    render_path = os.path.join(folder, "out", "classes.png" if CLASSES else "render.png")
     st = status.get(slug, {})
     failed = next((n for n in ("normals", "intrinsics", "read_photo", "build", "compare") if n in st and not st[n]["ok"]), None)
-    if os.path.exists(render_path) and failed not in ("normals", "intrinsics", "read_photo", "build"):
+    if os.path.exists(render_path) and failed not in (("normals", "intrinsics", "read_photo") if CLASSES else
+                                                       ("normals", "intrinsics", "read_photo", "build")):
         right = Image.open(render_path).convert("RGB").resize((w, CELL_H), Image.LANCZOS)
     else:
         right = Image.new("RGB", (w, CELL_H), (30, 30, 30))
@@ -40,7 +46,7 @@ def pair(slug, status):
     out.paste(photo, (0, 34))
     out.paste(right, (w + 4, 34))
     d = ImageDraw.Draw(out)
-    d.text((6, 4), f"{slug}   photo | render", fill=(255, 230, 120), font=font(22))
+    d.text((6, 4), f"{slug}   photo | {'how it was read' if CLASSES else 'render'}", fill=(255, 230, 120), font=font(22))
     return out
 
 
@@ -54,9 +60,11 @@ if __name__ == "__main__":
         sheet = Image.new("RGB", (COLS * cw + (COLS + 1) * GAP, rows * (CELL_H + 34) + (rows + 1) * GAP), (40, 40, 40))
         for i, c in enumerate(cells):
             sheet.paste(c, (GAP + (i % COLS) * (cw + GAP), GAP + (i // COLS) * (CELL_H + 34 + GAP)))
-        path = os.path.join(HERE, f"contact_{page // PER_PAGE + 1}.jpg")
+        path = os.path.join(HERE, f"{'reading' if CLASSES else 'contact'}_{page // PER_PAGE + 1}.jpg")
         sheet.save(path, quality=88)
         print("PAGE", path, sheet.size)
+    if CLASSES:
+        raise SystemExit(0)
     rows = {}
     for s in slugs:
         cp = os.path.join(HERE, "shots", s, "results", "compare.json")
