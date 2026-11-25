@@ -117,12 +117,13 @@ symmetry and "edges are steps" as constraints (SIRFS-style, or Mitsuba 3's diffe
 
 ### T-012 · Are there other photos of the same screen, from other angles or under other light?
 
-**Status:** open
+**Status:** answered
 **Parent:** T-009
 **Opened:** 2026-11-24
 **Question:** Two or more views give real depth (photogrammetry: COLMAP, Meshroom); one view can only give what looks
 right under its own light.
-**Answer:** —
+**Answer:** no, not where we could look (C-021). The photographer's three photos in that gallery are three different
+screens, each from the front; nobody else's on Flickr; Commons and the museum's archive could not be read from here.
 
 ### T-013 · What number says "the detail is there", so the bar is not the judge's eye alone?
 
@@ -200,7 +201,8 @@ the photo), grime in the hollows.
 **Question:** C-007 to C-015 built one jali from one photo to "this looks so real!", through 23 findings in
 `areas/production.md`. Which of them are about pierced carved stone in general and which about this photo? Run
 `make.py`'s chain on a second photo and see what breaks. Parked on the user's word (2026-11-24) until the remaining
-jali threads have set a standard: T-013, T-019, T-014, T-012, T-011.
+jali threads have set a standard: T-013, T-019, T-014, T-012, T-011. Candidates found by C-021, same phone, gallery
+and licence as ours: Flickr 51973919577 (a near sibling) and 51975487525 (another design).
 **Answer:** —
 
 ### T-019 · The light's colour, and grime in the hollows: what is left of the stone's age?

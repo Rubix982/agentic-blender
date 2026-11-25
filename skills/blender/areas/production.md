@@ -434,6 +434,9 @@ map (at most 0.20), the frame's texture (0.8 to 1.2). Not in it: the edge gradie
 pixel filter set, not the likeness. On the half-size sheets the rule's openings drift with the render's tones (IoU
 -0.205, -0.263 against the verdicts), so measure openings at full size. The lines measure, set aside in C-009 when it
 fell for one card, follows the verdicts over all eight. Eight sheets, one photo, one judge: a pattern to keep testing.
+Every number here is measured on the photo the build was fitted to. No second view of this screen was found to test
+the relief against (C-021: the photographer's other photos in that gallery are of other screens, each from the front), so
+its depth is unchecked from any other angle; it is right as far as it looks right under the one light.
 `[exp: shots/jali-match/measure_history.py]` `[exp: shots/jali-match/compare.py]`
 
 ```python

@@ -1391,3 +1391,39 @@ on these outlines turns on the points' exact floating-point values: a scale, a s
 Fill Curve, which never broke here. The build now repairs a short fill by keeping the curve's bevelled walls with its
 fill off and taking the front and back from Fill Curve (the halving search kept as a last resort). T-014 is answered;
 `curves-text.md` item 9 and `production.md` item 18 say so.
+### C-021 · Other photos of the same screen: is there a second view to test the relief against?
+
+**Opened and closed:** 2026-11-25
+
+1. **WHERE WE ARE.** T-012: the jali is rebuilt from one frontal photo, its relief taken from a learned normal map, and
+   every number in the standard (C-016) is measured on that same photo, the one the build was tuned to. Its title ends
+   "Louvre Abu Dhabi (2)", so the photographer took at least one more of this screen.
+2. **WHAT WE ARE DOING.** Search the photographer's Flickr photostream, Wikimedia Commons and the museum's own pages for
+   other photos of this screen, and record for each its angle, light, size and licence.
+3. **WHY.** Unknown: whether a second view exists that we may use. A photo from another angle would be the first test
+   of the relief that the build was not fitted to; one under other light, a test of the albedo and the light fit.
+4. **WHAT IS AFFECTED.** T-012's answer; `production.md`, "Rebuilding a pierced object from one photograph" (what one
+   view leaves unchecked); `photo/CREDIT.md` if a photo is added. Nothing in the build or the measures.
+5. **CONCLUSION.** If at least one openly licensed photo shows this screen from an angle well off frontal, or under
+   clearly different light, the next card renders the build from that view as a held-out check and T-012 stays open
+   for it. If there is none (only near-duplicates of our view, or licences that forbid reuse), T-012 is answered no,
+   and the guide says the relief's depth is untested beyond looking right under its one light.
+6. **CONSEQUENCE OF NOT DOING IT.** The standard rests on in-sample numbers only, and a second asset would inherit that
+   without anyone having checked whether a held-out view was there for the taking.
+
+**Measures (2026-11-25).** The photographer's Flickr photostream holds three photos with this title, numbered (1) to
+(3), all CC BY 2.0, all taken on the same phone within 37 seconds (12:33:11 to 12:33:48), all frontal, at 1/25 or 1/27
+s, f/1.8. They are three different screens. (3) is another design: upright flowering plants in the lattice, another
+arch and frame. (1) is a sibling of ours, the same arch and lattice, but the flower under the crown has notched,
+heart-shaped petals where ours are round, a plain ring of stems around it where ours cross in loops, and its stone has
+none of the white specks that cover ours (`photo/c021_sibling_vs_ours.jpg`). Flickr searched across all users ("louvre
+abu dhabi" with jali, window screen, agra, mughal, lattice; "jali abu dhabi"): no photo of a jali by anyone else.
+Wikimedia Commons did not answer from this machine; its search index, through a web search limited to the site, has no
+jali at the Louvre Abu Dhabi. The museum's site refused the request. Record: `results/other_photos_c021.json`.
+
+**Result (2026-11-25, closed): no second view of this screen where we could look.** Of the three photos taken in that
+gallery, one is ours and the other two are other screens, each also from the front. So the second branch holds: T-012
+is answered no, and the guide says the relief's depth has not been checked from any other angle; every number in the
+standard is measured on the photo the build was fitted to. Commons itself and the museum's archive were not read, so a
+view there is not ruled out. What the search turned up instead is for T-018: two more screens photographed on the same
+phone, in the same gallery and light, under the same licence, one of them a near sibling of ours.

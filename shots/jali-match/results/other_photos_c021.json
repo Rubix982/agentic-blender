@@ -1,0 +1,21 @@
+{
+ "card": "C-021",
+ "searched": {
+  "flickr_photographer": "Prof. Mortel's photostream, search 'jali': 3 photos, all titled 'Window screen (jali), northern India, Agra area, 1630-50; Louvre Abu Dhabi (n)'",
+  "flickr_all_users": "searches 'louvre abu dhabi jali', '... window screen', '... agra', '... mughal', '... lattice', 'jali abu dhabi': no photo of a jali by anyone else (two unrelated hotel photos)",
+  "wikimedia_commons": "not reachable from this machine (connection reset); its search index, through a web search limited to the site, shows no jali at the Louvre Abu Dhabi",
+  "museum_site": "louvreabudhabi.ae refused the request (HTTP 403)"
+ },
+ "photos": [
+  {"n": 1, "flickr_id": "51973919577", "taken": "2022-03-12 12:33:48", "size": [2513, 2978], "licence": "CC BY 2.0",
+   "camera": "SM-G998B, 24 mm equivalent, 1/25 s, f/1.8, ISO 640, edited in Polarr",
+   "same_screen": false, "why": "a sibling of the same design family: frontal, the same arch and lattice, but the flower under the crown has notched, heart-shaped petals (ours round), a plain ring of stems around it (ours crossing loops), and its stone has none of the white specks that cover ours"},
+  {"n": 2, "flickr_id": "51973919457", "taken": "2022-03-12 12:33:11", "size": [2460, 2803], "licence": "CC BY 2.0",
+   "camera": "SM-G998B, 24 mm equivalent, 1/25 s, f/1.8, ISO 640, edited in Polarr", "same_screen": true, "why": "ours (photo/agra-jali.jpg)"},
+  {"n": 3, "flickr_id": "51975487525", "taken": "2022-03-12 12:33:26", "size": [2918, 3354], "licence": "CC BY 2.0",
+   "camera": "SM-G998B, 24 mm equivalent, 1/27 s, f/1.8, ISO 500, edited in Polarr",
+   "same_screen": false, "why": "a different design: upright flowering plants in the lattice, a different arch and frame"}
+ ],
+ "second_view_of_our_screen": 0,
+ "evidence": "photo/c021_sibling_vs_ours.jpg: the flower under the crown, photo 1 left, ours right, the same fraction of each photo (x 0.38-0.62, y 0.13-0.30)"
+}
