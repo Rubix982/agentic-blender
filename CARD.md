@@ -1702,6 +1702,16 @@ worse on all four (the user had called 18, before it, "really beautiful"). The o
 one rule, so across a change of rule it is not like for like; SSIM and the bright end are. Fix 6 stays: it reads the
 structure the user saw was wrong (13's sides, its holes), and 18's loss is in the light that follows.
 
+*Fix 8, the user on 03 and 05 (2026-11-25): "it seems the further we go from the main jali, the further distortions
+become apparent".* Under the dark rule a pale wall's joints, cracks and weathering are darker than the threshold too,
+and they sat inside the carved field's box, which the frieze's gaps had stretched over nearly the whole picture (03:
+28 to 1,300 by 18 to 1,226 of 1,320 by 1,402). A jali's holes are packed and a wall's dark lines are scattered. So the
+dark rule keeps an opening only where the share of openings around it (a Gaussian of 20 px) is at least half the
+median share at the openings: 03 keeps 87.6 % of its openings, 05 83.3 %, 12 92.0 %, 15 89.7 %, and on the reading
+sheets the wall goes back to stone while the arch keeps its lattice (05's dark ledge shadows stay: they are dense).
+Worked at a quarter of the size in numpy; against scipy's Gaussian at full size it keeps the same openings to 99.9 %.
+Ours is on the colour rule and cannot move. Not yet run: the battery reached the 30 % at which runs stop.
+
 *Open, not yet fixed.* The tone curve's upper exponent sits at its limit of 4.0 in 8 of the 13 renders that C-022
 measured (ours 2.12), and with the fit's stone corrected 03, 05, 09 and 15 end at both limits (0.3 and 4.0); the
 cause is not found. The 25 % fit renders are not it: their stone's median is within about 10 % of the full render's

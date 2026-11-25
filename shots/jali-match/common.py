@@ -192,6 +192,26 @@ def decide_side(rgb):
     return out
 
 
+PACKED, PACKED_SIGMA = 0.5, 20.0    # C-023 (fix 8): see classify_dark
+
+
+def packed_share(mask, sigma=None):
+    """The share of mask pixels around each pixel, by a Gaussian of sigma px (PACKED_SIGMA), worked at a quarter of
+    the size: separable, numpy only."""
+    sigma = PACKED_SIGMA if sigma is None else sigma
+    h, w = mask.shape
+    q = (max(w // 4, 1), max(h // 4, 1))
+    a = resize(mask.astype(np.float32), q)
+    sq = sigma / 4.0
+    r = int(3 * sq) + 1
+    x = np.arange(-r, r + 1, dtype=np.float32)
+    g = np.exp(-x * x / (2 * sq * sq))
+    g /= g.sum()
+    a = np.apply_along_axis(lambda v: np.convolve(np.pad(v, r, mode="edge"), g, mode="valid"), 0, a)
+    a = np.apply_along_axis(lambda v: np.convolve(np.pad(v, r, mode="edge"), g, mode="valid"), 1, a)
+    return resize(a, (w, h))
+
+
 def classify_dark(rgb):
     """C-023: the openings darker than the stone (a room or an interior behind). The surround is the dark that reaches
     the image's border; the rest splits at its luminance's Otsu threshold, the dark side opening. The colour rule's
@@ -201,6 +221,14 @@ def classify_dark(rgb):
     outside = border_dark(y)
     t = otsu(y[~outside]) if (~outside).any() else 0.5
     opening = ~outside & (y <= t)
+    # C-023 (fix 8): a pale wall's joints, cracks and weathering are darker than the threshold too, and were read as
+    # holes all round 03's and 05's arch (the user: "the further we go from the main jali, the further distortions
+    # become apparent"). A jali's holes are packed; a wall's dark lines are scattered. So an opening is kept only where
+    # the share of openings around it (a Gaussian of PACKED_SIGMA px) is at least PACKED of the median share at the
+    # openings (03 keeps 87.6 % of them, 05 83.3 %, 12 92.0 %, 15 89.7 %).
+    if opening.any():
+        dens = packed_share(opening)
+        opening &= dens >= PACKED * float(np.median(dens[opening]))
     z = np.zeros_like(opening)
     return dict(outside=outside, opening=opening, stone=~outside & ~opening, y=y, gr=gr, lit=z, dim=z.copy(),
                 sure=z.copy(), wall_y=np.full(y.shape, t, np.float32), veto=z.copy(), side="dark", threshold=t)
