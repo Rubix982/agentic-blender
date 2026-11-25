@@ -82,7 +82,7 @@ THICK_M = THICK_ARG or 0.010          # the pierced field's thickness (--thick t
                                        # 0.754 at 10), and took 20. C-011, with the lit and dim tests in the photo's
                                        # rule: 0.7596 at 10, 0.7501 at 15, 0.7354 at 20, 0.715 at 25; now 10 (at 5 the
                                        # curve's fill broke past repair)
-BEVEL_M = 0.0005                       # the radius every edge is rounded to (it widens the outline by this). C-007 to
+BEVEL_M = float(argv[argv.index("--bevel") + 1]) if "--bevel" in argv else 0.0005   # C-023: a switch. The radius every edge is rounded to (it widens the outline by this). C-007 to
                                        # C-009 used 1 mm and shrank the traced stone by a pixel to make up for it; the
                                        # shrink took the photo's thin connecting pieces (6.8 % of them survived it)
 MIN_AREA_PX = 30                       # holes smaller than this (slivers, dust) are dropped; 12 left slivers (C-007)
@@ -199,7 +199,8 @@ hole = k["opening"] | (k["opening"][sy, sx] & (~thin if "--thin-protect" in argv
 solid = np.zeros((H, W), bool)
 solid[y0:y1 + 1, x0:x1 + 1] = True
 solid &= ~hole & ~sur
-field = C.blur(solid.astype(np.float32), 3)
+OUTLINE_BLUR = int(argv[argv.index("--outline-blur") + 1]) if "--outline-blur" in argv else 3   # C-023: a switch, to
+field = C.blur(solid.astype(np.float32), OUTLINE_BLUR)                 # test what the 3 px blur costs fine edges
 loops = C.contours(field, 0.5)
 outer_sign = np.sign(C.area(max(loops, key=lambda p: abs(C.area(p)))))   # the frame's outline winds as stone does
 # C-023: MIN_AREA_PX and MIN_ISLAND_PX were set on ours, whose holes are large (half its hole area lies in holes of 515 px

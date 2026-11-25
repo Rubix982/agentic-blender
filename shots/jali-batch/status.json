@@ -99,12 +99,12 @@
   "build": {
    "ok": true,
    "exit": 0,
-   "seconds": 91.1
+   "seconds": 85.3
   },
   "compare": {
    "ok": true,
    "exit": 0,
-   "seconds": 20.4
+   "seconds": 18.5
   }
  },
  "05-sidi-saiyyed-c": {

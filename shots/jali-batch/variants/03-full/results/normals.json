@@ -1,0 +1,109 @@
+{
+ "model": "prs-eth/marigold-normals-v1-1",
+ "licence": "CreativeML OpenRAIL++-M",
+ "device": "mps",
+ "dtype": "float16",
+ "size": [
+  1928,
+  2048
+ ],
+ "tile": 768,
+ "overlap": 192,
+ "feather": 96,
+ "ensemble": 3,
+ "steps": 4,
+ "seed": 0,
+ "tiles": [
+  {
+   "x": 0,
+   "y": 0,
+   "seconds": 11.1
+  },
+  {
+   "x": 387,
+   "y": 0,
+   "seconds": 11.0
+  },
+  {
+   "x": 773,
+   "y": 0,
+   "seconds": 12.1
+  },
+  {
+   "x": 1160,
+   "y": 0,
+   "seconds": 11.3
+  },
+  {
+   "x": 0,
+   "y": 427,
+   "seconds": 10.8
+  },
+  {
+   "x": 387,
+   "y": 427,
+   "seconds": 10.3
+  },
+  {
+   "x": 773,
+   "y": 427,
+   "seconds": 11.0
+  },
+  {
+   "x": 1160,
+   "y": 427,
+   "seconds": 19.2
+  },
+  {
+   "x": 0,
+   "y": 853,
+   "seconds": 174.8
+  },
+  {
+   "x": 387,
+   "y": 853,
+   "seconds": 23.3
+  },
+  {
+   "x": 773,
+   "y": 853,
+   "seconds": 14.3
+  },
+  {
+   "x": 1160,
+   "y": 853,
+   "seconds": 32.9
+  },
+  {
+   "x": 0,
+   "y": 1280,
+   "seconds": 12.6
+  },
+  {
+   "x": 387,
+   "y": 1280,
+   "seconds": 11.3
+  },
+  {
+   "x": 773,
+   "y": 1280,
+   "seconds": 14.1
+  },
+  {
+   "x": 1160,
+   "y": 1280,
+   "seconds": 35.9
+  }
+ ],
+ "seconds": 422.0,
+ "overlap_disagreement_deg": {
+  "median": 6.28,
+  "p90": 15.36
+ },
+ "up_vs_forms_band_correlation": 0.1233,
+ "mean_normal": [
+  0.0712,
+  0.0558,
+  0.9846
+ ]
+}

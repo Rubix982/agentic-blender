@@ -1661,6 +1661,31 @@ dark with only its edges lit, unlike the build's render: the scene file does not
 memory (the stone's colour, its normal map), so the comparison was void. `build.py --no-denoise` now makes it in a
 real build.
 
+*Fix 7 on 04 (2026-11-25).* Its floor came out 7.4 px (half its hole area in holes of 89 px or more). Bright spots in
+the carved field: the photo 3,261 (2,832 under 30 px), the render with the 30 px floor 1,685 (1,473), with its own
+floor 2,371 (2,151): 73 % of the photo's count, against 52 % (`shots/jali-batch/04_floor.jpg`). The holes are still
+blobbier than the photo's, and one pale green where the photo's light is green, blue and yellow (the wall's bands).
+
+*Sharpness, measured (2026-11-25).* On the edges between stone and opening in the carved field, an edge's width as
+the luminance step over 7 px divided by its steepest gradient: ours 4.9 px in the photo, 5.1 in the render; 13 3.4
+and 3.5; 03 3.7 and 6.5. Not the denoiser: 03 built with `--no-denoise` (`variants/03-nodenoise`) has edges 6.5 px
+wide too, SSIM 0.4686 against 0.4689. Not mainly the parallax: by distance from the picture's centre (thirds of the
+farthest edge's), 03's render is 6.0, 6.8 and 6.4 px against the photo's 3.3, 3.7 and 4.2, wide at the centre where
+there is no parallax; 18's is 7.3, 8.5 and 9.2 against 3.2, 3.5 and 3.3, so there the parallax adds to it; ours 5.7,
+4.8 and 5.0 against 5.4, 4.5 and 4.8. The render's edges are about 5 to 6 px wide whatever the photo's are, which
+matches ours (a phone photo at half size, carving rounded) and not a crisp photo of square-cut tracery. Next suspect,
+the normal map (Marigold's normals, smooth at this scale, shade every bar as if rounded): 03 with `--no-normal-map`.
+
+*Sharpness, continued.* Not the normal map: 03 with `--no-normal-map` (`variants/03-nonormal`) has edges 7.1 px wide,
+and everything else worse (SSIM 0.319 against 0.469, fine detail correlation -0.006 against 0.297). Seen beside the
+photo, the render's tracery is fatter and the fine black gaps between near bars have closed. The openings the build
+cuts against those the render shows: ours 11.0 % of the box cut, 8.6 % shown (the photo's reading 9.1 %); 03 32.8 %
+and 27.7 % (32.4 %); 18 21.0 % and 9.3 % (18.5 %). 18's loss is the same at the centre as at the corners (about
+half), so it is not the side walls seen at an angle; part of it may be the measure, which reads a dim hole as stone.
+Untested suspect: the edge bevel, 0.5 mm, which widens the outline by its radius: at the batch's assumed scale about
+0.6 px a side, a fifth of a 5 to 8 px hole, against nothing on ours' 20 px holes. `build.py --bevel` now takes another
+radius; run on 03 when the laptop is on power. The full-size 03 is paused there too, its normals done.
+
 *Open, not yet fixed.* The tone curve's upper exponent sits at its limit of 4.0 in 8 of the 13 renders that C-022
 measured (ours 2.12), and with the fit's stone corrected 03, 05, 09 and 15 end at both limits (0.3 and 4.0); the
 cause is not found. The 25 % fit renders are not it: their stone's median is within about 10 % of the full render's
