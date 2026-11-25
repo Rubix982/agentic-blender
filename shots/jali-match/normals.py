@@ -29,7 +29,9 @@ MODEL = "prs-eth/marigold-normals-v1-1"
 TILE = 768                                                              # the model's own processing size
 OVERLAP = 192
 FEATHER = 96
-W, H = 1230, 1402                                                       # common.size(): the photo at half size
+sys.path.insert(0, HERE)
+import shot  # noqa: E402  (C-022: which photo, and where the outputs go)
+W, H = shot.WORK                                                        # common.size(): ours at half size, 1230 x 1402
 argv = sys.argv[1:]
 ENSEMBLE = int(argv[argv.index("--ensemble") + 1]) if "--ensemble" in argv else 3
 STEPS = int(argv[argv.index("--steps") + 1]) if "--steps" in argv else None   # None: the model's default (4)
@@ -62,7 +64,7 @@ def blur(a, sigma):
 
 if __name__ == "__main__":
     t0 = time.time()
-    photo = Image.open(os.path.join(HERE, "photo", "agra-jali.jpg")).convert("RGB").resize((W, H), Image.LANCZOS)
+    photo = Image.open(shot.PHOTO).convert("RGB").resize((W, H), Image.LANCZOS)
     rgb = np.asarray(photo)
     device = "mps" if torch.backends.mps.is_available() else "cpu"
     try:
@@ -101,12 +103,14 @@ if __name__ == "__main__":
         cos = np.clip((n * normals[y0:y0 + TILE, x0:x0 + TILE]).sum(2), -1, 1)
         dis.append(np.degrees(np.arccos(cos[shared])))
     dis = np.concatenate(dis) if dis else np.zeros(1)
-    np.save(os.path.join(HERE, "out", "normals.npy"), normals)
-    Image.fromarray(np.clip((normals * 0.5 + 0.5) * 255, 0, 255).astype(np.uint8)).save(os.path.join(HERE, "out", "normals.png"))
+    os.makedirs(shot.OUT, exist_ok=True)
+    np.save(os.path.join(shot.OUT, "normals.npy"), normals)
+    Image.fromarray(np.clip((normals * 0.5 + 0.5) * 255, 0, 255).astype(np.uint8)).save(os.path.join(shot.OUT, "normals.png"))
     # The first check: up-facing against the forms band, inside the screen's box.
     y = (rgb.astype(np.float32) / 255) @ np.array([0.2126, 0.7152, 0.0722], np.float32)
     forms = blur(y, 1.0) - blur(y, 3.5)                                 # sigmas near common.blur's 5 and 21 px widths
-    bx0, by0, bx1, by1 = json.load(open(os.path.join(HERE, "results", "read_photo.json")))["box"]
+    rp = os.path.join(shot.RESULTS, "read_photo.json")                 # a new shot: the whole photo until it is read
+    bx0, by0, bx1, by1 = json.load(open(rp))["box"] if os.path.exists(rp) else (0, 0, W - 1, H - 1)
     sl = (slice(by0, by1 + 1), slice(bx0, bx1 + 1))
     up_forms = float(np.corrcoef(normals[:, :, 1][sl].ravel(), forms[sl].ravel())[0, 1])
     res = dict(model=MODEL, licence="CreativeML OpenRAIL++-M", device=device, dtype="float16", size=[W, H],
@@ -116,6 +120,7 @@ if __name__ == "__main__":
                                              p90=round(float(np.percentile(dis, 90)), 2)),
                up_vs_forms_band_correlation=round(up_forms, 4),
                mean_normal=[round(float(v), 4) for v in normals[sl].reshape(-1, 3).mean(0)])
-    with open(os.path.join(HERE, "results", "normals.json"), "w") as f:
+    os.makedirs(shot.RESULTS, exist_ok=True)
+    with open(os.path.join(shot.RESULTS, "normals.json"), "w") as f:
         json.dump(res, f, indent=1)
     print("NORMALS", json.dumps({k: v for k, v in res.items() if k != "tiles"}), flush=True)

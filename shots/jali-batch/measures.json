@@ -1,0 +1,908 @@
+{
+ "01-louvre-ad-3": {
+  "status": {
+   "normals": true,
+   "intrinsics": true,
+   "read_photo": true,
+   "build": true,
+   "compare": true
+  },
+  "measures": {
+   "ssim": {
+    "value": 0.4918,
+    "ok": false
+   },
+   "openings_iou": {
+    "value": 0.4713,
+    "ok": false
+   },
+   "bright_end": {
+    "value": 0.8798,
+    "ok": true
+   },
+   "lines_render_near_photo": {
+    "value": 0.5706,
+    "ok": false
+   },
+   "forms_correlation": {
+    "value": 0.4952,
+    "ok": false
+   },
+   "colour_spread": {
+    "value": 0.8139,
+    "ok": true
+   }
+  },
+  "guards": {
+   "contrast": {
+    "value": 0.8458,
+    "ok": true
+   },
+   "forms_amplitude": {
+    "value": 0.8476,
+    "ok": true
+   },
+   "thin_stone_shown": {
+    "value": 0.7487,
+    "ok": false
+   },
+   "openings_y_upper": {
+    "value": 0.0991,
+    "ok": false
+   },
+   "openings_y_lower": {
+    "value": 0.0023,
+    "ok": true
+   },
+   "light_map": {
+    "value": 0.195,
+    "ok": true
+   },
+   "frame_texture_forms": {
+    "value": 1.3769,
+    "ok": false
+   }
+  },
+  "all_met": false,
+  "guards_held": false
+ },
+ "02-louvre-ad-1": {
+  "status": {
+   "normals": true,
+   "intrinsics": true,
+   "read_photo": true,
+   "build": true,
+   "compare": true
+  },
+  "measures": {
+   "ssim": {
+    "value": 0.5551,
+    "ok": true
+   },
+   "openings_iou": {
+    "value": 0.6172,
+    "ok": false
+   },
+   "bright_end": {
+    "value": 0.8564,
+    "ok": true
+   },
+   "lines_render_near_photo": {
+    "value": 0.4825,
+    "ok": false
+   },
+   "forms_correlation": {
+    "value": 0.6359,
+    "ok": true
+   },
+   "colour_spread": {
+    "value": 0.8107,
+    "ok": true
+   }
+  },
+  "guards": {
+   "contrast": {
+    "value": 0.7864,
+    "ok": false
+   },
+   "forms_amplitude": {
+    "value": 0.7599,
+    "ok": false
+   },
+   "thin_stone_shown": {
+    "value": 0.6814,
+    "ok": false
+   },
+   "openings_y_upper": {
+    "value": 0.0817,
+    "ok": false
+   },
+   "openings_y_lower": {
+    "value": 0.0094,
+    "ok": true
+   },
+   "light_map": {
+    "value": 0.1442,
+    "ok": true
+   },
+   "frame_texture_forms": {
+    "value": 1.0274,
+    "ok": true
+   }
+  },
+  "all_met": false,
+  "guards_held": false
+ },
+ "03-sidi-saiyyed-a": {
+  "status": {
+   "normals": true,
+   "intrinsics": true,
+   "read_photo": true,
+   "build": true,
+   "compare": true
+  },
+  "measures": {
+   "ssim": {
+    "value": 0.2967,
+    "ok": false
+   },
+   "openings_iou": {
+    "value": 0.646,
+    "ok": false
+   },
+   "bright_end": {
+    "value": 0.6948,
+    "ok": false
+   },
+   "lines_render_near_photo": {
+    "value": 0.3732,
+    "ok": false
+   },
+   "forms_correlation": {
+    "value": 0.6114,
+    "ok": true
+   },
+   "colour_spread": {
+    "value": 0.4778,
+    "ok": true
+   }
+  },
+  "guards": {
+   "contrast": {
+    "value": 0.3938,
+    "ok": false
+   },
+   "forms_amplitude": {
+    "value": 0.5481,
+    "ok": false
+   },
+   "thin_stone_shown": {
+    "value": 0.4695,
+    "ok": false
+   },
+   "openings_y_upper": {
+    "value": 0.0017,
+    "ok": true
+   },
+   "openings_y_lower": {
+    "value": 0.0168,
+    "ok": true
+   },
+   "light_map": {
+    "value": 0.273,
+    "ok": false
+   },
+   "frame_texture_forms": {
+    "value": 0.4581,
+    "ok": false
+   }
+  },
+  "all_met": false,
+  "guards_held": false
+ },
+ "04-sidi-saiyyed-b": {
+  "status": {
+   "normals": true,
+   "intrinsics": true,
+   "read_photo": true,
+   "build": true,
+   "compare": true
+  },
+  "measures": {
+   "ssim": {
+    "value": 0.512,
+    "ok": true
+   },
+   "openings_iou": {
+    "value": 0.5927,
+    "ok": false
+   },
+   "bright_end": {
+    "value": 0.7274,
+    "ok": false
+   },
+   "lines_render_near_photo": {
+    "value": 0.5341,
+    "ok": false
+   },
+   "forms_correlation": {
+    "value": 0.4096,
+    "ok": false
+   },
+   "colour_spread": {
+    "value": 0.8236,
+    "ok": true
+   }
+  },
+  "guards": {
+   "contrast": {
+    "value": 0.692,
+    "ok": false
+   },
+   "forms_amplitude": {
+    "value": 0.7206,
+    "ok": false
+   },
+   "thin_stone_shown": {
+    "value": 0.8675,
+    "ok": false
+   },
+   "openings_y_upper": {
+    "value": 0.0251,
+    "ok": false
+   },
+   "openings_y_lower": {
+    "value": 0.0096,
+    "ok": true
+   },
+   "light_map": {
+    "value": 0.3436,
+    "ok": false
+   },
+   "frame_texture_forms": {
+    "value": 0.6401,
+    "ok": false
+   }
+  },
+  "all_met": false,
+  "guards_held": false
+ },
+ "05-sidi-saiyyed-c": {
+  "status": {
+   "normals": true,
+   "intrinsics": true,
+   "read_photo": true,
+   "build": true,
+   "compare": true
+  },
+  "measures": {
+   "ssim": {
+    "value": 0.378,
+    "ok": false
+   },
+   "openings_iou": {
+    "value": 0.6761,
+    "ok": false
+   },
+   "bright_end": {
+    "value": 1.1187,
+    "ok": true
+   },
+   "lines_render_near_photo": {
+    "value": 0.4538,
+    "ok": false
+   },
+   "forms_correlation": {
+    "value": 0.4607,
+    "ok": false
+   },
+   "colour_spread": {
+    "value": 0.2412,
+    "ok": false
+   }
+  },
+  "guards": {
+   "contrast": {
+    "value": 1.2134,
+    "ok": false
+   },
+   "forms_amplitude": {
+    "value": 1.2109,
+    "ok": false
+   },
+   "thin_stone_shown": {
+    "value": 0.395,
+    "ok": false
+   },
+   "openings_y_upper": {
+    "value": 0.0053,
+    "ok": true
+   },
+   "openings_y_lower": {
+    "value": 0.0414,
+    "ok": false
+   },
+   "light_map": {
+    "value": 0.3025,
+    "ok": false
+   },
+   "frame_texture_forms": {
+    "value": 1.159,
+    "ok": true
+   }
+  },
+  "all_met": false,
+  "guards_held": false
+ },
+ "06-sidi-saiyyed-d": {
+  "status": {
+   "normals": true,
+   "intrinsics": true,
+   "read_photo": true,
+   "build": true,
+   "compare": true
+  },
+  "measures": {
+   "ssim": {
+    "value": 0.4588,
+    "ok": false
+   },
+   "openings_iou": {
+    "value": 0.6474,
+    "ok": false
+   },
+   "bright_end": {
+    "value": 0.7887,
+    "ok": false
+   },
+   "lines_render_near_photo": {
+    "value": 0.391,
+    "ok": false
+   },
+   "forms_correlation": {
+    "value": 0.4286,
+    "ok": false
+   },
+   "colour_spread": {
+    "value": 0.6303,
+    "ok": true
+   }
+  },
+  "guards": {
+   "contrast": {
+    "value": 0.7193,
+    "ok": false
+   },
+   "forms_amplitude": {
+    "value": 1.1011,
+    "ok": true
+   },
+   "thin_stone_shown": {
+    "value": 0.4981,
+    "ok": false
+   },
+   "openings_y_upper": {
+    "value": 0.0317,
+    "ok": false
+   },
+   "openings_y_lower": {
+    "value": 0.1199,
+    "ok": false
+   },
+   "light_map": {
+    "value": 0.3671,
+    "ok": false
+   },
+   "frame_texture_forms": {
+    "value": 0.9349,
+    "ok": true
+   }
+  },
+  "all_met": false,
+  "guards_held": false
+ },
+ "07-humayun-doorway": {
+  "status": {
+   "normals": true,
+   "intrinsics": true,
+   "read_photo": true,
+   "build": true,
+   "compare": true
+  },
+  "measures": {
+   "ssim": {
+    "value": 0.3895,
+    "ok": false
+   },
+   "openings_iou": {
+    "value": 0.1756,
+    "ok": false
+   },
+   "bright_end": {
+    "value": 1.0095,
+    "ok": true
+   },
+   "lines_render_near_photo": {
+    "value": 0.1898,
+    "ok": false
+   },
+   "forms_correlation": {
+    "value": 0.5802,
+    "ok": true
+   },
+   "colour_spread": {
+    "value": 1.0955,
+    "ok": true
+   }
+  },
+  "guards": {
+   "contrast": {
+    "value": 0.9234,
+    "ok": true
+   },
+   "forms_amplitude": {
+    "value": 0.8054,
+    "ok": true
+   },
+   "thin_stone_shown": {
+    "value": 0.9599,
+    "ok": true
+   },
+   "openings_y_upper": {
+    "value": 0.343,
+    "ok": false
+   },
+   "openings_y_lower": {
+    "value": 0.2331,
+    "ok": false
+   },
+   "light_map": {
+    "value": 0.6592,
+    "ok": false
+   },
+   "frame_texture_forms": {
+    "value": 0.7447,
+    "ok": false
+   }
+  },
+  "all_met": false,
+  "guards_held": false
+ },
+ "08-humayun-mihrab": {
+  "status": {
+   "normals": true,
+   "intrinsics": true,
+   "read_photo": false
+  }
+ },
+ "09-humayun-c": {
+  "status": {
+   "normals": true,
+   "intrinsics": true,
+   "read_photo": true,
+   "build": true,
+   "compare": true
+  },
+  "measures": {
+   "ssim": {
+    "value": 0.2232,
+    "ok": false
+   },
+   "openings_iou": {
+    "value": 0.5547,
+    "ok": false
+   },
+   "bright_end": {
+    "value": 0.4392,
+    "ok": false
+   },
+   "lines_render_near_photo": {
+    "value": 0.2851,
+    "ok": false
+   },
+   "forms_correlation": {
+    "value": 0.8475,
+    "ok": true
+   },
+   "colour_spread": {
+    "value": 39700000.0,
+    "ok": true
+   }
+  },
+  "guards": {
+   "contrast": {
+    "value": 0.2614,
+    "ok": false
+   },
+   "forms_amplitude": {
+    "value": 0.2829,
+    "ok": false
+   },
+   "thin_stone_shown": {
+    "value": 0.6249,
+    "ok": false
+   },
+   "openings_y_upper": {
+    "value": NaN,
+    "ok": false
+   },
+   "openings_y_lower": {
+    "value": 0.0078,
+    "ok": true
+   },
+   "light_map": {
+    "value": 0.3354,
+    "ok": false
+   },
+   "frame_texture_forms": {
+    "value": 0.2916,
+    "ok": false
+   }
+  },
+  "all_met": false,
+  "guards_held": false
+ },
+ "10-humayun-d": {
+  "status": {
+   "normals": true,
+   "intrinsics": true,
+   "read_photo": false
+  }
+ },
+ "11-red-fort-marble": {
+  "status": {
+   "normals": true,
+   "intrinsics": true,
+   "read_photo": true,
+   "build": true,
+   "compare": true
+  },
+  "measures": {
+   "ssim": {
+    "value": 0.3499,
+    "ok": false
+   },
+   "openings_iou": {
+    "value": 0.4815,
+    "ok": false
+   },
+   "bright_end": {
+    "value": 0.9726,
+    "ok": true
+   },
+   "lines_render_near_photo": {
+    "value": 0.592,
+    "ok": false
+   },
+   "forms_correlation": {
+    "value": 0.3415,
+    "ok": false
+   },
+   "colour_spread": {
+    "value": 0.6869,
+    "ok": true
+   }
+  },
+  "guards": {
+   "contrast": {
+    "value": 0.8599,
+    "ok": true
+   },
+   "forms_amplitude": {
+    "value": 0.8687,
+    "ok": true
+   },
+   "thin_stone_shown": {
+    "value": 0.7281,
+    "ok": false
+   },
+   "openings_y_upper": {
+    "value": 0.0179,
+    "ok": true
+   },
+   "openings_y_lower": {
+    "value": 0.0323,
+    "ok": false
+   },
+   "light_map": {
+    "value": 0.1294,
+    "ok": true
+   },
+   "frame_texture_forms": {
+    "value": 0.9908,
+    "ok": true
+   }
+  },
+  "all_met": false,
+  "guards_held": false
+ },
+ "12-jaisalmer-slide": {
+  "status": {
+   "normals": true,
+   "intrinsics": true,
+   "read_photo": true,
+   "build": true,
+   "compare": true
+  },
+  "measures": {
+   "ssim": {
+    "value": 0.3827,
+    "ok": false
+   },
+   "openings_iou": {
+    "value": 0.3454,
+    "ok": false
+   },
+   "bright_end": {
+    "value": 0.5194,
+    "ok": false
+   },
+   "lines_render_near_photo": {
+    "value": 0.4516,
+    "ok": false
+   },
+   "forms_correlation": {
+    "value": 0.709,
+    "ok": true
+   },
+   "colour_spread": {
+    "value": 0.6163,
+    "ok": true
+   }
+  },
+  "guards": {
+   "contrast": {
+    "value": 0.2594,
+    "ok": false
+   },
+   "forms_amplitude": {
+    "value": 0.6372,
+    "ok": false
+   },
+   "thin_stone_shown": {
+    "value": 0.832,
+    "ok": false
+   },
+   "openings_y_upper": {
+    "value": 0.0477,
+    "ok": false
+   },
+   "openings_y_lower": {
+    "value": 0.0428,
+    "ok": false
+   },
+   "light_map": {
+    "value": 0.4366,
+    "ok": false
+   },
+   "frame_texture_forms": {
+    "value": 0.6784,
+    "ok": false
+   }
+  },
+  "all_met": false,
+  "guards_held": false
+ },
+ "13-jaali-window-a": {
+  "status": {
+   "normals": true,
+   "intrinsics": true,
+   "read_photo": false
+  }
+ },
+ "14-jaali-window-b": {
+  "status": {
+   "normals": true,
+   "intrinsics": true,
+   "read_photo": false
+  }
+ },
+ "15-nilabagh-palace": {
+  "status": {
+   "normals": true,
+   "intrinsics": true,
+   "read_photo": true,
+   "build": true,
+   "compare": true
+  },
+  "measures": {
+   "ssim": {
+    "value": 0.2379,
+    "ok": false
+   },
+   "openings_iou": {
+    "value": 0.7128,
+    "ok": false
+   },
+   "bright_end": {
+    "value": 0.762,
+    "ok": false
+   },
+   "lines_render_near_photo": {
+    "value": 0.8574,
+    "ok": true
+   },
+   "forms_correlation": {
+    "value": 0.6786,
+    "ok": true
+   },
+   "colour_spread": {
+    "value": 0.508,
+    "ok": true
+   }
+  },
+  "guards": {
+   "contrast": {
+    "value": 0.5014,
+    "ok": false
+   },
+   "forms_amplitude": {
+    "value": 0.754,
+    "ok": false
+   },
+   "thin_stone_shown": {
+    "value": 0.152,
+    "ok": false
+   },
+   "openings_y_upper": {
+    "value": 0.2621,
+    "ok": false
+   },
+   "openings_y_lower": {
+    "value": 0.1968,
+    "ok": false
+   },
+   "light_map": {
+    "value": 0.1178,
+    "ok": true
+   },
+   "frame_texture_forms": {
+    "value": 0.7539,
+    "ok": false
+   }
+  },
+  "all_met": false,
+  "guards_held": false
+ },
+ "16-bibi-ka-maqbara": {
+  "status": {
+   "normals": true,
+   "intrinsics": true,
+   "read_photo": true,
+   "build": true,
+   "compare": true
+  },
+  "measures": {
+   "ssim": {
+    "value": 0.2342,
+    "ok": false
+   },
+   "openings_iou": {
+    "value": 0.496,
+    "ok": false
+   },
+   "bright_end": {
+    "value": 0.4042,
+    "ok": false
+   },
+   "lines_render_near_photo": {
+    "value": 0.6543,
+    "ok": true
+   },
+   "forms_correlation": {
+    "value": -0.0405,
+    "ok": false
+   },
+   "colour_spread": {
+    "value": 2.0866,
+    "ok": true
+   }
+  },
+  "guards": {
+   "contrast": {
+    "value": 0.3251,
+    "ok": false
+   },
+   "forms_amplitude": {
+    "value": 0.8211,
+    "ok": true
+   },
+   "thin_stone_shown": {
+    "value": 0.3169,
+    "ok": false
+   },
+   "openings_y_upper": {
+    "value": 0.0348,
+    "ok": false
+   },
+   "openings_y_lower": {
+    "value": 0.0372,
+    "ok": false
+   },
+   "light_map": {
+    "value": 0.6179,
+    "ok": false
+   },
+   "frame_texture_forms": {
+    "value": 0.9166,
+    "ok": true
+   }
+  },
+  "all_met": false,
+  "guards_held": false
+ },
+ "17-fatehpur-sikri-a": {
+  "status": {
+   "normals": true,
+   "intrinsics": true,
+   "read_photo": true,
+   "build": true,
+   "compare": true
+  },
+  "measures": {
+   "ssim": {
+    "value": 0.3772,
+    "ok": false
+   },
+   "openings_iou": {
+    "value": 0.4474,
+    "ok": false
+   },
+   "bright_end": {
+    "value": 0.6356,
+    "ok": false
+   },
+   "lines_render_near_photo": {
+    "value": 0.6799,
+    "ok": true
+   },
+   "forms_correlation": {
+    "value": 0.5441,
+    "ok": true
+   },
+   "colour_spread": {
+    "value": 0.4778,
+    "ok": true
+   }
+  },
+  "guards": {
+   "contrast": {
+    "value": 0.5192,
+    "ok": false
+   },
+   "forms_amplitude": {
+    "value": 0.4698,
+    "ok": false
+   },
+   "thin_stone_shown": {
+    "value": 0.5967,
+    "ok": false
+   },
+   "openings_y_upper": {
+    "value": 0.0226,
+    "ok": false
+   },
+   "openings_y_lower": {
+    "value": 0.0809,
+    "ok": false
+   },
+   "light_map": {
+    "value": 0.5065,
+    "ok": false
+   },
+   "frame_texture_forms": {
+    "value": 0.6215,
+    "ok": false
+   }
+  },
+  "all_met": false,
+  "guards_held": false
+ },
+ "18-fatehpur-sikri-b": {
+  "status": {
+   "normals": true,
+   "intrinsics": true,
+   "read_photo": false
+  }
+ }
+}

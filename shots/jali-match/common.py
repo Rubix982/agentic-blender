@@ -46,12 +46,13 @@ DIM = 0.15                          # C-011: darker than the local wall by more 
 DIM_ABS = 0.03
 VETO_AREA = 400                     # C-012: an opening smaller than this (px) whose normals lean more than VETO_DEG from
 VETO_DEG = 15.0                     # the wall's is lit stone (when the photo's normals are given)
-SCALE = 0.5                         # the photo is worked at half its size: 1230 x 1402
-PHOTO_W, PHOTO_H = 2460, 2803
+SCALE = 0.5                         # the photo is worked at half its size: 1230 x 1402 (another photo: its shot.json)
+import shot as _shot  # noqa: E402  (C-022: the photo, its size and the working size, per shot)
+PHOTO_W, PHOTO_H = _shot.PHOTO_SIZE
 
 
 def size():
-    return round(PHOTO_W * SCALE), round(PHOTO_H * SCALE)
+    return tuple(_shot.WORK)
 
 
 def load(path, wh=None):
@@ -393,6 +394,9 @@ def field_box(opening, box, min_area=400, pad=6):
     big[np.unique(lab[edge & inside])] = False
     big[0] = False
     ys, xs = np.nonzero(big[lab])
+    if not len(xs):                                                    # C-022: say why, rather than a numpy error
+        raise SystemExit(f"field_box: no opening of {min_area} px or more inside the screen's box, away from its edge; "
+                         f"the carved field cannot be placed (the largest inside: {int(area[1:].max()) if len(area) > 1 else 0} px)")
     return [int(max(xs.min() - pad, x0)), int(max(ys.min() - pad, y0)), int(min(xs.max() + pad, x1)), int(min(ys.max() + pad, y1))]
 
 

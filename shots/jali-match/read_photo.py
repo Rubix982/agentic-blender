@@ -14,17 +14,18 @@ import numpy as np
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import common as C  # noqa: E402
+import shot  # noqa: E402  (C-022: which photo, and where the outputs go)
 
-OUT = os.path.join(HERE, "out")
+OUT = shot.OUT
 os.makedirs(OUT, exist_ok=True)
 
 
-NORMALS_NPY = os.path.join(HERE, "out", "normals.npy")
+NORMALS_NPY = os.path.join(shot.OUT, "normals.npy")
 
 
 def field():
     """The carved field's box, as read_photo.py found it (C-014), or None before it has run."""
-    path = os.path.join(HERE, "results", "read_photo.json")
+    path = os.path.join(shot.RESULTS, "read_photo.json")
     if not os.path.exists(path):
         return None
     d = json.load(open(path))
@@ -42,6 +43,9 @@ def stats(rgb, normals=None, field=None):
         C.keep_field(k, field["field"], field["box"])
     rows = np.nonzero(k["stone"].mean(axis=1) > 0.2)[0]
     cols = np.nonzero(k["stone"].mean(axis=0) > 0.2)[0]
+    if not len(rows) or not len(cols):                                 # C-022: say why, rather than an IndexError
+        raise SystemExit(f"stats: no screen found: no row or column is a fifth stone ({len(rows)} rows, {len(cols)} "
+                         f"columns); {k['outside'].mean():.0%} of the image is darker than the surround's {C.DARK}")
     y0, y1, x0, x1 = int(rows[0]), int(rows[-1]), int(cols[0]), int(cols[-1])
     box = (slice(y0, y1 + 1), slice(x0, x1 + 1))
     s = k["y"][box][k["stone"][box]]
@@ -58,7 +62,7 @@ def stats(rgb, normals=None, field=None):
 
 
 if __name__ == "__main__":
-    rgb = C.load(os.path.join(HERE, "photo", "agra-jali.jpg"), C.size())
+    rgb = C.load(shot.PHOTO, C.size())
     NM = photo_normals()
     k0, st0 = stats(rgb, NM)
     FIELD = dict(field=C.field_box(k0["opening"], st0["box"]), box=st0["box"])   # C-014: the carved field
@@ -122,11 +126,12 @@ if __name__ == "__main__":
     # Dark pixels inside the screen: is their colour the stone's or the wall's?
     inner = (slice(y0 + 110, y1 - 95), slice(x0 + 130, x1 - 110))     # the carved field, inside the frame
     d = k["outside"][inner]
-    st["dark_in_field"] = dict(share=round(float(d.mean()), 4),
-                               green_red_p50_p90=[round(float(np.percentile(k["gr"][inner][d], q)), 4) for q in (50, 90)])
+    st["dark_in_field"] = dict(share=round(float(d.mean()), 4) if d.size else None,   # C-022: guarded for small boxes
+                               green_red_p50_p90=[round(float(np.percentile(k["gr"][inner][d], q)), 4) for q in (50, 90)]
+                               if d.any() else None)
     with open(os.path.join(OUT, "photo.json"), "w") as f:
         json.dump(st, f, indent=1)
-    os.makedirs(os.path.join(HERE, "results"), exist_ok=True)
-    with open(os.path.join(HERE, "results", "read_photo.json"), "w") as f:
+    os.makedirs(shot.RESULTS, exist_ok=True)
+    with open(os.path.join(shot.RESULTS, "read_photo.json"), "w") as f:
         json.dump(st, f, indent=1)
     print("PHOTO", json.dumps(st), flush=True)

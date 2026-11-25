@@ -195,7 +195,7 @@ the photo), grime in the hollows.
 
 ### T-018 · What of the jali recipe holds for another asset (another screen, or carving that is not pierced)?
 
-**Status:** parked
+**Status:** active (C-022, on the user's word 2026-11-25)
 **Parent:** T-009
 **Opened:** 2026-11-24
 **Question:** C-007 to C-015 built one jali from one photo to "this looks so real!", through 23 findings in

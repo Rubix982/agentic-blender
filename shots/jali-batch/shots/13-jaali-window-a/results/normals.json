@@ -1,0 +1,59 @@
+{
+ "model": "prs-eth/marigold-normals-v1-1",
+ "licence": "CreativeML OpenRAIL++-M",
+ "device": "mps",
+ "dtype": "float16",
+ "size": [
+  913,
+  1402
+ ],
+ "tile": 768,
+ "overlap": 192,
+ "feather": 96,
+ "ensemble": 3,
+ "steps": 4,
+ "seed": 0,
+ "tiles": [
+  {
+   "x": 0,
+   "y": 0,
+   "seconds": 13.6
+  },
+  {
+   "x": 145,
+   "y": 0,
+   "seconds": 12.2
+  },
+  {
+   "x": 0,
+   "y": 317,
+   "seconds": 8.4
+  },
+  {
+   "x": 145,
+   "y": 317,
+   "seconds": 8.4
+  },
+  {
+   "x": 0,
+   "y": 634,
+   "seconds": 8.5
+  },
+  {
+   "x": 145,
+   "y": 634,
+   "seconds": 8.4
+  }
+ ],
+ "seconds": 62.8,
+ "overlap_disagreement_deg": {
+  "median": 4.36,
+  "p90": 11.55
+ },
+ "up_vs_forms_band_correlation": 0.0025,
+ "mean_normal": [
+  0.0638,
+  0.0465,
+  0.9709
+ ]
+}

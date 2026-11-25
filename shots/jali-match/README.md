@@ -31,6 +31,11 @@ to download them.
 Options after `--` go to `build.py`. The earlier builds are a switch away: `--forms shading --no-normal-map
 --photo-detail 0 --thick 0.020` gives C-009's build settings (on today's photo rule). `results/*_c00N.json` and `*_c011_*.json` keep each card's numbers.
 
+Another photo: put it in `<folder>/photo/`, describe it in `<folder>/shot.json` (`shot.py` lists the fields: the file,
+its size, the working size, the camera, the screen's width, the credit line), and run with `JALI_SHOT=<folder>`; the
+outputs go to that folder's `out/`, `results/` and `sheet.jpg`. Without it, everything is this folder's, as before.
+`shots/jali-batch/` runs the chain this way on eighteen other jalis (C-022).
+
 ## What comes from the photo
 
 - **The outline** of the stone and every opening, by the rule in `common.classify` (green over red, near the wall's

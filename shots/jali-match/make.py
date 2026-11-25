@@ -19,6 +19,8 @@ import sys
 import time
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, HERE)
+import shot  # noqa: E402  (C-022: JALI_SHOT=<folder> runs the chain on that folder's photo)
 ROOT = os.path.abspath(os.path.join(HERE, "..", ".."))
 RUN = os.path.join(ROOT, "skills", "blender", "scripts", "run.py")
 VENV_PY = os.path.join(ROOT, ".venv", "bin", "python")
@@ -40,8 +42,8 @@ def blender(script, timeout, extra=()):
     return [sys.executable, RUN, os.path.join(HERE, script), "--timeout", str(timeout)] + (["--", *extra] if extra else [])
 
 
-npy = os.path.join(HERE, "out", "normals.npy")
-inputs = [os.path.join(HERE, "photo", "agra-jali.jpg"), os.path.join(HERE, "normals.py")]
+npy = os.path.join(shot.OUT, "normals.npy")
+inputs = [shot.PHOTO, os.path.join(HERE, "normals.py")]
 fresh = os.path.exists(npy) and os.path.getmtime(npy) > max(os.path.getmtime(p) for p in inputs)
 if force or not fresh:
     if not os.path.exists(VENV_PY):
@@ -49,8 +51,8 @@ if force or not fresh:
     step("normals", [VENV_PY, os.path.join(HERE, "normals.py")])
 else:
     print("== normals: out/normals.npy is newer than the photo and normals.py; kept (--force-normals to redo)")
-alb = os.path.join(HERE, "out", "albedo.npy")
-ins = [os.path.join(HERE, "photo", "agra-jali.jpg"), os.path.join(HERE, "intrinsics.py")]
+alb = os.path.join(shot.OUT, "albedo.npy")
+ins = [shot.PHOTO, os.path.join(HERE, "intrinsics.py")]
 if force or not (os.path.exists(alb) and os.path.getmtime(alb) > max(os.path.getmtime(p) for p in ins)):
     step("intrinsics", [VENV_PY, os.path.join(HERE, "intrinsics.py")])  # C-015: the stone's albedo
 else:
@@ -58,8 +60,8 @@ else:
 step("read_photo", blender("read_photo.py", 300))                     # after the normals: its rule uses them (C-012)
 step("build", blender("build.py", 1800, build_args))
 step("compare", blender("compare.py", 300))
-res = json.load(open(os.path.join(HERE, "results", "compare.json")))
+res = json.load(open(os.path.join(shot.RESULTS, "compare.json")))
 print(json.dumps(dict(openings_iou=res["openings_iou"], thin_stone_shown=res["thin_stone_shown"],
                       forms_band=res["detail"]["forms"], frame_texture={k: v["ratio"] for k, v in res["frame_texture"].items()},
                       stone_p90=[res["render"]["stone_y"][2], res["photo"]["stone_y"][2]]), indent=1))
-print("sheet:", os.path.join(HERE, "sheet.jpg"))
+print("sheet:", shot.SHEET)

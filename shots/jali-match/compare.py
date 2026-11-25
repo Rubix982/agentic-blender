@@ -22,11 +22,12 @@ import numpy as np
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import common as C  # noqa: E402
+import shot  # noqa: E402  (C-022: which photo, and where the outputs go)
 from read_photo import stats  # noqa: E402
 
 W, H = C.size()
-photo = C.load(os.path.join(HERE, "photo", "agra-jali.jpg"), (W, H))
-render = C.load(os.path.join(HERE, "out", "render.png"), (W, H))
+photo = C.load(shot.PHOTO, (W, H))
+render = C.load(os.path.join(shot.OUT, "render.png"), (W, H))
 from read_photo import photo_normals, field  # noqa: E402
 FIELD = field()                                                        # C-014: no openings in the frame, either image
 kp, sp = stats(photo, photo_normals(), FIELD)                          # the photo's rule with the normals' veto (C-012)
@@ -143,7 +144,7 @@ if NMc is not None and FIELD is not None:
     deep_m = infield & C.erode(kp["stone"], 6) & C.erode(kr["stone"], 6)
     lr_all = np.log(np.maximum(kr["y"], 1e-3) / np.maximum(kp["y"], 1e-3))
     res["recesses"] = {}
-    for w_ in (11, 21):
+    for w_ in ((11, 21) if deep_m.any() else ()):                    # C-022: none when no stone is 6 px from an opening in both
         rec = np.clip(C.blur(hgt * stc, w_) / np.maximum(C.blur(stc, w_), 1e-3) - hgt, 0, None)
         q97 = np.percentile(rec[deep_m], 97)
         res["recesses"][f"window_{w_}px"] = dict(
@@ -151,7 +152,7 @@ if NMc is not None and FIELD is not None:
             all_stone=round(float(np.median(lr_all[deep_m])), 4))
     edge_band = infield & kp["stone"] & kr["stone"] & ~C.erode(kp["stone"], 4) & C.erode(kp["stone"], 1)
     res["opening_edges"] = dict(edge_band=round(float(np.median(lr_all[edge_band])), 4),
-                                inside=round(float(np.median(lr_all[deep_m])), 4))
+                                inside=round(float(np.median(lr_all[deep_m])), 4)) if edge_band.any() and deep_m.any() else None
 # C-015: the stone's colour variation (the photo's stains, grime and darker frame, against an even albedo): on stone in
 # both (3 px from any opening), each image blurred over 5 px, the chromaticity log(R / G) and log(B / G); their spread
 # (the two standard deviations combined), render over photo; and the frame's median luminance over the field's.
@@ -193,6 +194,11 @@ smap = ssim_map(yp_, yr_)
 shifted = np.roll(np.roll(yp_, 2, 0), 2, 1)
 cmap_ = ssim_map(yp_, shifted)
 DXp, DYp, DWp, DHp = 520, 330, 560, 420
+if not shot.DEFAULT:                                                   # C-022: another photo: centred on its carved field
+    _fb = FIELD["field"] if FIELD else sp["box"]
+    DWp, DHp = min(DWp, W), min(DHp, H)
+    DXp = int(min(max((_fb[0] + _fb[2]) // 2 - DWp // 2, 0), W - DWp))
+    DYp = int(min(max((_fb[1] + _fb[3]) // 2 - DHp // 2, 0), H - DHp))
 res["ssim"] = dict(box=round(float(smap[box].mean()), 4), patch=round(float(smap[DYp:DYp + DHp, DXp:DXp + DWp].mean()), 4),
                    photo_vs_itself_2px=round(float(cmap_[box].mean()), 4))
 # (Not a ceiling: the render scores above the photo against itself 2 px off, since SSIM weighs the photo's fine grain,
@@ -263,9 +269,9 @@ print("COMPARE", json.dumps(res), flush=True)
 
 # The sheet: both whole, then one detail of each at full size, with the openings that disagree marked.
 half = (W // 2, H // 2)
-a = C.load(os.path.join(HERE, "photo", "agra-jali.jpg"), half)
-b = C.load(os.path.join(HERE, "out", "render.png"), half)
-DX, DY, DW, DH = 520, 330, 560, 420                                    # a detail: two rows of cells and their rosettes
+a = C.load(shot.PHOTO, half)
+b = C.load(os.path.join(shot.OUT, "render.png"), half)
+DX, DY, DW, DH = DXp, DYp, DWp, DHp                                    # a detail: ours, two rows of cells and their rosettes
 LAB = 30
 top = np.concatenate([a, b], axis=1)
 det = np.concatenate([photo[DY:DY + DH, DX:DX + DW], render[DY:DY + DH, DX:DX + DW]], axis=1)
@@ -282,12 +288,12 @@ def pad(x):
 
 band = np.full((LAB, cols, 3), 0.08, np.float32)
 sheet = np.concatenate([band, pad(top), band, pad(det), band, pad(diffw)], axis=0)
-path = os.path.join(HERE, "sheet.jpg")
+path = shot.SHEET
 C.write_png(path, sheet)
 ib = imbuf.load(path)
 fid = blf.load("/System/Library/Fonts/Supplemental/Arial.ttf") if os.path.exists(
     "/System/Library/Fonts/Supplemental/Arial.ttf") else 0
-labels = [(0, "photograph (Prof. Mortel, CC BY 2.0)"), (half[0], "render"),
+labels = [(0, shot.CREDIT), (half[0], "render"),
           (0, None), (0, "detail, photograph"), (DW, "detail, render"),
           (0, f"openings that disagree: red = open only in the photo, blue = open only in the render "
               f"(IoU {res['openings_iou']})")]
@@ -300,7 +306,7 @@ with blf.bind_imbuf(fid, ib):
             blf.position(fid, x + 8, ib.size[1] - (y + 22), 0)
             blf.draw_buffer(fid, text)
 imbuf.write(ib, filepath=path)
-os.makedirs(os.path.join(HERE, "results"), exist_ok=True)
-with open(os.path.join(HERE, "results", "compare.json"), "w") as f:
+os.makedirs(shot.RESULTS, exist_ok=True)
+with open(os.path.join(shot.RESULTS, "compare.json"), "w") as f:
     json.dump(res, f, indent=1)
 print("SHEET", path, sheet.shape, flush=True)

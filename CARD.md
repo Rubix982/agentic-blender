@@ -1427,3 +1427,80 @@ is answered no, and the guide says the relief's depth has not been checked from 
 standard is measured on the photo the build was fitted to. Commons itself and the museum's archive were not read, so a
 view there is not ruled out. What the search turned up instead is for T-018: two more screens photographed on the same
 phone, in the same gallery and light, under the same licence, one of them a near sibling of ours.
+
+### C-022 · The chain on a few dozen other jalis: where it holds and where it breaks, at a glance
+
+**Opened:** 2026-11-25
+
+1. **WHERE WE ARE.** T-018, un-parked on the user's word (T-011 set aside): one screen, one photo, judged "this looks so
+   real!" (C-015) with the standard's four core measures inside their bars (C-016). Nothing in the chain has run on any
+   other photo, and C-021 found the standard is in-sample.
+2. **WHAT WE ARE DOING.** Run `make.py`'s chain, its method unchanged, on 24 to 36 openly licensed photos of other jalis
+   chosen by rules written before any is run, and lay each render beside its photo for the user to judge at a glance.
+   The only code change is to read what is this photo's (its path, size, camera, and where the outputs go) from a
+   per-photo file instead of constants, with today's values as the defaults so the jali-match shot reproduces.
+3. **WHY.** Unknown: which of the 27 findings in `areas/production.md` are about pierced stone in photos and which are
+   about this one photo. After: for each photo, at which step the chain breaks (reading the photo, the build, the light,
+   the colour) or that it does not, and whether the standard's measures agree with the user's glance on screens they
+   were not fitted to.
+4. **WHAT IS AFFECTED.** `areas/production.md` items 1 to 27 and the standard's bars (each could turn out this photo's
+   own); `shots/jali-match/*.py` (paths and the photo's constants only); T-018. The jali-match shot's own results must
+   not move: its build is rerun after the change and compared to four decimals.
+5. **CONCLUSION.** If the user takes at least half of the renders for their photos at a glance, the recipe holds for
+   frontal photos of jalis and the failures are its limits, named by step. If fewer than half, the recipe is this
+   photo's, and the failures, sorted by the step where each broke, are the order to generalise it in. Either way, the
+   standard's measures are checked against the user's glance on photos it was not fitted to: if they rank the renders
+   as the user does, they stand; if not, they are this photo's too.
+6. **CONSEQUENCE OF NOT DOING IT.** The guide's 27 findings stay one photo's, stated as if general, and the next
+   asset finds out which are not by failing.
+
+**Rules for choosing the photos (written before any was run).** A single carved, pierced screen (stone or marble),
+seen from roughly the front (its outline foreshortened by no more than about a fifth), its whole carved field in the
+frame; licensed CC0, public domain, "no known copyright restrictions", CC BY or CC BY-SA; at least 1,000 px on the
+short side. Taken in the order the searches return them, at most four from one monument, until 30 are kept; every
+candidate looked at and left out is recorded with its reason.
+
+**Amendment (2026-11-25, before any run):** four rounds of searching (391 candidates, `shots/jali-batch/candidates_round*.json`)
+gave 18 photos that meet every rule, short of the 24 the card set: Flickr's openly licensed photos of jalis ran out
+(round 4 found 6 new candidates, none a single screen), and Wikimedia Commons does not answer from this machine. The
+rules were not loosened to make up the number. Every candidate left out has its reason in `selection.json`; the size
+floor took 6 and the cap of four on one monument took 4 (Humayun's Tomb and Sidi Saiyyed reached it).
+
+**Measures (2026-11-25).** The chain's code: the photo, its size, camera, screen width and output folder now come from
+`shot.py` (a folder's `shot.json`, or this photo's constants when none is given). The jali-match shot rebuilt after the
+change: its 234 compared numbers within 0.0001 of the committed ones; after the guards below, one pixel of 851,095 in a
+mask and two numbers by 0.0001 (`results/` restored to the committed files). Assumed for the 18: the screen 1.05 m
+wide, as ours; a 28 mm equivalent lens, uncropped (Flickr's resized files carry no EXIF), except the two Louvre Abu
+Dhabi photos (the same phone as ours, 24 mm); worked at a long side of 1,402 px, as ours.
+
+The first pass: 10 of 18 reached a render and its comparison. Four of the failures were crashes in this repository's
+code, not the method, each fixed by a guard that leaves the jali-match shot as it was: the tone curve took a log of 0
+when a percentile was pure white (05, the render's sunlit stone; 09, sunlight on the floor taken for stone); C-020's
+repair entry has no `loop` and the older repair looked it up (15); the grime measure took a percentile of nothing
+where no stone lies 6 px from any opening in both (15). After them, 13 of 18 reach a render. The other five stop in
+reading the photo, and now say why:
+
+| shot | where it stops | measured |
+|---|---|---|
+| 08-humayun-mihrab | no screen box | 80 % of the image darker than the surround's 0.08: the backlit stone reads as the dark surround |
+| 10-humayun-d | no carved field | the box found, its largest opening 11 px (the field rule needs one of 400 px away from the box's edge) |
+| 13-jaali-window-a | no carved field | largest 390 px; the scan's white border one opening of 288,160 px, touching the box's edge |
+| 14-jaali-window-b | no carved field | largest 337 px; the white border 424,830 px |
+| 18-fatehpur-sikri-b | no carved field | largest 211 px, median 26 px: the marble lattice's holes are smaller than the rule's floor |
+
+Of the 13 renders, none meets the standard's four core bars (set on our photo): SSIM at least 0.50 in 2 (02, 04);
+openings' IoU at least 0.75 in none (0.176 to 0.713); the bright end within 0.85 to 1.15 in 5; the lines at least 0.60
+in 3; the forms band at least 0.50 in 7. The colour spread passes in 12 and says nothing: its bar has no upper end
+(16 passes at 2.087), and where the photo's stone has almost no colour the ratio runs away (09: 39,700,000). One cause
+measured on a render (01, the museum's third screen): its frame's top band has a grey-green patina, green over red
+0.833 at the median and 0.894 at the 90th percentile against ours 0.771 and 0.812, so the colour rule (wall above 0.86,
+near the wall's colour above 0.80) called 33.5 % of the band opening, and the field rule, which places the carved
+field from the openings, was stretched by them into the frame (its top at y 68 against the box's 52).
+
+My reading of the sheets, before the user's (the user's glance decides field 5): 01, 02 and 11 read as their photos;
+04 keeps the tree but loses the screen's fine holes; 05 and 17 in part; 03, 06, 07, 09, 12, 15 and 16 do not. Where it
+reads, the photo is like ours: a front-lit screen whose openings show a wall or a dim room. It fails on pale stone (the
+colour rule), backlit screens, fine lattices, and photos where the screen is a small part of a building. The contact
+sheets: `shots/jali-batch/contact_1.jpg` to `contact_3.jpg` (no measures on them); the measures: `measures.json`.
+
+**Result:** waiting on the user's glance at the contact sheets.

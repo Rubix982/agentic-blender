@@ -1,0 +1,12 @@
+09:35:43 08-humayun-mihrab read_photo: FAILED 1 (5.9 s)
+09:36:34 09-humayun-c build: ok (51.2 s)
+09:36:53 09-humayun-c compare: ok (18.9 s)
+09:37:00 10-humayun-d read_photo: FAILED 1 (6.8 s)
+09:37:02 13-jaali-window-a read_photo: FAILED 1 (2.7 s)
+09:37:05 14-jaali-window-b read_photo: FAILED 1 (2.6 s)
+09:37:22 05-sidi-saiyyed-c build: ok (104.8 s)
+09:38:04 05-sidi-saiyyed-c compare: ok (41.8 s)
+09:38:06 18-fatehpur-sikri-b read_photo: FAILED 1 (2.8 s)
+09:39:40 15-nilabagh-palace build: ok (154.4 s)
+09:39:54 15-nilabagh-palace compare: FAILED 1 (14.6 s)
+BATCH 2 of 8 shots through compare

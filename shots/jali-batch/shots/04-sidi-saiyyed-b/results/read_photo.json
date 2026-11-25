@@ -1,0 +1,144 @@
+{
+ "box": [
+  65,
+  0,
+  1401,
+  800
+ ],
+ "width_px": 1337,
+ "height_px": 801,
+ "opening_share": 0.1066,
+ "outside_share": 0.2685,
+ "stone_y": [
+  0.0968,
+  0.1975,
+  0.8594
+ ],
+ "stone_y_p99": 0.9696,
+ "stone_rgb_median": [
+  0.2863,
+  0.1804,
+  0.102
+ ],
+ "opening_y": 0.7978,
+ "stone_y_bands": [
+  0.1972,
+  0.1661,
+  0.1653,
+  0.2012,
+  0.2018,
+  0.2104,
+  0.2692,
+  0.2727,
+  0.2107,
+  0.1743
+ ],
+ "field_box": [
+  80,
+  89,
+  1257,
+  651
+ ],
+ "screen_box_for_field": [
+  65,
+  0,
+  1401,
+  800
+ ],
+ "frame_openings_removed_px": 112905,
+ "size": [
+  1402,
+  801
+ ],
+ "rule": {
+  "dark": 0.08,
+  "green_red": 0.86,
+  "wall_dist": 0.12,
+  "wall_tex": 0.05,
+  "wall_green_red_min": 0.8,
+  "lit": 0.12,
+  "lit_abs": 0.03,
+  "dim": 0.15,
+  "dim_abs": 0.03
+ },
+ "cut_lines": {
+  "share_of_box": 0.0842,
+  "rule": {
+   "darker_by": 0.15,
+   "thin": 2,
+   "neighbours": 4,
+   "run": 8
+  }
+ },
+ "rules_compared": {
+  "saturation below 0.22, luminance at least 0.30": {
+   "top": 0.0827,
+   "bottom": 0.0521,
+   "whole": 0.0674
+  },
+  "green over red above 0.86": {
+   "top": 0.169,
+   "bottom": 0.2226
+  },
+  "either that or near the wall's local colour (C-008)": {
+   "top": 0.08,
+   "bottom": 0.1352
+  },
+  "the same, less what is brighter than the wall (C-009)": {
+   "top": 0.08,
+   "bottom": 0.1343
+  },
+  "the same, less what is darker than the wall too (C-011)": {
+   "top": 0.0794,
+   "bottom": 0.1338
+  }
+ },
+ "lit_stone": {
+  "rule": {
+   "brighter_than_wall_by": 0.12,
+   "plus": 0.03
+  },
+  "sure_over_wall_p10_p25_p50_p75_p90": [
+   0.938,
+   0.978,
+   1.024,
+   186.51,
+   650.93
+  ],
+  "share_of_box": 0.0005,
+  "share_of_c008_openings": 0.0045,
+  "share_of_c008_openings_by_half": {
+   "top": 0.0,
+   "bottom": 0.0071
+  }
+ },
+ "dim_stone": {
+  "rule": {
+   "darker_than_wall_by": 0.15,
+   "less": 0.03
+  },
+  "share_of_box": 0.0005,
+  "share_of_c009_openings": 0.0047,
+  "share_of_c009_openings_by_third": [
+   0.0131,
+   0.0041,
+   0.0017
+  ]
+ },
+ "veto_stone": {
+  "rule": {
+   "area_below_px": 400,
+   "lean_above_deg": 15.0
+  },
+  "normals": true,
+  "share_of_box": 0.0029,
+  "share_of_openings_before": 0.0266
+ },
+ "dark_in_field": {
+  "share": 0.3859,
+  "green_red_p50_p90": [
+   0.5714,
+   0.7826
+  ]
+ }
+}

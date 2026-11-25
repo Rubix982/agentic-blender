@@ -38,6 +38,7 @@ from mathutils import Matrix, Vector
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import common as C  # noqa: E402
+import shot  # noqa: E402  (C-022: which photo, its camera and size, and where the outputs go)
 
 argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
 SAMPLES = int(argv[argv.index("--samples") + 1]) if "--samples" in argv else 256
@@ -54,7 +55,7 @@ CARVED_SHARE = float(argv[argv.index("--carved-share") + 1]) if "--carved-share"
 FIXED_LIGHT = "--fixed-light" in argv                                  # C-012: C-011's spot, not fitted to the pool
 REFIT_LIGHT = "--refit-light" in argv                                  # C-012: search again (else results/light_fit.json)
 TONE = "--no-tone" not in argv                                        # C-013: the photo's tone curve on the render
-ALBEDO_NPY = os.path.join(os.path.dirname(os.path.abspath(__file__)), "out", "albedo.npy")
+ALBEDO_NPY = os.path.join(shot.OUT, "albedo.npy")
 USE_ALBEDO = "--no-albedo" not in argv and os.path.exists(ALBEDO_NPY)    # C-015: the stone's colour from the photo
 SPECK_MAX = float(argv[argv.index("--speck-max") + 1]) if "--speck-max" in argv else 1.6   # C-015: the specks' brightening
 SATURATION = "--no-saturation" not in argv                             # C-018: colour falling with brightness
@@ -64,18 +65,18 @@ SPECK_FLOOR = float(argv[argv.index("--speck-floor") + 1]) if "--speck-floor" in
 TILT_MIN = "--tilt-min" in argv                                         # C-018: tried; see the card
 SPOT_WHITE = "--fit-spot-colour" not in argv                            # C-017: fitting the spot's colour did not
                                                                        # move the slopes (2,700 to 10,000 K), so off
-NORMALS_NPY = os.path.join(os.path.dirname(os.path.abspath(__file__)), "out", "normals.npy")
+NORMALS_NPY = os.path.join(shot.OUT, "normals.npy")
 if (FORMS == "normals" or NORMAL_MAP) and not os.path.exists(NORMALS_NPY):
     raise SystemExit("out/normals.npy is missing: run make.py, or .venv/bin/python shots/jali-match/normals.py, first "
                      "(or build C-009's version with --forms shading --no-normal-map)")
 FILTER_PX = float(argv[argv.index("--filter") + 1]) if "--filter" in argv else 1.8   # Cycles' pixel filter width:
 # the render's edges were 1.072 x as sharp as the photo's at 1.5 px and 0.853 x at 2.5 (compare.json, edge_gradient)
-OUT = os.path.join(HERE, "out")
+OUT = shot.OUT
 os.makedirs(OUT, exist_ok=True)
 T0 = time.time()
 log = {}
 
-WIDTH_M = 1.05                         # the screen's width (estimate, photo/CREDIT.md)
+WIDTH_M = shot.WIDTH_M                 # the screen's width (ours 1.05 m, an estimate, photo/CREDIT.md)
 THICK_M = THICK_ARG or 0.010          # the pierced field's thickness (--thick to try another). C-008: the openings
                                        # agree best when it is thin (IoU 0.564 at the catalogue's 61 mm, 0.737 at 20,
                                        # 0.754 at 10), and took 20. C-011, with the lit and dim tests in the photo's
@@ -91,15 +92,14 @@ RELIEF_M = 0.005                       # C-008: how far the bars rise at most, r
 RELIEF_PX = 20                         # how far in from an opening or the outline (18 mm) they reach that height
 FORMS_M = 0.004                        # C-009: the forms read from the averaged shading, at their 99th percentile,
                                        # clipped at 1.5 x that (at 6 mm unclipped they reached 17 mm and read as melted)
-# The camera: a Samsung SM-G998B main camera, 24 mm equivalent (EXIF). Assumed: a 12 MP 3000 x 4000 portrait frame
-# cropped to 2460 px wide, so the crop spans 2460 / 3000 of the 25.96 mm equivalent short side of a 4:3 frame.
-LENS_MM, SENSOR_MM = 24.0, 25.96 * 2460 / 3000
+# The camera (shot.py): ours a Samsung SM-G998B main camera, 24 mm equivalent, its frame cropped to 2460 px wide.
+LENS_MM, SENSOR_MM = shot.LENS_MM, shot.SENSOR_MM
 
 # --- the photograph ----------------------------------------------------------------------------------------------
 W, H = C.size()
-rgb = C.load(os.path.join(HERE, "photo", "agra-jali.jpg"), (W, H))
+rgb = C.load(shot.PHOTO, (W, H))
 k = C.classify(rgb, np.load(NORMALS_NPY) if os.path.exists(NORMALS_NPY) else None)   # C-012: with the normals' veto
-_rp = json.load(open(os.path.join(HERE, "results", "read_photo.json"))) if os.path.exists(os.path.join(HERE, "results", "read_photo.json")) else {}
+_rp = json.load(open(os.path.join(shot.RESULTS, "read_photo.json"))) if os.path.exists(os.path.join(shot.RESULTS, "read_photo.json")) else {}
 if "field_box" in _rp and "--frame-openings" not in argv:              # C-014: the frame is solid (read_photo.py)
     C.keep_field(k, _rp["field_box"], _rp["screen_box_for_field"])
 import symmetry  # noqa: E402
@@ -354,7 +354,8 @@ if front_px(me_c) < 0.85 * abs(sum(C.area(p) for p in loops)):
             half = cand[:len(cand) // 2]
             cand = half if not fills(half) else cand[len(cand) // 2:]
         i = cand[0]
-        again = any(r["loop"] == i for r in repairs)                   # its unsmoothed outline broke it too: drop it
+        again = any(r.get("loop") == i for r in repairs)               # its unsmoothed outline broke it too: drop it
+        # (C-022: .get, since the Fill Curve repair's entry has no loop; 15-nilabagh-palace crashed on it)
         repairs.append(dict(loop=i, centre_px=[round(float(v), 1) for v in loops[i].mean(0)],
                             area_px=round(float(abs(C.area(loops[i]))), 1), action="dropped" if again else "unsmoothed"))
         loops[i] = loops_raw[i] if not again else None
@@ -364,7 +365,8 @@ if front_px(me_c) < 0.85 * abs(sum(C.area(p) for p in loops)):
             loops_raw = [loops_raw[j] for j in keep]
             outer = max(range(len(loops)), key=lambda j: abs(C.area(loops[j])))
             for r in repairs:                                          # indices shift after a drop
-                r["loop"] = -1 if r["loop"] == i else r["loop"] - (r["loop"] > i)
+                if "loop" in r:
+                    r["loop"] = -1 if r["loop"] == i else r["loop"] - (r["loop"] > i)
     me_c = trace_mesh(loops)
 me_c.transform(Matrix.Scale(S, 4))
 expected = abs(sum(C.area(p) for p in loops)) * S * S
@@ -871,12 +873,12 @@ def try_light(c):
     return map_error(path)
 
 
-LIGHT_JSON = os.path.join(HERE, "results", "light_fit.json")
+LIGHT_JSON = os.path.join(shot.RESULTS, "light_fit.json")
 reuse = not FIXED_LIGHT and not REFIT_LIGHT and os.path.exists(LIGHT_JSON)
 if reuse:                                                              # the search takes ~130 renders (2.5 min)
     saved = json.load(open(LIGHT_JSON))
     light = dict(saved["best"])
-    log["light_fit"] = dict(reused=LIGHT_JSON.replace(HERE + os.sep, ""), best=saved["best"],
+    log["light_fit"] = dict(reused=LIGHT_JSON.replace(shot.FOLDER + os.sep, ""), best=saved["best"],
                             error_when_fitted=saved["best_error"], error_now=round(try_light(light), 4))
     print("LIGHT reused", log["light_fit"], flush=True)
 else:
@@ -1040,10 +1042,15 @@ def fit_curve(path):
     u = C.luminance(C.load(path))[TONE_MASK]
     u10, u90 = float(np.percentile(u, 10)), float(np.percentile(u, 90))
     m = curve["m"]
-    a = math.log(P10 / m) / math.log(min(u10, 0.999 * m) / m)
-    b = math.log((1 - P90) / (1 - m)) / math.log((1 - max(u90, 1.001 * m)) / (1 - m))
+    # C-022: a percentile at pure white or black (a sunlit stone clipping in the render, or sunlight on the floor taken
+    # for stone in the photo) made a log of 0; held just inside, the exponent goes to its clamp instead of crashing
+    lo, hi = 1e-3, 1 - 1e-3
+    p10, p90 = min(max(P10, lo), hi), min(max(P90, lo), hi)
+    u10c, u90c = min(max(u10, lo), hi), min(max(u90, lo), hi)
+    a = math.log(p10 / m) / math.log(min(u10c, 0.999 * m) / m)
+    b = math.log((1 - p90) / (1 - m)) / math.log((1 - min(max(u90c, 1.001 * m), hi)) / (1 - m))
     return dict(m=m, a=float(min(max(a, 0.3), 4.0)), b=float(min(max(b, 0.3), 4.0)), untoned_p10=round(u10, 4),
-                untoned_p90=round(u90, 4))
+                untoned_p90=round(u90, 4), clipped=(u10, u90, P10, P90) != (u10c, u90c, p10, p90))
 
 
 # The curve and the wall depend on each other: the wall, set through the curve's inverse, lights the stone's sides and
@@ -1055,7 +1062,7 @@ if TONE:
         render(UNTONED, 100, 64)
         c = fit_curve(UNTONED)
         log["tone"]["rounds"].append(dict(a=round(c["a"], 4), b=round(c["b"], 4), untoned_p10=c["untoned_p10"],
-                                          untoned_p90=c["untoned_p90"]))
+                                          untoned_p90=c["untoned_p90"], **({"clipped": True} if c["clipped"] else {})))
         print("TONE", it, log["tone"]["rounds"][-1], flush=True)
         still = abs(c["a"] - curve["a"]) < 0.02 and abs(c["b"] - curve["b"]) < 0.02
         curve.update(a=c["a"], b=c["b"])
@@ -1105,7 +1112,7 @@ log["render"] = dict(seconds=round(sec, 1), samples=SAMPLES, size=[W, H], spot_w
                      wall_strength=round(WALL_MAX, 4), albedo=[round(c, 4) for c in ALBEDO], look=LOOK,
                      filter_px=FILTER_PX)
 log["seconds"] = round(time.time() - T0, 1)
-for path in (os.path.join(OUT, "build.json"), os.path.join(HERE, "results", "build.json")):
+for path in (os.path.join(OUT, "build.json"), os.path.join(shot.RESULTS, "build.json")):
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w") as f:
         json.dump(log, f, indent=1)

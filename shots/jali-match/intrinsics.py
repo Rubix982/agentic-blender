@@ -25,6 +25,7 @@ from PIL import Image  # noqa: E402
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 from normals import TILE, OVERLAP, W, H, positions, feather  # noqa: E402
+import shot  # noqa: E402  (C-022)
 
 MODEL = "prs-eth/marigold-iid-lighting-v1-1"
 argv = sys.argv[1:]
@@ -39,7 +40,7 @@ def to_srgb(v):
 
 if __name__ == "__main__":
     t0 = time.time()
-    rgb = np.asarray(Image.open(os.path.join(HERE, "photo", "agra-jali.jpg")).convert("RGB").resize((W, H), Image.LANCZOS))
+    rgb = np.asarray(Image.open(shot.PHOTO).convert("RGB").resize((W, H), Image.LANCZOS))
     device = "mps" if torch.backends.mps.is_available() else "cpu"
     try:
         pipe = MarigoldIntrinsicsPipeline.from_pretrained(MODEL, variant="fp16", torch_dtype=torch.float16).to(device)
@@ -71,14 +72,17 @@ if __name__ == "__main__":
         count[y0:y0 + TILE, x0:x0 + TILE] += 1
     dis = np.concatenate([np.abs(a - albedo[y0:y0 + TILE, x0:x0 + TILE])[count[y0:y0 + TILE, x0:x0 + TILE] > 1].ravel()
                           for x0, y0, a in preds])
-    np.save(os.path.join(HERE, "out", "albedo.npy"), albedo)
-    Image.fromarray((to_srgb(albedo) * 255).astype(np.uint8)).save(os.path.join(HERE, "out", "albedo.png"))
-    bx0, by0, bx1, by1 = json.load(open(os.path.join(HERE, "results", "read_photo.json")))["box"]
+    os.makedirs(shot.OUT, exist_ok=True)
+    np.save(os.path.join(shot.OUT, "albedo.npy"), albedo)
+    Image.fromarray((to_srgb(albedo) * 255).astype(np.uint8)).save(os.path.join(shot.OUT, "albedo.png"))
+    rp = os.path.join(shot.RESULTS, "read_photo.json")
+    bx0, by0, bx1, by1 = json.load(open(rp))["box"] if os.path.exists(rp) else (0, 0, W - 1, H - 1)
     lum = albedo[by0:by1 + 1, bx0:bx1 + 1] @ np.array([0.2126, 0.7152, 0.0722], np.float32)
     res = dict(model=MODEL, licence="CreativeML OpenRAIL++-M", device=device, dtype="float16", size=[W, H], tile=TILE,
                overlap=OVERLAP, ensemble=ENSEMBLE, steps=STEPS or 4, seed=0, tiles=tiles, seconds=round(time.time() - t0, 1),
                overlap_albedo_abs_diff_median=round(float(np.median(dis)), 4),
                albedo_luminance_in_box_p10_p50_p90=[round(float(np.percentile(lum, q)), 4) for q in (10, 50, 90)])
-    with open(os.path.join(HERE, "results", "intrinsics.json"), "w") as f:
+    os.makedirs(shot.RESULTS, exist_ok=True)
+    with open(os.path.join(shot.RESULTS, "intrinsics.json"), "w") as f:
         json.dump(res, f, indent=1)
     print("INTRINSICS", json.dumps({k: v for k, v in res.items() if k != "tiles"}), flush=True)

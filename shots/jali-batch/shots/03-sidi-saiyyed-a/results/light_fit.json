@@ -1,0 +1,445 @@
+{
+ "fixed": false,
+ "start": {
+  "ax": 0.0,
+  "az": 0.0,
+  "d": 2.3324,
+  "rv": 1.1267,
+  "sx": 1.0,
+  "blend": 0.6
+ },
+ "start_error": 0.2522,
+ "steps": [
+  {
+   "round": 0,
+   "key": "rv",
+   "value": 0.4,
+   "error": 1.6698
+  },
+  {
+   "round": 0,
+   "key": "rv",
+   "value": 0.6,
+   "error": 1.4948
+  },
+  {
+   "round": 0,
+   "key": "rv",
+   "value": 0.8,
+   "error": 0.4566
+  },
+  {
+   "round": 0,
+   "key": "rv",
+   "value": 1.0,
+   "error": 0.2419
+  },
+  {
+   "round": 0,
+   "key": "rv",
+   "value": 1.3,
+   "error": 0.2556
+  },
+  {
+   "round": 0,
+   "key": "sx",
+   "value": 1.5,
+   "error": 0.2556
+  },
+  {
+   "round": 0,
+   "key": "sx",
+   "value": 2.0,
+   "error": 0.2556
+  },
+  {
+   "round": 0,
+   "key": "sx",
+   "value": 2.5,
+   "error": 0.2556
+  },
+  {
+   "round": 0,
+   "key": "az",
+   "value": -0.25,
+   "error": 0.4881
+  },
+  {
+   "round": 0,
+   "key": "az",
+   "value": -0.1,
+   "error": 0.257
+  },
+  {
+   "round": 0,
+   "key": "az",
+   "value": 0.1,
+   "error": 0.2472
+  },
+  {
+   "round": 0,
+   "key": "az",
+   "value": 0.2,
+   "error": 0.2476
+  },
+  {
+   "round": 0,
+   "key": "d",
+   "value": 1.6,
+   "error": 0.3074
+  },
+  {
+   "round": 0,
+   "key": "d",
+   "value": 2.33,
+   "error": 0.2419
+  },
+  {
+   "round": 0,
+   "key": "d",
+   "value": 3.5,
+   "error": 0.1864
+  },
+  {
+   "round": 0,
+   "key": "d",
+   "value": 5.0,
+   "error": 0.1665
+  },
+  {
+   "round": 0,
+   "key": "d",
+   "value": 8.0,
+   "error": 0.1453
+  },
+  {
+   "round": 0,
+   "key": "blend",
+   "value": 0.3,
+   "error": 0.1448
+  },
+  {
+   "round": 0,
+   "key": "blend",
+   "value": 0.6,
+   "error": 0.1453
+  },
+  {
+   "round": 0,
+   "key": "blend",
+   "value": 1.0,
+   "error": 0.1848
+  },
+  {
+   "round": 0,
+   "key": "ax",
+   "value": -0.06,
+   "error": 0.1448
+  },
+  {
+   "round": 0,
+   "key": "ax",
+   "value": 0.06,
+   "error": 0.1446
+  },
+  {
+   "round": 1,
+   "key": "rv",
+   "value": 0.85,
+   "error": 0.1514
+  },
+  {
+   "round": 1,
+   "key": "rv",
+   "value": 0.92,
+   "error": 0.1445
+  },
+  {
+   "round": 1,
+   "key": "rv",
+   "value": 0.9936,
+   "error": 0.1446
+  },
+  {
+   "round": 1,
+   "key": "rv",
+   "value": 1.058,
+   "error": 0.1446
+  },
+  {
+   "round": 1,
+   "key": "sx",
+   "value": 0.85,
+   "error": 0.1865
+  },
+  {
+   "round": 1,
+   "key": "sx",
+   "value": 0.92,
+   "error": 0.151
+  },
+  {
+   "round": 1,
+   "key": "sx",
+   "value": 1.08,
+   "error": 0.1446
+  },
+  {
+   "round": 1,
+   "key": "sx",
+   "value": 1.15,
+   "error": 0.1446
+  },
+  {
+   "round": 1,
+   "key": "az",
+   "value": -0.08,
+   "error": 0.1446
+  },
+  {
+   "round": 1,
+   "key": "az",
+   "value": -0.04,
+   "error": 0.1449
+  },
+  {
+   "round": 1,
+   "key": "az",
+   "value": 0.04,
+   "error": 0.1444
+  },
+  {
+   "round": 1,
+   "key": "az",
+   "value": 0.12,
+   "error": 0.1435
+  },
+  {
+   "round": 1,
+   "key": "d",
+   "value": 5.6,
+   "error": 0.161
+  },
+  {
+   "round": 1,
+   "key": "d",
+   "value": 6.8,
+   "error": 0.1529
+  },
+  {
+   "round": 1,
+   "key": "d",
+   "value": 9.6,
+   "error": 0.1371
+  },
+  {
+   "round": 1,
+   "key": "d",
+   "value": 13.44,
+   "error": 0.1367
+  },
+  {
+   "round": 1,
+   "key": "blend",
+   "value": 0.1,
+   "error": 0.1367
+  },
+  {
+   "round": 1,
+   "key": "blend",
+   "value": 0.2,
+   "error": 0.1367
+  },
+  {
+   "round": 1,
+   "key": "blend",
+   "value": 0.4,
+   "error": 0.1367
+  },
+  {
+   "round": 1,
+   "key": "ax",
+   "value": 0.03,
+   "error": 0.1367
+  },
+  {
+   "round": 1,
+   "key": "ax",
+   "value": 0.09,
+   "error": 0.1371
+  },
+  {
+   "round": 2,
+   "key": "rv",
+   "value": 0.874,
+   "error": 0.1372
+  },
+  {
+   "round": 2,
+   "key": "rv",
+   "value": 0.966,
+   "error": 0.1367
+  },
+  {
+   "round": 2,
+   "key": "sx",
+   "value": 0.95,
+   "error": 0.137
+  },
+  {
+   "round": 2,
+   "key": "sx",
+   "value": 1.05,
+   "error": 0.1367
+  },
+  {
+   "round": 2,
+   "key": "az",
+   "value": 0.1,
+   "error": 0.137
+  },
+  {
+   "round": 2,
+   "key": "az",
+   "value": 0.14,
+   "error": 0.1369
+  },
+  {
+   "round": 2,
+   "key": "d",
+   "value": 12.096,
+   "error": 0.1356
+  },
+  {
+   "round": 2,
+   "key": "d",
+   "value": 13.3056,
+   "error": 0.1368
+  },
+  {
+   "round": 2,
+   "key": "blend",
+   "value": 0.35,
+   "error": 0.1357
+  },
+  {
+   "round": 2,
+   "key": "blend",
+   "value": 0.45,
+   "error": 0.1356
+  },
+  {
+   "round": 2,
+   "key": "ax",
+   "value": 0.045,
+   "error": 0.1356
+  },
+  {
+   "round": 2,
+   "key": "ax",
+   "value": 0.075,
+   "error": 0.1361
+  },
+  {
+   "round": "nm",
+   "ax": 0.11,
+   "az": 0.12,
+   "d": 12.096,
+   "rv": 0.92,
+   "sx": 1.0,
+   "blend": 0.45,
+   "error": 0.1466
+  },
+  {
+   "round": "nm",
+   "ax": 0.06,
+   "az": 0.2,
+   "d": 12.096,
+   "rv": 0.92,
+   "sx": 1.0,
+   "blend": 0.45,
+   "error": 0.1368
+  },
+  {
+   "round": "nm",
+   "ax": 0.06,
+   "az": 0.12,
+   "d": 16.3279,
+   "rv": 0.92,
+   "sx": 1.0,
+   "blend": 0.45,
+   "error": 0.1388
+  },
+  {
+   "round": "nm",
+   "ax": 0.06,
+   "az": 0.12,
+   "d": 12.096,
+   "rv": 1.1237,
+   "sx": 1.0,
+   "blend": 0.45,
+   "error": 0.1357
+  },
+  {
+   "round": "nm",
+   "ax": 0.06,
+   "az": 0.12,
+   "d": 12.096,
+   "rv": 0.92,
+   "sx": 1.284,
+   "blend": 0.45,
+   "error": 0.1357
+  },
+  {
+   "round": "nm",
+   "ax": 0.06,
+   "az": 0.12,
+   "d": 12.096,
+   "rv": 0.92,
+   "sx": 1.0,
+   "blend": 0.65,
+   "error": 0.1545
+  },
+  {
+   "round": "nm",
+   "ax": 0.0767,
+   "az": 0.1467,
+   "d": 13.3681,
+   "rv": 0.9834,
+   "sx": 1.0869,
+   "blend": 0.25,
+   "error": 0.1366
+  },
+  {
+   "round": "nm",
+   "ax": 0.0156,
+   "az": 0.1556,
+   "d": 13.8213,
+   "rv": 1.0055,
+   "sx": 1.1175,
+   "blend": 0.3833,
+   "error": 0.1376
+  },
+  {
+   "round": "nm",
+   "ax": 0.0507,
+   "az": 0.1674,
+   "d": 9.6857,
+   "rv": 1.0358,
+   "sx": 1.1597,
+   "blend": 0.3611,
+   "error": 0.1365
+  }
+ ],
+ "best": {
+  "ax": 0.06,
+  "az": 0.12,
+  "d": 12.096,
+  "rv": 0.92,
+  "sx": 1.0,
+  "blend": 0.45
+ },
+ "best_error": 0.1356,
+ "cone_deg": 7.46,
+ "renders": 65
+}

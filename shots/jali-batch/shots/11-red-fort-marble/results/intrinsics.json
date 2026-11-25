@@ -1,0 +1,54 @@
+{
+ "model": "prs-eth/marigold-iid-lighting-v1-1",
+ "licence": "CreativeML OpenRAIL++-M",
+ "device": "mps",
+ "dtype": "float16",
+ "size": [
+  1052,
+  1402
+ ],
+ "tile": 768,
+ "overlap": 192,
+ "ensemble": 3,
+ "steps": 4,
+ "seed": 0,
+ "tiles": [
+  {
+   "x": 0,
+   "y": 0,
+   "seconds": 14.1
+  },
+  {
+   "x": 284,
+   "y": 0,
+   "seconds": 14.0
+  },
+  {
+   "x": 0,
+   "y": 317,
+   "seconds": 13.8
+  },
+  {
+   "x": 284,
+   "y": 317,
+   "seconds": 14.6
+  },
+  {
+   "x": 0,
+   "y": 634,
+   "seconds": 15.3
+  },
+  {
+   "x": 284,
+   "y": 634,
+   "seconds": 15.6
+  }
+ ],
+ "seconds": 89.9,
+ "overlap_albedo_abs_diff_median": 0.0173,
+ "albedo_luminance_in_box_p10_p50_p90": [
+  0.0815,
+  0.1788,
+  0.3001
+ ]
+}
