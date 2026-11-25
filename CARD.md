@@ -1686,6 +1686,22 @@ Untested suspect: the edge bevel, 0.5 mm, which widens the outline by its radius
 0.6 px a side, a fifth of a 5 to 8 px hole, against nothing on ours' 20 px holes. `build.py --bevel` now takes another
 radius; run on 03 when the laptop is on power. The full-size 03 is paused there too, its normals done.
 
+*`--wall photo` (a switch; the bands stay the default).* The wall's colour taken from the photo's own openings, filled
+in across the stone and seen through window coordinates, set through the tone curve's inverse each round. On a copy of
+18 (`variants/18-wallphoto`, `shots/jali-batch/18_wallphoto.jpg`) it changed almost nothing: SSIM 0.5453 either way,
+openings shown 8.9 % of the box against 9.3 %. The render is too dark for the wall's colour to show: 18's photo stone
+sits at a median of 0.103 between 0.054 and 0.127 (backlit, in its own shadow), the spot lights the render's stone from
+the front, and the tone curve squeezing that into the photo's range ends at both limits (4.0 and 0.3), which takes the
+holes down to a dim grey with it. A backlit screen needs light from behind and from the room, not a front spot.
+
+*What fix 6 cost.* Before it (13, 14 and 18 after fix 1; 16 and 17 at C-022) and after: 13 SSIM 0.556 to 0.727,
+openings IoU 0.704 to 0.813, bright end 0.789 to 0.632, lines 0.108 to 0.247; 14 0.605 to 0.686, 0.577 to 0.615,
+0.807 to 0.615, 0.499 to 0.602; 16 0.234 to 0.445, 0.496 to 0.607, 0.404 to 0.880, 0.654 to 0.804; 17 0.377 to 0.428,
+0.447 to 0.191, 0.636 to 0.606, 0.680 to 0.688; 18 0.704 to 0.545, 0.617 to 0.461, 0.685 to 0.522, 0.686 to 0.561,
+worse on all four (the user had called 18, before it, "really beautiful"). The openings IoU compares two readings by
+one rule, so across a change of rule it is not like for like; SSIM and the bright end are. Fix 6 stays: it reads the
+structure the user saw was wrong (13's sides, its holes), and 18's loss is in the light that follows.
+
 *Open, not yet fixed.* The tone curve's upper exponent sits at its limit of 4.0 in 8 of the 13 renders that C-022
 measured (ours 2.12), and with the fit's stone corrected 03, 05, 09 and 15 end at both limits (0.3 and 4.0); the
 cause is not found. The 25 % fit renders are not it: their stone's median is within about 10 % of the full render's

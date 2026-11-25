@@ -1,0 +1,23 @@
+{
+ "photo": "2411228969.jpg",
+ "size": [
+  2048,
+  1536
+ ],
+ "work": [
+  1402,
+  1052
+ ],
+ "lens_mm": 28.0,
+ "sensor_mm": 34.616,
+ "width_m": 1.05,
+ "credit": "photograph (colros, CC BY-SA 2.0)",
+ "camera": "assumed: 28 mm equivalent, uncropped",
+ "source": "https://www.flickr.com/photos/73416633@N00/2411228969/",
+ "title": "Marble Screen, Fatehpur Sikri",
+ "licence": "CC BY-SA 2.0",
+ "author": "colros",
+ "monument": "Fatehpur Sikri",
+ "variant_of": "18-fatehpur-sikri-b",
+ "variant": "build.py --wall photo"
+}

@@ -765,9 +765,59 @@ def set_wall(bs):
 
 
 set_wall(bands)
+# C-023: --wall photo. Ten flat bands cannot draw what some screens look onto: 14's arcade of dark arches (its bands go
+# from 0.92 to 0.047 within a tenth of the screen's height, a level change in the middle of a panel), 17's and 18's lit
+# courtyard, the green, blue and yellow light through 04's tree. So the wall's colour can be the photo itself, seen
+# from the camera (window coordinates: the render's frame is the photo's): where the photo shows an opening, its colour,
+# through the tone curve's inverse as the bands are; across the stone, those colours filled in (normalised
+# convolution, at a quarter of the size, widening until every pixel has some), since the stone hides it but for the
+# openings' edges. Each tone round sets it again, as it sets the bands. The bands stay the default (ours is a lit wall).
+WALL_PHOTO = "--wall" in argv and argv[argv.index("--wall") + 1] == "photo"
+
+
+def filled_openings():
+    q = (max(W // 4, 1), max(H // 4, 1))
+    have = C.resize(k["opening"].astype(np.float32), q) > 0.5
+    img = np.stack([C.resize(rgb[:, :, c].astype(np.float32), q) for c in range(3)], -1)
+    out = np.where(have[..., None], img, 0.0)
+    for width in (3, 7, 15, 31, 63):
+        if have.all():
+            break
+        wsum = C.blur(have.astype(np.float32), width)
+        est = np.stack([C.blur((img[:, :, c] * have).astype(np.float32), width) for c in range(3)], -1) / np.maximum(wsum, 1e-4)[..., None]
+        new = ~have & (wsum > 0.02)
+        out[new] = est[new]
+        have = have | new
+    if not have.all():
+        out[~have] = np.median(rgb[k["opening"]], axis=0) if k["opening"].any() else 0.5
+    full = np.stack([C.resize(out[:, :, c].astype(np.float32), (W, H)) for c in range(3)], -1)
+    return np.where(k["opening"][..., None], rgb, full)
+
+
+if WALL_PHOTO:
+    WALL_SHOWN = filled_openings()                                     # the photo's display values, all over
+    wall_img = bpy.data.images.new("wall photo", W, H, float_buffer=True)
+    wall_tex = wn.nodes.new("ShaderNodeTexImage")
+    wall_tex.image = wall_img
+    wall_tex.interpolation = "Linear"
+    wall_tco = wn.nodes.new("ShaderNodeTexCoord")
+    wn.links.new(wall_tco.outputs["Window"], wall_tex.inputs["Vector"])
+
+    def set_wall_photo(cv):
+        global WALL_MAX
+        lin = to_lin3(tone_rgb(WALL_SHOWN, cv, inverse=True))
+        WALL_MAX = float(max(lin.max(), 1e-4))
+        em.inputs["Strength"].default_value = WALL_MAX
+        px = np.concatenate([lin / WALL_MAX, np.ones(lin.shape[:2] + (1,))], -1)[::-1].astype(np.float32)
+        wall_img.pixels.foreach_set(px.ravel())
+        wall_img.update()
+
+    set_wall_photo(curve)
 wn.links.new(wtc.outputs["Generated"], sep.inputs["Vector"])
 wn.links.new(sep.outputs["Y"], ramp_w.inputs["Fac"])
-wn.links.new(ramp_w.outputs["Color"], em.inputs["Color"])
+wn.links.new((wall_tex if WALL_PHOTO else ramp_w).outputs["Color"], em.inputs["Color"])
+if WALL_PHOTO:
+    log["wall"]["photo"] = dict(source="the photo's openings, filled in across the stone; window coordinates")
 log["wall"]["bands"] = [dict(at=round(pos, 4), linear_rgb=[round(float(c), 4) for c in lin]) for pos, lin in bands]
 wn.links.new(em.outputs["Emission"], next(n for n in wn.nodes if n.type == "OUTPUT_MATERIAL").inputs["Surface"])
 wall.data.materials.append(wm)
@@ -1144,6 +1194,8 @@ if TONE:
         still = abs(c["a"] - curve["a"]) < 0.02 and abs(c["b"] - curve["b"]) < 0.02
         curve.update(a=c["a"], b=c["b"])
         set_wall(wall_bands(curve))                                    # the wall through the curve's inverse
+        if WALL_PHOTO:
+            set_wall_photo(curve)
         fit_power(2)
         if still:
             break
