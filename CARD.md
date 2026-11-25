@@ -1505,8 +1505,12 @@ break it in four ways: a pale stone or patina is taken for wall (01's frame, 06'
 behind, the reading inverts, the pale bars called wall and the dark holes stone (12, 15, 16); holes that show sunlight
 are brighter than any wall and are taken for lit stone (09); a backdrop of red sandstone cannot be told from the screen
 (17). Two read about right and still render poorly, 03 and 05 (the tree of life from outside, in sun), so theirs is
-later, in the light, the tone curve or the wall behind the holes; I first put 03 down to the colour rule, and its
-reading sheet says otherwise. 02 reads right and renders right. The contact sheets: `shots/jali-batch/contact_1.jpg`
+later; I first put 03 down to the colour rule, and its reading sheet says otherwise. Their build logs place it in the
+light: the tone curve ran into its limits both ways, 03's upper exponent at its cap of 4.0 with the render's stone
+spread 0.39 of the photo's (flat), 05's at its floor of 0.3 with the untoned stone clipping at white (spread 1.21).
+One spot and a lit wall behind the holes, a museum's arrangement, does not make a sunlit facade's range; and the
+stone's albedo is scaled so its brightest channel is 0.45 (`build.py`, from our sandstone), which a pale limestone or
+marble is not. 02 reads right and renders right. The contact sheets: `shots/jali-batch/contact_1.jpg`
 to `contact_3.jpg` (no measures on them); the measures: `measures.json`.
 
 **Result:** waiting on the user's glance at the contact sheets.
