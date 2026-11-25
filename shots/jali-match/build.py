@@ -142,8 +142,54 @@ for _ in range(2000):                                                  # grow al
 DIST = LENS_MM / SENSOR_MM * W * S                                     # the camera's distance to the front face
 KB = DIST / (DIST + THICK_M)
 yy, xx = np.mgrid[0:H, 0:W]
-sy = np.clip(np.round(H / 2 + (yy - H / 2) * KB).astype(int), 0, H - 1)
-sx = np.clip(np.round(W / 2 + (xx - W / 2) * KB).astype(int), 0, W - 1)
+
+
+def shifted(kb):
+    return (np.clip(np.round(H / 2 + (yy - H / 2) * kb).astype(int), 0, H - 1),
+            np.clip(np.round(W / 2 + (xx - W / 2) * kb).astype(int), 0, W - 1))
+
+
+# C-023: on a fine lattice the offset can be wider than the bars (18: 7.6 px at the field's corners, its bars about 6),
+# and the union then cuts through them, joining neighbouring holes into streaks that point at the picture's centre
+# (the user: "simmering kind of wave patterns" in the corner panels; 12's holes so merged its fill failed). The photo
+# shows those holes apart. So the offset is the camera's unless that merges more than MERGE_MAX of the holes (of 10 px
+# or more, in the carved field: a hole merged when its widened outline holds another); then the largest offset that
+# merges no more, by halving. Ours merges 4.1 % and keeps the camera's. --no-merge-cap: the camera's always.
+MERGE_MAX = 0.10
+KB_CAMERA = KB
+_fb = _rp.get("field_box", [x0, y0, x1, y1])
+FIELD_M = np.zeros((H, W), bool)
+FIELD_M[_fb[1]:_fb[3] + 1, _fb[0]:_fb[2] + 1] = True
+_lab0 = C.label(k["opening"] & FIELD_M)
+_area0 = np.bincount(_lab0.ravel())
+_holes = np.nonzero(_area0 >= 10)[0]
+_holes = _holes[_holes > 0]
+
+
+def merged_share(kb):
+    if not len(_holes):
+        return 0.0
+    ssy, ssx = shifted(kb)
+    lab1 = C.label((k["opening"] | k["opening"][ssy, ssx]) & FIELD_M)
+    comp = np.zeros(_lab0.max() + 1, np.int64)
+    np.maximum.at(comp, _lab0.ravel(), lab1.ravel())
+    _, inv, cnt = np.unique(comp[_holes], return_inverse=True, return_counts=True)
+    return float((cnt[inv] >= 2).mean())
+
+
+MERGE = dict(kb_camera=round(KB_CAMERA, 5), holes=int(len(_holes)), merged_at_camera=round(merged_share(KB), 4))
+if "--no-merge-cap" not in argv and MERGE["merged_at_camera"] > MERGE_MAX:
+    lo, hi = 0.0, 1.0 - KB                                             # the offset's share of the camera's, by halving
+    for _ in range(6):
+        mid = (lo + hi) / 2
+        if merged_share(1.0 - mid) <= MERGE_MAX:
+            lo = mid
+        else:
+            hi = mid
+    KB = 1.0 - lo
+    MERGE.update(kb=round(KB, 5), merged=round(merged_share(KB), 4))
+print("MERGE", MERGE, flush=True)
+sy, sx = shifted(KB)
 # Thin stone in the photo (strips about 4 px wide or less): connecting pieces. The user saw them missing in C-009; the
 # one-pixel shrink, not the widening, was what took them (see BEVEL_M). --thin-protect also keeps the widening off them:
 # it shows 94 % of them against 89 %, but costs the openings 0.05 of IoU (0.678 against 0.725), so it is off by default.
@@ -216,7 +262,7 @@ C.write_png(os.path.join(OUT, "height.png"), height / max(float(height.max()), 1
 log["sizes"] = dict(width_m=WIDTH_M, thick_m=THICK_M, thick_cm=THICK_M * 100, bevel_m=BEVEL_M)
 log["outlines"] = dict(count=len(loops), points=int(sum(len(p) for p in loops)), metres_per_px=round(S, 6),
                        screen_width_px=width_px, box=[x0, y0, x1, y1], dark_in_box_made_stone=int((dark & ~sur).sum()),
-                       surround_in_box=int(sur.sum()), back_face_scale=round(KB, 4),
+                       surround_in_box=int(sur.sum()), back_face_scale=round(KB, 4), **({'merge_cap': MERGE} if 'kb' in MERGE else {}),
                        seen_opening_share=round(float(k["opening"][y0:y1 + 1, x0:x1 + 1].mean()), 4),
                        hole_share=round(float(hole[y0:y1 + 1, x0:x1 + 1].mean()), 4),
                        cut_line_share=round(float(lines[y0:y1 + 1, x0:x1 + 1].mean()), 4))
@@ -791,6 +837,10 @@ BOX = (slice(y0, y1 + 1), slice(x0, x1 + 1))
 
 
 MID = (y0 + y1) // 2
+FIT_STONE_MIN = 0.5                                                    # C-022: see medians()
+STONE_PH_BOX = int(stone_ph[BOX].sum())
+STONE_FIT = C.erode(stone_ph, 2)
+FIT_READ = {}                                                          # set by medians() when it falls back
 
 
 def medians(img_rgb, wall_by_colour=False):
@@ -798,9 +848,16 @@ def medians(img_rgb, wall_by_colour=False):
     render the wall is found by colour alone (wall_by_colour), so a dim wall still counts and the fit cannot chase it
     to black."""
     q = C.classify(img_rgb)
-    if wall_by_colour:
+    if wall_by_colour and C.SIDE != "dark" and C.RULE == "colour":     # C-023: nor is grey stone
         q["opening"] = q["gr"] > C.GREEN_RED
         q["stone"] = ~q["opening"] & ~q["outside"]
+        # C-022: a grey or white stone passes green over red as wall, so the fit saw almost none of it (4 % of the
+        # photo's stone in 03, none in 09 and 15) and set the power from what was left, or from a nan. Under half the
+        # photo's stone, the render is measured where the photo's stone is: the two share one camera and one outline.
+        # Ours stays on its own reading (102 to 106 % of the photo's stone in every fit render).
+        if q["stone"][BOX].sum() < FIT_STONE_MIN * STONE_PH_BOX:
+            q["stone"], q["opening"] = STONE_FIT.copy(), k["opening"].copy()
+            FIT_READ["stone_from_photo"] = True
     st = q["stone"][BOX]
     lo = q["opening"][MID:y1 + 1, x0:x1 + 1]
     hi = q["opening"][y0:MID, x0:x1 + 1]
@@ -1022,10 +1079,12 @@ def fit_power(n):
         path = os.path.join(OUT, f"fit_{len(log['fit']['steps'])}.png")
         sec = render(path, 25, 32)
         img = tone_rgb(C.load(path, (W, H)), curve).astype(np.float32)
+        FIT_READ.clear()
         st, op_lo, op_hi = medians(img, wall_by_colour=True)
         log["fit"]["steps"].append(dict(spot_w=round(spot.energy, 2), stone_y=round(st, 4),
                                         opening_y_lower=round(op_lo, 4), opening_y_upper=round(op_hi, 4),
-                                        seconds=round(sec, 1), curve=[round(curve["a"], 4), round(curve["b"], 4)]))
+                                        seconds=round(sec, 1), curve=[round(curve["a"], 4), round(curve["b"], 4)],
+                                        **({"stone_from_photo": True} if FIT_READ else {})))
         print("FIT", log["fit"]["steps"][-1], flush=True)
         spot.energy *= gain(target[0], st)
 
@@ -1081,13 +1140,23 @@ if TONE:
     if SATURATION:
         def saturate(img, kk):
             yy = np.maximum(img @ LUM, 1e-6)[..., None]
-            f = (np.maximum(yy, 1e-3) / curve["m"]) ** -kk
+            f = (np.maximum(yy, SAT_Y_FLOOR) / curve["m"]) ** -kk
             return np.clip(yy + (img - yy) * f, 0.0, 1.0)
 
         # on stone in both images (3 px from any opening), as compare.py measures: a first fit on the photo's stone
         # alone took in the render's wall at the openings' edges, bright and grey, and fitted k = 0.10 where
         # compare.py then measured half the photo's slopes
-        sat_mask = TONE_MASK & C.erode(C.classify(toned.astype(np.float32))["stone"], 3)
+        render_stone = C.classify(toned.astype(np.float32))["stone"]
+        sat_from_photo = bool(render_stone[BOX].sum() < FIT_STONE_MIN * STONE_PH_BOX)   # C-022: as in medians()
+        sat_mask = TONE_MASK & C.erode(k["stone"] if sat_from_photo else render_stone, 3)
+        # C-023: the factor is fitted on the stone and was applied everywhere: through dark holes (03, 05: a stone median
+        # of 0.86, k 1.05 and 1.2) the interior's faint tint came out 50 to 90 times as strong, red and purple. So where
+        # the openings are dark, no pixel is taken darker than the stone's 1st percentile (as toned) when its factor is
+        # worked out. --sat-everywhere: the factor at every luminance, as before.
+        # Only where the openings are dark: on ours the floor (its stone's 1st percentile, 0.118) moved the colour spread
+        # from 0.7457 to 0.7232, through the museum's dark surround and deep shadows, which C-018 fitted as they were.
+        SAT_Y_FLOOR = 1e-3 if ("--sat-everywhere" in argv or C.SIDE != "dark" or not sat_mask.any()) else max(
+            1e-3, float(np.percentile((toned @ LUM)[sat_mask], 1)))
 
         def full_slopes(img):
             b = np.stack([C.blur(img[:, :, c].astype(np.float32), 5) for c in range(3)], -1)
@@ -1101,9 +1170,13 @@ if TONE:
             err = sum(abs(math.log(max(a / b, 1e-3))) if a * b > 0 else 5.0 for a, b in zip(sl, sat_photo))
             tries.append((err, float(kk), sl))
         err, k_sat, sl = min(tries)
+        if err >= 5.0:                                                 # C-023: no k matched both slopes' signs (03)
+            err, k_sat, sl = next(t for t in tries if t[1] == 0.0)
         toned = saturate(toned, k_sat)
         log["saturation"] = dict(k=round(k_sat, 3), photo_slopes=[round(v, 4) for v in sat_photo],
                                  render_slopes=[round(v, 4) for v in sl], error=round(err, 4),
+                                 **({"y_floor": round(SAT_Y_FLOOR, 4)} if SAT_Y_FLOOR > 1e-3 else {}),
+                                 **({"stone_from_photo": True} if sat_from_photo else {}),
                                  tries=[dict(k=round(t[1], 3), slopes=[round(v, 4) for v in t[2]]) for t in sorted(tries, key=lambda t: t[1])])
         print("SATURATION", {k: v for k, v in log["saturation"].items() if k != "tries"}, flush=True)
     C.write_png(os.path.join(OUT, "render.png"), toned)

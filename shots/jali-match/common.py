@@ -32,6 +32,9 @@ the cut as wall while darker than the wall around it. The user saw the bottom ro
 called opening there, 47 % lay more than 15 % below the local wall's luminance, against 0.8 % in the top half, where
 smooth wall pixels never went below 0.95 of it (5th percentile). So a pixel more than DIM below the local wall, less
 DIM_ABS, is stone too (results/read_photo.json, dim_stone)."""
+import json
+import os
+
 import numpy as np
 import OpenImageIO as oiio
 
@@ -68,7 +71,153 @@ def luminance(rgb):
     return rgb @ np.array([0.2126, 0.7152, 0.0722], np.float32)
 
 
-def classify(rgb, normals=None):
+def _side():
+    """C-023: which side of the stone's brightness the openings are on. "bright": a lit wall behind (ours), read by the
+    colour rule below; "dark": a room or an interior behind, read by classify_dark. From shot.json's "openings" when
+    given, else what read_photo.py decided (results/read_photo.json), else bright."""
+    s = _shot.META.get("openings")
+    if s in ("bright", "dark"):
+        return s
+    p = os.path.join(_shot.RESULTS, "read_photo.json")
+    if os.path.exists(p):
+        return json.load(open(p)).get("openings", {}).get("side", "bright")
+    return "bright"
+
+
+SIDE = _side()
+COLOUR_GAP = 0.04                   # C-023: below this, the two sides' green over red is one colour, and the colour rule
+                                    # cannot tell them apart (ours 0.101; 08 0.000, 09 0.000, 10 0.020)
+
+
+def _rule():
+    """C-023: how the bright side is read. "colour": the colour rule (ours); "brightness": classify_backlit. From
+    shot.json's "rule" when given, else read_photo.py's choice, else colour."""
+    s = _shot.META.get("rule")
+    if s in ("colour", "brightness"):
+        return s
+    p = os.path.join(_shot.RESULTS, "read_photo.json")
+    if os.path.exists(p):
+        return json.load(open(p)).get("openings", {}).get("rule", "colour")
+    return "colour"
+
+
+RULE = _rule()
+
+
+def otsu(v, bins=256):
+    """The threshold that best splits v in two (Otsu's: the largest variance between the two classes)."""
+    lo, hi = float(v.min()), float(v.max()) + 1e-6
+    h, e = np.histogram(v, bins=bins, range=(lo, hi))
+    c = (e[:-1] + e[1:]) / 2
+    w0 = np.cumsum(h)
+    w1 = w0[-1] - w0
+    m0 = np.cumsum(h * c) / np.maximum(w0, 1)
+    m1 = (np.sum(h * c) - np.cumsum(h * c)) / np.maximum(w1, 1)
+    return float(c[np.argmax(w0 * w1 * (m0 - m1) ** 2)])
+
+
+def border_dark(y):
+    """The dark surround (luminance below DARK) that reaches the image's border: holes onto a dark room do not."""
+    lab = label(y < DARK)
+    edge = np.unique(np.concatenate([lab[0], lab[-1], lab[:, 0], lab[:, -1]]))
+    keep = np.zeros(int(lab.max()) + 1, bool)
+    keep[edge] = True
+    keep[0] = False
+    return keep[lab]
+
+
+def structure_score(opening, inside):
+    """How much a split of the photo looks like a pierced screen: the stone mostly one piece, the openings mostly in
+    enclosed pieces of 20 px or more (not touching the region's edge), and many of them (30 or more count fully)."""
+    stone, op = inside & ~opening, inside & opening
+    if not stone.any() or not op.any():
+        return 0.0, {}
+    big = float(np.bincount(label(stone).ravel())[1:].max() / stone.sum())
+    lo = label(op)
+    area = np.bincount(lo.ravel())
+    edge = inside & ~erode(inside, 1)
+    edge[0], edge[-1], edge[:, 0], edge[:, -1] = inside[0], inside[-1], inside[:, 0], inside[:, -1]
+    ok = area >= 20
+    ok[0] = False
+    ok[np.unique(lo[edge & op])] = False
+    enclosed = float(area[ok].sum() / op.sum())
+    n, share = int(ok.sum()), float(op.sum() / inside.sum())
+    s = big * enclosed * min(n / 30, 1) * (1 if 0.03 < share < 0.65 else 0.3)
+    return s, dict(score=round(s, 4), stone_one_piece=round(big, 3), openings_enclosed=round(enclosed, 3),
+                   openings=n, opening_share=round(share, 3))
+
+
+def decide_side(rgb):
+    """C-023: split the photo at its luminance's Otsu threshold (the border's dark surround left out) and take the side
+    whose pixels, called openings, make the more screen-like structure. C-022 found the colour rule inverts where the
+    holes look into a dark interior (03: 82 % of the pale stone called opening, 82 % of the dark holes surround)."""
+    y = luminance(rgb)
+    inside = ~border_dark(y)
+    t = otsu(y[inside])
+    out = dict(threshold=round(t, 4))
+    for side, op in (("bright", y > t), ("dark", y <= t)):
+        out[side] = structure_score(op & inside, inside)[1]
+    out["side"] = "dark" if out["dark"].get("score", 0) > out["bright"].get("score", 0) else "bright"
+    # C-023: the colour rule calls a pixel wall when it is grey; that tells stone from wall only where the stone has a
+    # colour. Measured as the gap between the two sides' median green over red (the darkest pixels left out).
+    gr = rgb[:, :, 1] / np.maximum(rgb[:, :, 0], 1e-4)
+    ok = inside & (y > 0.02)
+    hi, lo = ok & (y > t), ok & (y <= t)
+    gap = float(np.median(gr[hi]) - np.median(gr[lo])) if hi.any() and lo.any() else 0.0
+    out["colour_gap"] = round(gap, 4)
+    out["rule"] = "brightness" if out["side"] == "dark" or gap < COLOUR_GAP else "colour"
+    return out
+
+
+def classify_dark(rgb):
+    """C-023: the openings darker than the stone (a room or an interior behind). The surround is the dark that reaches
+    the image's border; the rest splits at its luminance's Otsu threshold, the dark side opening. The colour rule's
+    tests (lit, dim, the wall's colour, the normals' veto) are for a lit wall behind, so they are empty here."""
+    y = luminance(rgb)
+    gr = rgb[:, :, 1] / np.maximum(rgb[:, :, 0], 1e-4)
+    outside = border_dark(y)
+    t = otsu(y[~outside]) if (~outside).any() else 0.5
+    opening = ~outside & (y <= t)
+    z = np.zeros_like(opening)
+    return dict(outside=outside, opening=opening, stone=~outside & ~opening, y=y, gr=gr, lit=z, dim=z.copy(),
+                sure=z.copy(), wall_y=np.full(y.shape, t, np.float32), veto=z.copy(), side="dark", threshold=t)
+
+
+def classify_backlit(rgb):
+    """C-023: the openings brighter than the stone, and the two of one colour (a screen against the sky or a lit room,
+    the stone in its own shadow). The stone can be as dark as the room around the window (08: 0.064 against 0.004), so
+    the screen is placed by its holes: the box around the bright pieces that touch neither the image's border nor are
+    under 20 px (1st to 99th percentile of their pixels, padded 2 %). Outside that box is the surround; inside, the
+    split at the luminance's Otsu threshold, the bright side opening."""
+    y = luminance(rgb)
+    gr = rgb[:, :, 1] / np.maximum(rgb[:, :, 0], 1e-4)
+    t = otsu(y[y > 0.02]) if (y > 0.02).any() else 0.5
+    bright = y > t
+    lab = label(bright)
+    area = np.bincount(lab.ravel())
+    ok = area >= 20
+    ok[0] = False
+    ok[np.unique(np.concatenate([lab[0], lab[-1], lab[:, 0], lab[:, -1]]))] = False
+    ys, xs = np.nonzero(ok[lab])
+    h, w = y.shape
+    outside = np.ones_like(bright)
+    if len(xs):
+        px, py = 0.02 * w, 0.02 * h
+        x0, x1 = int(max(np.percentile(xs, 1) - px, 0)), int(min(np.percentile(xs, 99) + px, w - 1))
+        y0, y1 = int(max(np.percentile(ys, 1) - py, 0)), int(min(np.percentile(ys, 99) + py, h - 1))
+        outside[y0:y1 + 1, x0:x1 + 1] = False
+    opening = ~outside & bright
+    z = np.zeros_like(opening)
+    return dict(outside=outside, opening=opening, stone=~outside & ~opening, y=y, gr=gr, lit=z, dim=z.copy(),
+                sure=z.copy(), wall_y=np.full(y.shape, t, np.float32), veto=z.copy(), side="bright", threshold=t,
+                rule="brightness")
+
+
+def classify(rgb, normals=None, side=None):
+    if (side or SIDE) == "dark":                                       # C-023
+        return classify_dark(rgb)
+    if RULE == "brightness":                                           # C-023: grey stone against a bright behind
+        return classify_backlit(rgb)
     y = luminance(rgb)
     gr = rgb[:, :, 1] / np.maximum(rgb[:, :, 0], 1e-4)
     outside = y < DARK
@@ -375,27 +524,41 @@ def heights_from_normals(n, region, iters=3000, nz_min=0.2, screen_px=None):
     return (x * inner).astype(np.float32), dict(iterations=it + 1, residual=round(float(np.sqrt(rr / max(r0, 1e-30))), 6))
 
 
-def field_box(opening, box, min_area=400, pad=6):
+FIELD_RANK, FIELD_FLOOR = 20, 20                    # C-022: see field_box
+
+
+def field_box(opening, box, min_area=400, pad=6, info=None):
     """C-014: the carved field, as the box around every opening of min_area px or more inside the screen's box (x0, y0,
     x1, y1), padded. The frame around it is solid: pale lit stone along its top edge passed the colour rule as wall,
-    and Marigold sees the plain frame as flat as a wall, so the normals' veto missed it."""
+    and Marigold sees the plain frame as flat as a wall, so the normals' veto missed it.
+
+    C-022: min_area was set by our photo's holes; a marble lattice's are smaller (18's largest 211 px, its median 26),
+    and four of 18 photos stopped here. So the floor is min_area or half the area of the screen's FIELD_RANK-th largest
+    opening away from the box's edge, whichever is smaller, and never below FIELD_FLOOR px. Ours keeps 400. The floor
+    used goes into info, when given."""
     x0, y0, x1, y1 = box
     inside = np.zeros_like(opening)
     inside[y0:y1 + 1, x0:x1 + 1] = opening[y0:y1 + 1, x0:x1 + 1]
     lab = label(inside)
     area = np.bincount(lab.ravel())
-    big = area >= min_area
-    big[0] = False
     # an opening that reaches within 20 px of the box's edge is not the field's (the frame surrounds the field): the
     # pale band along the frame's top was one part of 2,739 px and stretched the field to the top
     edge = np.zeros_like(opening)
     edge[y0:y1 + 1, x0:x1 + 1] = True
     edge[y0 + 20:y1 - 19, x0 + 20:x1 - 19] = False
-    big[np.unique(lab[edge & inside])] = False
-    big[0] = False
+    away = np.ones(len(area), bool)
+    away[np.unique(lab[edge & inside])] = False
+    away[0] = False
+    ranked = np.sort(area[away])[::-1]
+    floor = min_area
+    if len(ranked) >= FIELD_RANK:
+        floor = int(max(FIELD_FLOOR, min(min_area, ranked[FIELD_RANK - 1] / 2)))
+    if info is not None:
+        info.update(min_area=floor, rank_area=int(ranked[FIELD_RANK - 1]) if len(ranked) >= FIELD_RANK else None)
+    big = (area >= floor) & away
     ys, xs = np.nonzero(big[lab])
     if not len(xs):                                                    # C-022: say why, rather than a numpy error
-        raise SystemExit(f"field_box: no opening of {min_area} px or more inside the screen's box, away from its edge; "
+        raise SystemExit(f"field_box: no opening of {floor} px or more inside the screen's box, away from its edge; "
                          f"the carved field cannot be placed (the largest inside: {int(area[1:].max()) if len(area) > 1 else 0} px)")
     return [int(max(xs.min() - pad, x0)), int(max(ys.min() - pad, y0)), int(min(xs.max() + pad, x1)), int(min(ys.max() + pad, y1))]
 

@@ -228,3 +228,19 @@ overall, so none was added.)
 answers rather than run code. Test case: `~/code/agentic-mapbox`, C-001 (ten blind GL JS tasks, run in headless
 Chromium, with and without Mapbox's skills).
 **Answer:** —
+
+### T-021 · Can the read step tell an opening from a shadow without our photo's colours?
+
+**Status:** parked
+**Parent:** T-018 (C-022)
+**Opened:** 2026-11-25
+**Question:** The colour rule expects red stone in front of a lit grey wall, and C-022 found four ways photos break
+it. Four probes on the 19 photos (2026-11-25, scratch code, not kept) found no reading to replace it. First, a light
+or dark split, its side chosen by structure (the stone one piece, the openings many enclosed pieces): the score ranked
+it above the colour rule on our photo (0.78 against 0.62), where the colour rule is plainly better, so the score
+cannot choose between readings. Second, Depth Anything V2 Small (Apache-2.0, in the local cache, under a second a
+photo at 1,400 px) shows our holes clearly, but a local depth split takes every step in depth for an opening: 0.39 to
+0.41 agreement (IoU) with the approved reading. Third, brightness to draw the outline with depth to decide: 0.23.
+Fourth, depth's surest pixels as seeds for the colour fields: 0.24, with 39 % of the image called opening against
+13 %. To resume: depth looks usable for telling which side is the opening, not for drawing its outline.
+**Answer:** —

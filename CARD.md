@@ -1513,4 +1513,113 @@ stone's albedo is scaled so its brightest channel is 0.45 (`build.py`, from our 
 marble is not. 02 reads right and renders right. The contact sheets: `shots/jali-batch/contact_1.jpg`
 to `contact_3.jpg` (no measures on them); the measures: `measures.json`.
 
+**After the measures (2026-11-25): a fault in our code behind five renders, and two of my readings wrong.** The
+runs' logs show it. The fit of the light's power measures each fit render's stone by the colour rule with the wall
+found by green over red alone (`build.py`, `medians`), and grey or pale stone passes that as wall. So the fit saw 4 %
+of the photo's stone in 03, 4 to 6 % in 05, 4 to 14 % in 16 and none in 09 and 15, against 102 to 106 % in every fit
+render of ours. In 09 and 15 the median was nan, and each such round cut the power tenfold. Fixed: when the render's
+reading holds under half the photo's stone, the fit (and the saturation fit, which had the same mask) measures the
+render where the photo's stone is; the two share one camera and one outline. Ours never comes near that and rebuilt
+with only its timings changed. Rebuilt, the five fits reach their stone (05: 0.437 against 0.427, where it was 0.634
+and clipped white at 32,160 W; 15: 0.574 against 0.558, where it was 0.292), but at a glance 03, 05 and 09 look as
+they did (`shots/jali-batch/fitfix_before_after.jpg`).
+
+The user, on 03: "there are patches where the pathways go missing". Its reading is the photo's negative: of the
+carved field's pale pixels (luminance above 0.45) 82 % were read as opening, and of its dark ones (below 0.2) 82 % as
+the surround, which the build counts as stone inside the box (`shots/jali-batch/03_read_patch.jpg`). So my reading
+above, that 03 and 05 "read about right" and fail in the light, was wrong twice: they fail in reading, as 12 and 15
+do, because their holes look into a dark interior and the colour rule expects a lit wall. The reading sheets did not
+show it to me because a lattice drawn in white on black looks like a lattice either way.
+
 **Result:** waiting on the user's glance at the contact sheets.
+
+---
+
+### C-023 · The faults the 18 runs show, fixed one at a time where the jali-match shot does not move
+
+**Opened:** 2026-11-25, with C-022's result still waiting on the user's glance, on the user's word ("keep checking
+the current runs for errors and building on top of that")
+
+1. **WHERE WE ARE.** C-022: 13 of 18 photos reach a render, none meets the four core bars, and the five that stop all
+   stop in reading the photo. Reading the runs' logs after it found a fault in our code (the fit's reading of the
+   render: C-022's measures) and two constants set by our photo that the others break: the field rule's 400 px floor
+   on an opening (four of the five stops), and the tone curve's upper exponent held at 4.0 at most (8 of the 13
+   renders at that limit; ours 2.12).
+2. **WHAT WE ARE DOING.** Fix the batch's faults one at a time, the one touching most shots first, each changed only
+   where the jali-match shot's results stay as committed (its steps rerun and compared), and rerun the shots each fix
+   touches. A fault whose fix would move the jali-match shot is not fixed here; it goes to the user.
+3. **WHY.** Unknown: how much of C-022's failure is our photo's constants, and how much is the method (the reading by
+   colour; one spot and a lit wall for the light). After: the count of renders that read as their photos at a glance
+   (mine, then the user's), and of core bars met, before and after the constants are each photo's own.
+4. **WHAT IS AFFECTED.** `common.field_box`, `build.py`'s tone fit, and whatever the next fault touches; C-022's table
+   of where each shot stops, and its reading of 03 and 05. The jali-match shot must not move.
+5. **CONCLUSION.** If the fixes take the renders that read as their photos at a glance from 3 of 18 (my count at
+   C-022) to at least 9, the recipe's limits were constants fitted to one photo. If not, they are in the method, and
+   the next card is the reading or the light.
+6. **CONSEQUENCE OF NOT DOING IT.** The batch's renders stay judged with our photo's constants in them, and the
+   method's own limits cannot be told apart from those.
+
+**Measures.**
+
+*Fix 1, the field rule's floor (2026-11-25).* An opening had to be 400 px to place the carved field: our photo's
+size, and four of the five stops (10, 13, 14, 18). The floor is now half the area of the screen's 20th-largest opening
+away from the box's edge, if that is smaller, and never under 20 px (`common.field_box`; `read_photo.json`'s
+`field_rule` when it moved). Ours keeps 400: its read step reran to an identical `read_photo.json`. 13 got a floor of
+139 px, 14 of 78, and the three now reach a render (16 of 18 do); 10 still stops, its largest opening 11 px, because
+its backlit stone reads as the dark room. 18 renders with the highest SSIM of the batch, 0.704. At a glance 13 and 14
+keep their mullions, arch and lattice but their holes come out dim pink where the photo's are lit white, and 18 loses
+the lattice in patches in its top panels and smears its bottom panels' holes into slanted strokes
+(`shots/jali-batch/new_renders_13_14_18.jpg`).
+
+*Fix 2, which side the openings are on (2026-11-25).* The colour rule expects the holes brighter than the stone. Now
+`read_photo.py` splits the photo at its luminance's Otsu threshold (the dark surround that reaches the image's border
+left out) and keeps the side that makes the more screen-like structure: the stone mostly one piece, the openings
+mostly enclosed pieces of 20 px or more, 30 or more of them (`common.decide_side`). A photo whose openings are dark is
+read by `common.classify_dark`: the surround is the dark that reaches the border, the rest splits at the threshold.
+The bright side keeps the colour rule, untouched. Ours comes out bright, 0.753 against 0.160, and its read step reran
+to an identical `read_photo.json`. Dark: 03 (0.511 against 0.006), 05 (0.072 against 0.024, the narrowest margin), 12
+(0.913 against 0.001) and 15 (0.747 against 0.000); the other fourteen bright, as the first probe had them. The four
+rebuilt with their saved light fits set aside (`results/light_fit_c022.json`), since those were fitted over the
+inverted stone.
+
+*After fix 2, on the user's look at 03's first rebuild:* the wall around the arch reads as stone again, its blocks,
+rosettes and frieze, and the trunk and branches are pale stone the right way round; but the lattice inside the arch
+was gone, one large opening, and what showed through came out in bands of red, purple and blue where the photo's
+interior is near black (`shots/jali-batch/dark_holes_03_05.jpg`). Both were faults further down, now fixed (4 and 5).
+
+*Fix 3, grey stone on the bright side (2026-11-25).* 10 stopped with no opening over 11 px. Its backlit stone is dark
+and grey, and the colour rule calls any grey pixel wall, so bars and holes read as one opening that touched the box's
+edge. The colour rule can only tell stone from wall where the stone has a colour the wall has not: the gap between
+the two brightness sides' median green over red is 0.101 in ours, 0.067 or more in every photo with coloured stone,
+and 0.000 (08), 0.000 (09, a black-and-white photo) and 0.020 (10). Below 0.04 the bright side is read by brightness
+(`common.classify_backlit`), the screen placed by its holes, since its stone can be as dark as the room (08: 0.064
+against 0.004). 08, 09 and 10 now pass the read step, so all 18 do; 08's and 10's readings keep their lattice and
+inner arched panel, and 09's takes the sunlight the screen throws on the floor for holes too, so its box runs down
+over the floor. Ours keeps the colour rule.
+
+*Fix 4, the parallax widening (2026-11-25).* The user, on 18: "I see distortions on the top left, top right, bottom
+right, and bottom left jalis however, like simmering kind of wave patterns". The build widens each hole by its back
+face's offset, which grows from the picture's centre (C-008's straight-through holes). With the batch's assumed camera
+the offset at the field's corners is 7.6 px in 18, against bars about 6 px wide, so the widening cut through bars and
+joined neighbouring holes into streaks pointing at the centre. Counted directly, the share of holes (10 px or more,
+in the field) whose widened outline holds another: ours 4.1 %, 13 6.1 %, 14 0.8 %, and 24.6 % (15) to 87.7 % (12, whose
+fill then failed: front face 0.627 m2 of 0.763) in the rest. Now the offset is the camera's unless that merges over
+10 % of the holes; then the largest that merges no more, by halving (`--no-merge-cap` for the camera's always). Ours
+keeps the camera's.
+
+*Fix 5, the colour step through dark holes (2026-11-25).* C-018's step scales each pixel's colour by (luminance over
+the stone's median) to the power -k, fitted on the stone and applied to every pixel. In 03 and 05 the stone's median
+is 0.86 and k came out 1.05 and 1.2, so the interior's faint tint, at luminance near 0.02, was made 50 to 90 times as
+strong. 03's fit had also failed by its own measure (error 5.0: no k matched the sign of both colour slopes). First
+form of the fix: no pixel's factor worked out below the stone's 1st percentile. That moved ours: its stone's 1st
+percentile is 0.118, so the dark surround and deep shadows changed, and the colour spread went from 0.7457 to 0.7232
+(SSIM 0.5429 to 0.5427). Fixes 3 and 4 had left ours exactly as committed. So the floor applies only where the
+openings are dark, and ours runs the step as before; and a fit that matches neither slope's sign gives k = 0.
+
+*Open, not yet fixed.* The tone curve's upper exponent sits at its limit of 4.0 in 8 of the 13 renders that C-022
+measured (ours 2.12), and with the fit's stone corrected 03, 05, 09 and 15 end at both limits (0.3 and 4.0); the
+cause is not found. The 25 % fit renders are not it: their stone's median is within about 10 % of the full render's
+(09: 0.149 at 337 W against 0.116 at 273 W; 13: 0.319 against 0.343 at one power). 13 and 14's holes render dim pink
+where the photos' are lit white: the light behind a backlit screen is not yet the photo's.
+
+**Result:** —

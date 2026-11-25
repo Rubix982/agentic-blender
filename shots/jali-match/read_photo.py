@@ -64,11 +64,23 @@ def stats(rgb, normals=None, field=None):
 if __name__ == "__main__":
     rgb = C.load(shot.PHOTO, C.size())
     NM = photo_normals()
+    SIDE = C.decide_side(rgb)                                          # C-023: which side the openings are on
+    if shot.META.get("openings") in ("bright", "dark"):
+        SIDE.update(side=shot.META["openings"], given_by="shot.json")
+    if shot.META.get("rule") in ("colour", "brightness"):
+        SIDE.update(rule=shot.META["rule"], given_by="shot.json")
+    C.SIDE, C.RULE = SIDE["side"], SIDE["rule"]
+    print("SIDE", json.dumps(SIDE), flush=True)
     k0, st0 = stats(rgb, NM)
-    FIELD = dict(field=C.field_box(k0["opening"], st0["box"]), box=st0["box"])   # C-014: the carved field
+    FIELD_INFO = {}
+    FIELD = dict(field=C.field_box(k0["opening"], st0["box"], info=FIELD_INFO), box=st0["box"])   # C-014: the carved field
     k, st = stats(rgb, NM, FIELD)
     st["field_box"] = FIELD["field"]
     st["screen_box_for_field"] = FIELD["box"]
+    if (SIDE["side"], SIDE["rule"]) != ("bright", "colour"):            # C-023: only when it is not ours
+        st["openings"] = SIDE
+    if FIELD_INFO.get("min_area") != 400:                               # C-022: only when the floor moved (ours: 400)
+        st["field_rule"] = FIELD_INFO
     st["frame_openings_removed_px"] = int(k["frame_openings"].sum())
     img = np.zeros(rgb.shape, np.float32)
     img[k["opening"]] = 1.0
@@ -102,6 +114,8 @@ if __name__ == "__main__":
         float(sat_rule[y0:y1 + 1, x0:x1 + 1].mean()), 4)
     # C-009: the pixels the cut was sure were wall, by their luminance over the local wall's; and what the lit test takes.
     box = (slice(y0, y1 + 1), slice(x0, x1 + 1))
+    if C.SIDE == "dark" or C.RULE == "brightness":                     # C-023: the colour rule's tests did not run
+        k["sure"] = k["opening"].copy()
     ratio = (k["y"] / np.maximum(k["wall_y"], 1e-3))[box][k["sure"][box]]
     st["lit_stone"] = dict(rule=dict(brighter_than_wall_by=C.LIT, plus=C.LIT_ABS),
                            sure_over_wall_p10_p25_p50_p75_p90=[round(float(np.percentile(ratio, q)), 3)
@@ -129,6 +143,9 @@ if __name__ == "__main__":
     st["dark_in_field"] = dict(share=round(float(d.mean()), 4) if d.size else None,   # C-022: guarded for small boxes
                                green_red_p50_p90=[round(float(np.percentile(k["gr"][inner][d], q)), 4) for q in (50, 90)]
                                if d.any() else None)
+    if C.SIDE == "dark" or C.RULE == "brightness":                     # C-023: they describe the colour rule's tests
+        for key in ("rules_compared", "lit_stone", "dim_stone", "veto_stone", "dark_in_field"):
+            st.pop(key, None)
     with open(os.path.join(OUT, "photo.json"), "w") as f:
         json.dump(st, f, indent=1)
     os.makedirs(shot.RESULTS, exist_ok=True)
