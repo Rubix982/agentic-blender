@@ -1708,4 +1708,9 @@ cause is not found. The 25 % fit renders are not it: their stone's median is wit
 (09: 0.149 at 337 W against 0.116 at 273 W; 13: 0.319 against 0.343 at one power). 13 and 14's holes render dim pink
 where the photos' are lit white: the light behind a backlit screen is not yet the photo's.
 
-**Result:** —
+**Result:** waiting on the user's glance at `contact_c023_1.jpg` to `_3.jpg`. Measured: 17 of 18 photos reach a render
+(13 at C-022), and by my glance 8 read as their photos (3 at C-022), one short of field 5's 9. The faults left are in
+the method, as field 5's second branch says, and in this order of how many shots they touch: the light for a screen
+lit from behind or by its room (08, 09, 10, 13, 14, 16, 17, 18: a front spot and a tone curve at its limits); the
+wall seen through the holes (ten flat bands, where 04, 14, 17 and 18 look onto a scene); the edges' sharpness (03 and
+18's twice the photo's width; the bevel untested); 12's fill (4,686 outlines); 06 and 07 outside what the method does.
