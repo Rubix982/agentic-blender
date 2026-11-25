@@ -85,6 +85,7 @@ def _side():
 
 
 SIDE = _side()
+SEPARABLE = 0.80                    # C-023: above this, brightness alone splits the photo (ours 0.724; backlit 0.82 to 0.91)
 COLOUR_GAP = 0.04                   # C-023: below this, the two sides' green over red is one colour, and the colour rule
                                     # cannot tell them apart (ours 0.101; 08 0.000, 09 0.000, 10 0.020)
 
@@ -104,8 +105,9 @@ def _rule():
 RULE = _rule()
 
 
-def otsu(v, bins=256):
-    """The threshold that best splits v in two (Otsu's: the largest variance between the two classes)."""
+def otsu(v, bins=256, separability=False):
+    """The threshold that best splits v in two (Otsu's: the largest variance between the two classes), and with
+    separability=True also that variance's share of v's whole variance (1: two flat classes)."""
     lo, hi = float(v.min()), float(v.max()) + 1e-6
     h, e = np.histogram(v, bins=bins, range=(lo, hi))
     c = (e[:-1] + e[1:]) / 2
@@ -113,7 +115,21 @@ def otsu(v, bins=256):
     w1 = w0[-1] - w0
     m0 = np.cumsum(h * c) / np.maximum(w0, 1)
     m1 = (np.sum(h * c) - np.cumsum(h * c)) / np.maximum(w1, 1)
-    return float(c[np.argmax(w0 * w1 * (m0 - m1) ** 2)])
+    sb = w0 * w1 * (m0 - m1) ** 2
+    i = int(np.argmax(sb))
+    if separability:
+        return float(c[i]), float(sb[i] / w0[-1] ** 2 / max(float(np.var(v)), 1e-12))
+    return float(c[i])
+
+
+def border_touching(mask):
+    """The parts of a boolean mask that reach the image's border."""
+    lab = label(mask)
+    edge = np.unique(np.concatenate([lab[0], lab[-1], lab[:, 0], lab[:, -1]]))
+    keep = np.zeros(int(lab.max()) + 1, bool)
+    keep[edge] = True
+    keep[0] = False
+    return keep[lab]
 
 
 def border_dark(y):
@@ -165,7 +181,14 @@ def decide_side(rgb):
     hi, lo = ok & (y > t), ok & (y <= t)
     gap = float(np.median(gr[hi]) - np.median(gr[lo])) if hi.any() and lo.any() else 0.0
     out["colour_gap"] = round(gap, 4)
-    out["rule"] = "brightness" if out["side"] == "dark" or gap < COLOUR_GAP else "colour"
+    # C-023 (fix 6): how cleanly brightness alone splits the photo, a bright margin at the border (a scan's) left out:
+    # a screen lit from behind splits cleanly (08 0.913, 13 0.831), ours does not (0.724: lit stone and lit wall overlap
+    # in brightness, which is why the colour rule exists). 13's light through the holes is pink, under the colour
+    # rule's 0.86, so the rule read its holes as stone.
+    core = inside & ~border_touching(inside & (y > t))
+    _, sep = otsu(y[core], separability=True) if core.any() else (t, 0.0)
+    out["separability"] = round(sep, 4)
+    out["rule"] = "brightness" if out["side"] == "dark" or gap < COLOUR_GAP or sep > SEPARABLE else "colour"
     return out
 
 
@@ -183,6 +206,10 @@ def classify_dark(rgb):
                 sure=z.copy(), wall_y=np.full(y.shape, t, np.float32), veto=z.copy(), side="dark", threshold=t)
 
 
+BACKLIT_PAD = 0.15                  # C-023 (fix 6): the screen's box is its holes' padded by this share of their extent each
+                                    # way, so a frame survives (13's is about a tenth of its width); 2 % cut it away
+
+
 def classify_backlit(rgb):
     """C-023: the openings brighter than the stone, and the two of one colour (a screen against the sky or a lit room,
     the stone in its own shadow). The stone can be as dark as the room around the window (08: 0.064 against 0.004), so
@@ -192,7 +219,10 @@ def classify_backlit(rgb):
     y = luminance(rgb)
     gr = rgb[:, :, 1] / np.maximum(rgb[:, :, 0], 1e-4)
     t = otsu(y[y > 0.02]) if (y > 0.02).any() else 0.5
-    bright = y > t
+    margin = border_touching(y > t)                                    # fix 6: a scan's white margin, light at the edge
+    if (~margin & (y > 0.02)).any():
+        t = otsu(y[~margin & (y > 0.02)])
+    bright = (y > t) & ~margin
     lab = label(bright)
     area = np.bincount(lab.ravel())
     ok = area >= 20
@@ -202,10 +232,11 @@ def classify_backlit(rgb):
     h, w = y.shape
     outside = np.ones_like(bright)
     if len(xs):
-        px, py = 0.02 * w, 0.02 * h
+        px, py = BACKLIT_PAD * (np.percentile(xs, 99) - np.percentile(xs, 1)), BACKLIT_PAD * (np.percentile(ys, 99) - np.percentile(ys, 1))
         x0, x1 = int(max(np.percentile(xs, 1) - px, 0)), int(min(np.percentile(xs, 99) + px, w - 1))
         y0, y1 = int(max(np.percentile(ys, 1) - py, 0)), int(min(np.percentile(ys, 99) + py, h - 1))
         outside[y0:y1 + 1, x0:x1 + 1] = False
+    outside |= margin
     opening = ~outside & bright
     z = np.zeros_like(opening)
     return dict(outside=outside, opening=opening, stone=~outside & ~opening, y=y, gr=gr, lit=z, dim=z.copy(),

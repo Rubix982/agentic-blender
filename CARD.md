@@ -1616,6 +1616,51 @@ percentile is 0.118, so the dark surround and deep shadows changed, and the colo
 (SSIM 0.5429 to 0.5427). Fixes 3 and 4 had left ours exactly as committed. So the floor applies only where the
 openings are dark, and ours runs the step as before; and a fit that matches neither slope's sign gives k = 0.
 
+*The user's look at fixes 1 to 5 (2026-11-25).* On 03 (`shots/jali-batch/03_now.jpg`): "such a powerful render! I
+think if we could somehow narrow down on the SHARPNESS of the details and edges, it would make it more fantastic";
+on 01, "still disappearing edges" (its frame's top band and right side); on 02, "colors and spaces mixing together"
+(its upper holes as grey as the stone); on 04, "symptom of the same problem over and over again ... we are having a
+hard time getting the small details correctly". Measured, in each carved field: holes under the build's 30 px floor
+(`MIN_AREA_PX`, set on ours in C-007) are 1.6 % of our hole area, specks, but 20.7 % of 04's, whose median hole is 21
+px: the tree's pinpricks of light are dropped by design. And every photo is worked at 1,402 px on its long side, 03's
+from 1,928 x 2,048. Of 06 and 07 the user said "I don't understand the results ... at all": in both the screen is a
+small part of a deep space (a porch under a vault, a doorway in a dark hall), and the chain builds the whole picture
+as one flat carved slab. They passed the C-022 rules ("its whole carved field in the frame"), which should also have
+required the screen to fill the frame; they say nothing about detail and are left out of what follows.
+
+*Fix 7, the build's size floors (2026-11-25).* Each floor is the smaller of its 30 px and a twelfth of the hole size
+that holds half the screen's hole area, never under 4 px: ours 43, so 30 (`--fixed-floors` keeps 30 always); 04 7;
+13, 14, 17, 18 between 6 and 9. *A test, not a fix: 03 worked at its full size* (`shots/jali-batch/variants/03-full`,
+1,928 x 2,048, its method otherwise unchanged), against the same 03 at 1,402.
+
+*Fix 6, the user's look at 13 and 14 (2026-11-25).* On 13: "some disappearing sides"; on 14: "color is changing too
+drastically". 13's reading was inverted inside the screen: the pink light through its holes (a red sandstone
+courtyard beyond) is under the colour rule's 0.86, so the holes read as stone, the dark lattice and frame as the
+surround, and only the scan's white margin as opening; the render was close to a slab with the photo's colours on it
+(openings 6.9 % of the box), which is why it passed a glance, and its frame's sides were cut away as dark surround.
+The colour gap did not catch it (0.336, the white margin on the bright side; 0.249 without it), nor the holes' green
+over red (13's 0.882 against ours 0.814, whose bright side holds its lit stone). What did: how cleanly brightness
+alone splits the photo, the dark surround and a bright margin touching the border left out (Otsu's separability: the
+between-class share of the variance). Ours 0.724, 01 0.712, 02 0.737; the backlit 08 0.913, 10 0.902, 09 0.846, 13
+0.831, 14 0.820; the room interiors 16 0.833, 17 0.810, 18 0.825. Above 0.80 brightness reads the photo, and the
+backlit rule's surround is a bright margin at the border and what lies beyond 15 % around the holes (2 % cut 13's
+frame away). Ours stays on the colour rule, its read step rerun to an identical `read_photo.json`. 14's colour change
+is the wall: ten flat bands from the photo's openings, from 0.92 (linear) to 0.047 within a tenth of the screen's
+height, where the photo shows a red arcade with dark arches; bands cannot draw arches. Not fixed.
+
+*The batch after fixes 1 to 6 (2026-11-25; contact sheets `contact_c023_1.jpg` to `_3.jpg`, readings
+`reading_c023_*.jpg`, measures `measures_c023.json`).* 17 of 18 reach a render, against 13 at C-022; 08 and 10 for the
+first time. 12 fails in the mesh: with the merge cap its merging fell from 87.7 % to 7.3 %, but its 4,686 outlines
+fill to a front face of 0.700 m2 of 1.079 and the build stops itself. My glance, before the user's: read as their
+photos, 01, 02, 03, 05, 08, 09, 10 and 13 (8, against 3 at C-022); the structure right and the light or the detail
+not, 04, 11, 14, 15, 16, 17 and 18 (in 17 and 18 the holes dim where the photos show a bright courtyard); not, 06 and
+07 (outside the method) and 12 (no render). None meets the four core bars.
+
+*The denoiser, a test that did not run.* Rendering 03's saved scene with Cycles' denoiser on and off gave the stone
+dark with only its edges lit, unlike the build's render: the scene file does not keep the images the build makes in
+memory (the stone's colour, its normal map), so the comparison was void. `build.py --no-denoise` now makes it in a
+real build.
+
 *Open, not yet fixed.* The tone curve's upper exponent sits at its limit of 4.0 in 8 of the 13 renders that C-022
 measured (ours 2.12), and with the fit's stone corrected 03, 05, 09 and 15 end at both limits (0.3 and 4.0); the
 cause is not found. The 25 % fit renders are not it: their stone's median is within about 10 % of the full render's

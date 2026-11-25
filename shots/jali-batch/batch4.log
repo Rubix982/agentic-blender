@@ -1,0 +1,12 @@
+20:17:33 05-sidi-saiyyed-c read_photo: ok (123.4 s)
+20:20:27 03-sidi-saiyyed-a read_photo: ok (296.7 s)
+20:21:12 05-sidi-saiyyed-c build: ok (218.4 s)
+20:21:57 05-sidi-saiyyed-c compare: ok (44.9 s)
+20:23:47 12-jaisalmer-slide read_photo: ok (110.7 s)
+20:25:54 12-jaisalmer-slide build: FAILED 1 (126.8 s)
+20:26:15 15-nilabagh-palace read_photo: ok (20.8 s)
+20:26:33 03-sidi-saiyyed-a build: ok (366.0 s)
+20:27:55 03-sidi-saiyyed-a compare: ok (82.8 s)
+20:29:56 15-nilabagh-palace build: ok (221.3 s)
+20:30:09 15-nilabagh-palace compare: ok (12.9 s)
+BATCH 3 of 4 shots through compare

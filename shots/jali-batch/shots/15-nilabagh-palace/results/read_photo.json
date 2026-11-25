@@ -1,51 +1,73 @@
 {
  "box": [
-  24,
-  24,
-  747,
-  1377
+  25,
+  25,
+  746,
+  1376
  ],
- "width_px": 724,
- "height_px": 1354,
- "opening_share": 0.4922,
- "outside_share": 0.0579,
+ "width_px": 722,
+ "height_px": 1352,
+ "opening_share": 0.1769,
+ "outside_share": 0.0001,
  "stone_y": [
-  0.3202,
-  0.7025,
-  0.9207
+  0.6232,
+  0.8413,
+  0.9703
  ],
- "stone_y_p99": 0.9935,
+ "stone_y_p99": 1.0,
  "stone_rgb_median": [
-  0.7255,
-  0.698,
-  0.6706
+  0.8549,
+  0.8392,
+  0.8275
  ],
- "opening_y": 0.877,
+ "opening_y": 0.2375,
  "stone_y_bands": [
-  0.7363,
-  0.7215,
-  0.7469,
-  0.7478,
-  0.7585,
-  0.7243,
-  0.7,
-  0.6874,
-  0.5995,
-  0.5964
+  0.7555,
+  0.8716,
+  0.9092,
+  0.9162,
+  0.9103,
+  0.8793,
+  0.8611,
+  0.8205,
+  0.7389,
+  0.7099
  ],
  "field_box": [
-  68,
-  131,
-  653,
-  1356
+  69,
+  127,
+  700,
+  1334
  ],
  "screen_box_for_field": [
-  24,
-  24,
-  747,
-  1377
+  25,
+  25,
+  746,
+  1376
  ],
- "frame_openings_removed_px": 213511,
+ "openings": {
+  "threshold": 0.541,
+  "bright": {
+   "score": 0.0002,
+   "stone_one_piece": 0.131,
+   "openings_enclosed": 0.006,
+   "openings": 63,
+   "opening_share": 0.796
+  },
+  "dark": {
+   "score": 0.7474,
+   "stone_one_piece": 0.991,
+   "openings_enclosed": 0.754,
+   "openings": 1694,
+   "opening_share": 0.204
+  },
+  "side": "dark"
+ },
+ "field_rule": {
+  "min_area": 260,
+  "rank_area": 521
+ },
+ "frame_openings_removed_px": 23488,
  "size": [
   772,
   1402
@@ -62,83 +84,12 @@
   "dim_abs": 0.03
  },
  "cut_lines": {
-  "share_of_box": 0.072,
+  "share_of_box": 0.0157,
   "rule": {
    "darker_by": 0.15,
    "thin": 2,
    "neighbours": 4,
    "run": 8
   }
- },
- "rules_compared": {
-  "saturation below 0.22, luminance at least 0.30": {
-   "top": 0.8844,
-   "bottom": 0.8595,
-   "whole": 0.8719
-  },
-  "green over red above 0.86": {
-   "top": 0.9424,
-   "bottom": 0.9117
-  },
-  "either that or near the wall's local colour (C-008)": {
-   "top": 0.6767,
-   "bottom": 0.7396
-  },
-  "the same, less what is brighter than the wall (C-009)": {
-   "top": 0.6736,
-   "bottom": 0.7318
-  },
-  "the same, less what is darker than the wall too (C-011)": {
-   "top": 0.4833,
-   "bottom": 0.501
-  }
- },
- "lit_stone": {
-  "rule": {
-   "brighter_than_wall_by": 0.12,
-   "plus": 0.03
-  },
-  "sure_over_wall_p10_p25_p50_p75_p90": [
-   0.578,
-   0.808,
-   0.952,
-   1.015,
-   1.067
-  ],
-  "share_of_box": 0.0054,
-  "share_of_c008_openings": 0.0077,
-  "share_of_c008_openings_by_half": {
-   "top": 0.0046,
-   "bottom": 0.0105
-  }
- },
- "dim_stone": {
-  "rule": {
-   "darker_than_wall_by": 0.15,
-   "less": 0.03
-  },
-  "share_of_box": 0.2106,
-  "share_of_c009_openings": 0.2996,
-  "share_of_c009_openings_by_third": [
-   0.2973,
-   0.2812,
-   0.3224
-  ]
- },
- "veto_stone": {
-  "rule": {
-   "area_below_px": 400,
-   "lean_above_deg": 15.0
-  },
-  "normals": true,
-  "share_of_box": 0.0015,
-  "share_of_openings_before": 0.003
- },
- "dark_in_field": {
-  "share": 0.0837,
-  "green_red_p50_p90": [
-   0.6667,
-   2.0
-  ]
  }
 }

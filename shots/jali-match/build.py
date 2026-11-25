@@ -202,6 +202,23 @@ solid &= ~hole & ~sur
 field = C.blur(solid.astype(np.float32), 3)
 loops = C.contours(field, 0.5)
 outer_sign = np.sign(C.area(max(loops, key=lambda p: abs(C.area(p)))))   # the frame's outline winds as stone does
+# C-023: MIN_AREA_PX and MIN_ISLAND_PX were set on ours, whose holes are large (half its hole area lies in holes of 515 px
+# or more), and there the holes under 30 px are 1.6 % of the hole area, specks. A fine lattice's are its pattern: 04
+# (half in holes of 89 px or more) lost 20.7 % of its hole area, the tree's pinpricks of light. So each floor is the
+# smaller of its value and a twelfth of the hole size that holds half the screen's hole area (in the carved field),
+# and never under 4 px. Ours keeps 30. --fixed-floors: 30 always.
+_fb2 = _rp.get("field_box", [x0, y0, x1, y1])
+_lab_f = C.label(k["opening"][_fb2[1]:_fb2[3] + 1, _fb2[0]:_fb2[2] + 1])
+_ha = np.sort(np.bincount(_lab_f.ravel())[1:])
+_ha = _ha[_ha > 0]
+HOLE_A50 = float(_ha[np.searchsorted(np.cumsum(_ha) / _ha.sum(), 0.5)]) if len(_ha) else 1e9
+FLOORS = dict(hole_area_half_at=int(min(HOLE_A50, 1e9)))
+if "--fixed-floors" not in argv:
+    _floor = max(4.0, HOLE_A50 / 12.0)
+    if _floor < MIN_AREA_PX or _floor < MIN_ISLAND_PX:
+        MIN_AREA_PX, MIN_ISLAND_PX = min(MIN_AREA_PX, _floor), min(MIN_ISLAND_PX, _floor)
+        FLOORS.update(min_area_px=round(MIN_AREA_PX, 1), min_island_px=round(MIN_ISLAND_PX, 1))
+print("FLOORS", FLOORS, flush=True)
 loops = [p for p in loops if abs(C.area(p)) >= (MIN_ISLAND_PX if np.sign(C.area(p)) == outer_sign else MIN_AREA_PX)]
 
 
@@ -262,7 +279,7 @@ C.write_png(os.path.join(OUT, "height.png"), height / max(float(height.max()), 1
 log["sizes"] = dict(width_m=WIDTH_M, thick_m=THICK_M, thick_cm=THICK_M * 100, bevel_m=BEVEL_M)
 log["outlines"] = dict(count=len(loops), points=int(sum(len(p) for p in loops)), metres_per_px=round(S, 6),
                        screen_width_px=width_px, box=[x0, y0, x1, y1], dark_in_box_made_stone=int((dark & ~sur).sum()),
-                       surround_in_box=int(sur.sum()), back_face_scale=round(KB, 4), **({'merge_cap': MERGE} if 'kb' in MERGE else {}),
+                       surround_in_box=int(sur.sum()), back_face_scale=round(KB, 4), **({'merge_cap': MERGE} if 'kb' in MERGE else {}), **({'floors': FLOORS} if 'min_area_px' in FLOORS else {}),
                        seen_opening_share=round(float(k["opening"][y0:y1 + 1, x0:x1 + 1].mean()), 4),
                        hole_share=round(float(hole[y0:y1 + 1, x0:x1 + 1].mean()), 4),
                        cut_line_share=round(float(lines[y0:y1 + 1, x0:x1 + 1].mean()), 4))
@@ -812,7 +829,7 @@ for kind in ("METAL", "OPTIX", "CUDA", "HIP", "ONEAPI"):
             d.use = d.type == kind
         cyc.device = "GPU"
         break
-cyc.use_denoising = True
+cyc.use_denoising = "--no-denoise" not in argv                   # C-023: off, to test what it costs fine detail
 
 depsgraph = bpy.context.evaluated_depsgraph_get()
 ev = screen.evaluated_get(depsgraph)

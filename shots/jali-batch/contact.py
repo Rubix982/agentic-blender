@@ -1,6 +1,6 @@
 """C-022: every shot's photo beside its render, for the user to judge at a glance, and a table of the measures.
 
-    .venv/bin/python shots/jali-batch/contact.py [--classes]
+    .venv/bin/python shots/jali-batch/contact.py [--classes] [--tag TAG]
 Writes contact_1.jpg, contact_2.jpg, ... (six shots a page: the photo left, the render right, at the same size,
 numbered as the shot's folder; a shot that did not reach a render shows its photo and the step it failed at) and
 measures.json (the standard's measures and guards from each compare.json, with status.json's outcome). The pages
@@ -24,6 +24,8 @@ def font(size):
 
 
 CLASSES = __import__("sys").argv[1:].count("--classes") > 0
+_argv = __import__("sys").argv[1:]
+TAG = _argv[_argv.index("--tag") + 1] if "--tag" in _argv else ""   # C-023: contact_<tag>_N.jpg, measures_<tag>.json
 
 
 def pair(slug, status):
@@ -60,7 +62,7 @@ if __name__ == "__main__":
         sheet = Image.new("RGB", (COLS * cw + (COLS + 1) * GAP, rows * (CELL_H + 34) + (rows + 1) * GAP), (40, 40, 40))
         for i, c in enumerate(cells):
             sheet.paste(c, (GAP + (i % COLS) * (cw + GAP), GAP + (i // COLS) * (CELL_H + 34 + GAP)))
-        path = os.path.join(HERE, f"{'reading' if CLASSES else 'contact'}_{page // PER_PAGE + 1}.jpg")
+        path = os.path.join(HERE, f"{'reading' if CLASSES else 'contact'}_{TAG + '_' if TAG else ''}{page // PER_PAGE + 1}.jpg")
         sheet.save(path, quality=88)
         print("PAGE", path, sheet.size)
     if CLASSES:
@@ -76,6 +78,6 @@ if __name__ == "__main__":
                      guards={k: dict(value=v.get("value"), ok=v.get("ok")) for k, v in sc.get("guards", {}).items()},
                      all_met=sc.get("all_met"), guards_held=sc.get("guards_held"))
         rows[s] = r
-    with open(os.path.join(HERE, "measures.json"), "w") as f:
+    with open(os.path.join(HERE, f"measures{'_' + TAG if TAG else ''}.json"), "w") as f:
         json.dump(rows, f, indent=1)
     print("MEASURES", sum(1 for r in rows.values() if r.get("all_met")), "of", len(rows), "meet every core bar")

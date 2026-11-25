@@ -18,12 +18,12 @@
   "build": {
    "ok": true,
    "exit": 0,
-   "seconds": 308.4
+   "seconds": 204.5
   },
   "compare": {
    "ok": true,
    "exit": 0,
-   "seconds": 47.5
+   "seconds": 44.9
   }
  },
  "02-louvre-ad-1": {
@@ -45,12 +45,12 @@
   "build": {
    "ok": true,
    "exit": 0,
-   "seconds": 348.6
+   "seconds": 261.1
   },
   "compare": {
    "ok": true,
    "exit": 0,
-   "seconds": 45.5
+   "seconds": 50.2
   }
  },
  "03-sidi-saiyyed-a": {
@@ -67,17 +67,17 @@
   "read_photo": {
    "ok": true,
    "exit": 0,
-   "seconds": 96.7
+   "seconds": 296.7
   },
   "build": {
    "ok": true,
    "exit": 0,
-   "seconds": 838.4
+   "seconds": 490.9
   },
   "compare": {
    "ok": true,
    "exit": 0,
-   "seconds": 65.6
+   "seconds": 84.0
   }
  },
  "04-sidi-saiyyed-b": {
@@ -99,12 +99,12 @@
   "build": {
    "ok": true,
    "exit": 0,
-   "seconds": 727.8
+   "seconds": 91.1
   },
   "compare": {
    "ok": true,
    "exit": 0,
-   "seconds": 29.0
+   "seconds": 20.4
   }
  },
  "05-sidi-saiyyed-c": {
@@ -121,17 +121,17 @@
   "read_photo": {
    "ok": true,
    "exit": 0,
-   "seconds": 24.2
+   "seconds": 123.4
   },
   "build": {
    "ok": true,
    "exit": 0,
-   "seconds": 104.8
+   "seconds": 211.4
   },
   "compare": {
    "ok": true,
    "exit": 0,
-   "seconds": 41.8
+   "seconds": 46.9
   }
  },
  "06-sidi-saiyyed-d": {
@@ -153,12 +153,12 @@
   "build": {
    "ok": true,
    "exit": 0,
-   "seconds": 241.0
+   "seconds": 187.5
   },
   "compare": {
    "ok": true,
    "exit": 0,
-   "seconds": 43.4
+   "seconds": 48.2
   }
  },
  "07-humayun-doorway": {
@@ -180,12 +180,12 @@
   "build": {
    "ok": true,
    "exit": 0,
-   "seconds": 174.0
+   "seconds": 118.4
   },
   "compare": {
    "ok": true,
    "exit": 0,
-   "seconds": 23.7
+   "seconds": 30.8
   }
  },
  "08-humayun-mihrab": {
@@ -200,14 +200,19 @@
    "seconds": 146.5
   },
   "read_photo": {
-   "ok": false,
-   "exit": 1,
-   "seconds": 5.9,
-   "tail": [
-    "Blender 4.5.14 LTS (hash 62c1db4208e8 built 2026-09-15 01:30:44)",
-    "stats: no screen found: no row or column is a fifth stone (48 rows, 0 columns); 80% of the image is darker than the surround's 0.08",
-    "[run.py] exit 1 in 5.9 s"
-   ]
+   "ok": true,
+   "exit": 0,
+   "seconds": 23.2
+  },
+  "build": {
+   "ok": true,
+   "exit": 0,
+   "seconds": 238.8
+  },
+  "compare": {
+   "ok": true,
+   "exit": 0,
+   "seconds": 21.2
   }
  },
  "09-humayun-c": {
@@ -224,17 +229,17 @@
   "read_photo": {
    "ok": true,
    "exit": 0,
-   "seconds": 13.5
+   "seconds": 19.7
   },
   "build": {
    "ok": true,
    "exit": 0,
-   "seconds": 51.2
+   "seconds": 280.8
   },
   "compare": {
    "ok": true,
    "exit": 0,
-   "seconds": 18.9
+   "seconds": 21.9
   }
  },
  "10-humayun-d": {
@@ -249,17 +254,19 @@
    "seconds": 99.3
   },
   "read_photo": {
-   "ok": false,
-   "exit": 1,
-   "seconds": 6.8,
-   "tail": [
-    "  return _methods._mean(a, axis=axis, dtype=dtype,",
-    "~/Applications/Blender.app/Contents/Resources/4.5/python/lib/python3.11/site-packages/numpy/core/_methods.py:129: RuntimeWarning: invalid value encountered in divide",
-    "  ret = ret.dtype.type(ret / rcount)",
-    "Blender 4.5.14 LTS (hash 62c1db4208e8 built 2026-09-15 01:30:44)",
-    "field_box: no opening of 400 px or more inside the screen's box, away from its edge; the carved field cannot be placed (the largest inside: 11 px)",
-    "[run.py] exit 1 in 6.7 s"
-   ]
+   "ok": true,
+   "exit": 0,
+   "seconds": 21.9
+  },
+  "build": {
+   "ok": true,
+   "exit": 0,
+   "seconds": 248.8
+  },
+  "compare": {
+   "ok": true,
+   "exit": 0,
+   "seconds": 28.8
   }
  },
  "11-red-fort-marble": {
@@ -281,12 +288,12 @@
   "build": {
    "ok": true,
    "exit": 0,
-   "seconds": 266.1
+   "seconds": 127.8
   },
   "compare": {
    "ok": true,
    "exit": 0,
-   "seconds": 26.5
+   "seconds": 25.1
   }
  },
  "12-jaisalmer-slide": {
@@ -303,17 +310,20 @@
   "read_photo": {
    "ok": true,
    "exit": 0,
-   "seconds": 61.9
+   "seconds": 110.7
   },
   "build": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 321.6
-  },
-  "compare": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 38.0
+   "ok": false,
+   "exit": 1,
+   "seconds": 1015.5,
+   "tail": [
+    "RuntimeError: the curve's fill failed: front face 0.700 m2 of 1.079",
+    "",
+    "Error: script failed, file: 'shots/jali-match/build.py', exiting.",
+    "",
+    "Blender quit",
+    "[run.py] exit 1 in 1015.4 s"
+   ]
   }
  },
  "13-jaali-window-a": {
@@ -328,14 +338,19 @@
    "seconds": 171.3
   },
   "read_photo": {
-   "ok": false,
-   "exit": 1,
-   "seconds": 2.7,
-   "tail": [
-    "Blender 4.5.14 LTS (hash 62c1db4208e8 built 2026-09-15 01:30:44)",
-    "field_box: no opening of 400 px or more inside the screen's box, away from its edge; the carved field cannot be placed (the largest inside: 390 px)",
-    "[run.py] exit 1 in 2.7 s"
-   ]
+   "ok": true,
+   "exit": 0,
+   "seconds": 16.4
+  },
+  "build": {
+   "ok": true,
+   "exit": 0,
+   "seconds": 525.3
+  },
+  "compare": {
+   "ok": true,
+   "exit": 0,
+   "seconds": 29.2
   }
  },
  "14-jaali-window-b": {
@@ -350,14 +365,19 @@
    "seconds": 92.3
   },
   "read_photo": {
-   "ok": false,
-   "exit": 1,
-   "seconds": 2.6,
-   "tail": [
-    "Blender 4.5.14 LTS (hash 62c1db4208e8 built 2026-09-15 01:30:44)",
-    "field_box: no opening of 400 px or more inside the screen's box, away from its edge; the carved field cannot be placed (the largest inside: 337 px)",
-    "[run.py] exit 1 in 2.5 s"
-   ]
+   "ok": true,
+   "exit": 0,
+   "seconds": 14.6
+  },
+  "build": {
+   "ok": true,
+   "exit": 0,
+   "seconds": 613.8
+  },
+  "compare": {
+   "ok": true,
+   "exit": 0,
+   "seconds": 21.4
   }
  },
  "15-nilabagh-palace": {
@@ -374,17 +394,17 @@
   "read_photo": {
    "ok": true,
    "exit": 0,
-   "seconds": 15.9
+   "seconds": 20.8
   },
   "build": {
    "ok": true,
    "exit": 0,
-   "seconds": 154.4
+   "seconds": 89.3
   },
   "compare": {
    "ok": true,
    "exit": 0,
-   "seconds": 15.6
+   "seconds": 12.5
   }
  },
  "16-bibi-ka-maqbara": {
@@ -401,17 +421,17 @@
   "read_photo": {
    "ok": true,
    "exit": 0,
-   "seconds": 43.2
+   "seconds": 117.3
   },
   "build": {
    "ok": true,
    "exit": 0,
-   "seconds": 234.9
+   "seconds": 643.7
   },
   "compare": {
    "ok": true,
    "exit": 0,
-   "seconds": 66.7
+   "seconds": 29.1
   }
  },
  "17-fatehpur-sikri-a": {
@@ -428,17 +448,17 @@
   "read_photo": {
    "ok": true,
    "exit": 0,
-   "seconds": 14.0
+   "seconds": 67.7
   },
   "build": {
    "ok": true,
    "exit": 0,
-   "seconds": 267.1
+   "seconds": 389.3
   },
   "compare": {
    "ok": true,
    "exit": 0,
-   "seconds": 30.9
+   "seconds": 24.3
   }
  },
  "18-fatehpur-sikri-b": {
@@ -453,14 +473,19 @@
    "seconds": 132.0
   },
   "read_photo": {
-   "ok": false,
-   "exit": 1,
-   "seconds": 2.8,
-   "tail": [
-    "Blender 4.5.14 LTS (hash 62c1db4208e8 built 2026-09-15 01:30:44)",
-    "field_box: no opening of 400 px or more inside the screen's box, away from its edge; the carved field cannot be placed (the largest inside: 211 px)",
-    "[run.py] exit 1 in 2.8 s"
-   ]
+   "ok": true,
+   "exit": 0,
+   "seconds": 30.1
+  },
+  "build": {
+   "ok": true,
+   "exit": 0,
+   "seconds": 340.9
+  },
+  "compare": {
+   "ok": true,
+   "exit": 0,
+   "seconds": 21.7
   }
  }
 }

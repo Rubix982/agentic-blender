@@ -1,6 +1,6 @@
 {
- "openings_iou": 0.4815,
- "stone_iou": 0.8436,
+ "openings_iou": 0.2226,
+ "stone_iou": 0.8116,
  "photo": {
   "stone_y": [
    0.2531,
@@ -31,55 +31,55 @@
  },
  "render": {
   "stone_y": [
-   0.2888,
-   0.4408,
-   0.6142
+   0.2925,
+   0.449,
+   0.6279
   ],
-  "stone_y_p99": 0.7447,
+  "stone_y_p99": 0.7343,
   "stone_rgb_median": [
-   0.549,
-   0.4275,
-   0.2588
+   0.5608,
+   0.4353,
+   0.2667
   ],
-  "stone_spread": 0.3254,
-  "opening_y": 0.6615,
-  "opening_share": 0.1378,
+  "stone_spread": 0.3354,
+  "opening_y": 0.6474,
+  "opening_share": 0.0617,
   "stone_y_bands": [
-   0.3862,
-   0.4411,
-   0.4562,
-   0.4791,
-   0.4997,
-   0.4403,
-   0.4313,
-   0.4406,
-   0.4636,
-   0.4086
+   0.3863,
+   0.4449,
+   0.4898,
+   0.5246,
+   0.52,
+   0.4417,
+   0.4297,
+   0.4461,
+   0.4695,
+   0.4126
   ]
  },
- "spread_ratio": 0.8599,
+ "spread_ratio": 0.8864,
  "lines": {
   "photo_share": 0.1265,
-  "render_share": 0.0922,
-  "render_near_photo": 0.592,
-  "photo_near_render": 0.4568
+  "render_share": 0.0924,
+  "render_near_photo": 0.5369,
+  "photo_near_render": 0.418
  },
- "thin_stone_shown": 0.7281,
+ "thin_stone_shown": 0.919,
  "edge_gradient": {
   "photo": 0.103,
-  "render": 0.1085,
-  "render_over_photo": 1.053
+  "render": 0.0918,
+  "render_over_photo": 0.891
  },
  "detail": {
   "fine": {
-   "correlation": 0.3464,
-   "amplitude_ratio": 0.5512
+   "correlation": 0.3616,
+   "amplitude_ratio": 0.5409
   },
   "forms": {
-   "correlation": 0.3415,
-   "amplitude_ratio": 0.8687
+   "correlation": 0.3263,
+   "amplitude_ratio": 0.8378
   },
-  "pixels": 570222,
+  "pixels": 575295,
   "photo_vs_itself_shifted": {
    "1px": {
     "fine": -0.0591,
@@ -94,202 +94,202 @@
  "frame_texture": {
   "fine": {
    "photo": 0.0606,
-   "render": 0.0362,
-   "ratio": 0.5978
+   "render": 0.0354,
+   "ratio": 0.5831
   },
   "forms": {
-   "photo": 0.0502,
-   "render": 0.0497,
-   "ratio": 0.9908
+   "photo": 0.0501,
+   "render": 0.0482,
+   "ratio": 0.9624
   }
  },
  "light_map": {
   "photo": [
    [
-    0.932,
-    0.952,
-    0.991,
-    0.979,
-    0.969,
-    0.844
+    0.922,
+    0.942,
+    0.98,
+    0.968,
+    0.959,
+    0.835
    ],
    [
-    1.035,
-    0.969,
-    0.914,
-    0.955,
-    1.023,
-    1.068
+    1.027,
+    0.96,
+    0.907,
+    0.949,
+    1.01,
+    1.055
    ],
    [
-    1.041,
-    0.905,
-    0.998,
+    1.028,
+    0.898,
     1.018,
-    0.984,
-    1.059
+    1.027,
+    0.982,
+    1.048
    ],
    [
-    1.248,
-    1.017,
-    0.966,
-    1.16,
-    1.079,
-    1.206
+    1.231,
+    1.012,
+    0.955,
+    1.128,
+    1.072,
+    1.191
    ],
    [
-    1.239,
-    1.002,
-    1.141,
-    1.482,
-    1.215,
-    1.222
+    1.224,
+    0.99,
+    1.127,
+    1.465,
+    1.201,
+    1.207
    ],
    [
-    1.129,
-    1.082,
-    0.947,
-    0.902,
-    1.125,
-    1.145
+    1.116,
+    1.069,
+    0.95,
+    0.883,
+    1.111,
+    1.133
    ],
    [
-    0.987,
-    0.956,
-    0.969,
-    0.994,
     0.981,
-    0.893
+    0.953,
+    0.958,
+    0.98,
+    0.97,
+    0.881
    ]
   ],
   "render": [
    [
-    0.96,
-    0.811,
-    0.833,
-    0.868,
-    0.939,
-    0.884
+    0.94,
+    0.796,
+    0.818,
+    0.849,
+    0.918,
+    0.858
    ],
    [
-    1.102,
-    0.936,
-    0.971,
-    0.993,
-    1.007,
-    1.086
+    1.098,
+    0.928,
+    0.959,
+    0.984,
+    0.988,
+    1.073
    ],
    [
-    1.143,
-    1.018,
-    0.991,
-    1.03,
-    1.087,
+    1.133,
+    1.055,
+    1.027,
+    1.118,
+    1.107,
+    1.1
+   ],
+   [
+    1.168,
+    1.043,
+    1.012,
+    1.123,
+    1.079,
     1.11
    ],
    [
-    1.188,
-    1.037,
-    1.026,
-    1.097,
-    1.056,
-    1.127
+    1.059,
+    0.937,
+    0.877,
+    0.778,
+    1.051,
+    1.063
    ],
    [
+    0.986,
     1.07,
-    0.96,
     0.902,
-    0.798,
-    1.062,
-    1.076
+    1.017,
+    1.013,
+    0.968
    ],
    [
-    1.007,
-    1.087,
-    0.907,
-    0.922,
-    1.029,
-    0.991
-   ],
-   [
-    0.965,
-    1.118,
-    0.985,
+    0.929,
+    1.07,
     0.967,
-    0.962,
-    0.928
+    0.938,
+    0.934,
+    0.902
    ]
   ],
-  "log_rms": 0.1294
+  "log_rms": 0.1361
  },
  "frame_crispness": {
   "photo": 1.3154,
-  "render": 0.7014
+  "render": 0.7146
  },
  "recesses": {
   "window_11px": {
-   "deepest_3pct": 0.1802,
-   "all_stone": -0.0008
+   "deepest_3pct": 0.1878,
+   "all_stone": 0.0116
   },
   "window_21px": {
-   "deepest_3pct": 0.1203,
-   "all_stone": -0.0008
+   "deepest_3pct": 0.1205,
+   "all_stone": 0.0116
   }
  },
  "opening_edges": {
-  "edge_band": 0.0181,
-  "inside": -0.0008
+  "edge_band": 0.0337,
+  "inside": 0.0116
  },
  "stone_colour": {
-  "photo_spread": 0.2724,
-  "render_spread": 0.1871,
-  "ratio": 0.6869
+  "photo_spread": 0.2707,
+  "render_spread": 0.1213,
+  "ratio": 0.4481
  },
  "colour_vs_brightness": {
   "photo": {
    "r_over_g": {
-    "slope": -0.1856,
-    "explained": 0.1547
+    "slope": -0.1891,
+    "explained": 0.1617
    },
    "b_over_g": {
-    "slope": -0.112,
-    "explained": 0.0107
+    "slope": -0.1029,
+    "explained": 0.0091
    }
   },
   "render": {
    "r_over_g": {
-    "slope": -0.1737,
-    "explained": 0.3273
+    "slope": -0.0764,
+    "explained": 0.0988
    },
    "b_over_g": {
-    "slope": 0.3825,
-    "explained": 0.3018
+    "slope": 0.0338,
+    "explained": 0.0059
    }
   }
  },
  "frame_over_field": {
-  "photo": 1.0074,
-  "render": 0.9898
+  "photo": 1.0035,
+  "render": 0.9845
  },
  "ssim": {
-  "box": 0.3499,
-  "patch": 0.3785,
+  "box": 0.3254,
+  "patch": 0.3446,
   "photo_vs_itself_2px": 0.1508
  },
  "openings_y_by_half": {
   "upper": {
    "photo": 0.6394,
-   "render": 0.6573
+   "render": 0.673
   },
   "lower": {
    "photo": 0.6506,
-   "render": 0.6829
+   "render": 0.5916
   }
  },
  "scorecard": {
   "measures": {
    "ssim": {
-    "value": 0.3499,
+    "value": 0.3254,
     "bar": ">= 0.50",
     "ok": false,
     "follows_judge": {
@@ -299,7 +299,7 @@
     "tier": "core"
    },
    "openings_iou": {
-    "value": 0.4815,
+    "value": 0.2226,
     "bar": ">= 0.75",
     "ok": false,
     "follows_judge": {
@@ -308,7 +308,7 @@
     "tier": "core"
    },
    "bright_end": {
-    "value": 0.9726,
+    "value": 0.9943,
     "bar": "0.85 to 1.15",
     "ok": true,
     "follows_judge": {
@@ -318,7 +318,7 @@
     "tier": "core"
    },
    "lines_render_near_photo": {
-    "value": 0.592,
+    "value": 0.5369,
     "bar": ">= 0.60",
     "ok": false,
     "follows_judge": {
@@ -328,7 +328,7 @@
     "tier": "core"
    },
    "forms_correlation": {
-    "value": 0.3415,
+    "value": 0.3263,
     "bar": ">= 0.50",
     "ok": false,
     "follows_judge": {
@@ -338,9 +338,9 @@
     "tier": "secondary"
    },
    "colour_spread": {
-    "value": 0.6869,
+    "value": 0.4481,
     "bar": ">= 0.45 (provisional, T-019)",
-    "ok": true,
+    "ok": false,
     "follows_judge": {
      "patch": 0.527,
      "whole": 0.922
@@ -350,37 +350,37 @@
   },
   "guards": {
    "contrast": {
-    "value": 0.8599,
+    "value": 0.8864,
     "bar": "0.8 to 1.2",
     "ok": true
    },
    "forms_amplitude": {
-    "value": 0.8687,
+    "value": 0.8378,
     "bar": "0.8 to 1.2",
     "ok": true
    },
    "thin_stone_shown": {
-    "value": 0.7281,
+    "value": 0.919,
     "bar": ">= 0.90",
-    "ok": false
-   },
-   "openings_y_upper": {
-    "value": 0.0179,
-    "bar": "<= 0.02 off",
     "ok": true
    },
+   "openings_y_upper": {
+    "value": 0.0336,
+    "bar": "<= 0.02 off",
+    "ok": false
+   },
    "openings_y_lower": {
-    "value": 0.0323,
+    "value": 0.059,
     "bar": "<= 0.02 off",
     "ok": false
    },
    "light_map": {
-    "value": 0.1294,
+    "value": 0.1361,
     "bar": "<= 0.20",
     "ok": true
    },
    "frame_texture_forms": {
-    "value": 0.9908,
+    "value": 0.9624,
     "bar": "0.8 to 1.2",
     "ok": true
    }
@@ -406,14 +406,14 @@
   "openings_guard": false
  },
  "photo_openings_in_render": {
-  "opening": 0.582,
-  "stone": 0.413,
-  "dark": 0.005
+  "opening": 0.2466,
+  "stone": 0.7513,
+  "dark": 0.0021
  },
- "render_openings_on_photo_stone": 0.2536,
+ "render_openings_on_photo_stone": 0.2598,
  "openings_iou_by_third": [
-  0.3491,
-  0.5307,
-  0.5307
+  0.0005,
+  0.2724,
+  0.3402
  ]
 }

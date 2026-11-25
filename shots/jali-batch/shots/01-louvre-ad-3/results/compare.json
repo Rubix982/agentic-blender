@@ -1,6 +1,6 @@
 {
- "openings_iou": 0.4713,
- "stone_iou": 0.7108,
+ "openings_iou": 0.3211,
+ "stone_iou": 0.6848,
  "photo": {
   "stone_y": [
    0.1419,
@@ -31,55 +31,55 @@
  },
  "render": {
   "stone_y": [
-   0.1416,
-   0.3301,
-   0.5597
+   0.1413,
+   0.3298,
+   0.5603
   ],
-  "stone_y_p99": 0.7494,
+  "stone_y_p99": 0.7516,
   "stone_rgb_median": [
    0.3922,
    0.3176,
    0.2588
   ],
-  "stone_spread": 0.4181,
-  "opening_y": 0.5929,
-  "opening_share": 0.2235,
+  "stone_spread": 0.419,
+  "opening_y": 0.5906,
+  "opening_share": 0.1749,
   "stone_y_bands": [
-   0.1545,
-   0.2054,
-   0.2872,
-   0.3656,
-   0.4502,
-   0.4234,
-   0.4007,
-   0.3853,
-   0.3539,
-   0.3217
+   0.15,
+   0.2082,
+   0.2948,
+   0.3822,
+   0.4539,
+   0.422,
+   0.4031,
+   0.385,
+   0.3488,
+   0.3144
   ]
  },
- "spread_ratio": 0.8458,
+ "spread_ratio": 0.8477,
  "lines": {
   "photo_share": 0.0804,
-  "render_share": 0.0798,
-  "render_near_photo": 0.5706,
-  "photo_near_render": 0.5697
+  "render_share": 0.0887,
+  "render_near_photo": 0.4832,
+  "photo_near_render": 0.5533
  },
- "thin_stone_shown": 0.7487,
+ "thin_stone_shown": 0.8446,
  "edge_gradient": {
   "photo": 0.1171,
-  "render": 0.0993,
-  "render_over_photo": 0.848
+  "render": 0.096,
+  "render_over_photo": 0.82
  },
  "detail": {
   "fine": {
-   "correlation": 0.3868,
-   "amplitude_ratio": 0.6866
+   "correlation": 0.3814,
+   "amplitude_ratio": 0.6658
   },
   "forms": {
-   "correlation": 0.4952,
-   "amplitude_ratio": 0.8476
+   "correlation": 0.474,
+   "amplitude_ratio": 0.8094
   },
-  "pixels": 353258,
+  "pixels": 348265,
   "photo_vs_itself_shifted": {
    "1px": {
     "fine": 0.0344,
@@ -93,203 +93,203 @@
  },
  "frame_texture": {
   "fine": {
-   "photo": 0.0309,
-   "render": 0.0287,
-   "ratio": 0.9302
+   "photo": 0.0307,
+   "render": 0.0276,
+   "ratio": 0.9003
   },
   "forms": {
    "photo": 0.0332,
-   "render": 0.0456,
-   "ratio": 1.3769
+   "render": 0.0431,
+   "ratio": 1.3013
   }
  },
  "light_map": {
   "photo": [
    [
-    0.367,
-    0.396,
-    0.574,
-    0.577,
-    0.546,
-    0.598
-   ],
-   [
+    0.368,
+    0.394,
     0.572,
-    1.169,
-    1.199,
-    0.707,
-    0.618,
-    0.993
+    0.563,
+    0.552,
+    0.599
    ],
    [
-    0.881,
-    1.3,
-    1.157,
-    1.123,
-    0.936,
-    1.093
+    0.568,
+    1.22,
+    1.23,
+    0.718,
+    0.617,
+    0.992
    ],
    [
-    1.036,
-    1.389,
-    1.48,
-    1.565,
+    0.885,
+    1.366,
+    1.136,
+    1.097,
+    0.909,
+    1.094
+   ],
+   [
+    1.032,
     1.461,
-    1.046
+    1.484,
+    1.566,
+    1.473,
+    1.053
    ],
    [
-    1.007,
-    1.32,
-    1.396,
-    1.397,
-    1.253,
-    0.632
+    1.008,
+    1.328,
+    1.385,
+    1.392,
+    1.25,
+    0.634
    ],
    [
-    0.967,
-    1.48,
-    1.405,
-    1.363,
+    0.962,
+    1.481,
+    1.399,
+    1.355,
     1.354,
-    0.78
+    0.669
    ],
    [
-    0.835,
-    0.944,
-    0.916,
-    0.914,
-    0.721,
-    0.554
+    0.832,
+    0.936,
+    0.913,
+    0.908,
+    0.713,
+    0.506
    ]
   ],
   "render": [
    [
-    0.295,
-    0.341,
-    0.525,
-    0.508,
-    0.465,
-    0.426
+    0.299,
+    0.335,
+    0.522,
+    0.507,
+    0.46,
+    0.433
    ],
    [
-    0.665,
-    0.8,
-    0.942,
-    0.994,
-    0.854,
-    0.926
+    0.661,
+    0.86,
+    0.973,
+    0.996,
+    0.873,
+    0.932
    ],
    [
-    0.934,
-    1.156,
-    1.17,
-    1.046,
-    0.971,
-    1.422
+    0.935,
+    1.209,
+    1.171,
+    1.011,
+    0.973,
+    1.433
    ],
    [
     1.083,
-    1.246,
-    1.385,
-    1.433,
-    1.424,
-    1.219
+    1.289,
+    1.388,
+    1.409,
+    1.477,
+    1.241
    ],
    [
-    1.006,
-    1.169,
-    1.243,
-    1.302,
-    1.215,
-    0.746
+    1.004,
+    1.127,
+    1.227,
+    1.296,
+    1.219,
+    0.752
    ],
    [
-    0.836,
-    1.134,
-    1.158,
-    1.211,
+    0.837,
+    1.135,
+    1.155,
+    1.203,
     1.194,
-    0.97
+    0.765
    ],
    [
-    0.744,
-    0.933,
-    0.977,
-    1.094,
-    1.043,
-    0.971
+    0.748,
+    0.92,
+    0.965,
+    1.079,
+    1.027,
+    0.937
    ]
   ],
-  "log_rms": 0.195
+  "log_rms": 0.1971
  },
  "frame_crispness": {
   "photo": 0.5987,
-  "render": 0.5066
+  "render": 0.4558
  },
  "recesses": {
   "window_11px": {
-   "deepest_3pct": -0.3228,
-   "all_stone": -0.0637
+   "deepest_3pct": -0.3442,
+   "all_stone": -0.0998
   },
   "window_21px": {
-   "deepest_3pct": -0.4427,
-   "all_stone": -0.0637
+   "deepest_3pct": -0.4814,
+   "all_stone": -0.0998
   }
  },
  "opening_edges": {
-  "edge_band": -0.0795,
-  "inside": -0.0637
+  "edge_band": -0.0727,
+  "inside": -0.0998
  },
  "stone_colour": {
-  "photo_spread": 0.137,
-  "render_spread": 0.1115,
-  "ratio": 0.8139
+  "photo_spread": 0.1391,
+  "render_spread": 0.1129,
+  "ratio": 0.8116
  },
  "colour_vs_brightness": {
   "photo": {
    "r_over_g": {
-    "slope": -0.133,
-    "explained": 0.3437
+    "slope": -0.1318,
+    "explained": 0.342
    },
    "b_over_g": {
-    "slope": 0.1954,
-    "explained": 0.5993
+    "slope": 0.1976,
+    "explained": 0.606
    }
   },
   "render": {
    "r_over_g": {
-    "slope": -0.1193,
-    "explained": 0.5212
+    "slope": -0.1129,
+    "explained": 0.5012
    },
    "b_over_g": {
-    "slope": 0.2223,
-    "explained": 0.7927
+    "slope": 0.2227,
+    "explained": 0.7925
    }
   }
  },
  "frame_over_field": {
-  "photo": 0.6398,
-  "render": 0.8163
+  "photo": 0.6313,
+  "render": 0.8069
  },
  "ssim": {
-  "box": 0.4918,
-  "patch": 0.4914,
+  "box": 0.4503,
+  "patch": 0.4666,
   "photo_vs_itself_2px": 0.3182
  },
  "openings_y_by_half": {
   "upper": {
    "photo": 0.4522,
-   "render": 0.5513
+   "render": 0.5614
   },
   "lower": {
    "photo": 0.6412,
-   "render": 0.6435
+   "render": 0.6236
   }
  },
  "scorecard": {
   "measures": {
    "ssim": {
-    "value": 0.4918,
+    "value": 0.4503,
     "bar": ">= 0.50",
     "ok": false,
     "follows_judge": {
@@ -299,7 +299,7 @@
     "tier": "core"
    },
    "openings_iou": {
-    "value": 0.4713,
+    "value": 0.3211,
     "bar": ">= 0.75",
     "ok": false,
     "follows_judge": {
@@ -308,7 +308,7 @@
     "tier": "core"
    },
    "bright_end": {
-    "value": 0.8798,
+    "value": 0.8807,
     "bar": "0.85 to 1.15",
     "ok": true,
     "follows_judge": {
@@ -318,7 +318,7 @@
     "tier": "core"
    },
    "lines_render_near_photo": {
-    "value": 0.5706,
+    "value": 0.4832,
     "bar": ">= 0.60",
     "ok": false,
     "follows_judge": {
@@ -328,7 +328,7 @@
     "tier": "core"
    },
    "forms_correlation": {
-    "value": 0.4952,
+    "value": 0.474,
     "bar": ">= 0.50",
     "ok": false,
     "follows_judge": {
@@ -338,7 +338,7 @@
     "tier": "secondary"
    },
    "colour_spread": {
-    "value": 0.8139,
+    "value": 0.8116,
     "bar": ">= 0.45 (provisional, T-019)",
     "ok": true,
     "follows_judge": {
@@ -350,37 +350,37 @@
   },
   "guards": {
    "contrast": {
-    "value": 0.8458,
+    "value": 0.8477,
     "bar": "0.8 to 1.2",
     "ok": true
    },
    "forms_amplitude": {
-    "value": 0.8476,
+    "value": 0.8094,
     "bar": "0.8 to 1.2",
     "ok": true
    },
    "thin_stone_shown": {
-    "value": 0.7487,
+    "value": 0.8446,
     "bar": ">= 0.90",
     "ok": false
    },
    "openings_y_upper": {
-    "value": 0.0991,
+    "value": 0.1092,
     "bar": "<= 0.02 off",
     "ok": false
    },
    "openings_y_lower": {
-    "value": 0.0023,
+    "value": 0.0176,
     "bar": "<= 0.02 off",
     "ok": true
    },
    "light_map": {
-    "value": 0.195,
+    "value": 0.1971,
     "bar": "<= 0.20",
     "ok": true
    },
    "frame_texture_forms": {
-    "value": 1.3769,
+    "value": 1.3013,
     "bar": "0.8 to 1.2",
     "ok": false
    }
@@ -406,14 +406,14 @@
   "openings_guard": false
  },
  "photo_openings_in_render": {
-  "opening": 0.7338,
-  "stone": 0.2441,
-  "dark": 0.0221
+  "opening": 0.4886,
+  "stone": 0.4779,
+  "dark": 0.0335
  },
- "render_openings_on_photo_stone": 0.4229,
+ "render_openings_on_photo_stone": 0.5068,
  "openings_iou_by_third": [
-  0.4964,
-  0.4015,
-  0.5548
+  0.3245,
+  0.3077,
+  0.3392
  ]
 }
