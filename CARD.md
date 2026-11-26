@@ -1792,6 +1792,21 @@ render took about 420 s against 1.7, so the builds ran out their 30 minutes (01,
 stopped. Cycles also aborted 3 builds in about 50 in its Metal shader cache (`ccl::path_cache_get`, a pointer freed that
 was never allocated, as a render starts); `run_batch.py` now runs such a step once more.
 
+*Fix 17, the user on 03's sheet (2026-11-26): "the actual graving/stone isn't uniform in color all the way. sometimes
+it decreases ... most probably due to the moss affecting it from the rain".* Measured, it holds. The dark rule's one cut
+is the whole photo's Otsu threshold, set in 03 by the pale wall against the dark lattice (0.48). In a patch of the
+lattice's lower left, 37 % of the pixels are near black (under 0.05, the holes) and the rest spread evenly from 0.05 to
+1.0 with no second peak, so at that cut 59 % of the patch read as hole: stained stone, darker than the cut. Not the
+working size: at the photo's full 1,928 px the same cut reads 59.7 % against 59.4 %. Three local cuts tried in scratch
+code: the pixel over a bright envelope (a 9 px max, smoothed), which barely moved (33.3 % open to 32.6 %), since bright
+branches lie within a few pixels of every stained strand; Otsu tile by tile (64 px), its cuts about 0.43, little better;
+and the one kept, the cut halfway between the local mean of the dark pixels (under 0.1) and the local mean of the
+rest, Gaussians of 8 px, where a tenth of the neighbourhood is dark, never above the global cut. In the chain
+(`common.classify_dark`): 03's patch 51.5 % hole, the whole picture 25.2 % open after fix 8 (28.7 % before), the
+lattice's cut about 0.32; 05 24.8 % to 24.1 %, 12 44.7 % to 40.1 %, 15 16.2 % to 14.7 % (its fine panel's reading had
+been more open than the photo's halfway edge, 30.8 % against 27.7 %). shot.json `"dark_cut": "global"` keeps the one
+cut. Ours is on the colour rule. Written, not yet rendered (on battery): their reading, build and comparison are queued.
+
 *Open, not yet fixed.* The tone curve's upper exponent sits at its limit of 4.0 in 8 of the 13 renders that C-022
 measured (ours 2.12), and with the fit's stone corrected 03, 05, 09 and 15 end at both limits (0.3 and 4.0); the
 cause is not found. The 25 % fit renders are not it: their stone's median is within about 10 % of the full render's

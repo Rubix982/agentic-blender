@@ -69,24 +69,6 @@
    "ok": true,
    "exit": 0,
    "seconds": 92.4
-  },
-  "read_photo": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 354.9
-  },
-  "build": {
-   "ok": false,
-   "exit": 124,
-   "seconds": 1801.6,
-   "tail": [
-    "Fra:1 Mem:601.82M (Peak 733.03M) | Time:00:01.79 | Mem:261.11M, Peak:261.11M | Scene, ViewLayer | Updating Baking",
-    "Fra:1 Mem:601.82M (Peak 733.03M) | Time:00:01.79 | Mem:261.11M, Peak:261.11M | Scene, ViewLayer | Updating Device | Writing constant memory",
-    "Fra:1 Mem:601.82M (Peak 733.03M) | Time:00:01.81 | Mem:261.11M, Peak:261.11M | Scene, ViewLayer | Loading denoising kernels (may take a few minutes the first time)",
-    "Fra:1 Mem:601.82M (Peak 733.03M) | Time:00:01.82 | Mem:3077.11M, Peak:3077.11M | Scene, ViewLayer | Sample 0/32 (Using optimized kernels)",
-    "[run.py] timed out after 1800.0 s",
-    "[run.py] exit 124 in 1801.5 s"
-   ]
   }
  },
  "04-sidi-saiyyed-b": {
@@ -116,11 +98,6 @@
    "ok": true,
    "exit": 0,
    "seconds": 90.5
-  },
-  "read_photo": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 150.9
   }
  },
  "06-sidi-saiyyed-d": {
@@ -235,11 +212,6 @@
    "ok": true,
    "exit": 0,
    "seconds": 151.7
-  },
-  "read_photo": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 113.6
   }
  },
  "13-jaali-window-a": {
@@ -286,11 +258,6 @@
    "ok": true,
    "exit": 0,
    "seconds": 88.2
-  },
-  "read_photo": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 27.7
   }
  },
  "16-bibi-ka-maqbara": {

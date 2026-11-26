@@ -193,6 +193,7 @@ def decide_side(rgb):
 
 
 PACKED, PACKED_SIGMA = 0.5, 20.0    # C-023 (fix 8): see classify_dark
+CUT_DARK, CUT_SIGMA, CUT_NEAR = 0.1, 8.0, 0.10   # C-023 (fix 17): see classify_dark
 
 
 def packed_share(mask, sigma=None):
@@ -220,7 +221,25 @@ def classify_dark(rgb):
     gr = rgb[:, :, 1] / np.maximum(rgb[:, :, 0], 1e-4)
     outside = border_dark(y)
     t = otsu(y[~outside]) if (~outside).any() else 0.5
-    opening = ~outside & (y <= t)
+    # C-023, fix 17 (the user, on 03: "the actual graving/stone isn't uniform in color all the way ... most probably due
+    # to the moss affecting it from the rain"). One cut for the whole photo is set by its largest masses; in 03 that is
+    # the pale wall against the dark lattice, 0.48, and inside the lattice stained stone is darker than that: in a patch
+    # of its lower left, 37 % of the pixels are near black (the holes) and the rest spread evenly from 0.05 to 1.0 with
+    # no second peak, so 59 % read as hole. At the photo's full size the same (59.7 % against 59.4 %): not the working
+    # size. So where holes are near (a tenth of the neighbourhood darker than CUT_DARK), the cut is halfway between the
+    # local mean of the dark pixels and the local mean of the rest (Gaussians of CUT_SIGMA px), never above the global
+    # cut; elsewhere the global cut. 03's patch: 51 % hole, the whole picture 33.3 % to 28.8 %, the lattice's cut about
+    # 0.32. shot.json "dark_cut": "global" keeps the one cut.
+    cut = t
+    if (~outside).any() and _shot.META.get("dark_cut") != "global":
+        dk = ~outside & (y <= CUT_DARK)
+        st = ~outside & (y > CUT_DARK)
+        wd, ws = packed_share(dk, CUT_SIGMA), packed_share(st, CUT_SIGMA)
+        hole_lv = packed_share(np.where(dk, y, 0.0), CUT_SIGMA) / np.maximum(wd, 1e-4)
+        stone_lv = packed_share(np.where(st, y, 0.0), CUT_SIGMA) / np.maximum(ws, 1e-4)
+        near = wd / np.maximum(wd + ws, 1e-4) > CUT_NEAR
+        cut = np.where(near, np.minimum(0.5 * (hole_lv + stone_lv), t), t)
+    opening = ~outside & (y <= cut)
     # C-023 (fix 8): a pale wall's joints, cracks and weathering are darker than the threshold too, and were read as
     # holes all round 03's and 05's arch (the user: "the further we go from the main jali, the further distortions
     # become apparent"). A jali's holes are packed; a wall's dark lines are scattered. So an opening is kept only where
