@@ -7,37 +7,37 @@
  ],
  "width_px": 977,
  "height_px": 1402,
- "opening_share": 0.2477,
+ "opening_share": 0.2332,
  "outside_share": 0.041,
  "stone_y": [
-  0.3857,
-  0.8022,
-  0.9112
+  0.3858,
+  0.7978,
+  0.9104
  ],
- "stone_y_p99": 0.9857,
+ "stone_y_p99": 0.9852,
  "stone_rgb_median": [
-  0.8118,
-  0.8,
-  0.8078
+  0.8078,
+  0.7961,
+  0.8039
  ],
- "opening_y": 0.023,
+ "opening_y": 0.0177,
  "stone_y_bands": [
   0.8473,
-  0.7037,
-  0.771,
-  0.8621,
-  0.8689,
-  0.8295,
-  0.7556,
-  0.7069,
-  0.6704,
-  0.7333
+  0.739,
+  0.782,
+  0.8633,
+  0.8663,
+  0.8034,
+  0.7182,
+  0.6723,
+  0.6425,
+  0.7258
  ],
  "field_box": [
-  94,
-  303,
-  952,
-  1387
+  25,
+  204,
+  961,
+  1386
  ],
  "screen_box_for_field": [
   0,
@@ -66,7 +66,7 @@
   "separability": 0.7718,
   "rule": "brightness"
  },
- "frame_openings_removed_px": 46567,
+ "frame_openings_removed_px": 11163,
  "size": [
   977,
   1402
@@ -83,7 +83,7 @@
   "dim_abs": 0.03
  },
  "cut_lines": {
-  "share_of_box": 0.0297,
+  "share_of_box": 0.0248,
   "rule": {
    "darker_by": 0.15,
    "thin": 2,

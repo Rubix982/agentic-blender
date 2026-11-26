@@ -1807,13 +1807,35 @@ lattice's cut about 0.32; 05 24.8 % to 24.1 %, 12 44.7 % to 40.1 %, 15 16.2 % to
 been more open than the photo's halfway edge, 30.8 % against 27.7 %). shot.json `"dark_cut": "global"` keeps the one
 cut. Ours is on the colour rule. Written, not yet rendered (on battery): their reading, build and comparison are queued.
 
+*Round 4 and fix 17, run (2026-11-26, on AC; `shots/jali-batch/c023_round4.jpg`, photo | last seen | now, and
+`c023_round4_stain.jpg`, 03's and 05's stained lattice, photo | round 3 | now; contact pages `contact_c023r4_*.jpg`).*
+The first try at it on AC stalled like the battery run: four jobs of about 3.2 GB each with 9.1 GB of swap already in
+use, and every render crawled at once; with two workers the fit renders took 1.2 to 1.9 s again. SSIM, last seen to
+now (round 3 between): 01 0.450 to 0.548 (0.548), 02 0.507 to 0.582 (0.588), 03 0.469 to 0.581 (0.555), 04 0.471 to
+0.550 (0.546), 05 0.418 to 0.549 (0.467), 06 0.456 to 0.475, 07 0.386 to 0.385, 08 0.798 to 0.799 (0.793), 09 0.579
+to 0.575 (0.553), 10 0.825 to 0.826, 11 0.325 to 0.398, 12 0.383 to 0.690 (0.667), 13 0.727 to 0.716 (0.696), 14
+0.686 to 0.783, 15 0.549 to 0.670 (0.673), 16 0.445 to 0.564 (0.551), 17 0.428 to 0.690 (0.680), 18 0.545 to 0.798
+(0.783): up in 13, down in 2 (09 by 0.004, 13 by 0.011), 3 flat. 16 meets the four core bars, the first of the batch
+to. Round 4 gave back what round 3 took from 08, 09 and 10, and cost 02 (half-width 3.12 px, just over the new cut:
+0.588 to 0.582). By my glance 03's stained tracery is back between its branches, 05's purple is gone and its lattice
+is dense and grey as in the photo, and 12's lattice and frame read as its photo; 13 of 18 read as their photos (01,
+02, 03, 04, 05, 08, 09, 10, 12, 13, 14, 15, 17), 3 have the structure right and the light or colour not (11, 16, 18),
+and 06 and 07 are outside the method. Ours, rebuilt with all of it: every measure as committed but two at ±0.0001 and
+one mask's count by a pixel (render noise).
+
 *Open, not yet fixed.* The tone curve's upper exponent sits at its limit of 4.0 in 8 of the 13 renders that C-022
 measured (ours 2.12), and with the fit's stone corrected 03, 05, 09 and 15 end at both limits (0.3 and 4.0); the
 cause is not found. The 25 % fit renders are not it: their stone's median is within about 10 % of the full render's
 (09: 0.149 at 337 W against 0.116 at 273 W; 13: 0.319 against 0.343 at one power). 13 and 14's holes render dim pink
 where the photos' are lit white: the light behind a backlit screen is not yet the photo's.
 
-**Result (2026-11-26, after fixes 1 to 15; round 4 written, not run):** 18 of 18 photos reach a render, and by my
+**Result (2026-11-26, after fixes 1 to 17):** 18 of 18 photos reach a render; by my glance 13 read as their photos
+(01, 02, 03, 04, 05, 08, 09, 10, 12, 13, 14, 15, 17), 3 have the structure right and the light or colour not (11, 16,
+18), 06 and 07 are outside the method; 16 meets the four core bars. The user named the cause of fix 17 (stained
+stone); the rest of what is said under the first result below holds. Waiting on the user's glance at
+`c023_round4.jpg` and `c023_round4_stain.jpg`.
+
+*After fixes 1 to 15 (round 4 written, not run):* 18 of 18 photos reach a render, and by my
 glance, before the user's, 11 read as their photos: 01, 02, 03, 04, 08, 09, 10, 13, 14, 15 and 17 (8 before fixes 9 to
 15, 3 at C-022). Five have the structure right and the colour or light not: 05 (its interior purple), 11 (its centre
 muddled), 12 (its central opening red where the photo's is dark), 16 (its floor), 18 (grey where the photo's light is
