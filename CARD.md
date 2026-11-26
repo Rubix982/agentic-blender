@@ -1823,13 +1823,25 @@ is dense and grey as in the photo, and 12's lattice and frame read as its photo;
 and 06 and 07 are outside the method. Ours, rebuilt with all of it: every measure as committed but two at ±0.0001 and
 one mask's count by a pixel (render noise).
 
+*Fix 12, third and fourth forms (2026-11-26).* Taken apart on two backlit shots: 13 (half-width 2.995 px) with its
+bevel 0.725 against 0.716 without (IoU 0.817 against 0.791), 10 (3.48) without it 0.810 against 0.826, as 09 (3.92):
+every loss from removing the bevel had been on a screen lit from behind, every gain on lit stone (03, 15 under the
+dark rule; 01, 02 under the colour rule). Lit from the front, the rim catches the light as a pale ring inside each
+dark hole; lit from behind it lies on the bright edge, like the glow at a backlit hole's edge. Third form, the bevel
+off only where not backlit (and under 4.2 px): 02 0.582 to 0.588, 13 0.716 to 0.725, but the finest backlit lattices
+lost, where the bevel also takes a large share of each hole: 17 (1.81 px) 0.690 to 0.647, its render 12.4 % open
+against the reading's 14.7 %; 14 (2.58) 0.783 to 0.755; 18 (2.57) 0.798 to 0.769; 16 (2.72) 0.564 to 0.563. In order of
+half-width the backlit seven are hurt at 1.81, 2.57 and 2.58, level at 2.72, helped at 2.995, 3.48 and 3.92. Fourth
+form, kept: no bevel under 4.2 px lit from the front, under 2.8 px backlit; 14, 16, 17 and 18 back to their round-4
+values exactly. A threshold placed between seven points, monotone in them; recorded as that.
+
 *Open, not yet fixed.* The tone curve's upper exponent sits at its limit of 4.0 in 8 of the 13 renders that C-022
 measured (ours 2.12), and with the fit's stone corrected 03, 05, 09 and 15 end at both limits (0.3 and 4.0); the
 cause is not found. The 25 % fit renders are not it: their stone's median is within about 10 % of the full render's
 (09: 0.149 at 337 W against 0.116 at 273 W; 13: 0.319 against 0.343 at one power). 13 and 14's holes render dim pink
 where the photos' are lit white: the light behind a backlit screen is not yet the photo's.
 
-**Result (2026-11-26, after fixes 1 to 17):** 18 of 18 photos reach a render; by my glance 13 read as their photos
+**Result (2026-11-26, after fixes 1 to 17, fix 12 in its fourth form):** 18 of 18 photos reach a render; by my glance 13 read as their photos
 (01, 02, 03, 04, 05, 08, 09, 10, 12, 13, 14, 15, 17), 3 have the structure right and the light or colour not (11, 16,
 18), 06 and 07 are outside the method; 16 meets the four core bars. The user named the cause of fix 17 (stained
 stone); the rest of what is said under the first result below holds. Waiting on the user's glance at

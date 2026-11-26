@@ -60,7 +60,7 @@
  "spread_ratio": 0.4844,
  "lines": {
   "photo_share": 0.0939,
-  "render_share": 0.0768,
+  "render_share": 0.0767,
   "render_near_photo": 0.7425,
   "photo_near_render": 0.6512
  },

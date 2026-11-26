@@ -248,7 +248,7 @@
     "stone_y": 0.1622,
     "opening_y_lower": 0.5291,
     "opening_y_upper": 0.4375,
-    "seconds": 1.1,
+    "seconds": 1.0,
     "curve": [
      1.0,
      1.0
@@ -259,7 +259,7 @@
     "stone_y": 0.1624,
     "opening_y_lower": 0.5327,
     "opening_y_upper": 0.4399,
-    "seconds": 1.3,
+    "seconds": 1.7,
     "curve": [
      1.0,
      1.0
@@ -281,7 +281,7 @@
     "stone_y": 0.3043,
     "opening_y_lower": 0.505,
     "opening_y_upper": 0.4666,
-    "seconds": 1.1,
+    "seconds": 1.0,
     "curve": [
      4.0,
      0.3
@@ -292,7 +292,7 @@
     "stone_y": 0.2265,
     "opening_y_lower": 0.5304,
     "opening_y_upper": 0.4854,
-    "seconds": 1.0,
+    "seconds": 0.9,
     "curve": [
      4.0,
      0.3317
@@ -347,7 +347,7 @@
     "stone_y": 0.1632,
     "opening_y_lower": 0.6655,
     "opening_y_upper": 0.8012,
-    "seconds": 1.1,
+    "seconds": 1.0,
     "curve": [
      1.018,
      1.8015
@@ -369,7 +369,7 @@
     "stone_y": 0.1632,
     "opening_y_lower": 0.6652,
     "opening_y_upper": 0.7995,
-    "seconds": 1.1,
+    "seconds": 1.0,
     "curve": [
      1.0264,
      1.7581
@@ -391,7 +391,7 @@
     "stone_y": 0.1633,
     "opening_y_lower": 0.6652,
     "opening_y_upper": 0.7997,
-    "seconds": 1.1,
+    "seconds": 1.0,
     "curve": [
      1.0257,
      1.7613
@@ -651,5 +651,5 @@
   "look": "None",
   "filter_px": 1.8
  },
- "seconds": 355.2
+ "seconds": 349.7
 }

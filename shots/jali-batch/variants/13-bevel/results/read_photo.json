@@ -1,0 +1,98 @@
+{
+ "box": [
+  67,
+  67,
+  845,
+  1334
+ ],
+ "width_px": 779,
+ "height_px": 1268,
+ "opening_share": 0.1538,
+ "outside_share": 0.0,
+ "stone_y": [
+  0.0196,
+  0.0638,
+  0.213
+ ],
+ "stone_y_p99": 0.4313,
+ "stone_rgb_median": [
+  0.0902,
+  0.0588,
+  0.051
+ ],
+ "opening_y": 0.7266,
+ "stone_y_bands": [
+  0.054,
+  0.0646,
+  0.0688,
+  0.0621,
+  0.0728,
+  0.0767,
+  0.0688,
+  0.068,
+  0.0582,
+  0.0465
+ ],
+ "field_box": [
+  115,
+  187,
+  788,
+  1242
+ ],
+ "screen_box_for_field": [
+  67,
+  67,
+  845,
+  1334
+ ],
+ "openings": {
+  "threshold": 0.5137,
+  "bright": {
+   "score": 0.2994,
+   "stone_one_piece": 0.999,
+   "openings_enclosed": 0.3,
+   "openings": 1221,
+   "opening_share": 0.332
+  },
+  "dark": {
+   "score": 0.0206,
+   "stone_one_piece": 0.688,
+   "openings_enclosed": 0.999,
+   "openings": 3,
+   "opening_share": 0.668
+  },
+  "side": "bright",
+  "colour_gap": 0.3357,
+  "separability": 0.8313,
+  "rule": "brightness"
+ },
+ "field_rule": {
+  "min_area": 176,
+  "rank_area": 353
+ },
+ "frame_openings_removed_px": 9292,
+ "size": [
+  913,
+  1402
+ ],
+ "rule": {
+  "dark": 0.08,
+  "green_red": 0.86,
+  "wall_dist": 0.12,
+  "wall_tex": 0.05,
+  "wall_green_red_min": 0.8,
+  "lit": 0.12,
+  "lit_abs": 0.03,
+  "dim": 0.15,
+  "dim_abs": 0.03
+ },
+ "cut_lines": {
+  "share_of_box": 0.0425,
+  "rule": {
+   "darker_by": 0.15,
+   "thin": 2,
+   "neighbours": 4,
+   "run": 8
+  }
+ }
+}

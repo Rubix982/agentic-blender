@@ -219,7 +219,8 @@ _ofw = k["opening"][_fbw[1]:_fbw[3] + 1, _fbw[0]:_fbw[2] + 1]
 _inw = _ofw.copy()
 _inw[1:-1, 1:-1] = _ofw[1:-1, 1:-1] & _ofw[:-2, 1:-1] & _ofw[2:, 1:-1] & _ofw[1:-1, :-2] & _ofw[1:-1, 2:]
 HALF_W_PX = float(_ofw.sum()) / max(float((_ofw & ~_inw).sum()), 1.0)
-FINE_HOLES = HALF_W_PX < 3.0 and "--fixed-bevel" not in argv          # (3.0 px, not 4.2: see BEVEL below)
+BACKLIT = C.SIDE == "bright" and C.RULE == "brightness"                # fix 12, third form: see BEVEL below
+FINE_HOLES = HALF_W_PX < (2.8 if BACKLIT else 4.2) and "--fixed-bevel" not in argv
 OUTLINE_BLUR = int(argv[argv.index("--outline-blur") + 1]) if "--outline-blur" in argv else 3   # C-023: a switch, to
 if FINE_HOLES and "--outline-blur" not in argv:                       # (fix 12 revised: see BEVEL below)
     OUTLINE_BLUR = max(1, int(round(3 * HALF_W_PX / 4.64)))
@@ -281,8 +282,16 @@ BEVEL_RULE = dict(hole_half_width_px=round(HALF_W_PX, 3))
 # 0.576, SSIM 0.597 to 0.625, openings IoU 0.530 to 0.595 (the blur alone: 0.602 and 0.540). So where the holes are
 # finer than ours's there is no bevel, and the outline's blur (above) is 3 px times the half-width over ours's, at
 # least 1 px. The cut was first 4.2 px; 09 (3.92) lost by it, SSIM 0.566 with its bevel against 0.553 without, 08 (4.08)
-# and 10 (3.48) a little; 15 (2.0), 03 (2.47) and 01 (2.23) gained. Now under 3.0 px. Ours keeps 0.5 mm and 3 px.
-# --fixed-bevel: 0.5 mm and 3 px always.
+# and 10 (3.48) a little; 15 (2.0), 03 (2.47) and 01 (2.23) gained. Second form: under 3.0 px; that cost 02 (3.12:
+# SSIM 0.588 without its bevel, 0.582 with). Then taken apart on the backlit 13 and 10: 13 with its bevel 0.725 against
+# 0.716 (IoU 0.817 against 0.791), 10 without it 0.810 against 0.826, as 09 (0.566 against 0.553). Every loss had been
+# on a screen lit from behind, every gain on lit stone (03, 15 under the dark rule; 01, 02 under the colour rule). Lit
+# from the front, the rounded rim catches the light as a pale ring inside each dark hole; lit from behind it lies on the
+# bright edge, as the glow at a backlit hole's edge does. Third form, not backlit: that cost the finest backlit
+# lattices, where the bevel also takes a large share of each hole (17, half-width 1.81 px: SSIM 0.690 without, 0.647
+# with; 14 (2.58) 0.783 and 0.755; 18 (2.57) 0.798 and 0.769; 16 (2.72) 0.564 and 0.563). In order of half-width the
+# backlit seven are hurt at 1.81, 2.57 and 2.58, level at 2.72, helped at 2.995, 3.48 and 3.92. Fourth form: under
+# 4.2 px lit from the front, under 2.8 px backlit. Ours (4.64) keeps 0.5 mm and 3 px. --fixed-bevel: always.
 if FINE_HOLES and "--bevel" not in argv:
     BEVEL_M = 0.0
     BEVEL_RULE.update(bevel_m=0.0)

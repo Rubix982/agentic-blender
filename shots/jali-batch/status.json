@@ -45,12 +45,12 @@
   "build": {
    "ok": true,
    "exit": 0,
-   "seconds": 129.5
+   "seconds": 111.1
   },
   "compare": {
    "ok": true,
    "exit": 0,
-   "seconds": 35.2
+   "seconds": 36.8
   }
  },
  "03-sidi-saiyyed-a": {
@@ -153,12 +153,12 @@
   "build": {
    "ok": true,
    "exit": 0,
-   "seconds": 99.1
+   "seconds": 106.2
   },
   "compare": {
    "ok": true,
    "exit": 0,
-   "seconds": 39.7
+   "seconds": 40.1
   }
  },
  "07-humayun-doorway": {
@@ -180,12 +180,12 @@
   "build": {
    "ok": true,
    "exit": 0,
-   "seconds": 61.8
+   "seconds": 61.7
   },
   "compare": {
    "ok": true,
    "exit": 0,
-   "seconds": 21.4
+   "seconds": 20.7
   }
  },
  "08-humayun-mihrab": {
@@ -342,12 +342,12 @@
   "build": {
    "ok": true,
    "exit": 0,
-   "seconds": 129.3
+   "seconds": 109.4
   },
   "compare": {
    "ok": true,
    "exit": 0,
-   "seconds": 11.8
+   "seconds": 12.0
   }
  },
  "14-jaali-window-b": {
@@ -369,12 +369,12 @@
   "build": {
    "ok": true,
    "exit": 0,
-   "seconds": 146.0
+   "seconds": 135.2
   },
   "compare": {
    "ok": true,
    "exit": 0,
-   "seconds": 16.4
+   "seconds": 15.9
   }
  },
  "15-nilabagh-palace": {
@@ -423,12 +423,12 @@
   "build": {
    "ok": true,
    "exit": 0,
-   "seconds": 355.9
+   "seconds": 350.3
   },
   "compare": {
    "ok": true,
    "exit": 0,
-   "seconds": 30.7
+   "seconds": 30.4
   }
  },
  "17-fatehpur-sikri-a": {
@@ -450,12 +450,12 @@
   "build": {
    "ok": true,
    "exit": 0,
-   "seconds": 545.7
+   "seconds": 537.8
   },
   "compare": {
    "ok": true,
    "exit": 0,
-   "seconds": 21.6
+   "seconds": 22.2
   }
  },
  "18-fatehpur-sikri-b": {
@@ -477,7 +477,7 @@
   "build": {
    "ok": true,
    "exit": 0,
-   "seconds": 393.6
+   "seconds": 398.4
   },
   "compare": {
    "ok": true,

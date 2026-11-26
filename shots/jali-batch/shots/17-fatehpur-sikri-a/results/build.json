@@ -244,7 +244,7 @@
     "stone_y": 0.2357,
     "opening_y_lower": 0.5305,
     "opening_y_upper": 0.4778,
-    "seconds": 1.2,
+    "seconds": 1.0,
     "curve": [
      1.0,
      1.0
@@ -266,7 +266,7 @@
     "stone_y": 0.1205,
     "opening_y_lower": 0.5522,
     "opening_y_upper": 0.4747,
-    "seconds": 2.0,
+    "seconds": 1.1,
     "curve": [
      0.9265,
      2.5834
@@ -277,7 +277,7 @@
     "stone_y": 0.1202,
     "opening_y_lower": 0.5523,
     "opening_y_upper": 0.4747,
-    "seconds": 1.4,
+    "seconds": 1.1,
     "curve": [
      0.9265,
      2.5834
@@ -288,10 +288,10 @@
     "stone_y": 0.1202,
     "opening_y_lower": 0.5523,
     "opening_y_upper": 0.4746,
-    "seconds": 1.1,
+    "seconds": 1.0,
     "curve": [
      0.9214,
-     2.6369
+     2.6368
     ]
    },
    {
@@ -299,10 +299,10 @@
     "stone_y": 0.1201,
     "opening_y_lower": 0.5523,
     "opening_y_upper": 0.4746,
-    "seconds": 1.1,
+    "seconds": 1.0,
     "curve": [
      0.9214,
-     2.6369
+     2.6368
     ]
    },
    {
@@ -310,7 +310,7 @@
     "stone_y": 0.1201,
     "opening_y_lower": 0.5523,
     "opening_y_upper": 0.4745,
-    "seconds": 1.0,
+    "seconds": 1.1,
     "curve": [
      0.9203,
      2.6485
@@ -321,7 +321,7 @@
     "stone_y": 0.1201,
     "opening_y_lower": 0.5523,
     "opening_y_upper": 0.4745,
-    "seconds": 1.2,
+    "seconds": 1.1,
     "curve": [
      0.9203,
      2.6485
@@ -342,7 +342,7 @@
    },
    {
     "a": 0.9214,
-    "b": 2.6369,
+    "b": 2.6368,
     "untoned_p10": 0.0549,
     "untoned_p90": 0.1471
    },
@@ -546,7 +546,7 @@
   ]
  },
  "render": {
-  "seconds": 9.9,
+  "seconds": 9.8,
   "samples": 256,
   "size": [
    1402,
@@ -562,5 +562,5 @@
   "look": "None",
   "filter_px": 1.8
  },
- "seconds": 545.0
+ "seconds": 537.0
 }
