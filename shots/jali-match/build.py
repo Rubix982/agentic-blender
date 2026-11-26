@@ -217,6 +217,33 @@ OUTLINE_BLUR = int(argv[argv.index("--outline-blur") + 1]) if "--outline-blur" i
 field = C.blur(solid.astype(np.float32), OUTLINE_BLUR)                 # test what the 3 px blur costs fine edges
 loops = C.contours(field, 0.5)
 outer_sign = np.sign(C.area(max(loops, key=lambda p: abs(C.area(p)))))   # the frame's outline winds as stone does
+# C-023, fix 13: common.contours turns each outline by one sample, the pixel nearest a point 0.35 px to its left; on a
+# thin bar or a small hole that pixel can lie across the outline. With the photo's own fine holes cut (fix 9) 1,453 of
+# 15's 1,632 outlines came out turned the wrong way (12: 628 of 5,543; 17: 6,660 of 6,973). The fill does not read the
+# turning (scanfill and Fill Curve both gave 15's even-odd area, 831,855 px2, to the pixel), but the build does: the
+# fill's check sums the outlines' signed areas (1,099,762 for 15, so the check failed at 0.756), and the repairs then
+# dropped outlines that were never broken (03 lost a 115,719 px opening to the halving, and rendered it as a grey haze);
+# the size floors tell holes from stone pieces by the sign too. So each outline is turned by how many others hold it:
+# stone at an even depth, a hole at an odd one, as the fill counts. --sample-turning: as common.contours turned them.
+TURNED = 0
+if "--sample-turning" not in argv:
+    _A = np.array([C.area(q) for q in loops])
+    _bb = np.array([[q[:, 0].min(), q[:, 1].min(), q[:, 0].max(), q[:, 1].max()] for q in loops])
+
+    def _holds(pt, q):                                                 # even-odd point in polygon
+        xs, ys = q[:, 0], q[:, 1]
+        xe, ye = np.roll(xs, -1), np.roll(ys, -1)
+        dy = np.where(ye == ys, 1e-12, ye - ys)
+        return bool((((ys > pt[1]) != (ye > pt[1])) & (pt[0] < (xe - xs) * (pt[1] - ys) / dy + xs)).sum() % 2)
+    for _i in range(len(loops)):
+        _pt = loops[_i][0]
+        _cand = np.nonzero((_bb[:, 0] <= _pt[0]) & (_bb[:, 2] >= _pt[0]) & (_bb[:, 1] <= _pt[1]) & (_bb[:, 3] >= _pt[1])
+                           & (np.abs(_A) > abs(_A[_i])))[0]
+        _depth = sum(1 for _j in _cand if _holds(_pt, loops[_j]))
+        if np.sign(_A[_i]) != outer_sign * (1 if _depth % 2 == 0 else -1):
+            loops[_i] = loops[_i][::-1].copy()
+            TURNED += 1
+print("TURNED", TURNED, "of", len(loops), flush=True)
 # C-023: MIN_AREA_PX and MIN_ISLAND_PX were set on ours, whose holes are large (half its hole area lies in holes of 515 px
 # or more), and there the holes under 30 px are 1.6 % of the hole area, specks. A fine lattice's are its pattern: 04
 # (half in holes of 89 px or more) lost 20.7 % of its hole area, the tree's pinpricks of light. So each floor is the
@@ -234,6 +261,21 @@ if "--fixed-floors" not in argv:
         MIN_AREA_PX, MIN_ISLAND_PX = min(MIN_AREA_PX, _floor), min(MIN_ISLAND_PX, _floor)
         FLOORS.update(min_area_px=round(MIN_AREA_PX, 1), min_island_px=round(MIN_ISLAND_PX, 1))
 print("FLOORS", FLOORS, flush=True)
+# C-023, fix 12: the bevel rounds every edge outwards, so the stone widens by its radius on each side. On ours that is
+# 11.7 % of the holes' half-width (their area over their edge's length in the carved field, 4.64 px; the bevel 0.54 px);
+# on the batch up to 37 % (17), and 03 built without it came out better on every measure (SSIM 0.497 to 0.529,
+# openings IoU 0.612 to 0.671, the render's open share 0.244 to 0.276 against the photo's 0.287). So the bevel is no
+# larger a share of a hole than 12.5 % of its half-width; ours keeps 0.5 mm. --bevel R sets it and --fixed-bevel keeps
+# 0.5 mm.
+_of = k["opening"][_fb2[1]:_fb2[3] + 1, _fb2[0]:_fb2[2] + 1]
+_inner = _of.copy()
+_inner[1:-1, 1:-1] = _of[1:-1, 1:-1] & _of[:-2, 1:-1] & _of[2:, 1:-1] & _of[1:-1, :-2] & _of[1:-1, 2:]
+HALF_W_PX = float(_of.sum()) / max(float((_of & ~_inner).sum()), 1.0)
+BEVEL_RULE = dict(hole_half_width_px=round(HALF_W_PX, 3))
+if "--bevel" not in argv and "--fixed-bevel" not in argv and 0.125 * HALF_W_PX * S < BEVEL_M:
+    BEVEL_M = 0.125 * HALF_W_PX * S
+    BEVEL_RULE.update(bevel_m=round(BEVEL_M, 6))
+print("BEVEL", BEVEL_RULE, flush=True)
 loops = [p for p in loops if abs(C.area(p)) >= (MIN_ISLAND_PX if np.sign(C.area(p)) == outer_sign else MIN_AREA_PX)]
 
 
@@ -294,7 +336,7 @@ C.write_png(os.path.join(OUT, "height.png"), height / max(float(height.max()), 1
 log["sizes"] = dict(width_m=WIDTH_M, thick_m=THICK_M, thick_cm=THICK_M * 100, bevel_m=BEVEL_M)
 log["outlines"] = dict(count=len(loops), points=int(sum(len(p) for p in loops)), metres_per_px=round(S, 6),
                        screen_width_px=width_px, box=[x0, y0, x1, y1], dark_in_box_made_stone=int((dark & ~sur).sum()),
-                       surround_in_box=int(sur.sum()), back_face_scale=round(KB, 4), **({'merge_cap': MERGE} if 'kb' in MERGE or 'tunnels' in MERGE else {}), **({'floors': FLOORS} if 'min_area_px' in FLOORS else {}),
+                       surround_in_box=int(sur.sum()), back_face_scale=round(KB, 4), **({'merge_cap': MERGE} if 'kb' in MERGE or 'tunnels' in MERGE else {}), **({'floors': FLOORS} if 'min_area_px' in FLOORS else {}), **({'bevel_rule': BEVEL_RULE} if 'bevel_m' in BEVEL_RULE else {}), **({'turned': TURNED} if TURNED else {}),
                        seen_opening_share=round(float(k["opening"][y0:y1 + 1, x0:x1 + 1].mean()), 4),
                        hole_share=round(float(hole[y0:y1 + 1, x0:x1 + 1].mean()), 4),
                        cut_line_share=round(float(lines[y0:y1 + 1, x0:x1 + 1].mean()), 4))
@@ -408,6 +450,12 @@ def trace_mesh_cdt(L):
 # falls short, the outlines are halved until the one that breaks it is found, it is swapped for its unsmoothed outline,
 # and that is logged; if the same outline is found again, it is dropped (at 5 mm a 120 px hole broke the fill either
 # way). At most five times, then the build stops.
+if "--dump-loops" in argv:                                             # C-023: to study the fill's failures (T-014)
+    _dp = argv[argv.index("--dump-loops") + 1]
+    np.savez_compressed(_dp, n=len(loops), field_box=np.array(_rp.get("field_box", [0, 0, 0, 0])), outer_sign=outer_sign,
+                        **{f"s{i}": q for i, q in enumerate(loops)}, **{f"r{i}": q for i, q in enumerate(loops_raw)})
+    print("DUMPED", _dp, len(loops), flush=True)
+    raise SystemExit(0)
 me_c = trace_mesh_cdt(loops) if "--cdt-caps" in argv else trace_mesh(loops)
 repairs = []
 if front_px(me_c) < 0.85 * abs(sum(C.area(p) for p in loops)):         # C-020: first the constrained Delaunay caps
@@ -417,14 +465,15 @@ if front_px(me_c) < 0.85 * abs(sum(C.area(p) for p in loops)):         # C-020: 
 # C-023, fix 10: after fix 8, 15's fill failed past the halving's five tries, and the outlines it found were all on one
 # row, y = 1334.5: the carved field's bottom edge, where keep_field cuts every opening that crosses it with a straight
 # line (the frame's carved grooves, read as holes). Many holes ending on one line is what the fill breaks on, it
-# seems. So the second repair makes those cut-off openings stone: every hole outline with three or more points within
-# a pixel of the field box's edge. Only on a failed fill: ours fills first time and keeps the 22 px its box cuts.
+# seems. So the second repair makes those cut-off openings stone: every hole outline with a point within
+# 1.5 px of the field box's edge. Only on a failed fill: ours fills first time and keeps the 22 px its box cuts.
 _fbc = _rp.get("field_box")
 if _fbc and front_px(me_c) < 0.85 * abs(sum(C.area(p) for p in loops)):
     _lines = ((0, _fbc[0] - 0.5), (0, _fbc[2] + 0.5), (1, _fbc[1] - 0.5), (1, _fbc[3] + 0.5))
 
-    def _cut(p):
-        return np.sign(C.area(p)) != outer_sign and sum(int((np.abs(p[:, ax] - v) <= 1.0).sum()) for ax, v in _lines) >= 3
+    def _cut(p):                                                       # (any point within 1.5 px: three within
+        return np.sign(C.area(p)) != outer_sign and any(                # 1 px missed 15's small holes on the row)
+            bool((np.abs(p[:, ax] - v) <= 1.5).any()) for ax, v in _lines)
     _drop = [i for i in range(len(loops)) if _cut(loops[i])]
     if _drop:
         repairs.append(dict(action="openings cut by the carved field's edge made stone", loops=len(_drop),
@@ -1254,6 +1303,12 @@ if TONE:
         def saturate(img, kk):
             yy = np.maximum(img @ LUM, 1e-6)[..., None]
             f = (np.maximum(yy, SAT_Y_FLOOR) / curve["m"]) ** -kk
+            if SAT_Y_FLOOR > 1e-3:
+                # C-023, fix 11: fix 5 held the factor at the floor's below it, which at 05's refitted k (0.85, the
+                # stone's median 0.86, its floor 0.048) is 11.6: the interior's faint tint came out purple again. The
+                # factor was fitted on the stone, so below the stone's darkest it fades to none at black. Only where
+                # the floor is set (the dark rule); ours keeps 1e-3 and the step as it was.
+                f = 1.0 + (f - 1.0) * np.clip(yy / SAT_Y_FLOOR, 0.0, 1.0)
             return np.clip(yy + (img - yy) * f, 0.0, 1.0)
 
         # on stone in both images (3 px from any opening), as compare.py measures: a first fit on the photo's stone
