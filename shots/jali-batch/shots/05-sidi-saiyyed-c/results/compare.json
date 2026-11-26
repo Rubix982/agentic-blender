@@ -1,295 +1,295 @@
 {
- "openings_iou": 0.5891,
- "stone_iou": 0.8001,
+ "openings_iou": 0.731,
+ "stone_iou": 0.8444,
  "photo": {
   "stone_y": [
-   0.5662,
-   0.8228,
-   0.9147
+   0.3857,
+   0.8022,
+   0.9112
   ],
-  "stone_y_p99": 0.9884,
+  "stone_y_p99": 0.9857,
   "stone_rgb_median": [
-   0.8314,
-   0.8196,
-   0.8314
+   0.8118,
+   0.8,
+   0.8078
   ],
-  "stone_spread": 0.3485,
-  "opening_y": 0.0546,
-  "opening_share": 0.323,
+  "stone_spread": 0.5255,
+  "opening_y": 0.023,
+  "opening_share": 0.2477,
   "stone_y_bands": [
-   0.8513,
-   0.7682,
-   0.8112,
-   0.8706,
-   0.8739,
-   0.8341,
-   0.7731,
-   0.7287,
-   0.6961,
-   0.7473
+   0.8473,
+   0.7037,
+   0.771,
+   0.8621,
+   0.8689,
+   0.8295,
+   0.7556,
+   0.7069,
+   0.6704,
+   0.7333
   ]
  },
  "render": {
   "stone_y": [
-   0.5888,
-   0.832,
-   0.9241
+   0.2684,
+   0.7986,
+   0.9073
   ],
-  "stone_y_p99": 0.9961,
+  "stone_y_p99": 0.9714,
   "stone_rgb_median": [
-   0.8353,
-   0.8275,
-   0.8431
+   0.7961,
+   0.7961,
+   0.8039
   ],
-  "stone_spread": 0.3353,
-  "opening_y": 0.0728,
-  "opening_share": 0.34,
+  "stone_spread": 0.6389,
+  "opening_y": 0.0277,
+  "opening_share": 0.3078,
   "stone_y_bands": [
-   0.8426,
-   0.8245,
-   0.8349,
-   0.8695,
+   0.8247,
+   0.5463,
+   0.7143,
+   0.8653,
    0.8821,
-   0.8336,
-   0.733,
-   0.7081,
-   0.7224,
-   0.8081
+   0.8415,
+   0.6572,
+   0.5794,
+   0.6098,
+   0.7387
   ]
  },
- "spread_ratio": 0.9621,
+ "spread_ratio": 1.2158,
  "lines": {
-  "photo_share": 0.0092,
-  "render_share": 0.0113,
-  "render_near_photo": 0.2346,
-  "photo_near_render": 0.2764
+  "photo_share": 0.0297,
+  "render_share": 0.0301,
+  "render_near_photo": 0.5672,
+  "photo_near_render": 0.5617
  },
- "thin_stone_shown": 0.5631,
+ "thin_stone_shown": 0.3314,
  "edge_gradient": {
-  "photo": 0.286,
-  "render": 0.2473,
-  "render_over_photo": 0.865
+  "photo": 0.318,
+  "render": 0.2441,
+  "render_over_photo": 0.768
  },
  "detail": {
   "fine": {
-   "correlation": 0.286,
-   "amplitude_ratio": 0.6614
+   "correlation": 0.3363,
+   "amplitude_ratio": 0.5961
   },
   "forms": {
-   "correlation": 0.6804,
-   "amplitude_ratio": 1.0691
+   "correlation": 0.6236,
+   "amplitude_ratio": 0.8986
   },
-  "pixels": 475498,
+  "pixels": 743173,
   "photo_vs_itself_shifted": {
    "1px": {
-    "fine": -0.2083,
-    "forms": 0.8718
+    "fine": -0.1417,
+    "forms": 0.8358
    },
    "2px": {
-    "fine": -0.0535,
-    "forms": 0.6134
+    "fine": -0.0971,
+    "forms": 0.4844
    }
   }
  },
  "frame_texture": {
   "fine": {
-   "photo": 0.0545,
-   "render": 0.0359,
-   "ratio": 0.6589
+   "photo": 0.0888,
+   "render": 0.0485,
+   "ratio": 0.5467
   },
   "forms": {
-   "photo": 0.0602,
-   "render": 0.0649,
-   "ratio": 1.0765
+   "photo": 0.0915,
+   "render": 0.0796,
+   "ratio": 0.8698
   }
  },
  "light_map": {
   "photo": [
    [
-    1.028,
-    1.03,
+    1.045,
+    1.048,
+    1.029,
     1.012,
-    0.996,
-    0.989,
-    0.982
+    1.005,
+    0.999
    ],
    [
-    0.997,
-    1.015,
-    1.017,
-    1.016,
-    0.977,
-    0.907
+    0.935,
+    0.963,
+    0.968,
+    0.906,
+    0.881,
+    0.792
    ],
    [
-    1.056,
+    1.079,
+    1.077,
+    1.077,
     1.049,
-    1.052,
-    1.04,
-    1.04,
-    1.01
+    1.061,
+    1.014
    ],
    [
-    1.032,
-    1.059,
-    1.037,
-    1.043,
-    1.067,
-    1.048
+    1.06,
+    1.084,
+    1.049,
+    1.035,
+    1.085,
+    1.075
    ],
    [
-    1.027,
+    1.009,
     NaN,
-    0.921,
-    0.956,
+    0.954,
+    0.988,
     NaN,
-    1.003
+    1.001
    ],
    [
-    0.765,
-    0.9,
-    0.902,
-    0.947,
-    0.902,
-    0.767
+    0.507,
+    0.94,
+    0.942,
+    0.978,
+    0.963,
+    0.787
    ],
    [
-    0.794,
-    0.938,
-    0.917,
-    0.938,
-    0.995,
-    0.835
+    0.725,
+    0.95,
+    0.936,
+    0.957,
+    1.001,
+    0.85
    ]
   ],
   "render": [
    [
-    0.982,
-    0.998,
+    0.991,
+    1.03,
+    1.032,
+    1.021,
     1.002,
-    0.998,
-    0.989,
-    0.971
+    0.905
    ],
    [
-    1.005,
-    1.022,
-    1.029,
-    1.013,
-    0.993,
-    0.906
-   ],
-   [
-    1.024,
-    1.034,
-    1.042,
-    1.045,
-    1.028,
-    1.012
-   ],
-   [
-    1.014,
-    1.062,
-    1.149,
-    1.074,
-    1.088,
-    1.056
-   ],
-   [
-    1.011,
-    NaN,
-    0.839,
-    0.845,
-    NaN,
-    1.028
-   ],
-   [
-    0.704,
-    0.739,
-    0.863,
-    0.89,
+    0.864,
+    0.948,
+    0.99,
+    0.869,
     0.822,
-    0.852
+    0.716
    ],
    [
-    0.834,
-    0.986,
-    0.984,
-    0.987,
-    1.005,
-    0.934
+    1.091,
+    1.099,
+    1.101,
+    1.068,
+    1.084,
+    1.036
+   ],
+   [
+    1.068,
+    1.096,
+    1.084,
+    1.058,
+    1.101,
+    1.106
+   ],
+   [
+    0.963,
+    NaN,
+    0.799,
+    0.802,
+    NaN,
+    1.031
+   ],
+   [
+    0.422,
+    0.67,
+    0.824,
+    0.853,
+    0.77,
+    0.826
+   ],
+   [
+    0.69,
+    1.006,
+    0.998,
+    1.011,
+    1.034,
+    0.871
    ]
   ],
-  "log_rms": 0.0588
+  "log_rms": 0.0963
  },
  "frame_crispness": {
   "photo": 0.6114,
-  "render": 0.4579
+  "render": 0.4242
  },
  "recesses": {
   "window_11px": {
-   "deepest_3pct": 0.0604,
-   "all_stone": -0.0006
+   "deepest_3pct": 0.42,
+   "all_stone": 0.0123
   },
   "window_21px": {
-   "deepest_3pct": 0.0702,
-   "all_stone": -0.0006
+   "deepest_3pct": 0.3096,
+   "all_stone": 0.0123
   }
  },
  "opening_edges": {
-  "edge_band": 0.0314,
-  "inside": -0.0006
+  "edge_band": -0.0684,
+  "inside": 0.0123
  },
  "stone_colour": {
-  "photo_spread": 0.1645,
-  "render_spread": 0.0487,
-  "ratio": 0.296
+  "photo_spread": 0.174,
+  "render_spread": 0.2228,
+  "ratio": 1.2805
  },
  "colour_vs_brightness": {
   "photo": {
    "r_over_g": {
-    "slope": -0.0944,
-    "explained": 0.1681
+    "slope": -0.0732,
+    "explained": 0.1898
    },
    "b_over_g": {
-    "slope": 0.0388,
-    "explained": 0.0019
+    "slope": 0.0122,
+    "explained": 0.0013
    }
   },
   "render": {
    "r_over_g": {
-    "slope": -0.07,
-    "explained": 0.1172
+    "slope": -0.154,
+    "explained": 0.3145
    },
    "b_over_g": {
-    "slope": 0.0292,
-    "explained": 0.0125
+    "slope": 0.1583,
+    "explained": 0.0983
    }
   }
  },
  "frame_over_field": {
-  "photo": 0.9838,
-  "render": 0.971
+  "photo": 0.9861,
+  "render": 0.9676
  },
  "ssim": {
-  "box": 0.4179,
-  "patch": 0.3735,
+  "box": 0.467,
+  "patch": 0.3787,
   "photo_vs_itself_2px": 0.2039
  },
  "openings_y_by_half": {
   "upper": {
-   "photo": 0.1948,
-   "render": 0.2444
+   "photo": 0.0199,
+   "render": 0.0165
   },
   "lower": {
-   "photo": 0.0257,
-   "render": 0.037
+   "photo": 0.0233,
+   "render": 0.0297
   }
  },
  "scorecard": {
   "measures": {
    "ssim": {
-    "value": 0.4179,
+    "value": 0.467,
     "bar": ">= 0.50",
     "ok": false,
     "follows_judge": {
@@ -299,7 +299,7 @@
     "tier": "core"
    },
    "openings_iou": {
-    "value": 0.5891,
+    "value": 0.731,
     "bar": ">= 0.75",
     "ok": false,
     "follows_judge": {
@@ -308,7 +308,7 @@
     "tier": "core"
    },
    "bright_end": {
-    "value": 1.0103,
+    "value": 0.9957,
     "bar": "0.85 to 1.15",
     "ok": true,
     "follows_judge": {
@@ -318,7 +318,7 @@
     "tier": "core"
    },
    "lines_render_near_photo": {
-    "value": 0.2346,
+    "value": 0.5672,
     "bar": ">= 0.60",
     "ok": false,
     "follows_judge": {
@@ -328,7 +328,7 @@
     "tier": "core"
    },
    "forms_correlation": {
-    "value": 0.6804,
+    "value": 0.6236,
     "bar": ">= 0.50",
     "ok": true,
     "follows_judge": {
@@ -338,9 +338,9 @@
     "tier": "secondary"
    },
    "colour_spread": {
-    "value": 0.296,
+    "value": 1.2805,
     "bar": ">= 0.45 (provisional, T-019)",
-    "ok": false,
+    "ok": true,
     "follows_judge": {
      "patch": 0.527,
      "whole": 0.922
@@ -350,37 +350,37 @@
   },
   "guards": {
    "contrast": {
-    "value": 0.9621,
+    "value": 1.2158,
     "bar": "0.8 to 1.2",
-    "ok": true
+    "ok": false
    },
    "forms_amplitude": {
-    "value": 1.0691,
+    "value": 0.8986,
     "bar": "0.8 to 1.2",
     "ok": true
    },
    "thin_stone_shown": {
-    "value": 0.5631,
+    "value": 0.3314,
     "bar": ">= 0.90",
     "ok": false
    },
    "openings_y_upper": {
-    "value": 0.0496,
+    "value": 0.0034,
     "bar": "<= 0.02 off",
-    "ok": false
+    "ok": true
    },
    "openings_y_lower": {
-    "value": 0.0113,
+    "value": 0.0064,
     "bar": "<= 0.02 off",
     "ok": true
    },
    "light_map": {
-    "value": 0.0588,
+    "value": 0.0963,
     "bar": "<= 0.20",
     "ok": true
    },
    "frame_texture_forms": {
-    "value": 1.0765,
+    "value": 0.8698,
     "bar": "0.8 to 1.2",
     "ok": true
    }
@@ -391,8 +391,8 @@
  "bar": {
   "lines_near_at_least": 0.6,
   "stone_p90_within": [
-   0.7775,
-   1.0519
+   0.7745,
+   1.0479
   ],
   "spread_ratio_within": [
    0.8,
@@ -402,18 +402,18 @@
  },
  "measures_pass": {
   "lines": false,
-  "light": true,
-  "openings_guard": false
+  "light": false,
+  "openings_guard": true
  },
  "photo_openings_in_render": {
-  "opening": 0.7609,
-  "stone": 0.239,
-  "dark": 0.0001
+  "opening": 0.9471,
+  "stone": 0.0515,
+  "dark": 0.0014
  },
- "render_openings_on_photo_stone": 0.1777,
+ "render_openings_on_photo_stone": 0.2304,
  "openings_iou_by_third": [
-  0.4637,
-  0.6732,
-  0.5748
+  0.5583,
+  0.7654,
+  0.7115
  ]
 }

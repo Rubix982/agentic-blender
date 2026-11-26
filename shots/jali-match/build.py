@@ -213,7 +213,16 @@ hole = k["opening"] | (k["opening"][sy, sx] & (~thin if "--thin-protect" in argv
 solid = np.zeros((H, W), bool)
 solid[y0:y1 + 1, x0:x1 + 1] = True
 solid &= ~hole & ~sur
+# C-023, fix 12 (revised): the holes' half-width, their area over their edge's length in the carved field (ours 4.64 px)
+_fbw = _rp.get("field_box", [x0, y0, x1, y1])
+_ofw = k["opening"][_fbw[1]:_fbw[3] + 1, _fbw[0]:_fbw[2] + 1]
+_inw = _ofw.copy()
+_inw[1:-1, 1:-1] = _ofw[1:-1, 1:-1] & _ofw[:-2, 1:-1] & _ofw[2:, 1:-1] & _ofw[1:-1, :-2] & _ofw[1:-1, 2:]
+HALF_W_PX = float(_ofw.sum()) / max(float((_ofw & ~_inw).sum()), 1.0)
+FINE_HOLES = HALF_W_PX < 3.0 and "--fixed-bevel" not in argv          # (3.0 px, not 4.2: see BEVEL below)
 OUTLINE_BLUR = int(argv[argv.index("--outline-blur") + 1]) if "--outline-blur" in argv else 3   # C-023: a switch, to
+if FINE_HOLES and "--outline-blur" not in argv:                       # (fix 12 revised: see BEVEL below)
+    OUTLINE_BLUR = max(1, int(round(3 * HALF_W_PX / 4.64)))
 field = C.blur(solid.astype(np.float32), OUTLINE_BLUR)                 # test what the 3 px blur costs fine edges
 loops = C.contours(field, 0.5)
 outer_sign = np.sign(C.area(max(loops, key=lambda p: abs(C.area(p)))))   # the frame's outline winds as stone does
@@ -264,17 +273,21 @@ print("FLOORS", FLOORS, flush=True)
 # C-023, fix 12: the bevel rounds every edge outwards, so the stone widens by its radius on each side. On ours that is
 # 11.7 % of the holes' half-width (their area over their edge's length in the carved field, 4.64 px; the bevel 0.54 px);
 # on the batch up to 37 % (17), and 03 built without it came out better on every measure (SSIM 0.497 to 0.529,
-# openings IoU 0.612 to 0.671, the render's open share 0.244 to 0.276 against the photo's 0.287). So the bevel is no
-# larger a share of a hole than 12.5 % of its half-width; ours keeps 0.5 mm. --bevel R sets it and --fixed-bevel keeps
-# 0.5 mm.
-_of = k["opening"][_fb2[1]:_fb2[3] + 1, _fb2[0]:_fb2[2] + 1]
-_inner = _of.copy()
-_inner[1:-1, 1:-1] = _of[1:-1, 1:-1] & _of[:-2, 1:-1] & _of[2:, 1:-1] & _of[1:-1, :-2] & _of[1:-1, 2:]
-HALF_W_PX = float(_of.sum()) / max(float((_of & ~_inner).sum()), 1.0)
+# openings IoU 0.612 to 0.671, the render's open share 0.244 to 0.276 against the photo's 0.287). First form: the
+# bevel no larger a share of a hole than 12.5 % of its half-width. --bevel R sets it.
 BEVEL_RULE = dict(hole_half_width_px=round(HALF_W_PX, 3))
-if "--bevel" not in argv and "--fixed-bevel" not in argv and 0.125 * HALF_W_PX * S < BEVEL_M:
-    BEVEL_M = 0.125 * HALF_W_PX * S
-    BEVEL_RULE.update(bevel_m=round(BEVEL_M, 6))
+# Revised: on 15 (half-width 2.0 px) the share rule's 0.37 mm (0.25 px) still left each hole's edge ring at 0.675 against
+# the photo's 0.32, its rounded rim catching the light; with no bevel and the outline blurred over 1 px in place of 3,
+# 0.576, SSIM 0.597 to 0.625, openings IoU 0.530 to 0.595 (the blur alone: 0.602 and 0.540). So where the holes are
+# finer than ours's there is no bevel, and the outline's blur (above) is 3 px times the half-width over ours's, at
+# least 1 px. The cut was first 4.2 px; 09 (3.92) lost by it, SSIM 0.566 with its bevel against 0.553 without, 08 (4.08)
+# and 10 (3.48) a little; 15 (2.0), 03 (2.47) and 01 (2.23) gained. Now under 3.0 px. Ours keeps 0.5 mm and 3 px.
+# --fixed-bevel: 0.5 mm and 3 px always.
+if FINE_HOLES and "--bevel" not in argv:
+    BEVEL_M = 0.0
+    BEVEL_RULE.update(bevel_m=0.0)
+if FINE_HOLES and "--outline-blur" not in argv:
+    BEVEL_RULE.update(outline_blur_px=OUTLINE_BLUR)
 print("BEVEL", BEVEL_RULE, flush=True)
 loops = [p for p in loops if abs(C.area(p)) >= (MIN_ISLAND_PX if np.sign(C.area(p)) == outer_sign else MIN_AREA_PX)]
 
@@ -639,9 +652,21 @@ if NORMAL_MAP:
         # bumps on the frame, the user's "bluriness" (the frame's top band had 1.85 times the photo's mid-scale texture)
         detail = ((yph - b5) * (CARVED_SHARE + (1 - CARVED_SHARE) * flatw) + MID_W * (b5 - b21) * flatw) * k["stone"]
         NM = NM.copy()
-        NM[:, :, 1] += PHOTO_DETAIL * detail
+        # C-023, fix 15: the tilt's strength, 8 per unit, was set on ours, whose detail has a spread of 0.0171 on the
+        # stone. 03's has 0.0793 (05 0.0565, 15 0.0515): the normals were tilted past where the shading saturates, and
+        # the saturated tilts read as hard-edged square patches across 03's pale wall (built with 1.7: the patches
+        # gone, SSIM 0.541 to 0.547, lines near the photo's 0.450 to 0.618, the forms band's amplitude 1.25 to 0.93).
+        # First form: the tilt scaled so the detail's spread is at most 0.018. It cost 09 (a black-and-white photo,
+        # spread 0.0811, scaled to 0.22): SSIM 0.563 to 0.553, fine detail's correlation 0.31 to 0.15. Measured
+        # (scratch probe_tilt.py), 8 x the detail on the stone: ours median 0.055, 0.03 % over 1, at most 2.4; 03
+        # median 0.24, 8.7 % over 1; 09 median 0.02, 15 % over 1. On 03 most of the stone is tilted hard, which is
+        # the squares; on 09 most is flat and the strong tilts are its bars' edges, the detail itself. So the tilt
+        # is scaled so its median is at most 0.06 (ours 0.055 keeps 8; 03 about 2.0). --fixed-detail: unscaled.
+        _dmed = PHOTO_DETAIL * float(np.median(np.abs(detail[k["stone"]]))) if k["stone"].any() else 0.0
+        DETAIL_SCALE = 1.0 if "--fixed-detail" in argv or _dmed <= 0.06 else 0.06 / _dmed
+        NM[:, :, 1] += PHOTO_DETAIL * DETAIL_SCALE * detail
         NM /= np.maximum(np.linalg.norm(NM, axis=2, keepdims=True), 1e-6)
-        log["photo_detail"] = dict(tilt_per_unit=PHOTO_DETAIL, carved_share=CARVED_SHARE, mid_weight=MID_W, flat_share_of_stone=round(float((flatw[k["stone"]] > 0.5).mean()), 4),
+        log["photo_detail"] = dict(tilt_per_unit=PHOTO_DETAIL, **({"scaled_by": round(DETAIL_SCALE, 4)} if DETAIL_SCALE < 1 else {}), carved_share=CARVED_SHARE, mid_weight=MID_W, flat_share_of_stone=round(float((flatw[k["stone"]] > 0.5).mean()), 4),
                                    detail_std=round(float(detail[k["stone"]].std()), 4))
     nimg = bpy.data.images.new("marigold normals", W, H, alpha=False, float_buffer=True)
     nimg.colorspace_settings.name = "Non-Color"
@@ -1309,6 +1334,11 @@ if TONE:
                 # factor was fitted on the stone, so below the stone's darkest it fades to none at black. Only where
                 # the floor is set (the dark rule); ours keeps 1e-3 and the step as it was.
                 f = 1.0 + (f - 1.0) * np.clip(yy / SAT_Y_FLOOR, 0.0, 1.0)
+                # C-023, fix 16: and at most 3. Round 3 refitted 05 at k 1.2 with both slopes within a factor of two
+                # (fix 14 kept it), and the factor at the stone's darkest (0.048 against its median 0.80) was 29: the
+                # interior, near black and faintly purple in the photo (0.031, 0.020, 0.027), came out purple (0.051,
+                # 0.016, 0.043), the ledge's shadow green. The fit sees the cap, so it picks k with it.
+                f = np.minimum(f, 3.0)
             return np.clip(yy + (img - yy) * f, 0.0, 1.0)
 
         # on stone in both images (3 px from any opening), as compare.py measures: a first fit on the photo's stone
@@ -1340,10 +1370,22 @@ if TONE:
         err, k_sat, sl = min(tries)
         if err >= 5.0:                                                 # C-023: no k matched both slopes' signs (03)
             err, k_sat, sl = next(t for t in tries if t[1] == 0.0)
+        # C-023, fix 14: fix 11 let 03's fit land at k 1.05 (error 3.50): the red slope matched (-0.071 against -0.072)
+        # and the blue was 30 times too small (0.003 against 0.091), and at that k a pixel of luminance 0.1 has its
+        # colour made about ten times as strong: the ledge's shadow and the rosettes' holes came out red. A k is kept
+        # only when both slopes come within a factor of two of the photo's; else no colour step. Ours (0.998 and 1.05
+        # of the photo's) keeps its k; 03, 05, 06 and 15 (pale stone, k 1.05, 1.05, 0.15, 1.2) get none.
+        # --sat-any-fit: the best k whatever its slopes, as before.
+        SAT_REJECTED = None
+        if "--sat-any-fit" not in argv and k_sat > 0 and any(
+                a * b_ <= 0 or abs(math.log(a / b_)) > math.log(2.0) for a, b_ in zip(sl, sat_photo)):
+            SAT_REJECTED = dict(k=round(k_sat, 3), slopes=[round(v, 4) for v in sl])
+            err, k_sat, sl = next(t for t in tries if t[1] == 0.0)
         toned = saturate(toned, k_sat)
         log["saturation"] = dict(k=round(k_sat, 3), photo_slopes=[round(v, 4) for v in sat_photo],
                                  render_slopes=[round(v, 4) for v in sl], error=round(err, 4),
                                  **({"y_floor": round(SAT_Y_FLOOR, 4)} if SAT_Y_FLOOR > 1e-3 else {}),
+                                 **({"rejected": SAT_REJECTED} if SAT_REJECTED else {}),
                                  **({"stone_from_photo": True} if sat_from_photo else {}),
                                  tries=[dict(k=round(t[1], 3), slopes=[round(v, 4) for v in t[2]]) for t in sorted(tries, key=lambda t: t[1])])
         print("SATURATION", {k: v for k, v in log["saturation"].items() if k != "tries"}, flush=True)

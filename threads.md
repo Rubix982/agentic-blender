@@ -152,6 +152,9 @@ broke it either way. The build now finds and repairs such a loop by halving; the
 **Answer:** C-020: not a tolerance (the scan-fill's only tolerance does not touch closed outlines) but its exact
 arithmetic: a scale, a 0.0005 px shift or rounding to 1e-5 px turns the break on and off
 (`experiments/curves/curve_fill_knife_edge.py`). Geometry Nodes' Fill Curve never broke; the build's repair uses it.
+C-023 (2026-11-26): the batch's later "failed fills" were not the fill. The outlines' turning (`common.contours`
+samples one pixel) disagreed with their nesting, so the check's signed area was wrong; both fills gave the even-odd
+area exactly. The build now turns each outline by its nesting depth.
 
 ### T-015 · What light does the museum's photo have, and can the render's be fitted to it?
 
@@ -243,4 +246,16 @@ photo at 1,400 px) shows our holes clearly, but a local depth split takes every 
 0.41 agreement (IoU) with the approved reading. Third, brightness to draw the outline with depth to decide: 0.23.
 Fourth, depth's surest pixels as seeds for the colour fields: 0.24, with 39 % of the image called opening against
 13 %. To resume: depth looks usable for telling which side is the opening, not for drawing its outline.
+**Answer:** —
+
+### T-022 · How can the read step find a screen that is only part of a larger scene?
+
+**Status:** open
+**Parent:** T-021 (C-023)
+**Opened:** 2026-11-26
+**Question:** In 06 and 07 the screen sits inside a porch or a hall. In 06 the colour rule takes the pale sunlit columns
+and the arch's lit rim for openings (grey, like the wall it expects behind red stone), the carved field's box is placed
+by those large "openings" and spans the picture, and the render cuts them out and shows the backdrop through them, its
+colour at that height the jali's dark blue-green holes (the user: "a strange blueish affect"). A lead: place the field
+where openings are many and packed (fix 8's density, a count of pieces), not where they are large.
 **Answer:** —

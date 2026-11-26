@@ -1712,13 +1712,103 @@ sheets the wall goes back to stone while the arch keeps its lattice (05's dark l
 Worked at a quarter of the size in numpy; against scipy's Gaussian at full size it keeps the same openings to 99.9 %.
 Ours is on the colour rule and cannot move. Not yet run: the battery reached the 30 % at which runs stop.
 
+*The user's look at the contact sheets (2026-11-26).* On 03 and 05 (`contact_c023_1.jpg`): "still that furthness
+issue"; on 06: "a strange blueish affect is occuring here"; on 15 (`contact_c023_3.jpg`): "the lines are thicker than
+in the original"; on 17: "unable to narrowly decipher what belongs to the background and what belongs to the
+foreground". On the first of the numbers below: "improvements!"
+
+*Fix 8, run (2026-11-26).* 03's reading went from 32.4 % of the picture open to 28.7 %, and its wall reads as stone on
+the reading sheet. But its render kept a speckled wall (fix 15), and 15's build stopped at the fill's check (fix 13).
+
+*Fix 9, the tunnels aimed at the camera (2026-11-26).* Fix 4's cap held 14 of the 18 shots to a tenth of the camera's
+offset or less (merged at the camera's: 15.7 % of the holes in 09 to 91.1 % in 16), which left every hole a straight
+1 cm tunnel seen at an angle; towards the picture's edges its far wall covered part of the hole. That is 15's thicker
+bars (its render read back 13.5 % open against its reading's 17.7 %), 17's dark holes where its photo shows a lit
+courtyard, and a share of 03's and 05's damage growing away from the centre. Now, when the widening would merge more
+than 10 % of the holes, the holes are cut as the reading has them and every point of the screen is moved back along
+the camera's ray through it (the back face scaled by (dist + thickness) / dist about the camera's axis), so each
+tunnel's walls lie along the rays and every hole is seen whole. `--tunnels straight` keeps fix 4 and `--tunnels
+camera` forces this; ours merges 4.1 % and keeps its straight, widened tunnels (compare.json identical). Before and
+after, SSIM and openings IoU: 01 0.450 to 0.536 and 0.321 to 0.475; 02 0.507 to 0.582, 0.474 to 0.611; 04 0.471 to
+0.559, 0.405 to 0.655; 06 0.456 to 0.475, 0.482 to 0.571; 07 0.386 to 0.383, 0.141 to 0.160; 09 0.579 to 0.575, 0.824
+to 0.859; 11 0.325 to 0.403, 0.223 to 0.300; 14 0.686 to 0.781, 0.615 to 0.769; 16 0.445 to 0.563, 0.607 to 0.801;
+18 0.545 to 0.769, 0.461 to 0.770 (before fix 6, when the user called it "really beautiful", 0.704). With fix 8, 03
+0.469 to 0.497 and 05 0.418 to 0.462 (their IoU is across a change of reading). 12, 15 and 17 stopped at the fill's
+check.
+
+*Fix 10, on a wrong premise.* 15's failed fill after fix 8: the halving's culprits sat on one row, the carved field's
+bottom edge, where `keep_field` cuts openings with a straight line, and I took that line for what breaks the fill. On a
+failed fill those openings are now made stone. It did not let 15 build, and 12's and 17's culprits were off the edge;
+fix 13 found the cause. It stays as a repair that runs only after a failed check.
+
+*Fix 13, the outlines' turning (2026-11-26).* The outlines dumped before the fill (`--dump-loops`) and filled in a
+separate script: 15's 1,632 filled to 831,855 px2 by scanfill and by Fill Curve alike, as dumped or with a 0.001 or
+0.01 px jitter, exactly their even-odd area; no two cross, none share a point. The check compares the fill with the sum
+of the outlines' signed areas, 1,099,762 px2, because 1,453 outlines were turned against their nesting (12: 628 of
+5,543; 17: 6,660 of 6,973; ours 72 of 353, its check passing at 0.953 only because its holes are large).
+`common.contours` turns each outline by one sample, the pixel nearest a point 0.35 px to its left, which can lie
+across a thin bar or a small hole, and fix 9's uncut fine holes made those common. The fill reads no turning; the build
+did: the check failed on fills that were right, the halving then dropped outlines that were never broken (03 lost a
+115,719 px opening, rendered as a grey haze over its lower arch), and the size floors told holes from pieces by the
+sign. Now every outline is turned by its nesting depth, as the fill counts (`--sample-turning`: as before). Ours:
+compare.json identical, its build.json now recording 72 turned and its outlines' area 1.1248 m2 (its front face's).
+12, 15 and 17 build: 12 SSIM 0.383 (C-022's inverted reading) to 0.667; 15 0.549 (before fix 8) to 0.597; 17 0.428
+to 0.684, openings IoU 0.191 to 0.711, the courtyard through every hole. C-020's knife edge (T-014) stands; it was not
+what stopped these.
+
+*Fix 11, fix 12 (first form), fix 14, fix 15, and fix 12 revised (2026-11-26).* Fix 11: under the dark rule the colour
+step fades to none below the stone's darkest. Fix 12: 03 without its bevel, SSIM 0.497 to 0.529, IoU 0.612 to 0.671
+(the bevel widens the stone by its radius: 11.7 % of ours's holes' half-width, up to 37 % on the batch); first form,
+the bevel at most 12.5 % of the half-width. Then 15 kept a pale ring at each hole's edge (0.675 against the photo's
+0.32): with no bevel and the outline blurred over 1 px, 0.576, SSIM 0.597 to 0.625, IoU 0.530 to 0.595 (the blur
+alone 0.602 and 0.540). Revised: where the holes' half-width is under 4.2 px (ours 4.64) no bevel and the blur 3 px
+times the half-width over ours's, at least 1 (`--fixed-bevel`: 0.5 mm and 3 px). Fix 14: with fix 11, 03's colour fit
+landed at k 1.05 with the red slope matched and the blue 30 times too small, and a pixel at 0.1 had its colour made
+ten times as strong: the ledge's shadow and the rosettes' holes red. A k is kept only when both slopes are within a
+factor of two of the photo's (`--sat-any-fit`). Fix 15, 03's speckled wall: not the speck step (without it SSIM 0.470
+against 0.497), not the square opening in the tilt (`--tilt-min`: 0.502, the squares unchanged), not Marigold's
+normals (spread under 0.02 on the wall); without the detail tilt the squares went but so did the joints (SSIM 0.372).
+The tilt's 8 per unit was set on ours, whose detail spreads 0.0171; 03's spreads 0.0793 and its normals were tilted
+past where the shading saturates. With 1.7 the squares went: SSIM 0.541 to 0.547, lines near the photo's 0.450 to
+0.618. So the tilt is scaled so the detail's spread is at most 0.018 (`--fixed-detail`). Ours, rebuilt with all of
+these: every measure identical (one pixel of one mask's count differed, 851,095 against 851,094: render noise).
+
+*The batch with fixes 1 to 15 (2026-11-26; `shots/jali-batch/c023_fixes_9_15.jpg` and `_crops.jpg`, photo | the render
+the user last saw | now).* All 18 reach a render (12 since C-022; its round-3 build aborted in Cycles and its results
+are from fix 13's round). SSIM, last seen to now: 01 0.450 to 0.548, 02 0.507 to 0.588, 03 0.469 to 0.555, 04 0.471
+to 0.546, 05 0.418 to 0.467, 06 0.456 to 0.469, 07 0.386 to 0.389, 08 0.798 to 0.793, 09 0.579 to 0.553, 10 0.825 to
+0.824, 11 0.325 to 0.397, 12 0.383 to 0.667, 13 0.727 to 0.696, 14 0.686 to 0.782, 15 0.549 to 0.673, 16 0.445 to
+0.551, 17 0.428 to 0.680, 18 0.545 to 0.783: up in 13, down in 4 (08, 09, 10, 13, all in the round of fixes 12 revised,
+14 and 15). By my glance: 03's wall is stone again, 15's bars are the photo's width (the render reads back 15.4 %
+open against the reading's 16.2 %), 17's and 18's courtyards show through every hole; 05's interior is purple, 06 is
+unchanged. Two of the round's changes were then taken apart on 09 (SSIM 0.553): with its bevel 0.566, with the detail
+unscaled 0.563 and fine detail's correlation 0.31 against 0.15.
+
+*Round 4, written and not yet run (2026-11-26).* Fix 15 by the tilt's median (at most 0.06; ours 0.055), not its
+spread; fix 12's cut at a half-width of 3.0 px, not 4.2; fix 16, under the dark rule the colour factor at most 3 (05:
+refitted at k 1.2 with both slopes within a factor of two, its factor 29 at the stone's darkest). None reaches ours by
+its rule; its rebuild has not run. The batch's run of it stopped: the laptop went on battery mid-run and each fit
+render took about 420 s against 1.7, so the builds ran out their 30 minutes (01, 02, 03, ours) and the rest were
+stopped. Cycles also aborted 3 builds in about 50 in its Metal shader cache (`ccl::path_cache_get`, a pointer freed that
+was never allocated, as a render starts); `run_batch.py` now runs such a step once more.
+
 *Open, not yet fixed.* The tone curve's upper exponent sits at its limit of 4.0 in 8 of the 13 renders that C-022
 measured (ours 2.12), and with the fit's stone corrected 03, 05, 09 and 15 end at both limits (0.3 and 4.0); the
 cause is not found. The 25 % fit renders are not it: their stone's median is within about 10 % of the full render's
 (09: 0.149 at 337 W against 0.116 at 273 W; 13: 0.319 against 0.343 at one power). 13 and 14's holes render dim pink
 where the photos' are lit white: the light behind a backlit screen is not yet the photo's.
 
-**Result:** waiting on the user's glance at `contact_c023_1.jpg` to `_3.jpg`. Measured: 17 of 18 photos reach a render
+**Result (2026-11-26, after fixes 1 to 15; round 4 written, not run):** 18 of 18 photos reach a render, and by my
+glance, before the user's, 11 read as their photos: 01, 02, 03, 04, 08, 09, 10, 13, 14, 15 and 17 (8 before fixes 9 to
+15, 3 at C-022). Five have the structure right and the colour or light not: 05 (its interior purple), 11 (its centre
+muddled), 12 (its central opening red where the photo's is dark), 16 (its floor), 18 (grey where the photo's light is
+warm). 06 and 07 are outside the method (T-022). So field 5's count is met, but not as its first branch put it: most
+of the gain came from two faults in the build, not from constants fitted to our photo (the cap's straight tunnels,
+fix 9; the outlines' turning, fix 13), and the rest from constants that were (the floors, the bevel and blur, the
+detail tilt's strength, the colour step). None of the 18 meets the four core bars. Waiting on the user's glance at
+`c023_fixes_9_15.jpg`.
+
+*Before fixes 9 to 15:* waiting on the user's glance at `contact_c023_1.jpg` to `_3.jpg`. Measured: 17 of 18 photos reach a render
 (13 at C-022), and by my glance 8 read as their photos (3 at C-022), one short of field 5's 9. The faults left are in
 the method, as field 5's second branch says, and in this order of how many shots they touch: the light for a screen
 lit from behind or by its room (08, 09, 10, 13, 14, 16, 17, 18: a front spot and a tone curve at its limits); the

@@ -1,0 +1,573 @@
+{
+ "thin_stone": {
+  "photo_px": 31160,
+  "kept_by_widening": 1.0,
+  "kept_by_trace": 1.0
+ },
+ "normals": {
+  "solve": {
+   "iterations": 362,
+   "residual": 1e-05
+  },
+  "screen_px": 30.0,
+  "p99_m": 0.0042,
+  "p1_m": -0.00736,
+  "below_front_share": 0.556,
+  "scale": 1.0
+ },
+ "sizes": {
+  "width_m": 1.05,
+  "thick_m": 0.01,
+  "thick_cm": 1.0,
+  "bevel_m": 0.0003655035391412368
+ },
+ "outlines": {
+  "count": 1748,
+  "points": 110536,
+  "metres_per_px": 0.00145,
+  "screen_width_px": 724,
+  "box": [
+   24,
+   24,
+   747,
+   1377
+  ],
+  "dark_in_box_made_stone": 7,
+  "surround_in_box": 121,
+  "back_face_scale": 1.0,
+  "merge_cap": {
+   "kb_camera": 0.99339,
+   "holes": 1760,
+   "merged_at_camera": 0.2443,
+   "tunnels": "camera"
+  },
+  "floors": {
+   "hole_area_half_at": 125,
+   "min_area_px": 10.4,
+   "min_island_px": 10.4
+  },
+  "bevel_rule": {
+   "hole_half_width_px": 2.016,
+   "bevel_m": 0.000366
+  },
+  "turned": 424,
+  "seen_opening_share": 0.1621,
+  "hole_share": 0.1621,
+  "cut_line_share": 0.0269,
+  "tunnels": {
+   "aimed_at_camera": true,
+   "back_face_scale": 1.00665
+  }
+ },
+ "fill_repairs": [],
+ "photo_detail": {
+  "tilt_per_unit": 8.0,
+  "carved_share": 0.3,
+  "mid_weight": 1.0,
+  "flat_share_of_stone": 0.4969,
+  "detail_std": 0.0575
+ },
+ "albedo": {
+  "blur_px": 41,
+  "speck_max": 1.6,
+  "speck_floor": 0.0,
+  "map_median_linear": [
+   0.4474,
+   0.4379,
+   0.4115
+  ],
+  "scaled_to": [
+   0.45,
+   0.4315,
+   0.418
+  ],
+  "map_p10_p90_luminance": [
+   0.3745,
+   0.6287
+  ]
+ },
+ "relief": {
+  "forms": "normals",
+  "normal_map": true,
+  "bars_m": 0.005,
+  "reach_px": 20,
+  "forms_m_at_p99": 0.004,
+  "height_max_m": 0.00847,
+  "vertices": 624362,
+  "faces": 573349
+ },
+ "symmetry": {
+  "skipped": "the forms come from the normals (--forms normals)"
+ },
+ "wall": {
+  "panel_seen_from_camera_at": 0.7877,
+  "panel_covers_box": 0.95,
+  "bands": [
+   {
+    "at": 0.0262,
+    "linear_rgb": [
+     0.1095,
+     0.1046,
+     0.1195
+    ]
+   },
+   {
+    "at": 0.1311,
+    "linear_rgb": [
+     0.0561,
+     0.0529,
+     0.0529
+    ]
+   },
+   {
+    "at": 0.2361,
+    "linear_rgb": [
+     0.0048,
+     0.0044,
+     0.0044
+    ]
+   },
+   {
+    "at": 0.341,
+    "linear_rgb": [
+     0.0369,
+     0.0331,
+     0.0307
+    ]
+   },
+   {
+    "at": 0.446,
+    "linear_rgb": [
+     0.0467,
+     0.0467,
+     0.0467
+    ]
+   },
+   {
+    "at": 0.5509,
+    "linear_rgb": [
+     0.0194,
+     0.0185,
+     0.0176
+    ]
+   },
+   {
+    "at": 0.6563,
+    "linear_rgb": [
+     0.0307,
+     0.0273,
+     0.0222
+    ]
+   },
+   {
+    "at": 0.762,
+    "linear_rgb": [
+     0.0262,
+     0.0232,
+     0.0176
+    ]
+   },
+   {
+    "at": 0.8677,
+    "linear_rgb": [
+     0.0144,
+     0.0116,
+     0.008
+    ]
+   },
+   {
+    "at": 0.9735,
+    "linear_rgb": [
+     0.117,
+     0.0908,
+     0.0561
+    ]
+   }
+  ]
+ },
+ "camera": {
+  "lens_mm": 28.0,
+  "sensor_mm": 20.861,
+  "distance_m": 1.5028,
+  "frame_width_m": 1.1196
+ },
+ "mesh": {
+  "vertices": 1326432,
+  "faces": 1222296,
+  "front_face_m2": 1.7373,
+  "front_face_m2_if_built_in_metres": 1.7373,
+  "metres_per_curve_unit": 0.00145,
+  "outlines_enclose_m2": 1.7373
+ },
+ "light_fit": {
+  "reused": "results/light_fit.json",
+  "best": {
+   "ax": -0.2228,
+   "az": 0.0245,
+   "d": 26.8158,
+   "rv": 1.0123,
+   "sx": 1.4867,
+   "blend": 1.0
+  },
+  "error_when_fitted": 0.0378,
+  "error_now": 0.0372
+ },
+ "spot_colour": {
+  "photo_slopes_at_fit_size": [
+   -0.0635,
+   0.0357
+  ],
+  "tries": [],
+  "kelvin": null,
+  "error": null,
+  "spot_rgb": [
+   1.0,
+   1.0,
+   1.0
+  ]
+ },
+ "fit": {
+  "target_stone_y": 0.8411,
+  "target_opening_y_lower": 0.2645,
+  "target_opening_y_upper": 0.1979,
+  "steps": [
+   {
+    "spot_w": 52874.05,
+    "stone_y": 0.6955,
+    "opening_y_lower": 0.4991,
+    "opening_y_upper": 0.4764,
+    "seconds": 2.5,
+    "curve": [
+     1.0,
+     1.0
+    ]
+   },
+   {
+    "spot_w": 80912.55,
+    "stone_y": 0.8372,
+    "opening_y_lower": 0.5891,
+    "opening_y_upper": 0.563,
+    "seconds": 1.8,
+    "curve": [
+     1.0,
+     1.0
+    ]
+   },
+   {
+    "spot_w": 81750.49,
+    "stone_y": 0.8409,
+    "opening_y_lower": 0.5876,
+    "opening_y_upper": 0.5625,
+    "seconds": 1.2,
+    "curve": [
+     1.0,
+     1.0
+    ]
+   },
+   {
+    "spot_w": 81794.3,
+    "stone_y": 0.8198,
+    "opening_y_lower": 0.485,
+    "opening_y_upper": 0.4836,
+    "seconds": 1.5,
+    "curve": [
+     0.5842,
+     0.3415
+    ]
+   },
+   {
+    "spot_w": 86643.61,
+    "stone_y": 0.832,
+    "opening_y_lower": 0.4927,
+    "opening_y_upper": 0.4913,
+    "seconds": 1.8,
+    "curve": [
+     0.5842,
+     0.3415
+    ]
+   },
+   {
+    "spot_w": 88778.6,
+    "stone_y": 0.8372,
+    "opening_y_lower": 0.464,
+    "opening_y_upper": 0.4761,
+    "seconds": 1.7,
+    "curve": [
+     0.6281,
+     0.3415
+    ]
+   },
+   {
+    "spot_w": 89702.23,
+    "stone_y": 0.8385,
+    "opening_y_lower": 0.4739,
+    "opening_y_upper": 0.4776,
+    "seconds": 1.2,
+    "curve": [
+     0.6281,
+     0.3415
+    ]
+   },
+   {
+    "spot_w": 90319.2,
+    "stone_y": 0.8394,
+    "opening_y_lower": 0.4445,
+    "opening_y_upper": 0.4755,
+    "seconds": 1.9,
+    "curve": [
+     0.6382,
+     0.3415
+    ]
+   },
+   {
+    "spot_w": 90722.67,
+    "stone_y": 0.84,
+    "opening_y_lower": 0.4436,
+    "opening_y_upper": 0.4761,
+    "seconds": 1.7,
+    "curve": [
+     0.6382,
+     0.3415
+    ]
+   }
+  ]
+ },
+ "tone": {
+  "pivot": 0.8371,
+  "photo_p10": 0.6115,
+  "photo_p90": 0.9714,
+  "rounds": [
+   {
+    "a": 0.5842,
+    "b": 0.3415,
+    "untoned_p10": 0.489,
+    "untoned_p90": 1.0,
+    "clipped": true
+   },
+   {
+    "a": 0.6281,
+    "b": 0.3415,
+    "untoned_p10": 0.5077,
+    "untoned_p90": 1.0,
+    "clipped": true
+   },
+   {
+    "a": 0.6382,
+    "b": 0.3415,
+    "untoned_p10": 0.5117,
+    "untoned_p90": 1.0,
+    "clipped": true
+   }
+  ],
+  "a": 0.6382,
+  "b": 0.3415
+ },
+ "saturation": {
+  "k": 1.2,
+  "photo_slopes": [
+   -0.0745,
+   0.0811
+  ],
+  "render_slopes": [
+   -0.0466,
+   0.0308
+  ],
+  "error": 1.4378,
+  "y_floor": 0.2381,
+  "tries": [
+   {
+    "k": 0.0,
+    "slopes": [
+     -0.0226,
+     0.0144
+    ]
+   },
+   {
+    "k": 0.05,
+    "slopes": [
+     -0.0232,
+     0.0148
+    ]
+   },
+   {
+    "k": 0.1,
+    "slopes": [
+     -0.0238,
+     0.0152
+    ]
+   },
+   {
+    "k": 0.15,
+    "slopes": [
+     -0.0244,
+     0.0156
+    ]
+   },
+   {
+    "k": 0.2,
+    "slopes": [
+     -0.0251,
+     0.0161
+    ]
+   },
+   {
+    "k": 0.25,
+    "slopes": [
+     -0.0258,
+     0.0166
+    ]
+   },
+   {
+    "k": 0.3,
+    "slopes": [
+     -0.0265,
+     0.017
+    ]
+   },
+   {
+    "k": 0.35,
+    "slopes": [
+     -0.0272,
+     0.0176
+    ]
+   },
+   {
+    "k": 0.4,
+    "slopes": [
+     -0.028,
+     0.0181
+    ]
+   },
+   {
+    "k": 0.45,
+    "slopes": [
+     -0.0288,
+     0.0187
+    ]
+   },
+   {
+    "k": 0.5,
+    "slopes": [
+     -0.0297,
+     0.0192
+    ]
+   },
+   {
+    "k": 0.55,
+    "slopes": [
+     -0.0306,
+     0.0198
+    ]
+   },
+   {
+    "k": 0.6,
+    "slopes": [
+     -0.0315,
+     0.0205
+    ]
+   },
+   {
+    "k": 0.65,
+    "slopes": [
+     -0.0325,
+     0.0211
+    ]
+   },
+   {
+    "k": 0.7,
+    "slopes": [
+     -0.0335,
+     0.0218
+    ]
+   },
+   {
+    "k": 0.75,
+    "slopes": [
+     -0.0345,
+     0.0225
+    ]
+   },
+   {
+    "k": 0.8,
+    "slopes": [
+     -0.0357,
+     0.0233
+    ]
+   },
+   {
+    "k": 0.85,
+    "slopes": [
+     -0.0368,
+     0.0241
+    ]
+   },
+   {
+    "k": 0.9,
+    "slopes": [
+     -0.038,
+     0.0249
+    ]
+   },
+   {
+    "k": 0.95,
+    "slopes": [
+     -0.0393,
+     0.0258
+    ]
+   },
+   {
+    "k": 1.0,
+    "slopes": [
+     -0.0406,
+     0.0267
+    ]
+   },
+   {
+    "k": 1.05,
+    "slopes": [
+     -0.042,
+     0.0276
+    ]
+   },
+   {
+    "k": 1.1,
+    "slopes": [
+     -0.0435,
+     0.0286
+    ]
+   },
+   {
+    "k": 1.15,
+    "slopes": [
+     -0.045,
+     0.0297
+    ]
+   },
+   {
+    "k": 1.2,
+    "slopes": [
+     -0.0466,
+     0.0308
+    ]
+   }
+  ]
+ },
+ "render": {
+  "seconds": 15.1,
+  "samples": 256,
+  "size": [
+   772,
+   1402
+  ],
+  "spot_w": 90988.7,
+  "wall_strength": 0.0454,
+  "albedo": [
+   0.45,
+   0.4315,
+   0.418
+  ],
+  "look": "None",
+  "filter_px": 1.8
+ },
+ "seconds": 95.6
+}

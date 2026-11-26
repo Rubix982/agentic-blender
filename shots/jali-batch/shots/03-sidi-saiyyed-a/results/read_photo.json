@@ -7,35 +7,35 @@
  ],
  "width_px": 1320,
  "height_px": 1400,
- "opening_share": 0.3236,
+ "opening_share": 0.2874,
  "outside_share": 0.0166,
  "stone_y": [
-  0.6051,
-  0.8563,
-  0.9708
+  0.537,
+  0.847,
+  0.9692
  ],
  "stone_y_p99": 1.0,
  "stone_rgb_median": [
-  0.8745,
-  0.851,
-  0.8627
+  0.8627,
+  0.8431,
+  0.851
  ],
- "opening_y": 0.0391,
+ "opening_y": 0.026,
  "stone_y_bands": [
-  0.8532,
-  0.9373,
-  0.8803,
-  0.9013,
-  0.856,
-  0.8372,
-  0.8257,
-  0.7989,
-  0.7767,
-  0.7985
+  0.8291,
+  0.9353,
+  0.863,
+  0.8961,
+  0.8499,
+  0.8303,
+  0.8221,
+  0.7962,
+  0.7717,
+  0.793
  ],
  "field_box": [
-  17,
-  15,
+  23,
+  16,
   1293,
   1382
  ],
@@ -61,9 +61,12 @@
    "openings": 983,
    "opening_share": 0.339
   },
-  "side": "dark"
+  "side": "dark",
+  "colour_gap": 0.077,
+  "separability": 0.7617,
+  "rule": "brightness"
  },
- "frame_openings_removed_px": 17128,
+ "frame_openings_removed_px": 12288,
  "size": [
   1320,
   1402
@@ -80,7 +83,7 @@
   "dim_abs": 0.03
  },
  "cut_lines": {
-  "share_of_box": 0.0064,
+  "share_of_box": 0.0238,
   "rule": {
    "darker_by": 0.15,
    "thin": 2,

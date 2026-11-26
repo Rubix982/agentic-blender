@@ -49,9 +49,19 @@ def step(slug, name, cmd):
     os.makedirs(os.path.join(folder, "log"), exist_ok=True)
     log = os.path.join(folder, "log", f"{name}.log")
     t = time.time()
-    with open(log, "w") as f:
-        r = subprocess.run(cmd, cwd=ROOT, stdout=f, stderr=subprocess.STDOUT, env=dict(os.environ, JALI_SHOT=folder))
-    tail = [ln.replace(ROOT + os.sep, "").replace(os.path.expanduser("~"), "~")   # no home folder in the record
+    retried = False
+    while True:
+        with open(log, "w") as f:
+            r = subprocess.run(cmd, cwd=ROOT, stdout=f, stderr=subprocess.STDOUT, env=dict(os.environ, JALI_SHOT=folder))
+        # C-023: Blender can abort (run.py reports 250, its -6) in Cycles' Metal shader cache as a render starts
+        # (ccl::path_cache_get frees a pointer it never allocated, on a kernel-compiling thread): 2 builds in about 30
+        # when several jobs began rendering together; the same build then ran. Such a step is run once more.
+        if r.returncode in (250, -6, 134) and not retried:
+            retried = True
+            print(f"{time.strftime('%H:%M:%S')} {slug} {name}: Blender aborted ({r.returncode}); once more", flush=True)
+            continue
+        break
+    tail =[ln.replace(ROOT + os.sep, "").replace(os.path.expanduser("~"), "~")   # no home folder in the record
             for ln in open(log, errors="ignore").read().strip().splitlines()[-6:]]
     st[name] = dict(ok=r.returncode == 0, exit=r.returncode, seconds=round(time.time() - t, 1),
                     **({} if r.returncode == 0 else dict(tail=tail)))

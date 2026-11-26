@@ -16,14 +16,17 @@
    "seconds": 25.6
   },
   "build": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 204.5
-  },
-  "compare": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 44.9
+   "ok": false,
+   "exit": 124,
+   "seconds": 1801.9,
+   "tail": [
+    "Fra:1 Mem:470.26M (Peak 573.67M) | Time:00:00.94 | Mem:208.47M, Peak:208.47M | Scene, ViewLayer | Updating Baking",
+    "Fra:1 Mem:470.26M (Peak 573.67M) | Time:00:00.94 | Mem:208.47M, Peak:208.47M | Scene, ViewLayer | Updating Device | Writing constant memory",
+    "Fra:1 Mem:470.26M (Peak 573.67M) | Time:00:00.96 | Mem:208.47M, Peak:208.47M | Scene, ViewLayer | Loading denoising kernels (may take a few minutes the first time)",
+    "Fra:1 Mem:470.26M (Peak 573.67M) | Time:00:00.98 | Mem:3024.47M, Peak:3024.47M | Scene, ViewLayer | Sample 0/32 (Using optimized kernels)",
+    "[run.py] timed out after 1800.0 s",
+    "[run.py] exit 124 in 1801.8 s"
+   ]
   }
  },
  "02-louvre-ad-1": {
@@ -43,14 +46,17 @@
    "seconds": 37.5
   },
   "build": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 261.1
-  },
-  "compare": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 50.2
+   "ok": false,
+   "exit": 124,
+   "seconds": 1801.0,
+   "tail": [
+    "Fra:1 Mem:715.88M (Peak 895.04M) | Time:00:00.93 | Mem:309.84M, Peak:309.84M | Scene, ViewLayer | Loading denoising kernels (may take a few minutes the first time)",
+    "Fra:1 Mem:715.88M (Peak 895.04M) | Time:00:00.94 | Mem:3125.84M, Peak:3125.84M | Scene, ViewLayer | Sample 0/64 (Using optimized kernels)",
+    "Fra:1 Mem:715.87M (Peak 895.04M) | Time:00:01.89 | Remaining:01:00.03 | Mem:3246.09M, Peak:3246.09M | Scene, ViewLayer | Sample 1/64 (Using optimized kernels)",
+    "Fra:1 Mem:715.87M (Peak 895.04M) | Time:13:03.15 | Remaining:04:42.92 | Mem:3246.10M, Peak:3246.10M | Scene, ViewLayer | Sample 47/64 (Using optimized kernels)",
+    "[run.py] timed out after 1800.0 s",
+    "[run.py] exit 124 in 1800.9 s"
+   ]
   }
  },
  "03-sidi-saiyyed-a": {
@@ -67,17 +73,20 @@
   "read_photo": {
    "ok": true,
    "exit": 0,
-   "seconds": 296.7
+   "seconds": 354.9
   },
   "build": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 490.9
-  },
-  "compare": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 84.0
+   "ok": false,
+   "exit": 124,
+   "seconds": 1801.6,
+   "tail": [
+    "Fra:1 Mem:601.82M (Peak 733.03M) | Time:00:01.79 | Mem:261.11M, Peak:261.11M | Scene, ViewLayer | Updating Baking",
+    "Fra:1 Mem:601.82M (Peak 733.03M) | Time:00:01.79 | Mem:261.11M, Peak:261.11M | Scene, ViewLayer | Updating Device | Writing constant memory",
+    "Fra:1 Mem:601.82M (Peak 733.03M) | Time:00:01.81 | Mem:261.11M, Peak:261.11M | Scene, ViewLayer | Loading denoising kernels (may take a few minutes the first time)",
+    "Fra:1 Mem:601.82M (Peak 733.03M) | Time:00:01.82 | Mem:3077.11M, Peak:3077.11M | Scene, ViewLayer | Sample 0/32 (Using optimized kernels)",
+    "[run.py] timed out after 1800.0 s",
+    "[run.py] exit 124 in 1801.5 s"
+   ]
   }
  },
  "04-sidi-saiyyed-b": {
@@ -95,16 +104,6 @@
    "ok": true,
    "exit": 0,
    "seconds": 9.4
-  },
-  "build": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 85.3
-  },
-  "compare": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 18.5
   }
  },
  "05-sidi-saiyyed-c": {
@@ -121,17 +120,7 @@
   "read_photo": {
    "ok": true,
    "exit": 0,
-   "seconds": 123.4
-  },
-  "build": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 211.4
-  },
-  "compare": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 46.9
+   "seconds": 150.9
   }
  },
  "06-sidi-saiyyed-d": {
@@ -149,16 +138,6 @@
    "ok": true,
    "exit": 0,
    "seconds": 33.5
-  },
-  "build": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 187.5
-  },
-  "compare": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 48.2
   }
  },
  "07-humayun-doorway": {
@@ -176,16 +155,6 @@
    "ok": true,
    "exit": 0,
    "seconds": 20.0
-  },
-  "build": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 118.4
-  },
-  "compare": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 30.8
   }
  },
  "08-humayun-mihrab": {
@@ -203,16 +172,6 @@
    "ok": true,
    "exit": 0,
    "seconds": 23.2
-  },
-  "build": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 238.8
-  },
-  "compare": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 21.2
   }
  },
  "09-humayun-c": {
@@ -230,16 +189,6 @@
    "ok": true,
    "exit": 0,
    "seconds": 19.7
-  },
-  "build": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 280.8
-  },
-  "compare": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 21.9
   }
  },
  "10-humayun-d": {
@@ -257,16 +206,6 @@
    "ok": true,
    "exit": 0,
    "seconds": 21.9
-  },
-  "build": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 248.8
-  },
-  "compare": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 28.8
   }
  },
  "11-red-fort-marble": {
@@ -284,16 +223,6 @@
    "ok": true,
    "exit": 0,
    "seconds": 13.8
-  },
-  "build": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 127.8
-  },
-  "compare": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 25.1
   }
  },
  "12-jaisalmer-slide": {
@@ -310,20 +239,7 @@
   "read_photo": {
    "ok": true,
    "exit": 0,
-   "seconds": 110.7
-  },
-  "build": {
-   "ok": false,
-   "exit": 1,
-   "seconds": 1015.5,
-   "tail": [
-    "RuntimeError: the curve's fill failed: front face 0.700 m2 of 1.079",
-    "",
-    "Error: script failed, file: 'shots/jali-match/build.py', exiting.",
-    "",
-    "Blender quit",
-    "[run.py] exit 1 in 1015.4 s"
-   ]
+   "seconds": 113.6
   }
  },
  "13-jaali-window-a": {
@@ -341,16 +257,6 @@
    "ok": true,
    "exit": 0,
    "seconds": 16.4
-  },
-  "build": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 525.3
-  },
-  "compare": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 29.2
   }
  },
  "14-jaali-window-b": {
@@ -368,16 +274,6 @@
    "ok": true,
    "exit": 0,
    "seconds": 14.6
-  },
-  "build": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 613.8
-  },
-  "compare": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 21.4
   }
  },
  "15-nilabagh-palace": {
@@ -394,17 +290,7 @@
   "read_photo": {
    "ok": true,
    "exit": 0,
-   "seconds": 20.8
-  },
-  "build": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 89.3
-  },
-  "compare": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 12.5
+   "seconds": 27.7
   }
  },
  "16-bibi-ka-maqbara": {
@@ -422,16 +308,6 @@
    "ok": true,
    "exit": 0,
    "seconds": 117.3
-  },
-  "build": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 643.7
-  },
-  "compare": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 29.1
   }
  },
  "17-fatehpur-sikri-a": {
@@ -449,16 +325,6 @@
    "ok": true,
    "exit": 0,
    "seconds": 67.7
-  },
-  "build": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 389.3
-  },
-  "compare": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 24.3
   }
  },
  "18-fatehpur-sikri-b": {
@@ -476,16 +342,6 @@
    "ok": true,
    "exit": 0,
    "seconds": 30.1
-  },
-  "build": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 340.9
-  },
-  "compare": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 21.7
   }
  }
 }
