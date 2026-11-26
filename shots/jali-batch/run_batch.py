@@ -31,7 +31,7 @@ status = json.load(open(STATUS)) if os.path.exists(STATUS) else {}
 STEPS_A = [("normals", [VENV_PY, os.path.join(CHAIN, "normals.py")]),
            ("intrinsics", [VENV_PY, os.path.join(CHAIN, "intrinsics.py")])]
 STEPS_B = [(name, [sys.executable, RUN, os.path.join(CHAIN, f"{name}.py"), "--timeout", str(t)])
-           for name, t in (("read_photo", 300), ("build", 1800), ("compare", 300))]
+           for name, t in (("read_photo", 900), ("build", 1800), ("compare", 600))]
 
 
 def save():

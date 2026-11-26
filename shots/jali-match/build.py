@@ -178,7 +178,21 @@ def merged_share(kb):
 
 
 MERGE = dict(kb_camera=round(KB_CAMERA, 5), holes=int(len(_holes)), merged_at_camera=round(merged_share(KB), 4))
-if "--no-merge-cap" not in argv and MERGE["merged_at_camera"] > MERGE_MAX:
+# C-023, fix 9: the cap kept the holes apart but left them as straight 1 cm tunnels seen at an angle, and towards the
+# picture's edges each tunnel's far wall covered part of its hole (03, 05, 15, 17 were capped to a tenth of the
+# camera's offset or less): the bars looked thicker (the user, on 15), the holes dark (17: "unable to decipher what
+# belongs to the background and what belongs to the foreground"), the damage growing away from the centre (03, 05).
+# So when the widening would merge more than MERGE_MAX of the holes, it is not done: the holes are cut as the photo
+# shows them, and every point of the screen is moved back along the camera's ray through it (the back face scaled by
+# (dist + thickness) / dist about the camera's axis), so each tunnel's walls lie along the rays and the camera sees
+# through every hole whole, as in the photo. Ours merges 4.1 % and keeps its straight, widened tunnels.
+# --tunnels camera: aimed at the camera always; --tunnels straight: straight, with the cap (fix 4) as before.
+TUNNELS = argv[argv.index("--tunnels") + 1] if "--tunnels" in argv else (
+    "camera" if "--no-merge-cap" not in argv and MERGE["merged_at_camera"] > MERGE_MAX else "straight")
+if TUNNELS == "camera":
+    KB = 1.0                                                           # no widening: the cut is the photo's openings
+    MERGE["tunnels"] = "camera"
+elif "--no-merge-cap" not in argv and MERGE["merged_at_camera"] > MERGE_MAX:
     lo, hi = 0.0, 1.0 - KB                                             # the offset's share of the camera's, by halving
     for _ in range(6):
         mid = (lo + hi) / 2
@@ -280,7 +294,7 @@ C.write_png(os.path.join(OUT, "height.png"), height / max(float(height.max()), 1
 log["sizes"] = dict(width_m=WIDTH_M, thick_m=THICK_M, thick_cm=THICK_M * 100, bevel_m=BEVEL_M)
 log["outlines"] = dict(count=len(loops), points=int(sum(len(p) for p in loops)), metres_per_px=round(S, 6),
                        screen_width_px=width_px, box=[x0, y0, x1, y1], dark_in_box_made_stone=int((dark & ~sur).sum()),
-                       surround_in_box=int(sur.sum()), back_face_scale=round(KB, 4), **({'merge_cap': MERGE} if 'kb' in MERGE else {}), **({'floors': FLOORS} if 'min_area_px' in FLOORS else {}),
+                       surround_in_box=int(sur.sum()), back_face_scale=round(KB, 4), **({'merge_cap': MERGE} if 'kb' in MERGE or 'tunnels' in MERGE else {}), **({'floors': FLOORS} if 'min_area_px' in FLOORS else {}),
                        seen_opening_share=round(float(k["opening"][y0:y1 + 1, x0:x1 + 1].mean()), 4),
                        hole_share=round(float(hole[y0:y1 + 1, x0:x1 + 1].mean()), 4),
                        cut_line_share=round(float(lines[y0:y1 + 1, x0:x1 + 1].mean()), 4))
@@ -400,6 +414,25 @@ if front_px(me_c) < 0.85 * abs(sum(C.area(p) for p in loops)):         # C-020: 
     bpy.data.meshes.remove(me_c)
     me_c = trace_mesh_cdt(loops)
     repairs.append(dict(action="caps from Fill Curve (constrained Delaunay)"))
+# C-023, fix 10: after fix 8, 15's fill failed past the halving's five tries, and the outlines it found were all on one
+# row, y = 1334.5: the carved field's bottom edge, where keep_field cuts every opening that crosses it with a straight
+# line (the frame's carved grooves, read as holes). Many holes ending on one line is what the fill breaks on, it
+# seems. So the second repair makes those cut-off openings stone: every hole outline with three or more points within
+# a pixel of the field box's edge. Only on a failed fill: ours fills first time and keeps the 22 px its box cuts.
+_fbc = _rp.get("field_box")
+if _fbc and front_px(me_c) < 0.85 * abs(sum(C.area(p) for p in loops)):
+    _lines = ((0, _fbc[0] - 0.5), (0, _fbc[2] + 0.5), (1, _fbc[1] - 0.5), (1, _fbc[3] + 0.5))
+
+    def _cut(p):
+        return np.sign(C.area(p)) != outer_sign and sum(int((np.abs(p[:, ax] - v) <= 1.0).sum()) for ax, v in _lines) >= 3
+    _drop = [i for i in range(len(loops)) if _cut(loops[i])]
+    if _drop:
+        repairs.append(dict(action="openings cut by the carved field's edge made stone", loops=len(_drop),
+                            area_px=round(float(sum(abs(C.area(loops[i])) for i in _drop)), 1)))
+        _keep = [i for i in range(len(loops)) if i not in set(_drop)]
+        loops, loops_raw = [loops[i] for i in _keep], [loops_raw[i] for i in _keep]
+        bpy.data.meshes.remove(me_c)
+        me_c = trace_mesh_cdt(loops)
 if front_px(me_c) < 0.85 * abs(sum(C.area(p) for p in loops)):
     bpy.data.meshes.remove(me_c)
     outer = max(range(len(loops)), key=lambda i: abs(C.area(loops[i])))
@@ -459,6 +492,16 @@ front_in_metres_m2 = sum(f.area for f in me_m.polygons if f.normal.z > 0.99)
 ev_m.to_mesh_clear()
 bpy.data.objects.remove(ob_m)
 bpy.data.curves.remove(cu_m)
+if TUNNELS == "camera":                                                # C-023, fix 9: each point back along its ray
+    _v = np.empty(len(me_c.vertices) * 3, np.float32)
+    me_c.vertices.foreach_get("co", _v)
+    _v = _v.reshape(-1, 3)
+    _f = (DIST + (THICK_M / 2 - _v[:, 2])) / DIST                      # 1 on the front face, its depth behind it
+    _v[:, 0] *= _f
+    _v[:, 1] *= _f
+    me_c.vertices.foreach_set("co", _v.ravel())
+    me_c.update()
+    log["outlines"]["tunnels"] = dict(aimed_at_camera=True, back_face_scale=round(float((DIST + THICK_M) / DIST), 5))
 screen = bpy.data.objects.new("jali", me_c)
 scene.collection.objects.link(screen)
 screen.rotation_euler = (math.radians(90), 0, 0)                      # stands up, facing -Y
