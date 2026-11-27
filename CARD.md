@@ -1876,13 +1876,40 @@ light, lit tunnel walls), and the holes go from 0.017 to 0.048 (03; photo 0.013)
 IoU falls 0.696 to 0.653 and 0.670 to 0.629, 03's SSIM 0.604 to 0.590, 05's 0.552 to 0.570. Ours loses its lower half
 too (0.0718 against 0.0702; a 1.06 to 1.00): SSIM 0.5429 to 0.5427, openings IoU 0.7956 to 0.7953, by eye the same.
 
+*Fix 21 made the default, and fixes 22 and 23 (2026-11-27; on the user's "Adopt + fix holes", and "ours can move";
+`c023_tone.jpg`, photo | what the user saw | now).* With the check on everywhere, all 18 rebuilt: up 6, down 7 in SSIM.
+Two faults showed. 18 fell from 0.798 to 0.467, its stone 0.249 against the photo's 0.103, its spot 2,166 W where the
+build before had 27.8 W: not the curve (18 kept both its halves offline) but its light fit, which reads a render by
+brightness at a threshold found again on each render, so the reading jumps; the two builds ran the same fit renders
+until 2,962 W, read there 0.3405 once and 0.1234 the next time, and settled on different powers. Fix 23: under the
+brightness rules a fit render is measured where the photo's stone and openings are, the same pixels at every power
+(`--fit-own-reading`: as before). 18 then fits 565, 56, 31, 30 W and comes back to 0.797, its stone 0.097. And the
+check hurt the shots read by colour: 01 0.549 to 0.507, flatter and greyer than its photo by eye, 11 0.399 to 0.381;
+there the darkest tenth of the stone is the carving's own recesses and the curve's contrast real, where under the
+brightness rules it is what lies at the threshold that defines the stone. So fix 21 runs under the brightness rules
+only (`--tone-check`: every rule). Fix 22, a toe on dark holes (`--no-toe`): the curve's lower half had also crushed the
+grey in them (the pixel filter's spill, lit tunnel walls); luminance y less t (1 - y / K) below K, the stone's 10th
+percentile as toned, t solved so the box's openings' median comes to the photo's; a plain black point had taken the
+stone down with it. It overshoots a little on the lattices (03's holes 0.000 against the photo's 0.013, 05's 0.004
+against 0.016), black to the eye either way; fitted pixel by pixel it ran to its limit. Against the build before fix 21,
+SSIM: 05 +0.024, 09 +0.040, 10 +0.031, 16 +0.018, 17 +0.014, 03 and 08 +0.002, 14 and 18 level, 12 -0.011, 15 -0.010,
+13 -0.006 (their stone's median nearer the photo's in all three: 12 0.707 to 0.656 against 0.618, 15 0.857 to 0.839
+against 0.834, 13 0.044 to 0.047 against 0.064); the six read by colour exactly as before. On the crops the user
+looked at, the stone: 03 0.611 to 0.717 (photo 0.755), its edges 0.484 to 0.655 (0.686); 05 0.494 to 0.619 (0.694),
+edges 0.389 to 0.550 (0.642); a little under the check alone (0.747, 0.644), since fix 23's fit sets their light about
+9 % lower. Ours, rebuilt: as committed but two values at ±0.0001.
+
 *Open, not yet fixed.* The tone curve's upper exponent sits at its limit of 4.0 in 8 of the 13 renders that C-022
 measured (ours 2.12), and with the fit's stone corrected 03, 05, 09 and 15 end at both limits (0.3 and 4.0); the
 cause is not found. The 25 % fit renders are not it: their stone's median is within about 10 % of the full render's
 (09: 0.149 at 337 W against 0.116 at 273 W; 13: 0.319 against 0.343 at one power). 13 and 14's holes render dim pink
 where the photos' are lit white: the light behind a backlit screen is not yet the photo's.
 
-**Result (2026-11-27, after fixes 1 to 20):** as below, with 03's and 05's lattices brighter and fuller on the user's four points
+**Result (2026-11-27, after fixes 1 to 23):** as below; 03's and 05's lattices now near their photos' tone (stone 0.717 and 0.619
+against 0.755 and 0.694, from 0.611 and 0.494), holes black; the light fit no longer jumps under the brightness rules.
+Waiting on the user's glance at `c023_tone.jpg`.
+
+*After fixes 1 to 20:* as below, with 03's and 05's lattices brighter and fuller on the user's four points
 (fixes 18 to 20; SSIM up on 7 of the 14 shots they reach, none down); still darker than the photos there. Waiting on
 the user's glance at `c023_fine.jpg`.
 

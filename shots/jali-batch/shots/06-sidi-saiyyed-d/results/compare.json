@@ -76,10 +76,10 @@
    "amplitude_ratio": 0.9943
   },
   "forms": {
-   "correlation": 0.4513,
+   "correlation": 0.4514,
    "amplitude_ratio": 1.0452
   },
-  "pixels": 802341,
+  "pixels": 802399,
   "photo_vs_itself_shifted": {
    "1px": {
     "fine": 0.2227,
@@ -176,7 +176,7 @@
     1.004,
     1.123,
     1.402,
-    2.781,
+    2.779,
     2.915
    ],
    [
@@ -228,11 +228,11 @@
  },
  "recesses": {
   "window_11px": {
-   "deepest_3pct": 0.0805,
+   "deepest_3pct": 0.0812,
    "all_stone": 0.1653
   },
   "window_21px": {
-   "deepest_3pct": -0.0465,
+   "deepest_3pct": -0.0462,
    "all_stone": 0.1653
   }
  },
@@ -263,12 +263,12 @@
    },
    "b_over_g": {
     "slope": 0.0337,
-    "explained": 0.1034
+    "explained": 0.1033
    }
   }
  },
  "frame_over_field": {
-  "photo": 2.0473,
+  "photo": 2.0472,
   "render": 1.2818
  },
  "ssim": {
@@ -328,7 +328,7 @@
     "tier": "core"
    },
    "forms_correlation": {
-    "value": 0.4513,
+    "value": 0.4514,
     "bar": ">= 0.50",
     "ok": false,
     "follows_judge": {
@@ -410,9 +410,9 @@
   "stone": 0.152,
   "dark": 0.0023
  },
- "render_openings_on_photo_stone": 0.242,
+ "render_openings_on_photo_stone": 0.2419,
  "openings_iou_by_third": [
-  0.4355,
+  0.4357,
   0.657,
   0.6754
  ]

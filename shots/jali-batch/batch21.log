@@ -1,0 +1,9 @@
+13:28:50 02-louvre-ad-1 build: ok (102.4 s)
+13:29:18 01-louvre-ad-3 build: ok (130.7 s)
+13:29:27 02-louvre-ad-1 compare: ok (37.5 s)
+13:29:50 01-louvre-ad-3 compare: ok (32.0 s)
+13:30:34 07-humayun-doorway build: ok (66.5 s)
+13:30:55 07-humayun-doorway compare: ok (21.1 s)
+13:31:14 11-red-fort-marble build: ok (83.9 s)
+13:31:34 11-red-fort-marble compare: ok (19.5 s)
+BATCH 4 of 4 shots through compare

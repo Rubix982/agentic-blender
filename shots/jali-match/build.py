@@ -1112,6 +1112,15 @@ def medians(img_rgb, wall_by_colour=False):
         if q["stone"][BOX].sum() < FIT_STONE_MIN * STONE_PH_BOX:
             q["stone"], q["opening"] = STONE_FIT.copy(), k["opening"].copy()
             FIT_READ["stone_from_photo"] = True
+    # C-023, fix 23: read by brightness, a render's stone and openings are split at a threshold found again on each
+    # render, and over a range of powers the split jumps: 18's fit renders read 0.0738, 0.0671, 0.0705 at 564, 920,
+    # 1,706 W, then at 2,962 W 0.3405 in one build and 0.1234 in the next, the same scene, so one build settled at 27.8 W
+    # (SSIM 0.798) and the next at 2,166 W (0.467, its stone 0.249 against the photo's 0.103). So under the brightness
+    # rules a render is measured where the photo's stone and openings are (one camera, one outline), at every power the
+    # same pixels. Ours is read by colour and stays on its own reading. --fit-own-reading: as before.
+    elif wall_by_colour and C.RULE == "brightness" and "--fit-own-reading" not in argv:
+        q["stone"], q["opening"] = STONE_FIT.copy(), k["opening"].copy()
+        FIT_READ["stone_from_photo"] = True
     st = q["stone"][BOX]
     lo = q["opening"][MID:y1 + 1, x0:x1 + 1]
     hi = q["opening"][y0:MID, x0:x1 + 1]
@@ -1375,9 +1384,15 @@ def fit_curve(path):
 # instead. Checked pixel by pixel on the stone the fit uses, 03's curve fits the photo worse than no curve (mean error
 # 0.111 against 0.108). So, with --tone-check, each half of the curve is kept only where it brings the render's stone
 # nearer the photo's, pixel by pixel, than none: below the pivot 03 0.187 against 0.175 with none, dropped; above it
-# 0.079 against 0.080, kept. Off by default: on ours it drops the lower half too (0.0718 against 0.0702; a 1.06), the
-# dark stone rising by up to 0.007, and ours moves only on the user's word.
-TONE_CHECK = "--tone-check" in argv
+# 0.079 against 0.080, kept. On ours it drops the lower half too (0.0718 against 0.0702; a 1.06 to 1.00: SSIM 0.5429 to
+# 0.5427), and the user said yes to that (2026-11-27, on `c023_tonecheck.jpg`). Run on all 18 it helped where the stone
+# is read by brightness, whose darkest tenth lies at the threshold that defines it (with fix 23: 05 +0.024, 09 +0.040,
+# 10 +0.031, 16 +0.018, 17 +0.014 in SSIM, 03 and 08 +0.002; 12 -0.011, 15 -0.010, 13 -0.006, their stone's median
+# nearer the photo's in all three), and hurt where it is read by colour, whose darkest tenth is the carving's own
+# recesses and the curve's contrast real: 01 0.549 to 0.507 (flatter and greyer than its photo, by eye), 11 0.399 to
+# 0.381. So it runs under the brightness rules only, and ours (the colour rule) keeps its curve as fitted.
+# --no-tone-check: never; --tone-check: under every rule.
+TONE_CHECK = "--no-tone-check" not in argv and (C.RULE == "brightness" or "--tone-check" in argv)
 
 
 def check_curve(path, c):
@@ -1488,6 +1503,32 @@ if TONE:
                                  **({"stone_from_photo": True} if sat_from_photo else {}),
                                  tries=[dict(k=round(t[1], 3), slopes=[round(v, 4) for v in t[2]]) for t in sorted(tries, key=lambda t: t[1])])
         print("SATURATION", {k: v for k, v in log["saturation"].items() if k != "tries"}, flush=True)
+    # C-023, fix 22 (with fix 21, on the user's yes): the curve's lower half also crushed the grey left in dark holes
+    # (the pixel filter's spill of the stone's light, lit tunnel walls); without it 03's lattice holes are 0.048 where
+    # the photo's are 0.013. A plain black point fitted on the openings took the stone down 0.013 and 03's lattice
+    # holes to 0.000 (the box's other openings set it). So a toe: luminance y less t (1 - y / K) where y < K, K the
+    # stone's 10th percentile as toned (stone above it untouched), t solved so the openings' median in the box comes
+    # to the photo's. Only where the openings are dark (the dark rule); ours's are its lit wall. --no-toe: none.
+    if C.SIDE == "dark" and "--no-toe" not in argv:
+        y_t = np.maximum(toned @ LUM, 1e-6)
+        op_box = k["opening"][BOX]
+        r_med, p_med = float(np.median(y_t[BOX][op_box])), float(np.median(k["y"][BOX][op_box]))
+        K_TOE = float(np.percentile(y_t[TONE_MASK], 10))
+        if r_med > p_med and K_TOE > r_med:
+            def toe(yv, t):
+                return np.maximum(yv - t * np.clip(1.0 - yv / K_TOE, 0.0, 1.0), 0.0)
+            lo_t, hi_t = 0.0, K_TOE
+            for _ in range(40):
+                mid_t = (lo_t + hi_t) / 2
+                if np.median(toe(y_t[BOX][op_box], mid_t)) > p_med:
+                    lo_t = mid_t
+                else:
+                    hi_t = mid_t
+            T_TOE = (lo_t + hi_t) / 2
+            toned = np.clip(toned * (toe(y_t, T_TOE) / y_t)[..., None], 0.0, 1.0)
+            log["tone"]["toe"] = dict(t=round(T_TOE, 4), knee=round(K_TOE, 4), openings_before=round(r_med, 4),
+                                      photo_openings=round(p_med, 4))
+            print("TOE", log["tone"]["toe"], flush=True)
     C.write_png(os.path.join(OUT, "render.png"), toned)
     log["tone"].update(a=round(curve["a"], 4), b=round(curve["b"], 4))
 log["render"] = dict(seconds=round(sec, 1), samples=SAMPLES, size=[W, H], spot_w=round(spot.energy, 2),

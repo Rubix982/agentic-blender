@@ -79,7 +79,7 @@
    "correlation": 0.2963,
    "amplitude_ratio": 0.8205
   },
-  "pixels": 578236,
+  "pixels": 578238,
   "photo_vs_itself_shifted": {
    "1px": {
     "fine": -0.0591,
@@ -164,7 +164,7 @@
   ],
   "render": [
    [
-    0.934,
+    0.933,
     0.787,
     0.803,
     0.832,
@@ -410,7 +410,7 @@
   "stone": 0.5863,
   "dark": 0.0059
  },
- "render_openings_on_photo_stone": 0.2502,
+ "render_openings_on_photo_stone": 0.2503,
  "openings_iou_by_third": [
   0.0013,
   0.4568,

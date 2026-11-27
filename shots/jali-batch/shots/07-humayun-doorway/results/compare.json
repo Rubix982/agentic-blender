@@ -72,7 +72,7 @@
  },
  "detail": {
   "fine": {
-   "correlation": 0.3094,
+   "correlation": 0.3093,
    "amplitude_ratio": 0.7653
   },
   "forms": {
@@ -216,7 +216,7 @@
     1.203,
     0.598,
     1.405,
-    1.019,
+    1.02,
     NaN
    ]
   ],
@@ -279,7 +279,7 @@
  "openings_y_by_half": {
   "upper": {
    "photo": 0.4211,
-   "render": 0.7962
+   "render": 0.7964
   },
   "lower": {
    "photo": 0.4567,
@@ -365,7 +365,7 @@
     "ok": true
    },
    "openings_y_upper": {
-    "value": 0.3751,
+    "value": 0.3753,
     "bar": "<= 0.02 off",
     "ok": false
    },

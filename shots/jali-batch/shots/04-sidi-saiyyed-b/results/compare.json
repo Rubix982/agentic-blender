@@ -61,7 +61,7 @@
  "lines": {
   "photo_share": 0.0842,
   "render_share": 0.0554,
-  "render_near_photo": 0.6048,
+  "render_near_photo": 0.6046,
   "photo_near_render": 0.4378
  },
  "thin_stone_shown": 0.8595,
@@ -79,7 +79,7 @@
    "correlation": 0.4263,
    "amplitude_ratio": 0.6512
   },
-  "pixels": 476854,
+  "pixels": 476853,
   "photo_vs_itself_shifted": {
    "1px": {
     "fine": -0.0531,
@@ -100,7 +100,7 @@
   "forms": {
    "photo": 0.0586,
    "render": 0.036,
-   "ratio": 0.6139
+   "ratio": 0.614
   }
  },
  "light_map": {
@@ -224,7 +224,7 @@
  },
  "frame_crispness": {
   "photo": 0.5704,
-  "render": 0.6284
+  "render": 0.6285
  },
  "recesses": {
   "window_11px": {
@@ -318,7 +318,7 @@
     "tier": "core"
    },
    "lines_render_near_photo": {
-    "value": 0.6048,
+    "value": 0.6046,
     "bar": ">= 0.60",
     "ok": true,
     "follows_judge": {
@@ -380,7 +380,7 @@
     "ok": false
    },
    "frame_texture_forms": {
-    "value": 0.6139,
+    "value": 0.614,
     "bar": "0.8 to 1.2",
     "ok": false
    }

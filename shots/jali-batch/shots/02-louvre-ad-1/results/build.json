@@ -236,7 +236,7 @@
     "stone_y": 0.4474,
     "opening_y_lower": 0.7006,
     "opening_y_upper": 0.6457,
-    "seconds": 1.3,
+    "seconds": 1.0,
     "curve": [
      1.0,
      1.0
@@ -247,7 +247,7 @@
     "stone_y": 0.3185,
     "opening_y_lower": 0.6188,
     "opening_y_upper": 0.576,
-    "seconds": 1.6,
+    "seconds": 1.1,
     "curve": [
      1.0,
      1.0
@@ -269,7 +269,7 @@
     "stone_y": 0.31,
     "opening_y_lower": 0.6614,
     "opening_y_upper": 0.6036,
-    "seconds": 1.5,
+    "seconds": 1.0,
     "curve": [
      1.2643,
      1.8125
@@ -280,7 +280,7 @@
     "stone_y": 0.3076,
     "opening_y_lower": 0.6598,
     "opening_y_upper": 0.6024,
-    "seconds": 1.1,
+    "seconds": 1.0,
     "curve": [
      1.2643,
      1.8125
@@ -302,29 +302,29 @@
     "stone_y": 0.3078,
     "opening_y_lower": 0.6617,
     "opening_y_upper": 0.6037,
-    "seconds": 1.6,
+    "seconds": 1.1,
     "curve": [
      1.2509,
      1.848
     ]
    },
    {
-    "spot_w": 242.65,
+    "spot_w": 242.64,
     "stone_y": 0.3078,
     "opening_y_lower": 0.6616,
     "opening_y_upper": 0.6036,
-    "seconds": 1.0,
+    "seconds": 1.3,
     "curve": [
      1.2516,
      1.8461
     ]
    },
    {
-    "spot_w": 242.62,
+    "spot_w": 242.63,
     "stone_y": 0.3078,
     "opening_y_lower": 0.6616,
     "opening_y_upper": 0.6036,
-    "seconds": 1.0,
+    "seconds": 1.3,
     "curve": [
      1.2516,
      1.8461
@@ -444,7 +444,7 @@
    {
     "k": 0.5,
     "slopes": [
-     -0.233,
+     -0.2329,
      0.1723
     ]
    },
@@ -480,7 +480,7 @@
     "k": 0.75,
     "slopes": [
      -0.3156,
-     0.3281
+     0.328
     ]
    },
    {
@@ -515,14 +515,14 @@
     "k": 1.0,
     "slopes": [
      -0.4087,
-     0.5895
+     0.5894
     ]
    },
    {
     "k": 1.05,
     "slopes": [
      -0.4288,
-     0.6516
+     0.6515
     ]
    },
    {
@@ -549,7 +549,7 @@
   ]
  },
  "render": {
-  "seconds": 9.3,
+  "seconds": 10.5,
   "samples": 256,
   "size": [
    1183,
@@ -565,5 +565,5 @@
   "look": "None",
   "filter_px": 1.8
  },
- "seconds": 111.9
+ "seconds": 101.7
 }

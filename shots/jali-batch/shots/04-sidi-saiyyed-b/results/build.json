@@ -228,7 +228,7 @@
     "stone_y": 0.525,
     "opening_y_lower": 0.5402,
     "opening_y_upper": 0.9062,
-    "seconds": 0.8,
+    "seconds": 0.9,
     "curve": [
      1.0,
      1.0
@@ -239,7 +239,7 @@
     "stone_y": 0.1939,
     "opening_y_lower": 0.4169,
     "opening_y_upper": 0.4951,
-    "seconds": 0.9,
+    "seconds": 0.8,
     "curve": [
      1.0,
      1.0
@@ -249,8 +249,8 @@
     "spot_w": 9.21,
     "stone_y": 0.1746,
     "opening_y_lower": 0.3967,
-    "opening_y_upper": 0.4833,
-    "seconds": 0.9,
+    "opening_y_upper": 0.4831,
+    "seconds": 0.8,
     "curve": [
      1.0,
      1.0
@@ -261,7 +261,7 @@
     "stone_y": 0.1699,
     "opening_y_lower": 0.3943,
     "opening_y_upper": 0.6148,
-    "seconds": 0.8,
+    "seconds": 1.0,
     "curve": [
      0.8338,
      4.0
@@ -294,7 +294,7 @@
     "stone_y": 0.1691,
     "opening_y_lower": 0.3937,
     "opening_y_upper": 0.6126,
-    "seconds": 1.0,
+    "seconds": 0.9,
     "curve": [
      0.8243,
      4.0
@@ -311,13 +311,45 @@
     "a": 0.8338,
     "b": 4.0,
     "untoned_p10": 0.1014,
-    "untoned_p90": 0.3526
+    "untoned_p90": 0.3526,
+    "checked": {
+     "a": 0.8338,
+     "b": 4.0,
+     "kept": [
+      true,
+      true
+     ],
+     "lower_error": [
+      0.0816,
+      0.0859
+     ],
+     "upper_error": [
+      0.1773,
+      0.2684
+     ]
+    }
    },
    {
     "a": 0.8243,
     "b": 4.0,
     "untoned_p10": 0.1006,
-    "untoned_p90": 0.3506
+    "untoned_p90": 0.3506,
+    "checked": {
+     "a": 0.8243,
+     "b": 4.0,
+     "kept": [
+      true,
+      true
+     ],
+     "lower_error": [
+      0.0817,
+      0.0862
+     ],
+     "upper_error": [
+      0.1785,
+      0.2709
+     ]
+    }
    }
   ],
   "a": 0.8243,
@@ -346,7 +378,7 @@
     "k": 0.05,
     "slopes": [
      -0.1156,
-     0.0727
+     0.0726
     ]
    },
    {
@@ -408,7 +440,7 @@
    {
     "k": 0.5,
     "slopes": [
-     -0.2646,
+     -0.2645,
      0.3462
     ]
    },
@@ -529,5 +561,5 @@
   "look": "None",
   "filter_px": 1.8
  },
- "seconds": 62.6
+ "seconds": 61.9
 }

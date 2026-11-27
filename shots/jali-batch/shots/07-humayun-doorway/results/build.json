@@ -208,7 +208,7 @@
     "stone_y": 0.4172,
     "opening_y_lower": 0.5385,
     "opening_y_upper": 0.4225,
-    "seconds": 2.4,
+    "seconds": 0.6,
     "curve": [
      1.0,
      1.0
@@ -219,7 +219,7 @@
     "stone_y": 0.1986,
     "opening_y_lower": 0.3355,
     "opening_y_upper": 0.3831,
-    "seconds": 1.5,
+    "seconds": 0.6,
     "curve": [
      1.0,
      1.0
@@ -230,7 +230,7 @@
     "stone_y": 0.1827,
     "opening_y_lower": 0.3142,
     "opening_y_upper": 0.3807,
-    "seconds": 0.7,
+    "seconds": 0.6,
     "curve": [
      1.0,
      1.0
@@ -259,33 +259,33 @@
     ]
    },
    {
-    "spot_w": 99.17,
+    "spot_w": 99.16,
     "stone_y": 0.1862,
     "opening_y_lower": 0.4651,
     "opening_y_upper": 0.351,
     "seconds": 0.6,
     "curve": [
      0.7596,
-     3.9816
+     3.9817
     ]
    },
    {
-    "spot_w": 93.91,
+    "spot_w": 93.92,
     "stone_y": 0.1768,
     "opening_y_lower": 0.4581,
     "opening_y_upper": 0.3487,
-    "seconds": 0.7,
+    "seconds": 0.6,
     "curve": [
      0.7596,
-     3.9816
+     3.9817
     ]
    },
    {
     "spot_w": 97.82,
     "stone_y": 0.1811,
-    "opening_y_lower": 0.4639,
+    "opening_y_lower": 0.4638,
     "opening_y_upper": 0.3501,
-    "seconds": 0.7,
+    "seconds": 0.9,
     "curve": [
      0.747,
      4.0
@@ -317,7 +317,7 @@
    },
    {
     "a": 0.7596,
-    "b": 3.9816,
+    "b": 3.9817,
     "untoned_p10": 0.1101,
     "untoned_p90": 0.427
    },
@@ -341,13 +341,13 @@
    -0.5654,
    0.1449
   ],
-  "error": 0.287,
+  "error": 0.2869,
   "tries": [
    {
     "k": 0.0,
     "slopes": [
      -0.3761,
-     -0.0454
+     -0.0453
     ]
    },
    {
@@ -396,7 +396,7 @@
     "k": 0.35,
     "slopes": [
      -0.5254,
-     0.1065
+     0.1066
     ]
    },
    {
@@ -501,14 +501,14 @@
     "k": 1.1,
     "slopes": [
      -0.8143,
-     0.5029
+     0.5028
     ]
    },
    {
     "k": 1.15,
     "slopes": [
      -0.8336,
-     0.5439
+     0.5438
     ]
    },
    {
@@ -521,13 +521,13 @@
   ]
  },
  "render": {
-  "seconds": 4.9,
+  "seconds": 5.3,
   "samples": 256,
   "size": [
    1052,
    1402
   ],
-  "spot_w": 98.3,
+  "spot_w": 98.31,
   "wall_strength": 0.0703,
   "albedo": [
    0.45,
@@ -537,5 +537,5 @@
   "look": "None",
   "filter_px": 1.8
  },
- "seconds": 74.9
+ "seconds": 65.8
 }
