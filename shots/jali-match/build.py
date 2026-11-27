@@ -1366,6 +1366,33 @@ def fit_curve(path):
                 untoned_p90=round(u90, 4), clipped=(u10, u90, P10, P90) != (u10c, u90c, p10, p90))
 
 
+# C-023, fix 21 (the user, on 03 and 05's lattices after fixes 18 to 20: "the tone is still a bit darker than the
+# original"). Before the curve the render's lattice stone matches the photo's (03: 0.689 against 0.686 next to the
+# holes, 0.80 to 0.81 against 0.80 to 0.82 further in); the curve takes it to 0.484 and 0.75. Its lower exponent is
+# 2.82 on 03 (2.27 on 05) because the photo's darkest tenth of stone (0.556) is far darker than the render's (0.723):
+# the shadows of the wall's mouldings and the stains, which the render does not have at any scale up to 10 px (fitted
+# on both smoothed, 2.59), and a percentile match cannot tell which pixel is which, so the curve darkens every mid-tone
+# instead. Checked pixel by pixel on the stone the fit uses, 03's curve fits the photo worse than no curve (mean error
+# 0.111 against 0.108). So, with --tone-check, each half of the curve is kept only where it brings the render's stone
+# nearer the photo's, pixel by pixel, than none: below the pivot 03 0.187 against 0.175 with none, dropped; above it
+# 0.079 against 0.080, kept. Off by default: on ours it drops the lower half too (0.0718 against 0.0702; a 1.06), the
+# dark stone rising by up to 0.007, and ours moves only on the user's word.
+TONE_CHECK = "--tone-check" in argv
+
+
+def check_curve(path, c):
+    u = C.luminance(C.load(path))[TONE_MASK].astype(np.float64)
+    py = k["y"][TONE_MASK].astype(np.float64)
+    lo, hi = u <= c["m"], u > c["m"]
+    err = lambda sel, a, b: float(np.abs(tone(u[sel], c["m"], a, b) - py[sel]).mean()) if sel.any() else 0.0
+    keep_a = err(lo, c["a"], c["b"]) < err(lo, 1.0, 1.0)
+    keep_b = err(hi, c["a"], c["b"]) < err(hi, 1.0, 1.0)
+    return dict(c, a=c["a"] if keep_a else 1.0, b=c["b"] if keep_b else 1.0,
+                checked=dict(a=round(c["a"], 4), b=round(c["b"], 4), kept=[bool(keep_a), bool(keep_b)],
+                             lower_error=[round(err(lo, c["a"], c["b"]), 4), round(err(lo, 1.0, 1.0), 4)],
+                             upper_error=[round(err(hi, c["a"], c["b"]), 4), round(err(hi, 1.0, 1.0), 4)]))
+
+
 # The curve and the wall depend on each other: the wall, set through the curve's inverse, lights the stone's sides and
 # backs, so the stone's percentiles move and the curve with them (a first try, fitted once: the openings came out 0.05
 # too bright). So: render, fit the curve, set the wall through it, fit the power again, until the curve holds still.
@@ -1374,8 +1401,11 @@ if TONE:
     for it in range(8):
         render(UNTONED, 100, 64)
         c = fit_curve(UNTONED)
+        if TONE_CHECK:
+            c = check_curve(UNTONED, c)
         log["tone"]["rounds"].append(dict(a=round(c["a"], 4), b=round(c["b"], 4), untoned_p10=c["untoned_p10"],
-                                          untoned_p90=c["untoned_p90"], **({"clipped": True} if c["clipped"] else {})))
+                                          untoned_p90=c["untoned_p90"], **({"clipped": True} if c["clipped"] else {}),
+                                          **({"checked": c["checked"]} if TONE_CHECK else {})))
         print("TONE", it, log["tone"]["rounds"][-1], flush=True)
         still = abs(c["a"] - curve["a"]) < 0.02 and abs(c["b"] - curve["b"]) < 0.02
         curve.update(a=c["a"], b=c["b"])

@@ -1,0 +1,614 @@
+{
+ "thin_stone": {
+  "photo_px": 138500,
+  "kept_by_widening": 1.0,
+  "kept_by_trace": 1.0
+ },
+ "normals": {
+  "solve": {
+   "iterations": 425,
+   "residual": 1e-05
+  },
+  "screen_px": 30.0,
+  "p99_m": 0.0046,
+  "p1_m": -0.00343,
+  "below_front_share": 0.4909,
+  "scale": 1.0
+ },
+ "sizes": {
+  "width_m": 1.05,
+  "thick_m": 0.01,
+  "thick_cm": 1.0,
+  "bevel_m": 0.0
+ },
+ "outlines": {
+  "count": 871,
+  "points": 215980,
+  "metres_per_px": 0.001075,
+  "screen_width_px": 977,
+  "box": [
+   0,
+   0,
+   976,
+   1401
+  ],
+  "dark_in_box_made_stone": 775,
+  "surround_in_box": 43915,
+  "back_face_scale": 1.0,
+  "merge_cap": {
+   "kb_camera": 0.99166,
+   "holes": 1211,
+   "merged_at_camera": 0.8968,
+   "tunnels": "camera"
+  },
+  "bevel_rule": {
+   "hole_half_width_px": 2.151,
+   "bevel_m": 0.0,
+   "outline_blur_px": 1
+  },
+  "turned": 545,
+  "saddles": {
+   "ties": 7297,
+   "stone_joined": 3773
+  },
+  "seen_opening_share": 0.2332,
+  "hole_share": 0.2332,
+  "cut_line_share": 0.0203,
+  "tunnels": {
+   "aimed_at_camera": true,
+   "back_face_scale": 1.00841
+  }
+ },
+ "fill_repairs": [],
+ "photo_detail": {
+  "tilt_per_unit": 8.0,
+  "scaled_by": 0.4072,
+  "carved_share": 0.3,
+  "mid_weight": 1.0,
+  "flat_share_of_stone": 0.535,
+  "detail_std": 0.0556
+ },
+ "albedo": {
+  "blur_px": 41,
+  "speck_max": 1.6,
+  "speck_floor": 0.0,
+  "edge_over_core": 0.843,
+  "cores_only": true,
+  "speck_share": 0.2548,
+  "map_median_linear": [
+   0.3047,
+   0.2641,
+   0.2291
+  ],
+  "scaled_to": [
+   0.45,
+   0.4354,
+   0.4451
+  ],
+  "map_p10_p90_luminance": [
+   0.2442,
+   0.6824
+  ]
+ },
+ "relief": {
+  "forms": "normals",
+  "normal_map": true,
+  "bars_m": 0.005,
+  "reach_px": 20,
+  "forms_m_at_p99": 0.004,
+  "height_max_m": 0.02352,
+  "vertices": 749905,
+  "faces": 722149
+ },
+ "symmetry": {
+  "skipped": "the forms come from the normals (--forms normals)"
+ },
+ "wall": {
+  "panel_seen_from_camera_at": 0.7458,
+  "panel_covers_box": 0.95,
+  "bands": [
+   {
+    "at": 0.0262,
+    "linear_rgb": [
+     0.0015,
+     0.0012,
+     0.0018
+    ]
+   },
+   {
+    "at": 0.1314,
+    "linear_rgb": [
+     0.0018,
+     0.0012,
+     0.0018
+    ]
+   },
+   {
+    "at": 0.2365,
+    "linear_rgb": [
+     0.0012,
+     0.0009,
+     0.0012
+    ]
+   },
+   {
+    "at": 0.3416,
+    "linear_rgb": [
+     0.0012,
+     0.0009,
+     0.0012
+    ]
+   },
+   {
+    "at": 0.4467,
+    "linear_rgb": [
+     0.0012,
+     0.0009,
+     0.0012
+    ]
+   },
+   {
+    "at": 0.5518,
+    "linear_rgb": [
+     0.0009,
+     0.0006,
+     0.0006
+    ]
+   },
+   {
+    "at": 0.6569,
+    "linear_rgb": [
+     0.0513,
+     0.0356,
+     0.0331
+    ]
+   },
+   {
+    "at": 0.762,
+    "linear_rgb": [
+     0.0437,
+     0.0252,
+     0.016
+    ]
+   },
+   {
+    "at": 0.8675,
+    "linear_rgb": [
+     0.0844,
+     0.0497,
+     0.0369
+    ]
+   }
+  ]
+ },
+ "camera": {
+  "lens_mm": 28.0,
+  "sensor_mm": 24.737,
+  "distance_m": 1.1885,
+  "frame_width_m": 1.05
+ },
+ "mesh": {
+  "vertices": 863920,
+  "faces": 649408,
+  "front_face_m2": 1.1625,
+  "front_face_m2_if_built_in_metres": 1.1625,
+  "metres_per_curve_unit": 0.001075,
+  "outlines_enclose_m2": 1.1625
+ },
+ "light_fit": {
+  "reused": "results/light_fit.json",
+  "best": {
+   "ax": -0.015,
+   "az": -0.2,
+   "d": 19.9563,
+   "rv": 1.2776,
+   "sx": 1.242,
+   "blend": 1.0
+  },
+  "error_when_fitted": 0.059,
+  "error_now": 0.0582
+ },
+ "spot_colour": {
+  "photo_slopes_at_fit_size": [
+   -0.1147,
+   0.0377
+  ],
+  "tries": [],
+  "kelvin": null,
+  "error": null,
+  "spot_rgb": [
+   1.0,
+   1.0,
+   1.0
+  ]
+ },
+ "fit": {
+  "target_stone_y": 0.8003,
+  "target_opening_y_lower": 0.0165,
+  "target_opening_y_upper": 0.1027,
+  "steps": [
+   {
+    "spot_w": 29283.38,
+    "stone_y": 0.7857,
+    "opening_y_lower": 0.3817,
+    "opening_y_upper": 0.2416,
+    "seconds": 1.1,
+    "curve": [
+     1.0,
+     1.0
+    ]
+   },
+   {
+    "spot_w": 30514.38,
+    "stone_y": 0.8003,
+    "opening_y_lower": 0.3891,
+    "opening_y_upper": 0.2428,
+    "seconds": 1.0,
+    "curve": [
+     1.0,
+     1.0
+    ]
+   },
+   {
+    "spot_w": 30511.3,
+    "stone_y": 0.8003,
+    "opening_y_lower": 0.3891,
+    "opening_y_upper": 0.2428,
+    "seconds": 1.0,
+    "curve": [
+     1.0,
+     1.0
+    ]
+   },
+   {
+    "spot_w": 30508.22,
+    "stone_y": 0.7981,
+    "opening_y_lower": 0.3851,
+    "opening_y_upper": 0.2393,
+    "seconds": 1.2,
+    "curve": [
+     1.0,
+     0.7588
+    ]
+   },
+   {
+    "spot_w": 30697.28,
+    "stone_y": 0.7995,
+    "opening_y_lower": 0.3856,
+    "opening_y_upper": 0.239,
+    "seconds": 1.1,
+    "curve": [
+     1.0,
+     0.7588
+    ]
+   },
+   {
+    "spot_w": 30762.64,
+    "stone_y": 0.7998,
+    "opening_y_lower": 0.3856,
+    "opening_y_upper": 0.2389,
+    "seconds": 1.1,
+    "curve": [
+     1.0,
+     0.7244
+    ]
+   },
+   {
+    "spot_w": 30799.55,
+    "stone_y": 0.8001,
+    "opening_y_lower": 0.3857,
+    "opening_y_upper": 0.2389,
+    "seconds": 1.0,
+    "curve": [
+     1.0,
+     0.7244
+    ]
+   },
+   {
+    "spot_w": 30812.68,
+    "stone_y": 0.8002,
+    "opening_y_lower": 0.3857,
+    "opening_y_upper": 0.2388,
+    "seconds": 1.1,
+    "curve": [
+     1.0,
+     0.7178
+    ]
+   },
+   {
+    "spot_w": 30820.34,
+    "stone_y": 0.8002,
+    "opening_y_lower": 0.3857,
+    "opening_y_upper": 0.2388,
+    "seconds": 1.0,
+    "curve": [
+     1.0,
+     0.7178
+    ]
+   }
+  ]
+ },
+ "tone": {
+  "pivot": 0.7978,
+  "photo_p10": 0.5212,
+  "photo_p90": 0.9135,
+  "rounds": [
+   {
+    "a": 1.0,
+    "b": 0.7588,
+    "untoned_p10": 0.6576,
+    "untoned_p90": 0.9339,
+    "checked": {
+     "a": 2.2028,
+     "b": 0.7588,
+     "kept": [
+      false,
+      true
+     ],
+     "lower_error": [
+      0.1617,
+      0.1478
+     ],
+     "upper_error": [
+      0.0565,
+      0.0615
+     ]
+    }
+   },
+   {
+    "a": 1.0,
+    "b": 0.7244,
+    "untoned_p10": 0.66,
+    "untoned_p90": 0.9373,
+    "checked": {
+     "a": 2.2462,
+     "b": 0.7244,
+     "kept": [
+      false,
+      true
+     ],
+     "lower_error": [
+      0.1635,
+      0.1496
+     ],
+     "upper_error": [
+      0.057,
+      0.0632
+     ]
+    }
+   },
+   {
+    "a": 1.0,
+    "b": 0.7178,
+    "untoned_p10": 0.6605,
+    "untoned_p90": 0.938,
+    "checked": {
+     "a": 2.2549,
+     "b": 0.7178,
+     "kept": [
+      false,
+      true
+     ],
+     "lower_error": [
+      0.1638,
+      0.1499
+     ],
+     "upper_error": [
+      0.0571,
+      0.0635
+     ]
+    }
+   }
+  ],
+  "a": 1.0,
+  "b": 0.7178
+ },
+ "saturation": {
+  "k": 1.2,
+  "photo_slopes": [
+   -0.1003,
+   0.0227
+  ],
+  "render_slopes": [
+   -0.0679,
+   0.0392
+  ],
+  "error": 0.9353,
+  "y_floor": 0.2797,
+  "tries": [
+   {
+    "k": 0.0,
+    "slopes": [
+     -0.0516,
+     0.0414
+    ]
+   },
+   {
+    "k": 0.05,
+    "slopes": [
+     -0.052,
+     0.0413
+    ]
+   },
+   {
+    "k": 0.1,
+    "slopes": [
+     -0.0525,
+     0.0412
+    ]
+   },
+   {
+    "k": 0.15,
+    "slopes": [
+     -0.0529,
+     0.0411
+    ]
+   },
+   {
+    "k": 0.2,
+    "slopes": [
+     -0.0534,
+     0.041
+    ]
+   },
+   {
+    "k": 0.25,
+    "slopes": [
+     -0.0539,
+     0.0409
+    ]
+   },
+   {
+    "k": 0.3,
+    "slopes": [
+     -0.0545,
+     0.0408
+    ]
+   },
+   {
+    "k": 0.35,
+    "slopes": [
+     -0.055,
+     0.0407
+    ]
+   },
+   {
+    "k": 0.4,
+    "slopes": [
+     -0.0556,
+     0.0406
+    ]
+   },
+   {
+    "k": 0.45,
+    "slopes": [
+     -0.0562,
+     0.0405
+    ]
+   },
+   {
+    "k": 0.5,
+    "slopes": [
+     -0.0568,
+     0.0404
+    ]
+   },
+   {
+    "k": 0.55,
+    "slopes": [
+     -0.0574,
+     0.0403
+    ]
+   },
+   {
+    "k": 0.6,
+    "slopes": [
+     -0.0581,
+     0.0402
+    ]
+   },
+   {
+    "k": 0.65,
+    "slopes": [
+     -0.0588,
+     0.0401
+    ]
+   },
+   {
+    "k": 0.7,
+    "slopes": [
+     -0.0595,
+     0.04
+    ]
+   },
+   {
+    "k": 0.75,
+    "slopes": [
+     -0.0602,
+     0.04
+    ]
+   },
+   {
+    "k": 0.8,
+    "slopes": [
+     -0.061,
+     0.0399
+    ]
+   },
+   {
+    "k": 0.85,
+    "slopes": [
+     -0.0618,
+     0.0398
+    ]
+   },
+   {
+    "k": 0.9,
+    "slopes": [
+     -0.0626,
+     0.0397
+    ]
+   },
+   {
+    "k": 0.95,
+    "slopes": [
+     -0.0635,
+     0.0396
+    ]
+   },
+   {
+    "k": 1.0,
+    "slopes": [
+     -0.0644,
+     0.0395
+    ]
+   },
+   {
+    "k": 1.05,
+    "slopes": [
+     -0.0653,
+     0.0394
+    ]
+   },
+   {
+    "k": 1.1,
+    "slopes": [
+     -0.0662,
+     0.0393
+    ]
+   },
+   {
+    "k": 1.15,
+    "slopes": [
+     -0.0671,
+     0.0393
+    ]
+   },
+   {
+    "k": 1.2,
+    "slopes": [
+     -0.0679,
+     0.0392
+    ]
+   }
+  ]
+ },
+ "render": {
+  "seconds": 12.9,
+  "samples": 256,
+  "size": [
+   977,
+   1402
+  ],
+  "spot_w": 30823.08,
+  "wall_strength": 0.0844,
+  "albedo": [
+   0.45,
+   0.4354,
+   0.4451
+  ],
+  "look": "None",
+  "filter_px": 1.8
+ },
+ "seconds": 144.6
+}

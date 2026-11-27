@@ -1859,6 +1859,23 @@ fronds and more of its tracery back; 05's lower left still darker than its photo
 brightness. Ours, rebuilt: its measures as committed; its log gains two fields that fix 13 corrected (`turned`, and the
 enclosed area now equal to the front face).
 
+*Fix 21, the tone curve checked pixel by pixel (2026-11-27; written, off by default, waiting on the user;
+`c023_tonecheck.jpg`).* The user, on `c023_fine.jpg`: "better! but the tone is still a bit darker than the original".
+Before the tone curve the render's lattice already matches the photo: 03's stone next to the holes 0.689 against
+0.686, further in 0.80 to 0.81 against 0.80 to 0.82. The curve took it to 0.484 and 0.75, its lower exponent 2.82
+(05: 2.27), because the photo's darkest tenth of stone (0.556) is far darker than the render's (0.723); mapped, those
+pixels are the shadows of the wall's mouldings and the stains, which the render does not have at any scale up to 10 px
+(fitted on both smoothed: 2.59), and the percentile match darkens every mid-tone in their place. Three other fits tried
+in scratch code and not kept: on the carved field only (03's field is 94 % of its box: 2.71), on the stone near the
+openings (worse: 3.08 to 3.73), pixel by pixel (03 1.42, but backlit 09 and 16 run to the limit, 0.30). Kept, behind
+`--tone-check`: each half of the curve stays only where it brings the render's stone nearer the photo's, pixel by pixel,
+than no curve. 03 and 05 lose their lower half (03: 0.187 against 0.175 with none), keep their upper. On the crops the
+stone comes to the photo's: 03 0.611 to 0.747 (photo 0.755), its edges 0.484 to 0.686 (0.686); 05 0.494 to 0.644
+(0.694). But the curve's lower half had also crushed the grey in the holes (the pixel filter's spill of the stone's
+light, lit tunnel walls), and the holes go from 0.017 to 0.048 (03; photo 0.013) and 0.060 (05; 0.016): the openings'
+IoU falls 0.696 to 0.653 and 0.670 to 0.629, 03's SSIM 0.604 to 0.590, 05's 0.552 to 0.570. Ours loses its lower half
+too (0.0718 against 0.0702; a 1.06 to 1.00): SSIM 0.5429 to 0.5427, openings IoU 0.7956 to 0.7953, by eye the same.
+
 *Open, not yet fixed.* The tone curve's upper exponent sits at its limit of 4.0 in 8 of the 13 renders that C-022
 measured (ours 2.12), and with the fit's stone corrected 03, 05, 09 and 15 end at both limits (0.3 and 4.0); the
 cause is not found. The 25 % fit renders are not it: their stone's median is within about 10 % of the full render's
