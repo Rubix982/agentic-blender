@@ -401,6 +401,15 @@ scene = bpy.context.scene
 # closer than a fixed distance; not checked). The mesh, not the object, is scaled, because the stone's texture is read
 # in object coordinates.
 cx, cy = W / 2, H / 2
+# C-023, fix 25: the outlines (common.contours) put a pixel's centre at whole coordinates, pixel i at i; the camera's
+# frame, W x S wide and centred on 0, puts pixel i's centre at (i + 0.5 - W / 2) x S. Centred at W / 2, the geometry and
+# its textures (mapped through the same cx, cy) sat half a pixel up and left of the camera's grid: every render was
+# (0.41 to 0.47, 0.30 to 0.54) px off its photo by phase correlation (ours 0.46, 0.38; 03 0.47, 0.54; 05 0.46, 0.51),
+# which on bars 4 to 10 px wide read as their top and left edges bright and their bottom and right edges dark
+# (03: 0.743 and 0.729 against 0.579 and 0.588, the photo's within 0.024 of each other), and cost every measure taken
+# pixel by pixel. So the centre is the grid's. --old-centre: as before.
+if "--old-centre" not in argv:
+    cx, cy = (W - 1) / 2, (H - 1) / 2
 
 
 def trace_mesh(L, flat=False, fill="BOTH"):

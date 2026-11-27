@@ -18,12 +18,12 @@
   "build": {
    "ok": true,
    "exit": 0,
-   "seconds": 130.7
+   "seconds": 153.6
   },
   "compare": {
    "ok": true,
    "exit": 0,
-   "seconds": 32.0
+   "seconds": 36.0
   }
  },
  "02-louvre-ad-1": {
@@ -45,12 +45,12 @@
   "build": {
    "ok": true,
    "exit": 0,
-   "seconds": 102.4
+   "seconds": 123.5
   },
   "compare": {
    "ok": true,
    "exit": 0,
-   "seconds": 37.5
+   "seconds": 44.6
   }
  },
  "03-sidi-saiyyed-a": {
@@ -72,12 +72,12 @@
   "build": {
    "ok": true,
    "exit": 0,
-   "seconds": 173.3
+   "seconds": 216.7
   },
   "compare": {
    "ok": true,
    "exit": 0,
-   "seconds": 51.6
+   "seconds": 54.8
   }
  },
  "04-sidi-saiyyed-b": {
@@ -99,12 +99,12 @@
   "build": {
    "ok": true,
    "exit": 0,
-   "seconds": 62.6
+   "seconds": 80.6
   },
   "compare": {
    "ok": true,
    "exit": 0,
-   "seconds": 17.2
+   "seconds": 23.6
   }
  },
  "05-sidi-saiyyed-c": {
@@ -126,12 +126,12 @@
   "build": {
    "ok": true,
    "exit": 0,
-   "seconds": 114.8
+   "seconds": 126.3
   },
   "compare": {
    "ok": true,
    "exit": 0,
-   "seconds": 43.3
+   "seconds": 45.0
   }
  },
  "06-sidi-saiyyed-d": {
@@ -153,12 +153,12 @@
   "build": {
    "ok": true,
    "exit": 0,
-   "seconds": 108.7
+   "seconds": 108.3
   },
   "compare": {
    "ok": true,
    "exit": 0,
-   "seconds": 41.8
+   "seconds": 36.5
   }
  },
  "07-humayun-doorway": {
@@ -180,12 +180,12 @@
   "build": {
    "ok": true,
    "exit": 0,
-   "seconds": 66.5
+   "seconds": 78.4
   },
   "compare": {
    "ok": true,
    "exit": 0,
-   "seconds": 21.1
+   "seconds": 22.5
   }
  },
  "08-humayun-mihrab": {
@@ -207,12 +207,12 @@
   "build": {
    "ok": true,
    "exit": 0,
-   "seconds": 67.1
+   "seconds": 72.3
   },
   "compare": {
    "ok": true,
    "exit": 0,
-   "seconds": 16.9
+   "seconds": 17.5
   }
  },
  "09-humayun-c": {
@@ -234,12 +234,12 @@
   "build": {
    "ok": true,
    "exit": 0,
-   "seconds": 85.7
+   "seconds": 70.1
   },
   "compare": {
    "ok": true,
    "exit": 0,
-   "seconds": 16.9
+   "seconds": 17.6
   }
  },
  "10-humayun-d": {
@@ -261,12 +261,12 @@
   "build": {
    "ok": true,
    "exit": 0,
-   "seconds": 77.6
+   "seconds": 108.9
   },
   "compare": {
    "ok": true,
    "exit": 0,
-   "seconds": 13.5
+   "seconds": 16.6
   }
  },
  "11-red-fort-marble": {
@@ -288,12 +288,12 @@
   "build": {
    "ok": true,
    "exit": 0,
-   "seconds": 83.9
+   "seconds": 94.9
   },
   "compare": {
    "ok": true,
    "exit": 0,
-   "seconds": 19.5
+   "seconds": 22.6
   }
  },
  "12-jaisalmer-slide": {
@@ -315,12 +315,12 @@
   "build": {
    "ok": true,
    "exit": 0,
-   "seconds": 115.0
+   "seconds": 236.2
   },
   "compare": {
    "ok": true,
    "exit": 0,
-   "seconds": 16.0
+   "seconds": 20.5
   }
  },
  "13-jaali-window-a": {
@@ -342,12 +342,12 @@
   "build": {
    "ok": true,
    "exit": 0,
-   "seconds": 76.9
+   "seconds": 90.3
   },
   "compare": {
    "ok": true,
    "exit": 0,
-   "seconds": 12.2
+   "seconds": 17.4
   }
  },
  "14-jaali-window-b": {
@@ -369,12 +369,12 @@
   "build": {
    "ok": true,
    "exit": 0,
-   "seconds": 147.0
+   "seconds": 187.6
   },
   "compare": {
    "ok": true,
    "exit": 0,
-   "seconds": 15.9
+   "seconds": 22.7
   }
  },
  "15-nilabagh-palace": {
@@ -396,12 +396,12 @@
   "build": {
    "ok": true,
    "exit": 0,
-   "seconds": 49.4
+   "seconds": 63.2
   },
   "compare": {
    "ok": true,
    "exit": 0,
-   "seconds": 10.7
+   "seconds": 13.0
   }
  },
  "16-bibi-ka-maqbara": {
@@ -423,12 +423,12 @@
   "build": {
    "ok": true,
    "exit": 0,
-   "seconds": 143.6
+   "seconds": 154.5
   },
   "compare": {
    "ok": true,
    "exit": 0,
-   "seconds": 30.9
+   "seconds": 32.1
   }
  },
  "17-fatehpur-sikri-a": {
@@ -450,12 +450,12 @@
   "build": {
    "ok": true,
    "exit": 0,
-   "seconds": 526.7
+   "seconds": 621.7
   },
   "compare": {
    "ok": true,
    "exit": 0,
-   "seconds": 17.9
+   "seconds": 20.8
   }
  },
  "18-fatehpur-sikri-b": {
@@ -477,12 +477,12 @@
   "build": {
    "ok": true,
    "exit": 0,
-   "seconds": 229.7
+   "seconds": 237.8
   },
   "compare": {
    "ok": true,
    "exit": 0,
-   "seconds": 15.9
+   "seconds": 19.6
   }
  }
 }

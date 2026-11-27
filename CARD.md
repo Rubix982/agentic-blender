@@ -1913,13 +1913,37 @@ against 0.074); an unsharp mask fitted to it (0.8 px, amount 2 to 2.5) makes the
 flat, and SSIM on the crops moves by under 0.01 either way. Being tested: 03 with the normal map off, and with the spot
 at 15 degrees (`--spot-el`, a new switch; 59 the default).
 
+*The shine's tests, and fix 25 (2026-11-27, unattended on the user's word: "continue largely this process of rendering
+and re-evaluating the results, and improving fixes around").* On 03, the stone along a hole by side, as a spread (the
+most minus the least of the four; the photo's 0.024), its crest over its edge (the photo's 0.848), SSIM: as built 0.165,
+0.848, 0.606; with the bars rounded (fix 24) 0.230, 0.843, 0.588, worse; with the normal map off 0.086, 0.966, 0.413; the
+spot at 15 degrees with its pool as fitted at 59 the spot barely lit the stone (its cone shrinks with the angle; the
+power ran to 2e10 W, the stone 0.286) and the spread was 0.027; refitted, at 15 degrees 0.151 and SSIM 0.497, at 30
+degrees 0.152 and 0.532, with the rounding too 0.163. So the spot's angle does not make the lopsided edges, and the
+spread fell only when the spot hardly lit the stone. 05 rounded: 0.215 against 0.171, SSIM 0.561 against 0.576. What
+did: every render sat half a pixel up and left of its photo, by phase correlation (0.41 to 0.47, 0.30 to 0.54 px on
+ours, 03, 05, 13, 18), and on bars 4 to 10 px wide a pixel measured on the photo's outline is on the bar's full stone at
+its top and left and half in the hole at its bottom and right. The outlines put a pixel's centre at whole coordinates,
+the camera's frame at half ones, and the scene was centred at W / 2. Fix 25 centres it at (W - 1) / 2, (H - 1) / 2
+(`--old-centre`: as before). Ours, rebuilt: off by (0.01, -0.01) px, SSIM 0.543 to 0.582 (patches 0.539 to 0.611),
+openings IoU 0.796 to 0.806, the largest step on ours in C-023; every measure the chain takes pixel by pixel had carried
+the half pixel, the tone check (fix 21) and the light fit's map among them. The 18 rebuilt with it: every one sits
+on its photo within 0.05 px but 04 (0.69 px down, not yet looked into), and SSIM rose on all 18, by 0.052 on average:
+15 +0.099, 03 +0.096, 05 +0.095, 11 +0.092, 12 +0.090, 01 +0.059, 16 +0.057, 04 +0.043, 13, 14 and 17 +0.035 to
++0.040, 02 +0.036, 10, 18 and 08 +0.030 to +0.032, 09 +0.020, 07 +0.019, 06 +0.017; the openings' IoU with them (09
+0.873 to 0.977, 12 0.717 to 0.837, 15 0.657 to 0.787). The
+shine itself is still open: a half pixel does not change how a render looks beside its photo, only how it measures.
+
 *Open, not yet fixed.* The tone curve's upper exponent sits at its limit of 4.0 in 8 of the 13 renders that C-022
 measured (ours 2.12), and with the fit's stone corrected 03, 05, 09 and 15 end at both limits (0.3 and 4.0); the
 cause is not found. The 25 % fit renders are not it: their stone's median is within about 10 % of the full render's
 (09: 0.149 at 337 W against 0.116 at 273 W; 13: 0.319 against 0.343 at one power). 13 and 14's holes render dim pink
 where the photos' are lit white: the light behind a backlit screen is not yet the photo's.
 
-**Result (2026-11-27, after fixes 1 to 23):** as below; 03's and 05's lattices now near their photos' tone (stone 0.717 and 0.619
+**Result (2026-11-28, after fixes 1 to 25, fix 24 off):** every render now on its photo's pixel grid (fix 25), SSIM up on all 18
+and ours (0.543 to 0.582); the user's shine on 03 and 05 still open.
+
+*After fixes 1 to 23 (2026-11-27):* as below; 03's and 05's lattices now near their photos' tone (stone 0.717 and 0.619
 against 0.755 and 0.694, from 0.611 and 0.494), holes black; the light fit no longer jumps under the brightness rules.
 Waiting on the user's glance at `c023_tone.jpg`.
 
