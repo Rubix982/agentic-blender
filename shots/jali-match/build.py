@@ -701,6 +701,50 @@ if NORMAL_MAP:
         NM /= np.maximum(np.linalg.norm(NM, axis=2, keepdims=True), 1e-6)
         log["photo_detail"] = dict(tilt_per_unit=PHOTO_DETAIL, **({"scaled_by": round(DETAIL_SCALE, 4)} if DETAIL_SCALE < 1 else {}), carved_share=CARVED_SHARE, mid_weight=MID_W, flat_share_of_stone=round(float((flatw[k["stone"]] > 0.5).mean()), 4),
                                    detail_std=round(float(detail[k["stone"]].std()), 4))
+    # C-023, fix 24 (the user: "there is some shine on the originals, that our renders do not capture"). In the photo
+    # the stone along a hole is about as bright whichever side the hole is on, and each bar brighter along its crest:
+    # rounded bars. Marigold's normals round ours's bars (at stone 1 to 2 px from a hole, their part towards the hole
+    # is 0.33 above, 0.25 below, 0.19 left, 0.25 right), but not 03's or 05's, whose bars are 4 to 10 px wide on its
+    # 768 px tiles: there every edge has the same normal, (0.18, 0.13, 0.97) on 03, one tilt for the whole lattice,
+    # and the relief (2 px in, blended over 40 px) is set for wide bars and gives these none. With --round-bars, where
+    # the map's part towards the nearest hole at 1 to 2 px from it is under ROUND_MIN, each bar's normals are tilted
+    # towards its nearest hole, none at its crest (the largest distance from a hole within 3 px) and most at its edge,
+    # scaled so that part comes to ROUND_TARGET, ours's by the same measure (0.208; 03 0.031, 05 0.023, 12 0.001).
+    ROUND = {}
+    if "--round-bars" in argv:
+        ROUND_MIN, ROUND_TARGET = 0.10, 0.21
+        st_r = k["stone"]
+        dist_r = np.zeros(st_r.shape, np.float32)
+        e_r = st_r.copy()
+        for _ in range(12):                                            # distance from a hole, 4-neighbour, to 12 px
+            dist_r += e_r
+            e_r = C.erode(e_r, 1)
+        gy_r, gx_r = np.gradient(C.blur(dist_r, 3))
+        g_r = np.sqrt(gx_r ** 2 + gy_r ** 2) + 1e-6
+        tx_r, ty_r = -gx_r / g_r, gy_r / g_r                           # towards the hole, Marigold's frame (y up)
+        _fbr = _rp.get("field_box", [x0, y0, x1, y1])
+        in_f = np.zeros(st_r.shape, bool)
+        in_f[_fbr[1]:_fbr[3] + 1, _fbr[0]:_fbr[2] + 1] = True
+        edge_r = st_r & in_f & (dist_r <= 2) & (g_r > 0.05)
+        curv0 = float(np.median(NM[:, :, 0][edge_r] * tx_r[edge_r] + NM[:, :, 1][edge_r] * ty_r[edge_r])) if edge_r.any() else 1.0
+        ROUND = dict(towards_hole_before=round(curv0, 4))
+        if curv0 < ROUND_MIN:
+            crest = dist_r.copy()
+            pad = np.pad(dist_r, 3, mode="edge")
+            for dy in range(7):
+                for dx in range(7):
+                    crest = np.maximum(crest, pad[dy:dy + st_r.shape[0], dx:dx + st_r.shape[1]])
+            xr = np.clip((crest - dist_r + 0.5) / np.maximum(crest, 1.0), 0.0, 1.0) * st_r
+            med_x = float(np.median(xr[edge_r])) if edge_r.any() else 1.0
+            tilt = (ROUND_TARGET - curv0) / max(med_x, 0.1)
+            NM = NM.copy()
+            NM[:, :, 0] += tilt * xr * tx_r
+            NM[:, :, 1] += tilt * xr * ty_r
+            NM /= np.maximum(np.linalg.norm(NM, axis=2, keepdims=True), 1e-6)
+            curv1 = float(np.median(NM[:, :, 0][edge_r] * tx_r[edge_r] + NM[:, :, 1][edge_r] * ty_r[edge_r]))
+            ROUND.update(edge_tilt=round(tilt, 4), towards_hole_after=round(curv1, 4))
+        log["round_bars"] = ROUND
+        print("ROUND", ROUND, flush=True)
     nimg = bpy.data.images.new("marigold normals", W, H, alpha=False, float_buffer=True)
     nimg.colorspace_settings.name = "Non-Color"
     px = np.ones((H, W, 4), np.float32)
