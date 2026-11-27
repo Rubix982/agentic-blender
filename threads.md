@@ -259,3 +259,19 @@ by those large "openings" and spans the picture, and the render cuts them out an
 colour at that height the jali's dark blue-green holes (the user: "a strange blueish affect"). A lead: place the field
 where openings are many and packed (fix 8's density, a count of pieces), not where they are large.
 **Answer:** —
+
+### T-023 · Can the rebuilt screens, taken together, be a library from which new jali designs are generated?
+
+**Status:** open
+**Parent:** T-018
+**Opened:** 2026-11-27
+**Question:** The user, during C-023: going over each piece until it reads as its photo builds a library of assets, "to
+the point that we might generatively create new assets based on past renders, completely new designs not seen before."
+What each rebuild holds now is a traced outline mask, a relief from normals and an albedo, matched to one photo; it
+does not hold the design's own structure (motif, repeat, symmetry, grid), which C-009's averaging and `symmetry.py`
+touched once. Open: what representation of a screen a generator would need, and how many rebuilt screens make a library.
+**Progress:** C-024 (2026-11-27): as traced, no screen's openings give a motif; one repeat away they match at most 47 %
+of themselves over a field and 64 % in one hand-cut panel (bar 0.70). The unit is the panel, not the field.
+C-025 (2026-11-27): from the mean of a panel's copies, each moved by one shift, 13's motif (a star and its ring
+of holes) rebuilds 83 % of its panel, 18's 80 %, 12's 67 %; 1 of 7 clears the bar, and two failures are the measure's.
+**Answer:** —

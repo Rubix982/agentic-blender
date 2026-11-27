@@ -1,0 +1,53 @@
+{
+ "0.05,0.6,0.35,0.95": {
+  "field_box": [
+   101,
+   831,
+   382,
+   1274
+  ],
+  "opening_share": 0.4085,
+  "repeat_vectors_px": [
+   [
+    208.5,
+    2.84
+   ],
+   null
+  ],
+  "central_lobe_px": 73663,
+  "peaks": [
+   [
+    0.34,
+    208.5,
+    2.8
+   ],
+   [
+    0.157,
+    163.1,
+    6.7
+   ]
+  ],
+  "mirror_x": 207,
+  "mirror_r": 0.4151,
+  "prediction_iou": 0.517,
+  "predicted_share": 0.9983,
+  "baseline_iou": 0.2755,
+  "lattice_only": 0.4972,
+  "mirror_only": 0.4789,
+  "drift_px": [
+   [
+    null
+   ],
+   [
+    null
+   ],
+   [
+    null
+   ],
+   [
+    null
+   ]
+  ],
+  "counts_as_lattice": false
+ }
+}

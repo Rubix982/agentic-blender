@@ -1,0 +1,66 @@
+{
+ "field_box": [
+  162,
+  88,
+  1044,
+  1226
+ ],
+ "opening_share": 0.3222,
+ "repeat_vectors_px": [
+  [
+   280.88,
+   1.04
+  ],
+  null
+ ],
+ "central_lobe_px": 4433,
+ "peaks": [
+  [
+   0.283,
+   280.9,
+   1.0
+  ],
+  [
+   0.242,
+   139.0,
+   -169.0
+  ],
+  [
+   0.239,
+   141.8,
+   170.0
+  ],
+  [
+   0.158,
+   559.6,
+   1.9
+  ],
+  [
+   0.155,
+   418.3,
+   -168.3
+  ]
+ ],
+ "mirror_x": 599,
+ "mirror_r": 0.3327,
+ "prediction_iou": 0.3959,
+ "predicted_share": 0.9841,
+ "baseline_iou": 0.2128,
+ "lattice_only": 0.3782,
+ "mirror_only": 0.3976,
+ "drift_px": [
+  [
+   null
+  ],
+  [
+   null
+  ],
+  [
+   3.0
+  ],
+  [
+   1.29
+  ]
+ ],
+ "counts_as_lattice": false
+}

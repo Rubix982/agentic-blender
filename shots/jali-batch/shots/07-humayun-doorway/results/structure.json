@@ -1,0 +1,23 @@
+{
+ "field_box": [
+  308,
+  431,
+  776,
+  968
+ ],
+ "opening_share": 0.0712,
+ "repeat_vectors_px": [
+  null,
+  null
+ ],
+ "central_lobe_px": 40419,
+ "peaks": [],
+ "mirror_x": 621,
+ "mirror_r": 0.1933,
+ "prediction_iou": 0.0,
+ "predicted_share": 0.4885,
+ "baseline_iou": null,
+ "mirror_only": 0.0,
+ "drift_px": null,
+ "counts_as_lattice": false
+}

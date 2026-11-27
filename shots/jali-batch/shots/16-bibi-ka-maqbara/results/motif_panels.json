@@ -1,0 +1,27 @@
+{
+ "0.43,0.55,0.62,0.78": {
+  "size": [
+   179,
+   292
+  ],
+  "repeat_vectors_px": [
+   [
+    36.26,
+    -39.49
+   ],
+   [
+    32.27,
+    43.06
+   ]
+  ],
+  "patch_px": 67,
+  "shift_max_px": 5,
+  "patches": 7,
+  "iou_unshifted": 0.6208,
+  "iou": 0.6578,
+  "baseline_iou": 0.4742,
+  "shift_px_median": 1.0,
+  "shift_px_max": 1.41,
+  "counts": false
+ }
+}

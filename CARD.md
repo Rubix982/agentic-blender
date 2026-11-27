@@ -1863,3 +1863,110 @@ the method, as field 5's second branch says, and in this order of how many shots
 lit from behind or by its room (08, 09, 10, 13, 14, 16, 17, 18: a front spot and a tone curve at its limits); the
 wall seen through the holes (ten flat bands, where 04, 14, 17 and 18 look onto a scene); the edges' sharpness (03 and
 18's twice the photo's width; the bevel untested); 12's fill (4,686 outlines); 06 and 07 outside what the method does.
+
+### C-024 · Each screen's structure from its traced openings: its repeat, its mirror, and how much one motif rebuilds
+
+**Opened:** 2026-11-27, on the user's word ("we should start working on extracting the structural aspects, the motifs,
+repetition, symmetry, grid"), with C-023's last batch (fixes 18 to 20) still running; its result is written when the
+batch lands. From T-023.
+
+1. **WHERE WE ARE.** 19 screens are rebuilt from their photos (ours and C-023's 18), each as a traced opening mask, a
+   relief and a stone colour; 13 of the 18 read as their photos. Only ours has had its structure measured: C-009 found
+   its repeat vectors (141.2, −177.3) and (146.3, 173.4) px at the working size and its mirror axis at x = 613
+   (`shots/jali-match/results/symmetry.json`), with its field's rows hard-coded.
+2. **WHAT WE ARE DOING.** For each of the 19 traced opening masks, inside its carved field
+   (`results/read_photo.json`'s `field_box`): find the two repeat vectors (the strongest peaks of the mask's
+   autocorrelation, as `symmetry.py` does) and the best vertical mirror axis, then predict every pixel of the mask
+   from its copies one lattice step away and from its mirror image, leaving the pixel's own value out, and score the
+   prediction against the mask by IoU of the openings. The same prediction from the same number of copies at random
+   shifts is the baseline. A new `shots/jali-batch/structure.py`, run in the repo's `.venv`; `symmetry.py` is not
+   touched (ours's build imports it).
+3. **WHY.** Unknown: whether the traced masks carry their design's structure at all. They hold reading errors, wear,
+   and the camera's slant, and some designs are not lattices (03 and 05's trees). Finding a lattice in a real photo is
+   studied (Liu, Collins and Tsin 2004 on wallpaper groups; Hays et al. 2006 and Park et al. 2009 on lattices bent by
+   perspective), and making new star patterns from a motif and its symmetry group is too (Kaplan and Salesin 2004); not
+   known is whether our masks, as traced, are good enough to start from. After: for each screen, a number for how much
+   of it one motif and its mirror rebuild.
+4. **WHAT IS AFFECTED.** Nothing that exists changes: a new script and a `results/structure.json` per shot. The check
+   on the script itself: on ours it must find C-009's vectors within 2 px. T-023's question (what a generator would
+   learn from) waits on this card's answer.
+5. **CONCLUSION.** A screen counts as a motif on a lattice when its leave-one-out prediction reaches an openings IoU of
+   0.70 (about what our own render reaches against the photo; a motif that describes the screen worse than our render
+   does is no description) and beats the random-shift baseline by 0.15. If at least half of the 19 count, the library's
+   form is motif, lattice and mirror, and the next card cuts each counted screen's motif out as one clean tile. If
+   fewer, the failures are sorted by their autocorrelation: peaks that drift across the field (the camera's slant) go
+   to a card that straightens the photo first; no peaks at all (no lattice) means that design needs another
+   description, such as a branching one for the trees.
+6. **CONSEQUENCE OF NOT DOING IT.** The rebuilt screens stay photo-matched surfaces with no design in them, and T-023
+   (new designs from the library) has nothing to learn from.
+
+**Measures (2026-11-27; `shots/jali-batch/structure.py`, `c024_masks.jpg`, `c024_panels.jpg`).** The check holds: on
+ours the finder gives (141.8, −177.7) and (146.4, 174.1) px, within 0.7 px of C-009's. Whole fields, the openings IoU
+of the prediction from one lattice step and the mirror (baseline in brackets): ours 0.344 (0.071), 02 0.396 (0.213),
+08 0.460 (0.107), 10 0.472 (0.157), 12 0.462 (0.316), 13 0.395 (0.122), 16 0.318 (0.172), 17 0.324 (0.150); eleven
+have no peak of 0.25 and are predicted by the mirror alone, from 0.000 (07, whose reading is not of a screen) to
+0.387 (05). In 02, 08, 16 and 17 the strongest repeat is a panel's (281, 555, 180 and 94 px), not a motif's. The
+masks show why: most fields are not one design. 13 to 18 are mullioned windows whose panels carry different
+patterns (15 a grid of square panels, each its own star), 08 and 10 a lattice round an inner arched panel, and the
+fields of 03 to 07 and 09 take in wall, porch, room or the sunlit floor. On seven panels cut by hand from the masks
+(fractions of the field in `results/structure_panels.json`) every score rises and none reaches the bar: ours's lower
+field 0.454 (0.074), 08's side strip 0.435 (0.237), 10's 0.446 (0.256), 12's lattice 0.570 (0.375), 13's lower left
+panel 0.638 (0.164), 16's 0.517 (0.276), 18's 0.460 (0.303). The drift is not what keeps 13's panel under: its vectors
+move under 1.2 px between its quarters (ours's lower field 2.5 to 5.9 px).
+
+**Result (2026-11-27, closed): no, as traced.** Laid over itself one repeat away, a screen's traced openings match at
+most 47 % of themselves over a whole field (10) and 64 % within one panel (13), against 0.70 asked; none of the 19
+counts. Field 5 named two causes and found a third, the larger: a field holds several designs (panels, frames,
+surroundings), and cutting one panel out raised every score, by 0.10 to 0.24. Within a panel, unaligned copies of a
+hand-carved motif, traced at a few pixels to a hole, still differ by a third. Not tested here: whether copies each
+moved by one shift onto the others' median give a motif that clears the bar (the next card, if chosen), and finding the
+panels without a hand.
+
+### C-025 · One motif per panel from its copies, each moved by one shift onto the others: does it rebuild the panel?
+
+**Opened:** 2026-11-27, on the user's word ("continue with c-025 next"), C-023's last batch still running.
+
+1. **WHERE WE ARE.** C-024: laid over itself one repeat away, a traced panel matches at most 64 % of its openings (13's
+   lower left panel; baseline 16 %), against 0.70 asked; over whole fields at most 47 %. Within 13's panel the lattice
+   moves under 1.2 px across it, ours's lower field 2.5 to 5.9 px.
+2. **WHAT WE ARE DOING.** On seven panels, each one design, cut by hand as fractions of the field (`c025_panels.jpg`:
+   ours's lower field 0,0.35,1,1; 08's inner arched panel 0.35,0.52,0.65,0.80; 10's 0.36,0.55,0.64,0.82; 12's lattice
+   below its window 0.05,0.55,0.95,0.92; 13's lower left panel 0.01,0.74,0.44,0.99; 16's central lower panel
+   0.43,0.55,0.62,0.78; 18's second lower panel 0.23,0.76,0.48,0.99): cut a square patch 1.2 repeats wide at every
+   lattice point, and four times over move each patch by the one whole-pixel shift (within a tenth of the repeat) that
+   best matches the mean of all the other patches. Then predict each patch from the others' mean, its own pixels left
+   out, and score the openings by IoU. The baseline is the same, from patches at random places, with the same shifts
+   allowed. `shots/jali-batch/motif.py`, beside C-024's `structure.py` (whose functions it uses).
+3. **WHY.** Unknown: whether the traces hold a clean motif once each copy may sit a few pixels off its ideal place
+   (hand carving, the camera's slant), or whether the copies differ in shape, beyond any shift, by too much for one
+   motif to stand for them. After: for each panel, how much of it one motif rebuilds, and the motif itself, as an image.
+4. **WHAT IS AFFECTED.** Nothing that exists: a new script, `results/motif_panels.json` per shot, a sheet of the seven
+   motifs. One shift per copy is two numbers fitted to each patch of thousands of pixels; the baseline gets the same
+   freedom, so it is the difference that counts.
+5. **CONCLUSION.** The bar is C-024's: IoU 0.70 or more, and 0.15 over the baseline. If 4 or more of the 7 panels
+   count, a clean motif comes out of the traces with one shift per copy, and the next card finds the panels without a
+   hand. If 3 or fewer, the copies differ in shape at the trace's scale (a few pixels to a hole), and the motif should be
+   read from the photo's brightness averaged over aligned copies, not from the traced openings.
+6. **CONSEQUENCE OF NOT DOING IT.** C-024's no stands for the traces as they are, and it stays unknown whether the
+   rebuilt screens hold their motifs at all; T-023 has nothing to start from.
+
+**Measures (2026-11-27; `shots/jali-batch/motif.py`, `c025_motifs.jpg`: one patch | the motif's mean | the motif at
+0.5).** Openings IoU from the other patches' mean, aligned (unshifted; random places, aligned the same): 13 0.830
+(0.817; 0.326), 18 0.803 (0.780; 0.697), 12 0.674 (0.447; 0.558), 16 0.658 (0.621; 0.474), ours 0.562 (0.540;
+0.119), 10 0.400 (0.284; 0.389), 08 0.302 (0.146; 0.314). Copies per panel: 13 in 13's, 81 in 18's, 2,229 in 12's, 7 in 16's and ours's, 25 in 10's, 29 in 08's.
+Most of the gain over C-024 is from the mean of all the copies rather than the four nearest and the mirror (13's
+panel 0.638 to 0.817 unshifted); the shifts add 0.01 to 0.04, except on 12 (0.22), whose many copies sit up to 4 px
+off a lattice fitted over 815 px. On 08 and 10 the finder took a 21 to 26 px echo inside the motif for the repeat:
+the motif's mean is one blurred hole, the shifts ran to their limit, and the score is the baseline's. Their inner
+panels hold too few copies of the true repeat for its peak; that is the instrument failing, not the copies. 18's motif
+is clean to the eye (a lattice of rounded squares) and misses the bar only by its margin over the baseline: its panel
+is so open that patches anywhere predict 70 % of it. Ours's and 16's motifs, from 7 copies each of a large motif, come
+out blotched, the copies' shapes differing.
+
+**Result (2026-11-27, closed): 1 of 7, so no by the bar, but not for field 5's one reason.** Built from the mean of a
+panel's copies, each moved by one shift, a motif rebuilds 83 % of 13's panel (random places 33 %): a clean star and
+its ring of holes, the first motif drawn out of a trace. The other six fail for three different reasons, and field 5
+named one: copies that differ in shape (ours, 16: seven copies each of a large motif). The others are the measure's:
+the repeat not found on two small panels (08, 10), and a bar the densest patterns cannot clear over their own
+openness (18 at 0.80, 12 at 0.67, against baselines of 0.70 and 0.56). So field 5's second branch, the motif read
+from the photo's brightness, is supported only for the large motifs.
