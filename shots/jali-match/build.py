@@ -722,6 +722,8 @@ if NORMAL_MAP:
     ROUND = {}
     if "--round-bars" in argv:
         ROUND_MIN, ROUND_TARGET = 0.10, 0.21
+        if "--round-target" in argv:                                 # a switch, to test the rounding's strength
+            ROUND_TARGET = float(argv[argv.index("--round-target") + 1])
         st_r = k["stone"]
         dist_r = np.zeros(st_r.shape, np.float32)
         e_r = st_r.copy()
@@ -1408,6 +1410,42 @@ def fit_power(n):
 
 
 fit_power(3)
+# C-023, fix 26 (the user, on 03 and 05: still "a bit darker", and "there is some shine on the originals"). With the
+# render on the photo's grid (fix 25), 05's lattice is darker than its wall where the photo's is not: by band, 0.62,
+# 0.59, 0.59 against 0.72, 0.67, 0.64, the wall above 0.86 against 0.86; its stone's top end 0.837 at the 95th
+# percentile against 0.956. Fix 18's cores still give its lattice 0.74 of its wall's albedo where the photo shows the
+# stone at 0.89 of the wall's brightness, and the spot's pool and the pixel filter on thin bars add to it. So, with
+# --albedo-refine, one render at half size, and the albedo's slow change is put right by the photo: over the stone's
+# cores (2 px in) inside the box, in linear light, the photo over the render, both blurred as the albedo is
+# (ALBEDO_BLUR), normalised to a median of 1 so only the balance between regions moves, held to 0.5 to 2; then the
+# power is fitted again.
+ALBEDO_REFINE = "--albedo-refine" in argv and USE_ALBEDO and NORMAL_MAP     # the albedo map is made with the normal map
+if ALBEDO_REFINE:
+    def _lin(v):
+        v = np.asarray(v, np.float64)
+        return np.where(v <= 0.04045, v / 12.92, ((v + 0.055) / 1.055) ** 2.4)
+    _rpath = os.path.join(OUT, "refine.png")
+    render(_rpath, 50, 32)
+    _yr = _lin(C.luminance(C.load(_rpath, (W, H))))
+    _yp = _lin(k["y"])
+    _m = np.zeros((H, W), np.float32)
+    _m[BOX] = C.erode(k["stone"], 2)[BOX]
+    _den = C.blur(_m, ALBEDO_BLUR)
+    _num_p = C.blur((_yp * _m).astype(np.float32), ALBEDO_BLUR)
+    _num_r = C.blur((_yr * _m).astype(np.float32), ALBEDO_BLUR)
+    _ok = (_den > 0.05) & (_num_r > 1e-5)
+    _ratio = np.where(_ok, _num_p / np.maximum(_num_r, 1e-6), 1.0)
+    _med = float(np.median(_ratio[_m > 0.5])) if (_m > 0.5).any() else 1.0
+    _ratio = np.clip(_ratio / max(_med, 1e-6), 0.5, 2.0)
+    _ratio = np.where(k["stone"], _ratio, 1.0)
+    AL_REF = np.clip(AL * _ratio[:, :, None], 0.0, 1.0)
+    apx[:, :, :3] = AL_REF
+    aimg.pixels.foreach_set(np.flipud(apx).ravel())
+    aimg.update()
+    log["albedo_refine"] = dict(ratio_p10_p90=[round(float(np.percentile(_ratio[_m > 0.5], q)), 4) for q in (10, 90)],
+                                held=round(float(((_ratio <= 0.5) | (_ratio >= 2.0))[_m > 0.5].mean()), 4))
+    print("ALBEDO_REFINE", log["albedo_refine"], flush=True)
+    fit_power(2)
 r.image_settings.color_depth = "16"                                    # a curve on 8 bits would band
 UNTONED = os.path.join(OUT, "render_untoned.png")
 TONE_MASK = (C.erode(k["stone"], 3) & np.pad(np.ones((y1 - y0 + 1, x1 - x0 + 1), bool), ((y0, H - y1 - 1), (x0, W - x1 - 1))))

@@ -1934,6 +1934,22 @@ on its photo within 0.05 px but 04 (0.69 px down, not yet looked into), and SSIM
 0.873 to 0.977, 12 0.717 to 0.837, 15 0.657 to 0.787). The
 shine itself is still open: a half pixel does not change how a render looks beside its photo, only how it measures.
 
+*The shine on aligned renders (2026-11-28).* With fix 25 the four sides of 03's bars are as even as the photo's (spread
+0.018 against 0.024; 05 0.026 against 0.018): the lopsided edges were all the half pixel. What is left is in the stone's
+upper range: on 03's crop the 75th and 95th percentiles 0.801 and 0.941 against 0.865 and 0.973, on 05's 0.727 and 0.837
+against 0.818 and 0.956, and 05's lower lattice by band 0.62, 0.59, 0.59 against 0.72, 0.67, 0.64 where its wall
+matches (0.86 and 0.87 both). Tried, none kept: the bars rounded (fix 24) at ours's strength and at 0.35: the sides
+uneven again (0.092, 0.153 on 03), SSIM 0.702 to 0.695 and 0.685, the 95th percentile unmoved (0.943, 0.945); 05 the
+same way. An unsharp mask fitted to the photo's fine detail (the render has about half: 0.53 of it on 03, 0.47 on 05):
+SSIM over the box up on 03, 05, 11, 15 (+0.021 to +0.037), down on ours (-0.012), 02, 04, 13 and 06 (-0.092); fitted by
+least squares pixel by pixel instead, it comes to 0 on 16 of the 19, since amplified the render's fine detail does not
+line up with the photo's: the photo's is carving the model does not have. The albedo's slow change put right by the
+photo (fix 26, `--albedo-refine`, off): 03's SSIM 0.702 to 0.736 and openings IoU 0.735 to 0.809, but its lattice
+darker (crop median 0.721 to 0.667 against the photo's 0.755); 05 barely moved (0.672 to 0.679, its lower lattice
+unchanged: at the bars' cores its render and photo already agree); ours 0.582 to 0.589 with corrections up to 0.59 and
+1.34 and its IoU 0.806 to 0.792. Being tested: a narrower pixel filter (1.8 px, set on ours's wide bars; 05's edges
+are 0.79 as sharp as its photo's), 1.2 px on 03 and 05, 0.8 on 05.
+
 *Open, not yet fixed.* The tone curve's upper exponent sits at its limit of 4.0 in 8 of the 13 renders that C-022
 measured (ours 2.12), and with the fit's stone corrected 03, 05, 09 and 15 end at both limits (0.3 and 4.0); the
 cause is not found. The 25 % fit renders are not it: their stone's median is within about 10 % of the full render's
