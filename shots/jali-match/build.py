@@ -1017,6 +1017,8 @@ so = bpy.data.objects.new("spot", spot)
 scene.collection.objects.link(so)
 SPOT_EL = math.atan2(2.0, 1.2)                                         # 59 degrees up, straight on: C-007's choice,
                                                                        # and what the photo's shading says (C-012)
+if "--spot-el" in argv:                                                # C-023: a switch, to test the light's angle
+    SPOT_EL = math.radians(float(argv[argv.index("--spot-el") + 1]))
 
 
 def place_spot(ax, az, d):

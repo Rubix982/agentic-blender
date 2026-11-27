@@ -1899,6 +1899,20 @@ looked at, the stone: 03 0.611 to 0.717 (photo 0.755), its edges 0.484 to 0.655 
 edges 0.389 to 0.550 (0.642); a little under the check alone (0.747, 0.644), since fix 23's fit sets their light about
 9 % lower. Ours, rebuilt: as committed but two values at ±0.0001.
 
+*The user's shine (2026-11-27; `c023_shine.jpg`, photo | now | sharpened): "there is some shine on the originals, that
+our renders do not capture".* Measured on 03's and 05's lattice crops, the stone along a hole, by which side the hole is
+on: in the photo about the same whichever side (03: above 0.708, below 0.695, left 0.685, right 0.709; 05 within
+0.010), the bars brighter along their crests than at their edges on every side, as light from the front or from the
+sky gives on rounded bars; in the render lit from the upper left, the edges with a hole above or to the left 0.14 to
+0.17 brighter than those with one below or to the right (ours too: above minus below 0.267 against its photo's
+0.056). So each bar has one lit rim and one dark side, and reads as lit sideways and flat. The spot comes from 59
+degrees up, straight on, which explains the up-down part but not the left-right one (03's crop lies left of the
+pool's centre, where a centred spot would light the right-facing sides); the normal map read from the photo is the
+other candidate. The photo also has about twice the render's fine detail on the stone (03, a 1 px high-pass: 0.142
+against 0.074); an unsharp mask fitted to it (0.8 px, amount 2 to 2.5) makes the edges crisp but leaves the bars
+flat, and SSIM on the crops moves by under 0.01 either way. Being tested: 03 with the normal map off, and with the spot
+at 15 degrees (`--spot-el`, a new switch; 59 the default).
+
 *Open, not yet fixed.* The tone curve's upper exponent sits at its limit of 4.0 in 8 of the 13 renders that C-022
 measured (ours 2.12), and with the fit's stone corrected 03, 05, 09 and 15 end at both limits (0.3 and 4.0); the
 cause is not found. The 25 % fit renders are not it: their stone's median is within about 10 % of the full render's
