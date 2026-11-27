@@ -1950,6 +1950,18 @@ unchanged: at the bars' cores its render and photo already agree); ours 0.582 to
 1.34 and its IoU 0.806 to 0.792. Being tested: a narrower pixel filter (1.8 px, set on ours's wide bars; 05's edges
 are 0.79 as sharp as its photo's), 1.2 px on 03 and 05, 0.8 on 05.
 
+*Fix 27, the pixel filter fitted per shot (2026-11-28).* The narrower filter was the first clear gain on the shine: 03 at
+1.2 px SSIM 0.702 to 0.728, openings IoU 0.735 to 0.786, its stone's 95th percentile 0.941 to 0.964 (photo 0.973); 05 at
+1.2 px 0.672 to 0.701 and 0.699 to 0.749, at 0.8 px 0.715 and 0.797, its 95th percentile 0.837 to 0.883 (photo 0.956).
+1.8 px had been set on ours to match its photo's edge sharpness, so it is now fitted that way per shot: after the tone
+curve, full renders at 1.8 and then 1.2, 0.8, 0.6 (or 2.5, 3.2 where the edges are already sharper than the photo's),
+toned and read as compare.py reads them, and the width where the edges' gradient is the photo's, interpolated
+(`--filter W` or `--fixed-filter`: no fit). Tried on 05 and ours first: 05 fitted to 0.8 px (its edges at 0.97 there),
+SSIM 0.672 to 0.715, patches 0.753 to 0.812, openings IoU 0.699 to 0.797, stone IoU 0.900 to 0.928, the fine detail's
+correlation with the photo's 0.586 to 0.629 and its amplitude 0.51 to 0.75; ours fitted to 1.19 px, SSIM 0.5816 to
+0.5829, patches 0.611 to 0.622, openings IoU 0.806 to 0.822, its lines near the photo's 0.448 to 0.479, its fine
+amplitude 0.57 to 0.68. The 18 and ours to be rebuilt with it (held on battery).
+
 *Open, not yet fixed.* The tone curve's upper exponent sits at its limit of 4.0 in 8 of the 13 renders that C-022
 measured (ours 2.12), and with the fit's stone corrected 03, 05, 09 and 15 end at both limits (0.3 and 4.0); the
 cause is not found. The 25 % fit renders are not it: their stone's median is within about 10 % of the full render's

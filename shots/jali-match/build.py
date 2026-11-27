@@ -1523,6 +1523,48 @@ if TONE:
         fit_power(2)
         if still:
             break
+# C-023, fix 27 (the user's shine): the pixel filter, FILTER_PX = 1.8, was set on ours so its edges came out about as
+# sharp as its photo's (compare.py's edge gradient: the luminance gradient's mean along each image's own opening edges).
+# On a fine lattice it smears each thin bar's light into the black holes beside it: 05's edges 0.79 as sharp as its
+# photo's, its stone's 95th percentile 0.837 against 0.956. At 1.2 px 05's SSIM went 0.672 to 0.701, its openings IoU
+# 0.699 to 0.749, at 0.8 px to 0.715 and 0.797, the edges 0.88 and 0.97, the 95th percentile 0.861 and 0.883; 03 at 1.2
+# 0.702 to 0.728, IoU 0.735 to 0.786, edges 0.91 to 1.01, its 95th percentile 0.941 to 0.964 against 0.973. So the
+# filter is fitted per shot the way 1.8 was on ours: full renders at a few widths, toned, read, and the width where the
+# edges are as sharp as the photo's, interpolated (0.6 to 3.5 px). --filter W or --fixed-filter: no fit.
+FILTER_FIT = "--fixed-filter" not in argv and "--filter" not in argv
+if FILTER_FIT:
+    def _edge_g(kk):
+        yy = kk["y"]
+        g = np.hypot(np.gradient(yy, axis=0), np.gradient(yy, axis=1))
+        e = (C.dilate(kk["opening"], 1) & ~C.erode(kk["opening"], 1))[BOX]
+        return float(g[BOX][e].mean()) if e.any() else 0.0
+    _eg_photo = _edge_g(k)
+    _ftry = os.path.join(OUT, "filter_try.png")
+
+    def _edge_ratio(width):
+        scene.cycles.filter_width = width
+        render(_ftry, 100, SAMPLES)
+        img = C.load(_ftry)
+        if TONE:
+            img = tone_rgb(img, curve)
+        return _edge_g(C.classify(img.astype(np.float32))) / max(_eg_photo, 1e-6)
+    _tries = [(FILTER_PX, _edge_ratio(FILTER_PX))]
+    _steps = (1.2, 0.8, 0.6) if _tries[0][1] < 0.97 else ((2.5, 3.2) if _tries[0][1] > 1.05 else ())
+    for _w in _steps:
+        _tries.append((_w, _edge_ratio(_w)))
+        if (_tries[0][1] - 1.0) * (_tries[-1][1] - 1.0) <= 0:
+            break
+    _tries_s = sorted(_tries, key=lambda t: t[1])
+    _lo = max([t for t in _tries_s if t[1] <= 1.0], key=lambda t: t[1], default=None)
+    _hi = min([t for t in _tries_s if t[1] >= 1.0], key=lambda t: t[1], default=None)
+    if _lo and _hi and _hi[1] > _lo[1]:
+        _wf = _lo[0] + (1.0 - _lo[1]) * (_hi[0] - _lo[0]) / (_hi[1] - _lo[1])
+    else:
+        _wf = min(_tries, key=lambda t: abs(t[1] - 1.0))[0]
+    FILTER_FIT_W = float(min(max(_wf, 0.6), 3.5))
+    scene.cycles.filter_width = FILTER_FIT_W
+    log["filter_fit"] = dict(tries=[dict(width=round(w, 3), edge_ratio=round(e, 4)) for w, e in _tries], width=round(FILTER_FIT_W, 3))
+    print("FILTER", log["filter_fit"], flush=True)
 bpy.ops.wm.save_as_mainfile(filepath=os.path.join(OUT, "scene.blend"))
 sec = render(UNTONED if TONE else os.path.join(OUT, "render.png"), 100, SAMPLES)
 if TONE:
@@ -1626,7 +1668,7 @@ if TONE:
     log["tone"].update(a=round(curve["a"], 4), b=round(curve["b"], 4))
 log["render"] = dict(seconds=round(sec, 1), samples=SAMPLES, size=[W, H], spot_w=round(spot.energy, 2),
                      wall_strength=round(WALL_MAX, 4), albedo=[round(c, 4) for c in ALBEDO], look=LOOK,
-                     filter_px=FILTER_PX)
+                     filter_px=round(float(scene.cycles.filter_width), 3))
 log["seconds"] = round(time.time() - T0, 1)
 for path in (os.path.join(OUT, "build.json"), os.path.join(shot.RESULTS, "build.json")):
     os.makedirs(os.path.dirname(path), exist_ok=True)

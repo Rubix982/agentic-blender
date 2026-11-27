@@ -1,0 +1,23 @@
+{
+ "photo": "52680889213.jpg",
+ "size": [
+  1427,
+  2048
+ ],
+ "work": [
+  977,
+  1402
+ ],
+ "lens_mm": 28.0,
+ "sensor_mm": 24.7369,
+ "width_m": 1.05,
+ "credit": "photograph (Ninara, CC BY 2.0)",
+ "camera": "assumed: 28 mm equivalent, uncropped",
+ "source": "https://www.flickr.com/photos/37583176@N00/52680889213/",
+ "title": "Sidi Saeed Mosque, Ahmedabad",
+ "licence": "CC BY 2.0",
+ "author": "Ninara",
+ "monument": "Sidi Saiyyed Mosque, Ahmedabad",
+ "variant_of": "05-sidi-saiyyed-c",
+ "variant": "build.py --filter 1.2"
+}
