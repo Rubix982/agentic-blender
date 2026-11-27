@@ -90,6 +90,53 @@ def lattice(peaks):
     return b1, b2
 
 
+def ac_at(ac, c, n, v, min_overlap):
+    """The autocorrelation at the shift v, bilinear; None outside it or where fewer than min_overlap pixels overlap."""
+    x, y = c[1] + v[0], c[0] + v[1]
+    if not (0 <= x < ac.shape[1] - 1 and 0 <= y < ac.shape[0] - 1) or n[int(round(y)), int(round(x))] < min_overlap:
+        return None
+    x0, y0 = int(x), int(y)
+    fx, fy = x - x0, y - y0
+    return float(ac[y0, x0] * (1 - fx) * (1 - fy) + ac[y0, x0 + 1] * fx * (1 - fy) + ac[y0 + 1, x0] * (1 - fx) * fy
+                 + ac[y0 + 1, x0 + 1] * fx * fy)
+
+
+def reduce_basis(b1, b2):
+    """The lattice's shortest basis (Gauss-Lagrange reduction): the same lattice, its two shortest vectors."""
+    while True:
+        if b1 @ b1 > b2 @ b2:
+            b1, b2 = b2, b1
+        mu = round(float(b1 @ b2) / float(b1 @ b1))
+        if mu == 0:
+            return b1, b2
+        b2 = b2 - mu * b1
+
+
+def lattice_consistent(ac, c, n, peaks, min_overlap, top=12):
+    """C-026: of the pairs among the strongest peaks (0.15 or more, the TOP strongest), the lattice whose points (every
+    sum of up to two steps of each vector, where enough overlaps) have the highest mean autocorrelation; of those within
+    a tenth of the best, the smallest cell. A vector that is an echo inside the motif puts lattice points where the
+    pattern does not repeat. Returns b1, b2 (the shortest basis) and the mean."""
+    vecs = [np.array(p[1:]) for p in sorted([p for p in peaks if p[0] >= 0.15], key=lambda p: -p[0])[:top]]
+    found = []
+    for i in range(len(vecs)):
+        for j in range(i + 1, len(vecs)):
+            b1, b2 = vecs[i], vecs[j]
+            cell = abs(b1[0] * b2[1] - b1[1] * b2[0])
+            if cell < 0.3 * min(b1 @ b1, b2 @ b2):
+                continue
+            vals = [a for n1 in range(-2, 3) for n2 in range(-2, 3) if (n1, n2) != (0, 0)
+                    for a in [ac_at(ac, c, n, n1 * b1 + n2 * b2, min_overlap)] if a is not None]
+            if len(vals) >= 4:
+                found.append((float(np.mean(vals)), cell, b1, b2))
+    if not found:
+        return None, None, None
+    best = max(f[0] for f in found)
+    score, _, b1, b2 = min([f for f in found if f[0] >= 0.9 * best], key=lambda f: f[1])
+    b1, b2 = reduce_basis(b1, b2)
+    return b1, b2, score
+
+
 def mirror_axis(m, valid):
     h, w = m.shape
     f = np.where(valid, m - m[valid].mean(), 0.0)
@@ -182,7 +229,7 @@ def drift(m, valid, b1, b2):
     return res
 
 
-def run(d, crop=None):
+def run(d, crop=None, finder="shortest"):
     m, valid, box = load(d)
     if crop:
         h, w = m.shape
@@ -194,6 +241,8 @@ def run(d, crop=None):
     ac, c, n = autocorr(m.astype(np.float64), valid)
     pk, lobe = peaks_of(ac, c, n, 0.25 * valid.sum())
     b1, b2 = lattice(pk)
+    if finder == "consistent":                                          # C-026
+        b1, b2, _ = lattice_consistent(ac, c, n, pk, 0.1 * valid.sum())
     x0, mr = mirror_axis(m.astype(np.float64), valid)
     mf = m.astype(np.float64)
     copies, scores = [], {}
@@ -231,15 +280,35 @@ def run(d, crop=None):
     return out
 
 
+def probe(d, crop, finder):
+    """The repeat alone, by another finder, written nowhere (C-026's check)."""
+    m, valid, box = load(d)
+    if crop:
+        h, w = m.shape
+        a, b, c, e = crop
+        sl = (slice(int(b * h), int(e * h)), slice(int(a * w), int(c * w)))
+        m, valid = m[sl], valid[sl]
+    ac, c, n = autocorr(m.astype(np.float64), valid)
+    pk, _ = peaks_of(ac, c, n, 0.25 * valid.sum())
+    b1, b2, sc = lattice_consistent(ac, c, n, pk, 0.1 * valid.sum())
+    return dict(repeat_vectors_px=[None if b is None else [round(float(b[0]), 2), round(float(b[1]), 2)] for b in (b1, b2)],
+                mirror_r=0.0, prediction_iou=0.0, baseline_iou=None, counts_as_lattice=False, drift_px=None,
+                lattice_mean_ac=None if sc is None else round(sc, 4))
+
+
 if __name__ == "__main__":
-    args = sys.argv[1:] or ["ours"] + sorted(os.listdir(os.path.join(HERE, "shots")))
-    for arg in args:
+    argv = sys.argv[1:]
+    finder = argv[argv.index("--finder") + 1] if "--finder" in argv else "shortest"   # C-026: consistent
+    args = [a for i, a in enumerate(argv) if not a.startswith("--") and (i == 0 or argv[i - 1] != "--finder")]
+    if finder != "shortest":
+        print("finder", finder, "(the results files are C-024's and are not written)")
+    for arg in args or ["ours"] + sorted(os.listdir(os.path.join(HERE, "shots"))):
         name, _, fr = arg.partition(":")
         crop = tuple(float(v) for v in fr.split(",")) if fr else None
         d = OURS if name == "ours" else os.path.join(HERE, "shots", name)
         name = arg
         try:
-            r = run(d, crop)
+            r = run(d, crop, finder) if finder == "shortest" else probe(d, crop, finder)
         except (FileNotFoundError, KeyError) as e:
             print(f"{name:22s} skipped: {e}")
             continue

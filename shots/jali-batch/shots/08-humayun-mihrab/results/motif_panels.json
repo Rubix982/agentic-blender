@@ -23,5 +23,25 @@
   "shift_px_median": 4.24,
   "shift_px_max": 4.24,
   "counts": false
+ },
+ "0.35,0.52,0.65,0.8 consistent balanced": {
+  "size": [
+   140,
+   235
+  ],
+  "repeat_vectors_px": [
+   [
+    78.73,
+    78.1
+   ],
+   [
+    79.16,
+    -77.74
+   ]
+  ],
+  "patch_px": 135,
+  "shift_max_px": 11,
+  "patches": 0,
+  "skipped": "fewer than four patches"
  }
 }

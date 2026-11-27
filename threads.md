@@ -274,4 +274,17 @@ touched once. Open: what representation of a screen a generator would need, and 
 of themselves over a field and 64 % in one hand-cut panel (bar 0.70). The unit is the panel, not the field.
 C-025 (2026-11-27): from the mean of a panel's copies, each moved by one shift, 13's motif (a star and its ring
 of holes) rebuilds 83 % of its panel, 18's 80 %, 12's 67 %; 1 of 7 clears the bar, and two failures are the measure's.
+C-026 (2026-11-27): the measure fixed (a repeat its lattice agrees on, stone and openings scored alike), still 1 of
+7 (13: 0.87 balanced); 18 0.81, short of the margin by 0.008; 08 and 10 unmeasurable on panels that small.
+**Answer:** —
+
+### T-024 · How is a design of two levels found, a fine net with larger shapes laid over it?
+
+**Status:** open
+**Parent:** T-023 (C-026)
+**Opened:** 2026-11-27
+**Question:** 16's central panel is a fine net of small diamonds that repeats about every 54 px, and over it larger
+shapes that do not repeat at that step (`shots/jali-batch/c026_motifs.jpg`, its motif's mean blotched where the
+copies disagree). One motif on one lattice cannot hold it. Is the larger level a second lattice (a supertile) found
+the same way at a longer step, or a different kind of structure?
 **Answer:** —

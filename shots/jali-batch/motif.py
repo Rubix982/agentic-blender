@@ -6,7 +6,11 @@ opening where it is 0.5 or more), its own pixels never used for themselves, and 
 patches. The same is done from patches at random places (the baseline, with the same shifts allowed) and from the
 lattice's patches left unshifted (what the shifts add).
 
-    .venv/bin/python shots/jali-batch/motif.py [SLUG:fx0,fy0,fx1,fy1 ...]     (no argument: C-025's seven panels)
+    .venv/bin/python shots/jali-batch/motif.py [--finder consistent] [--score balanced] [SLUG:fx0,fy0,fx1,fy1 ...]
+                                                                     (no slug: C-025's seven panels)
+C-026's switches: --finder consistent (structure.lattice_consistent: the lattice its points agree on, not the shortest
+strong peak) and --score balanced (the mean of the openings' IoU and the stone's, bar 0.80, not the openings' alone,
+bar 0.70). Results under the fractions, with the method appended when it is not C-025's; the sheet c026_motifs.jpg.
 
 Writes results/motif_panels.json per shot (keyed by the fractions), out/motif_<fractions>.png (one patch | the
 motif's mean | the motif at 0.5), and shots/jali-batch/c025_motifs.jpg, all the panels' motifs on one sheet.
@@ -30,6 +34,11 @@ ITER = 4
 WIDTH = 1.2            # a patch's width in repeats (the longer vector)
 SEARCH = 0.1           # the shift allowed, as a share of the shorter repeat (at least 3 px)
 MIN_VALID = 0.9        # a patch is used when this share of it lies in the screen
+_argv = sys.argv[1:]
+FINDER = _argv[_argv.index("--finder") + 1] if "--finder" in _argv else "shortest"   # C-026: consistent
+SCORE = _argv[_argv.index("--score") + 1] if "--score" in _argv else "openings"      # C-026: balanced
+BAR = 0.80 if SCORE == "balanced" else 0.70
+METHOD = "" if (FINDER, SCORE) == ("shortest", "openings") else f" {FINDER} {SCORE}"
 
 
 def lattice2(pk):
@@ -88,7 +97,7 @@ def fit(m, valid, pts, R, SR, iters):
         off = new
     P, Wt = stack()
     sP, sW = (P * Wt).sum(0), Wt.sum(0)
-    inter = union = 0.0
+    inter = union = inter_s = union_s = 0.0
     for k in range(K):
         w = sW - Wt[k]
         have = (w > 0) & (Wt[k] > 0.5)
@@ -96,7 +105,10 @@ def fit(m, valid, pts, R, SR, iters):
         own = P[k] > 0.5
         inter += float((pred & own & have).sum())
         union += float(((pred | own) & have).sum())
-    return inter / max(union, 1.0), off, sP / np.maximum(sW, 1e-9)
+        inter_s += float((~pred & ~own & have).sum())
+        union_s += float(((~pred | ~own) & have).sum())
+    iou_o, iou_s = inter / max(union, 1.0), inter_s / max(union_s, 1.0)
+    return (iou_o if SCORE == "openings" else 0.5 * (iou_o + iou_s)), off, sP / np.maximum(sW, 1e-9)
 
 
 def run(name, d, crop, rng):
@@ -108,6 +120,8 @@ def run(name, d, crop, rng):
     ac, cc, nn = S.autocorr(m.astype(np.float64), valid)
     pk, _ = S.peaks_of(ac, cc, nn, 0.25 * valid.sum())
     b1, b2 = lattice2(pk)
+    if FINDER == "consistent":
+        b1, b2, _ = S.lattice_consistent(ac, cc, nn, pk, 0.1 * valid.sum())
     out = dict(size=[int(m.shape[1]), int(m.shape[0])],
                repeat_vectors_px=[None if v is None else [round(float(v[0]), 2), round(float(v[1]), 2)] for v in (b1, b2)])
     if b1 is None or b2 is None:
@@ -136,7 +150,7 @@ def run(name, d, crop, rng):
     out.update(iou_unshifted=round(iou0, 4), iou=round(iou, 4), baseline_iou=round(float(np.mean(base)), 4),
                shift_px_median=round(float(np.median(np.hypot(off[:, 0], off[:, 1]))), 2),
                shift_px_max=round(float(np.hypot(off[:, 0], off[:, 1]).max()), 2))
-    out["counts"] = bool(iou >= 0.70 and iou - out["baseline_iou"] >= 0.15)
+    out["counts"] = bool(iou >= BAR and iou - out["baseline_iou"] >= 0.15)
     x, y = pts[len(pts) // 2]
     dx, dy = off[len(pts) // 2]
     patch = m[y + dy - R:y + dy + R + 1, x + dx - R:x + dx + R + 1]
@@ -145,12 +159,13 @@ def run(name, d, crop, rng):
 
 if __name__ == "__main__":
     tiles = []
-    for arg in sys.argv[1:] or PANELS:
+    slugs = [a for i, a in enumerate(_argv) if not a.startswith("--") and (i == 0 or _argv[i - 1] not in ("--finder", "--score"))]
+    for arg in slugs or PANELS:
         name, _, fr = arg.partition(":")
         crop = tuple(float(v) for v in fr.split(","))
         d = S.OURS if name == "ours" else os.path.join(HERE, "shots", name)
         out, img = run(name, d, crop, np.random.default_rng(0))
-        key = ",".join(f"{v:g}" for v in crop)
+        key = ",".join(f"{v:g}" for v in crop) + METHOD
         pp = os.path.join(d, "results", "motif_panels.json")
         allp = json.load(open(pp)) if os.path.exists(pp) else {}
         allp[key] = out
@@ -161,7 +176,7 @@ if __name__ == "__main__":
             row = np.concatenate([patch * 255.0, np.full((patch.shape[0], 4), 40.0), motif * 255.0,
                                   np.full((patch.shape[0], 4), 40.0), (motif >= 0.5) * 255.0], 1).astype(np.uint8)
             im = Image.fromarray(row)
-            im.save(os.path.join(d, "out", f"motif_{key}.png"))
+            im.save(os.path.join(d, "out", f"motif_{key.replace(' ', '_')}.png"))
             s = 220 / im.height
             im = im.resize((int(im.width * s), 220), Image.NEAREST)
             t = Image.new("L", (im.width, 240), 30)
@@ -173,4 +188,4 @@ if __name__ == "__main__":
         sheet = Image.new("L", (max(t.width for t in tiles), 240 * len(tiles)), 30)
         for i, t in enumerate(tiles):
             sheet.paste(t, (0, 240 * i))
-        sheet.convert("RGB").save(os.path.join(HERE, "c025_motifs.jpg"), quality=90)
+        sheet.convert("RGB").save(os.path.join(HERE, "c025_motifs.jpg" if not METHOD else "c026_motifs.jpg"), quality=90)

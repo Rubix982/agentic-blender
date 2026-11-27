@@ -23,5 +23,30 @@
   "shift_px_median": 2.24,
   "shift_px_max": 4.24,
   "counts": false
+ },
+ "0.05,0.55,0.95,0.92 consistent balanced": {
+  "size": [
+   814,
+   496
+  ],
+  "repeat_vectors_px": [
+   [
+    0.11,
+    -12.67
+   ],
+   [
+    12.85,
+    -0.85
+   ]
+  ],
+  "patch_px": 17,
+  "shift_max_px": 3,
+  "patches": 2285,
+  "iou_unshifted": 0.5031,
+  "iou": 0.6998,
+  "baseline_iou": 0.5676,
+  "shift_px_median": 2.24,
+  "shift_px_max": 4.24,
+  "counts": false
  }
 }

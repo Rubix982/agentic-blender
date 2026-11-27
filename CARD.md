@@ -1970,3 +1970,49 @@ named one: copies that differ in shape (ours, 16: seven copies each of a large m
 the repeat not found on two small panels (08, 10), and a bar the densest patterns cannot clear over their own
 openness (18 at 0.80, 12 at 0.67, against baselines of 0.70 and 0.56). So field 5's second branch, the motif read
 from the photo's brightness, is supported only for the large motifs.
+
+### C-026 · The motif measure fixed: a repeat that the whole lattice agrees on, and a score a flat guess cannot pass
+
+**Opened:** 2026-11-27, on the user's word ("commit, push, then perform the next"; the next was this, my first choice).
+
+1. **WHERE WE ARE.** C-025: 1 of 7 panels gives a motif that clears the bar (13, 0.83 against 0.33). Two of the six
+   failures were the measure's: on 08 and 10 the repeat finder took a 21 to 26 px echo inside the motif for the repeat
+   (it takes the shortest strong peak), and on 18 and 12 a score of openings alone lets copies from anywhere reach 70 %
+   and 56 %, since an open panel is mostly opening.
+2. **WHAT WE ARE DOING.** Change the measure in two ways and rerun it on C-025's seven panels as cut, nothing else
+   changed. The repeat: of the pairs among the strongest autocorrelation peaks, the one whose lattice points (every
+   sum of up to two steps of each vector) have the highest mean autocorrelation, the smallest cell among those within a
+   tenth of the best; an echo's lattice puts points where the pattern does not repeat. The score: the mean of the
+   openings' IoU and the stone's (a prediction of all opening scores half the open share). Both as switches in
+   `structure.py` and `motif.py`; C-025's way stays reproducible.
+3. **WHY.** Unknown: how many of the seven panels hold a motif once the measure stops failing on its own, which is
+   what C-025's count could not say. After: that count, and a measure the next cards (finding panels without a hand,
+   reading the motif from the photo's brightness) can be judged by.
+4. **WHAT IS AFFECTED.** C-025's count (kept as measured, under its own measure); `results/motif_panels.json` gains
+   entries under the new method. Checks on the new repeat finder: on ours's whole field it must still give C-009's
+   vectors within 2 px, and on 13's panel the same lattice as C-025's.
+5. **CONCLUSION.** The bar: a balanced IoU of 0.80 or more (ours's render scores 0.84 against its photo, openings
+   0.80 and stone 0.89; a motif describing its panel worse than our render describes the photo is no description) and
+   0.15 over the random-place baseline. If 4 or more of the 7 count, the traces give a motif for most single-design
+   panels, and the next card finds the panels without a hand. If 3 or fewer, the ones still failing are those whose
+   copies differ in shape, and their motifs should be read from the photo's brightness.
+6. **CONSEQUENCE OF NOT DOING IT.** Every later card about motifs is judged by a measure that fails on small panels
+   and on open patterns, and C-025's 1 of 7 cannot be told apart from the measure's own faults.
+
+**Measures (2026-11-27; `motif.py --finder consistent --score balanced`, `c026_motifs.jpg`).** The checks: on ours's
+whole field the new finder gives (139.3, −177.4) and (147.8, 173.6) px, within 2.0 px of C-009's (the old finder 0.7
+px; inside the limit, at its edge); on 13's panel the same lattice as C-025's; on 12's the same lattice in its shortest
+basis. Where C-025's finder took echoes it now finds 08's repeat at (78.7, 78.1) and (79.2, −77.7) px and 10's at
+(63.5, 61.4) and (62.2, −62.9), and 18's at a square 38 to 39 px where C-025 had a finer pair. Balanced IoU, aligned
+(unshifted; random places): 13 0.867 (0.841; 0.484), 18 0.811 (0.772; 0.669), ours 0.723 (0.703; 0.448), 12 0.700
+(0.503; 0.568), 16 0.636 (0.605; 0.419). 08's and 10's inner panels (140 x 235 and 105 x 184 px) hold fewer than
+four copies of their true repeat at 1.2 repeats a patch: not measured. On 12 the shifts run to their limit (3 px) over
+a panel 64 repeats wide; a larger limit would let a copy jump to its neighbour, a quarter of a repeat away. 16's motif
+is two motifs: a fine net that repeats at the lattice found, and larger shapes over it that do not (`c026_motifs.jpg`).
+
+**Result (2026-11-27, closed): still 1 of 7.** With a repeat the whole lattice agrees on and a score that judges stone
+and openings alike, 13 counts (0.87 against 0.48), 18 misses the margin by 0.008 (0.81 against 0.67), ours, 12 and 16
+miss the bar (0.72, 0.70, 0.64), and 08 and 10 cannot be measured on panels that small. The measure's two faults are
+gone: no echo is taken for a repeat, and no open panel passes by being open. What fails now is not one thing, as field
+5's second branch put it: ours's seven copies differ (shape, or the reading); 12's lattice bends further than one shift
+per copy can follow; 16 is a design of two levels. To the eye 13's, 18's and 12's motifs are clean.
