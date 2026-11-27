@@ -225,7 +225,31 @@ OUTLINE_BLUR = int(argv[argv.index("--outline-blur") + 1]) if "--outline-blur" i
 if FINE_HOLES and "--outline-blur" not in argv:                       # (fix 12 revised: see BEVEL below)
     OUTLINE_BLUR = max(1, int(round(3 * HALF_W_PX / 4.64)))
 field = C.blur(solid.astype(np.float32), OUTLINE_BLUR)                 # test what the 3 px blur costs fine edges
-loops = C.contours(field, 0.5)
+# C-023, fix 20 (the user, on 03 and 05's lattice: "there are still gaps, some minute details are lost"). Where the
+# outline is not blurred (fine holes, a 1 px blur, which OIIO makes the identity) two stone pixels that touch only at a
+# corner were always cut apart: the saddle's centre averages exactly 0.5 and counted as hole. A thin stone strand
+# running diagonally then broke into pieces of a pixel or two, and the pieces under the island floor (30 px) were
+# dropped: in 05's lower-left crop, of the photo's bright stone the render showed dark (10.2 %, all of it read as
+# stone), 74 % lay in such pieces (03: 5.2 % and 47 %); counted with corner contacts joined, 23 % (03: 20 %). So a
+# corner contact joins the class that is the minority around it (in a 9 x 9 window), the one drawn as lines: the stone
+# of a fine tracery on dark holes, the holes of a dense screen as before. Only where the outline is not blurred (OIIO's
+# widths 1 and 2 are both the identity): a blurred field ties only by chance (ours, 3 px: 6 exact ties, 4 of them
+# joined as stone, no measure moved), and is left as it was. --saddle-split: always cut, as before.
+SADDLES = {}
+if "--saddle-split" not in argv and OUTLINE_BLUR < 3:
+    _sv = np.pad(solid.astype(np.float64), 4, mode="edge").cumsum(0).cumsum(1)
+    _sv = np.pad(_sv, ((1, 0), (1, 0)))
+    STONE_MINOR = (_sv[9:, 9:] - _sv[:-9, 9:] - _sv[9:, :-9] + _sv[:-9, :-9]) / 81.0 < 0.5
+    _fi = field > 0.5
+    _sd = ((_fi[:-1, :-1] & _fi[1:, 1:] & ~_fi[:-1, 1:] & ~_fi[1:, :-1]) |
+           (~_fi[:-1, :-1] & ~_fi[1:, 1:] & _fi[:-1, 1:] & _fi[1:, :-1]))
+    _sd &= np.abs((field[:-1, :-1] + field[:-1, 1:] + field[1:, 1:] + field[1:, :-1]) / 4 - 0.5) < 1e-9
+    _sj = STONE_MINOR[:-1, :-1] | STONE_MINOR[:-1, 1:] | STONE_MINOR[1:, 1:] | STONE_MINOR[1:, :-1]
+    SADDLES = dict(ties=int(_sd.sum()), stone_joined=int((_sd & _sj).sum()))
+    print("SADDLES", SADDLES, flush=True)
+    loops = C.contours(field, 0.5, tie=STONE_MINOR)
+else:
+    loops = C.contours(field, 0.5)
 outer_sign = np.sign(C.area(max(loops, key=lambda p: abs(C.area(p)))))   # the frame's outline winds as stone does
 # C-023, fix 13: common.contours turns each outline by one sample, the pixel nearest a point 0.35 px to its left; on a
 # thin bar or a small hole that pixel can lie across the outline. With the photo's own fine holes cut (fix 9) 1,453 of
@@ -358,7 +382,7 @@ C.write_png(os.path.join(OUT, "height.png"), height / max(float(height.max()), 1
 log["sizes"] = dict(width_m=WIDTH_M, thick_m=THICK_M, thick_cm=THICK_M * 100, bevel_m=BEVEL_M)
 log["outlines"] = dict(count=len(loops), points=int(sum(len(p) for p in loops)), metres_per_px=round(S, 6),
                        screen_width_px=width_px, box=[x0, y0, x1, y1], dark_in_box_made_stone=int((dark & ~sur).sum()),
-                       surround_in_box=int(sur.sum()), back_face_scale=round(KB, 4), **({'merge_cap': MERGE} if 'kb' in MERGE or 'tunnels' in MERGE else {}), **({'floors': FLOORS} if 'min_area_px' in FLOORS else {}), **({'bevel_rule': BEVEL_RULE} if 'bevel_m' in BEVEL_RULE else {}), **({'turned': TURNED} if TURNED else {}),
+                       surround_in_box=int(sur.sum()), back_face_scale=round(KB, 4), **({'merge_cap': MERGE} if 'kb' in MERGE or 'tunnels' in MERGE else {}), **({'floors': FLOORS} if 'min_area_px' in FLOORS else {}), **({'bevel_rule': BEVEL_RULE} if 'bevel_m' in BEVEL_RULE else {}), **({'turned': TURNED} if TURNED else {}), **({'saddles': SADDLES} if SADDLES.get('ties') else {}),
                        seen_opening_share=round(float(k["opening"][y0:y1 + 1, x0:x1 + 1].mean()), 4),
                        hole_share=round(float(hole[y0:y1 + 1, x0:x1 + 1].mean()), 4),
                        cut_line_share=round(float(lines[y0:y1 + 1, x0:x1 + 1].mean()), 4))
@@ -718,11 +742,34 @@ if NORMAL_MAP:
         # Only the albedo's slow change (stains, discolour) is kept: at the fine scale the model draws soft round
         # blobs 8 to 15 px across, which on the plain frame read as the user's "bluriness". A 9 px blur, tried first,
         # was smaller than the blobs and changed nothing (the frame's fine-to-mid texture 0.421 to 0.429).
+        # C-023, fix 18 (the user, on 03 and 05's lattice: "the color is a bit darkened than expected"). The model reads
+        # a thin bar together with the dark holes beside it: 03's raw albedo on the stone of its lower-left lattice is
+        # 0.114 against 0.224 over all its stone, rising to 0.153, 0.177, 0.194 on the stone 1, 2, 3 px from a hole,
+        # while the photo shows the same stone as bright as the wall (linear 0.63 to 0.66 on those cores, 0.67 over all);
+        # the render's lattice came out at half the wall's brightness, the albedo's ratio (05: 0.096 and 0.265). So where
+        # the albedo on the stone's edges is darker than on its cores (2 px in) by more than a tenth, its slow change is
+        # taken from the cores alone (where cores are under 2 % of the blur's window, from all the stone, as before).
+        # Ours: 0.98, unchanged; dark: 03 0.86, 05 0.78, 07 0.69, 12 0.77, 16 0.87, 17 0.80. Backlit screens' edges are
+        # brighter (08 1.58, 14 2.01), the glow; left as they are. --albedo-edges: all the stone always.
+        _lw = np.array([0.2126, 0.7152, 0.0722])
+        _core = C.erode(k["stone"], 2)
+        _bx = np.zeros(k["stone"].shape, bool)
+        _bx[y0:y1 + 1, x0:x1 + 1] = True
+        _al_l = AL @ _lw
+        _edge_core = (float(np.median(_al_l[k["stone"] & _bx]) / max(float(np.median(_al_l[_core & _bx])), 1e-6))
+                      if (_core & _bx).sum() > 100 else 1.0)
+        ALBEDO_LEAK = _edge_core < 1 / 1.1 and "--albedo-edges" not in argv
         if ALBEDO_BLUR:                                                # within the stone only: across the openings
             sm = k["stone"].astype(np.float32)                         # the wall's pale grey leaked into the stone
             den = np.maximum(C.blur(sm, ALBEDO_BLUR), 1e-3)            # (the openings' IoU fell from 0.809 to 0.778)
-            AL = np.stack([np.where(k["stone"], C.blur(AL[:, :, c].astype(np.float32) * sm, ALBEDO_BLUR) / den, AL[:, :, c])
-                           for c in range(3)], -1).astype(np.float64)
+            slow = [C.blur(AL[:, :, c].astype(np.float32) * sm, ALBEDO_BLUR) / den for c in range(3)]
+            if ALBEDO_LEAK:
+                cm = _core.astype(np.float32)
+                den_c = C.blur(cm, ALBEDO_BLUR)
+                a = np.clip(den_c / 0.02, 0.0, 1.0)
+                slow = [a * C.blur(AL[:, :, c].astype(np.float32) * cm, ALBEDO_BLUR) / np.maximum(den_c, 1e-6) + (1 - a) * slow[c]
+                        for c in range(3)]
+            AL = np.stack([np.where(k["stone"], slow[c], AL[:, :, c]) for c in range(3)], -1).astype(np.float64)
         st_box = np.zeros(k["stone"].shape, bool)
         st_box[y0:y1 + 1, x0:x1 + 1] = k["stone"][y0:y1 + 1, x0:x1 + 1]
         med = np.median(AL[st_box], axis=0)
@@ -731,7 +778,18 @@ if NORMAL_MAP:
         # build with it read as clean clay. Each bright dot narrower than about 2 px (the photo's luminance over its
         # 3 x 3 grey opening) brightens the albedo by its own contrast, decoded to linear; wider bright features (lit
         # rims) are left to the shading.
-        y_open = C.grey_open(k["y"], 1)
+        # C-023, fix 19 (the user: "on the top left corners, the areas look a bit grainy"). Against dark holes every bar
+        # narrower than the 3 x 3 square is such a dot: in 05's lower-left corner 87 % of the stone was brightened (69 %
+        # by the most, 2.8 times), the wider parts of the same tracery not at all (03: 66 % and 32 %). Where the
+        # albedo's edges leak (fix 18), the holes are first filled with the stone's level around them (a 5 px blur over
+        # the stone), so only a dot paler than the stone around it counts. --speck-holes: as before.
+        y_sp = k["y"]
+        if ALBEDO_LEAK and "--speck-holes" not in argv:
+            _sm = k["stone"].astype(np.float32)
+            _d5 = C.blur(_sm, 5)
+            y_sp = np.where(k["stone"], k["y"], np.where(_d5 > 0.05, C.blur(k["y"].astype(np.float32) * _sm, 5)
+                                                         / np.maximum(_d5, 1e-3), k["y"]))
+        y_open = C.grey_open(y_sp, 1)
         speck = np.clip(k["y"] / np.maximum(y_open, 0.03) - SPECK_FLOOR, 1.0, SPECK_MAX) ** 2.2   # at 2.5 some went white, and the
                                                                        # render's rule took them for wall (IoU 0.795)
         AL = np.clip(AL * np.where(st_box, speck, 1.0)[:, :, None], 0.0, 1.0)
@@ -750,7 +808,9 @@ if NORMAL_MAP:
         L.new(sock(mix, "Result_Color", out=True), sock(amix, "A_Color"))
         L.new(atex.outputs["Color"], sock(amix, "B_Color"))
         L.new(sock(amix, "Result_Color", out=True), bsdf.inputs["Base Color"])
-        log["albedo"] = dict(blur_px=ALBEDO_BLUR, speck_max=SPECK_MAX, speck_floor=SPECK_FLOOR, map_median_linear=[round(float(v), 4) for v in med], scaled_to=[round(float(v), 4) for v in ALBEDO],
+        log["albedo"] = dict(blur_px=ALBEDO_BLUR, speck_max=SPECK_MAX, speck_floor=SPECK_FLOOR,
+                             **(dict(edge_over_core=round(_edge_core, 3), cores_only=True,
+                                     speck_share=round(float((speck[st_box] > 1.2).mean()), 4)) if ALBEDO_LEAK else {}), map_median_linear=[round(float(v), 4) for v in med], scaled_to=[round(float(v), 4) for v in ALBEDO],
                              map_p10_p90_luminance=[round(float(np.percentile(AL[st_box] @ np.array([0.2126, 0.7152, 0.0722]), q)), 4)
                                                     for q in (10, 90)])
 # C-017: a colour multiplied into the base colour, to divide out the spot's colour (white until the spot's colour is

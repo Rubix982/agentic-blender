@@ -22,8 +22,8 @@
   "bevel_m": 0.0
  },
  "outlines": {
-  "count": 2023,
-  "points": 113846,
+  "count": 2031,
+  "points": 114524,
   "metres_per_px": 0.00145,
   "screen_width_px": 724,
   "box": [
@@ -51,7 +51,11 @@
    "bevel_m": 0.0,
    "outline_blur_px": 1
   },
-  "turned": 486,
+  "turned": 473,
+  "saddles": {
+   "ties": 1069,
+   "stone_joined": 237
+  },
   "seen_opening_share": 0.148,
   "hole_share": 0.148,
   "cut_line_share": 0.0229,
@@ -194,12 +198,12 @@
   "frame_width_m": 1.1196
  },
  "mesh": {
-  "vertices": 455384,
-  "faces": 348646,
-  "front_face_m2": 1.7643,
-  "front_face_m2_if_built_in_metres": 1.7643,
+  "vertices": 458096,
+  "faces": 350800,
+  "front_face_m2": 1.7652,
+  "front_face_m2_if_built_in_metres": 1.7652,
   "metres_per_curve_unit": 0.00145,
-  "outlines_enclose_m2": 1.7643
+  "outlines_enclose_m2": 1.7652
  },
  "light_fit": {
   "reused": "results/light_fit.json",
@@ -236,9 +240,9 @@
    {
     "spot_w": 52874.05,
     "stone_y": 0.6692,
-    "opening_y_lower": 0.4723,
-    "opening_y_upper": 0.4538,
-    "seconds": 0.9,
+    "opening_y_lower": 0.4728,
+    "opening_y_upper": 0.456,
+    "seconds": 0.8,
     "curve": [
      1.0,
      1.0
@@ -247,8 +251,8 @@
    {
     "spot_w": 87251.01,
     "stone_y": 0.8347,
-    "opening_y_lower": 0.5748,
-    "opening_y_upper": 0.551,
+    "opening_y_lower": 0.579,
+    "opening_y_upper": 0.5551,
     "seconds": 0.8,
     "curve": [
      1.0,
@@ -256,80 +260,102 @@
     ]
    },
    {
-    "spot_w": 87848.28,
+    "spot_w": 87840.85,
+    "stone_y": 0.838,
+    "opening_y_lower": 0.579,
+    "opening_y_upper": 0.5549,
+    "seconds": 1.0,
+    "curve": [
+     1.0,
+     1.0
+    ]
+   },
+   {
+    "spot_w": 87643.06,
+    "stone_y": 0.8456,
+    "opening_y_lower": 0.5508,
+    "opening_y_upper": 0.5128,
+    "seconds": 1.5,
+    "curve": [
+     1.5939,
+     0.9426
+    ]
+   },
+   {
+    "spot_w": 85699.58,
     "stone_y": 0.8381,
-    "opening_y_lower": 0.5784,
-    "opening_y_upper": 0.5543,
-    "seconds": 0.8,
+    "opening_y_lower": 0.5454,
+    "opening_y_upper": 0.5083,
+    "seconds": 0.9,
     "curve": [
-     1.0,
-     1.0
+     1.5939,
+     0.9426
     ]
    },
    {
-    "spot_w": 87646.77,
-    "stone_y": 0.8451,
-    "opening_y_lower": 0.5461,
-    "opening_y_upper": 0.5075,
+    "spot_w": 85486.33,
+    "stone_y": 0.8382,
+    "opening_y_lower": 0.5571,
+    "opening_y_upper": 0.5259,
     "seconds": 0.8,
     "curve": [
-     1.594,
-     0.9422
+     1.4998,
+     1.1566
     ]
    },
    {
-    "spot_w": 85822.61,
-    "stone_y": 0.8386,
-    "opening_y_lower": 0.5447,
-    "opening_y_upper": 0.5071,
+    "spot_w": 85269.02,
+    "stone_y": 0.8373,
+    "opening_y_lower": 0.5575,
+    "opening_y_upper": 0.5269,
     "seconds": 0.8,
     "curve": [
-     1.594,
-     0.9422
+     1.4998,
+     1.1566
     ]
    },
    {
-    "spot_w": 85510.96,
-    "stone_y": 0.8383,
-    "opening_y_lower": 0.5565,
-    "opening_y_upper": 0.5251,
+    "spot_w": 85247.4,
+    "stone_y": 0.8371,
+    "opening_y_lower": 0.5578,
+    "opening_y_upper": 0.5275,
     "seconds": 0.8,
     "curve": [
-     1.5006,
-     1.1541
+     1.4898,
+     1.1816
     ]
    },
    {
-    "spot_w": 85259.77,
-    "stone_y": 0.8365,
-    "opening_y_lower": 0.5526,
-    "opening_y_upper": 0.52,
+    "spot_w": 85271.14,
+    "stone_y": 0.8372,
+    "opening_y_lower": 0.5578,
+    "opening_y_upper": 0.5274,
     "seconds": 0.8,
     "curve": [
-     1.5006,
-     1.1541
+     1.4898,
+     1.1816
     ]
    },
    {
-    "spot_w": 85421.98,
-    "stone_y": 0.8379,
-    "opening_y_lower": 0.5568,
-    "opening_y_upper": 0.5256,
-    "seconds": 0.8,
+    "spot_w": 85273.82,
+    "stone_y": 0.8372,
+    "opening_y_lower": 0.5577,
+    "opening_y_upper": 0.5273,
+    "seconds": 1.4,
     "curve": [
-     1.4969,
-     1.1633
+     1.4909,
+     1.1787
     ]
    },
    {
-    "spot_w": 85259.45,
-    "stone_y": 0.8365,
-    "opening_y_lower": 0.5527,
-    "opening_y_upper": 0.5203,
-    "seconds": 0.7,
+    "spot_w": 85270.41,
+    "stone_y": 0.8372,
+    "opening_y_lower": 0.5577,
+    "opening_y_upper": 0.5274,
+    "seconds": 1.2,
     "curve": [
-     1.4969,
-     1.1633
+     1.4909,
+     1.1787
     ]
    }
   ]
@@ -340,43 +366,49 @@
   "photo_p90": 0.9714,
   "rounds": [
    {
-    "a": 1.594,
-    "b": 0.9422,
+    "a": 1.5939,
+    "b": 0.9426,
     "untoned_p10": 0.6979,
     "untoned_p90": 0.9743
    },
    {
-    "a": 1.5006,
-    "b": 1.1541,
-    "untoned_p10": 0.6903,
-    "untoned_p90": 0.9638
+    "a": 1.4998,
+    "b": 1.1566,
+    "untoned_p10": 0.6902,
+    "untoned_p90": 0.9637
    },
    {
-    "a": 1.4969,
-    "b": 1.1633,
-    "untoned_p10": 0.6899,
-    "untoned_p90": 0.9634
+    "a": 1.4898,
+    "b": 1.1816,
+    "untoned_p10": 0.6893,
+    "untoned_p90": 0.9625
+   },
+   {
+    "a": 1.4909,
+    "b": 1.1787,
+    "untoned_p10": 0.6894,
+    "untoned_p90": 0.9627
    }
   ],
-  "a": 1.4969,
-  "b": 1.1633
+  "a": 1.4909,
+  "b": 1.1787
  },
  "saturation": {
   "k": 0.0,
   "photo_slopes": [
    -0.074,
-   0.0961
+   0.0962
   ],
   "render_slopes": [
-   -0.0119,
-   0.002
+   -0.0118,
+   0.0019
   ],
-  "error": 5.7111,
-  "y_floor": 0.5023,
+  "error": 5.764,
+  "y_floor": 0.5028,
   "rejected": {
    "k": 1.2,
    "slopes": [
-    -0.0328,
+    -0.0327,
     0.0127
    ]
   },
@@ -384,161 +416,161 @@
    {
     "k": 0.0,
     "slopes": [
-     -0.0119,
-     0.002
+     -0.0118,
+     0.0019
     ]
    },
    {
     "k": 0.05,
     "slopes": [
-     -0.0127,
-     0.0024
+     -0.0126,
+     0.0023
     ]
    },
    {
     "k": 0.1,
     "slopes": [
-     -0.0135,
-     0.0028
+     -0.0134,
+     0.0027
     ]
    },
    {
     "k": 0.15,
     "slopes": [
-     -0.0143,
+     -0.0142,
      0.0032
     ]
    },
    {
     "k": 0.2,
     "slopes": [
-     -0.0151,
-     0.0037
+     -0.015,
+     0.0036
     ]
    },
    {
     "k": 0.25,
     "slopes": [
-     -0.0159,
-     0.0041
+     -0.0158,
+     0.004
     ]
    },
    {
     "k": 0.3,
     "slopes": [
-     -0.0167,
-     0.0045
+     -0.0166,
+     0.0044
     ]
    },
    {
     "k": 0.35,
     "slopes": [
-     -0.0176,
+     -0.0175,
      0.0049
     ]
    },
    {
     "k": 0.4,
     "slopes": [
-     -0.0184,
-     0.0054
+     -0.0183,
+     0.0053
     ]
    },
    {
     "k": 0.45,
     "slopes": [
-     -0.0193,
-     0.0058
+     -0.0192,
+     0.0057
     ]
    },
    {
     "k": 0.5,
     "slopes": [
-     -0.0201,
+     -0.02,
      0.0062
     ]
    },
    {
     "k": 0.55,
     "slopes": [
-     -0.021,
-     0.0067
+     -0.0209,
+     0.0066
     ]
    },
    {
     "k": 0.6,
     "slopes": [
-     -0.0218,
-     0.0071
+     -0.0217,
+     0.007
     ]
    },
    {
     "k": 0.65,
     "slopes": [
-     -0.0227,
-     0.0076
+     -0.0226,
+     0.0075
     ]
    },
    {
     "k": 0.7,
     "slopes": [
-     -0.0236,
-     0.008
+     -0.0235,
+     0.0079
     ]
    },
    {
     "k": 0.75,
     "slopes": [
-     -0.0245,
-     0.0085
+     -0.0244,
+     0.0084
     ]
    },
    {
     "k": 0.8,
     "slopes": [
-     -0.0254,
+     -0.0253,
      0.0089
     ]
    },
    {
     "k": 0.85,
     "slopes": [
-     -0.0263,
-     0.0094
+     -0.0262,
+     0.0093
     ]
    },
    {
     "k": 0.9,
     "slopes": [
-     -0.0272,
-     0.0099
+     -0.0271,
+     0.0098
     ]
    },
    {
     "k": 0.95,
     "slopes": [
-     -0.0281,
+     -0.028,
      0.0103
     ]
    },
    {
     "k": 1.0,
     "slopes": [
-     -0.029,
-     0.0108
+     -0.0289,
+     0.0107
     ]
    },
    {
     "k": 1.05,
     "slopes": [
      -0.0299,
-     0.0113
+     0.0112
     ]
    },
    {
     "k": 1.1,
     "slopes": [
-     -0.0309,
+     -0.0308,
      0.0117
     ]
    },
@@ -552,21 +584,21 @@
    {
     "k": 1.2,
     "slopes": [
-     -0.0328,
+     -0.0327,
      0.0127
     ]
    }
   ]
  },
  "render": {
-  "seconds": 6.9,
+  "seconds": 12.3,
   "samples": 256,
   "size": [
    772,
    1402
   ],
-  "spot_w": 85433.2,
-  "wall_strength": 0.2232,
+  "spot_w": 85270.36,
+  "wall_strength": 0.222,
   "albedo": [
    0.45,
    0.427,
@@ -575,5 +607,5 @@
   "look": "None",
   "filter_px": 1.8
  },
- "seconds": 63.9
+ "seconds": 85.2
 }

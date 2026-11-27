@@ -1835,13 +1835,41 @@ half-width the backlit seven are hurt at 1.81, 2.57 and 2.58, level at 2.72, hel
 form, kept: no bevel under 4.2 px lit from the front, under 2.8 px backlit; 14, 16, 17 and 18 back to their round-4
 values exactly. A threshold placed between seven points, monotone in them; recorded as that.
 
+*Fixes 18 to 20, on the user's look at 03 and 05's lattice crops (2026-11-27; `c023_fine.jpg`, photo | what the user
+saw | now).* The user: "on the top left corners, the areas look a bit grainy ... there are still gaps, some minute
+details are lost, and the color is a bit darkened than expected." Measured on those crops, three causes. Dark: the
+intrinsic model reads a thin bar with the dark holes beside it, so 03's raw albedo on the lattice's stone was 0.114
+against 0.224 over all its stone (0.153, 0.177, 0.194 at 1, 2, 3 px from a hole), while the photo shows that stone as
+bright as the wall; the render's lattice came out at the albedo's ratio, half the wall. Fix 18: where the albedo on
+the stone's edges is under 1/1.1 of its cores' (2 px in), its slow change comes from the cores (03 0.871, 05 0.843,
+04 0.909, 07 0.763, 12 0.817, 16 0.826, 17 0.878; ours 0.98). Grain: the pale-speck step brightens any bright dot
+narrower than its 3 x 3 square, and against dark holes every thin bar is one: 87 % of 05's corner stone brightened,
+69 % by the most (2.8 times), the wider parts of the same tracery not at all. Fix 19: with fix 18, the holes are
+filled with the stone's level around them first, so only a dot paler than its stone counts: in 05's corner 87 % of
+the stone brightened to 54 %, by the most 69 % to 15 % (03's: 66 % to 49 %, 32 % to 8 %). Gaps: none of the lost stone was read as opening; where the outline is not blurred,
+two stone pixels touching only at a corner were always cut apart, a thin diagonal strand broke into pieces of a pixel
+or two, and the pieces under 30 px were dropped (74 % of 05's lost bright stone, 47 % of 03's). Fix 20: a corner
+contact joins the class that is the minority in its 9 x 9 neighbourhood (03: 2,628 of 7,188 such contacts joined as
+stone, 05: 3,773 of 7,297), only on unblurred outlines; ours's 3 px outline had 6 exact ties by chance, and is left out.
+Switches: `--albedo-edges`, `--speck-holes`, `--saddle-split`. On the crops: 03's stone 0.622 to 0.730 (photo
+0.826), 05's 0.572 to 0.653 (photo 0.773); bright stone shown dark 03 5.2 % (unchanged), 05 10.2 % to 8.0 %. SSIM
+over the 14 shots the fixes reach (the other four have none of them): 03 0.581 to 0.604, 04, 05 and 16 +0.003, 07, 12
+and 17 +0.002, the rest within 0.001; none down. By eye: 03's lattice brighter and its coiled column back, 05's palm
+fronds and more of its tracery back; 05's lower left still darker than its photo, and both still under the photo's
+brightness. Ours, rebuilt: its measures as committed; its log gains two fields that fix 13 corrected (`turned`, and the
+enclosed area now equal to the front face).
+
 *Open, not yet fixed.* The tone curve's upper exponent sits at its limit of 4.0 in 8 of the 13 renders that C-022
 measured (ours 2.12), and with the fit's stone corrected 03, 05, 09 and 15 end at both limits (0.3 and 4.0); the
 cause is not found. The 25 % fit renders are not it: their stone's median is within about 10 % of the full render's
 (09: 0.149 at 337 W against 0.116 at 273 W; 13: 0.319 against 0.343 at one power). 13 and 14's holes render dim pink
 where the photos' are lit white: the light behind a backlit screen is not yet the photo's.
 
-**Result (2026-11-26, after fixes 1 to 17, fix 12 in its fourth form):** 18 of 18 photos reach a render; by my glance 13 read as their photos
+**Result (2026-11-27, after fixes 1 to 20):** as below, with 03's and 05's lattices brighter and fuller on the user's four points
+(fixes 18 to 20; SSIM up on 7 of the 14 shots they reach, none down); still darker than the photos there. Waiting on
+the user's glance at `c023_fine.jpg`.
+
+*After fixes 1 to 17, fix 12 in its fourth form (2026-11-26):* 18 of 18 photos reach a render; by my glance 13 read as their photos
 (01, 02, 03, 04, 05, 08, 09, 10, 12, 13, 14, 15, 17), 3 have the structure right and the light or colour not (11, 16,
 18), 06 and 07 are outside the method; 16 meets the four core bars. The user named the cause of fix 17 (stained
 stone); the rest of what is said under the first result below holds. Waiting on the user's glance at

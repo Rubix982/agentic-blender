@@ -395,17 +395,24 @@ def blur(a, width):
     return oiio.ImageBufAlgo.convolve(src, k).get_pixels(oiio.FLOAT)[:, :, 0]
 
 
-def contours(field, level=0.5):
+def contours(field, level=0.5, tie=None):
     """Closed outlines of field > level, by marching squares with linear interpolation on the cell edges. The field is
     padded with zeros so every outline closes. Returns a list of (N, 2) arrays of (x, y) pixel coordinates, each
-    turned so the inside (field > level) lies on its left in image coordinates (y down)."""
+    turned so the inside (field > level) lies on its left in image coordinates (y down).
+    tie (C-023, fix 20): a boolean array of the field's shape. At a saddle (two inside corners across a diagonal) the
+    cell's centre decides which pair is joined; where the corners average exactly to level (an unblurred mask) the
+    centre counts as inside where tie is True at any of the cell's corners. Without it, outside, as before."""
     f = np.pad(field.astype(np.float64), 1)
     H, W = f.shape
     inside = f > level
     tl, tr, br, bl = inside[:-1, :-1], inside[:-1, 1:], inside[1:, 1:], inside[1:, :-1]
     case = tl * 1 + tr * 2 + br * 4 + bl * 8
     ys, xs = np.nonzero((case != 0) & (case != 15))
-    centre = (f[:-1, :-1] + f[:-1, 1:] + f[1:, 1:] + f[1:, :-1]) / 4 > level
+    mean = (f[:-1, :-1] + f[:-1, 1:] + f[1:, 1:] + f[1:, :-1]) / 4
+    centre = mean > level
+    if tie is not None:
+        tp = np.pad(np.asarray(tie, bool), 1)
+        centre = np.where(np.abs(mean - level) < 1e-9, tp[:-1, :-1] | tp[:-1, 1:] | tp[1:, 1:] | tp[1:, :-1], centre)
 
     def hid(y, x):                                                    # the edge from (y, x) to (y, x + 1)
         return 2 * (y * W + x)

@@ -61,10 +61,10 @@
  "lines": {
   "photo_share": 0.0784,
   "render_share": 0.0688,
-  "render_near_photo": 0.7411,
+  "render_near_photo": 0.7408,
   "photo_near_render": 0.6778
  },
- "thin_stone_shown": 0.6754,
+ "thin_stone_shown": 0.6758,
  "edge_gradient": {
   "photo": 0.2505,
   "render": 0.2599,
@@ -72,14 +72,14 @@
  },
  "detail": {
   "fine": {
-   "correlation": 0.4608,
-   "amplitude_ratio": 0.2349
+   "correlation": 0.4607,
+   "amplitude_ratio": 0.2348
   },
   "forms": {
    "correlation": 0.742,
-   "amplitude_ratio": 0.7849
+   "amplitude_ratio": 0.7848
   },
-  "pixels": 550779,
+  "pixels": 550775,
   "photo_vs_itself_shifted": {
    "1px": {
     "fine": 0.2856,
@@ -100,7 +100,7 @@
   "forms": {
    "photo": 0.0692,
    "render": 0.0449,
-   "ratio": 0.6499
+   "ratio": 0.6498
   }
  },
  "light_map": {
@@ -198,7 +198,7 @@
    [
     0.625,
     0.803,
-    2.513,
+    2.51,
     2.374,
     0.962,
     0.804
@@ -237,7 +237,7 @@
   }
  },
  "opening_edges": {
-  "edge_band": 0.0081,
+  "edge_band": 0.0082,
   "inside": 0.1276
  },
  "stone_colour": {
@@ -263,7 +263,7 @@
    },
    "b_over_g": {
     "slope": 0.1053,
-    "explained": 0.2136
+    "explained": 0.2135
    }
   }
  },
@@ -318,7 +318,7 @@
     "tier": "core"
    },
    "lines_render_near_photo": {
-    "value": 0.7411,
+    "value": 0.7408,
     "bar": ">= 0.60",
     "ok": true,
     "follows_judge": {
@@ -355,12 +355,12 @@
     "ok": false
    },
    "forms_amplitude": {
-    "value": 0.7849,
+    "value": 0.7848,
     "bar": "0.8 to 1.2",
     "ok": false
    },
    "thin_stone_shown": {
-    "value": 0.6754,
+    "value": 0.6758,
     "bar": ">= 0.90",
     "ok": false
    },
@@ -380,7 +380,7 @@
     "ok": false
    },
    "frame_texture_forms": {
-    "value": 0.6499,
+    "value": 0.6498,
     "bar": "0.8 to 1.2",
     "ok": false
    }
@@ -406,8 +406,8 @@
   "openings_guard": true
  },
  "photo_openings_in_render": {
-  "opening": 0.923,
-  "stone": 0.077,
+  "opening": 0.9229,
+  "stone": 0.0771,
   "dark": 0.0
  },
  "render_openings_on_photo_stone": 0.1614,

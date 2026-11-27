@@ -35,6 +35,7 @@
   "dark_in_box_made_stone": 2127,
   "surround_in_box": 17270,
   "back_face_scale": 0.9923,
+  "turned": 72,
   "seen_opening_share": 0.091,
   "hole_share": 0.1101,
   "cut_line_share": 0.0603
@@ -169,7 +170,7 @@
   "front_face_m2": 1.1248,
   "front_face_m2_if_built_in_metres": 1.1248,
   "metres_per_curve_unit": 0.000924,
-  "outlines_enclose_m2": 1.1804
+  "outlines_enclose_m2": 1.1248
  },
  "light_fit": {
   "reused": "results/light_fit.json",
@@ -208,7 +209,7 @@
     "stone_y": 0.4854,
     "opening_y_lower": 0.7359,
     "opening_y_upper": 0.4673,
-    "seconds": 1.7,
+    "seconds": 1.3,
     "curve": [
      1.0,
      1.0
@@ -219,7 +220,7 @@
     "stone_y": 0.3536,
     "opening_y_lower": 0.6771,
     "opening_y_upper": 0.4441,
-    "seconds": 1.6,
+    "seconds": 1.2,
     "curve": [
      1.0,
      1.0
@@ -230,7 +231,7 @@
     "stone_y": 0.3457,
     "opening_y_lower": 0.6732,
     "opening_y_upper": 0.4433,
-    "seconds": 1.5,
+    "seconds": 1.2,
     "curve": [
      1.0,
      1.0
@@ -241,7 +242,7 @@
     "stone_y": 0.3445,
     "opening_y_lower": 0.7332,
     "opening_y_upper": 0.4303,
-    "seconds": 1.5,
+    "seconds": 1.2,
     "curve": [
      1.0619,
      2.1235
@@ -252,7 +253,7 @@
     "stone_y": 0.3448,
     "opening_y_lower": 0.7334,
     "opening_y_upper": 0.4302,
-    "seconds": 1.5,
+    "seconds": 1.2,
     "curve": [
      1.0619,
      2.1235
@@ -263,7 +264,7 @@
     "stone_y": 0.3448,
     "opening_y_lower": 0.7332,
     "opening_y_upper": 0.4303,
-    "seconds": 1.5,
+    "seconds": 1.2,
     "curve": [
      1.0622,
      2.1185
@@ -274,7 +275,7 @@
     "stone_y": 0.3448,
     "opening_y_lower": 0.7332,
     "opening_y_upper": 0.4303,
-    "seconds": 1.6,
+    "seconds": 1.2,
     "curve": [
      1.0622,
      2.1185
@@ -493,7 +494,7 @@
   ]
  },
  "render": {
-  "seconds": 12.6,
+  "seconds": 11.8,
   "samples": 256,
   "size": [
    1230,
@@ -509,5 +510,5 @@
   "look": "None",
   "filter_px": 1.8
  },
- "seconds": 100.2
+ "seconds": 87.3
 }

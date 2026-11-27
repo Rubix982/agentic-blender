@@ -22,8 +22,8 @@
   "bevel_m": 0.0
  },
  "outlines": {
-  "count": 7245,
-  "points": 196684,
+  "count": 7931,
+  "points": 198666,
   "metres_per_px": 0.000749,
   "screen_width_px": 1402,
   "box": [
@@ -51,7 +51,11 @@
    "bevel_m": 0.0,
    "outline_blur_px": 1
   },
-  "turned": 1801,
+  "turned": 1984,
+  "saddles": {
+   "ties": 1526,
+   "stone_joined": 1402
+  },
   "seen_opening_share": 0.1474,
   "hole_share": 0.1474,
   "cut_line_share": 0.058,
@@ -76,10 +80,13 @@
   "blur_px": 41,
   "speck_max": 1.6,
   "speck_floor": 0.0,
+  "edge_over_core": 0.878,
+  "cores_only": true,
+  "speck_share": 0.1807,
   "map_median_linear": [
-   0.1352,
-   0.0989,
-   0.0566
+   0.1373,
+   0.1003,
+   0.0576
   ],
   "scaled_to": [
    0.45,
@@ -87,8 +94,8 @@
    0.1444
   ],
   "map_p10_p90_luminance": [
-   0.2027,
-   0.6066
+   0.209,
+   0.6173
   ]
  },
  "relief": {
@@ -189,12 +196,12 @@
   "frame_width_m": 1.05
  },
  "mesh": {
-  "vertices": 786736,
-  "faces": 617448,
-  "front_face_m2": 0.7041,
-  "front_face_m2_if_built_in_metres": 0.7041,
+  "vertices": 794664,
+  "faces": 627138,
+  "front_face_m2": 0.7044,
+  "front_face_m2_if_built_in_metres": 0.7044,
   "metres_per_curve_unit": 0.000749,
-  "outlines_enclose_m2": 0.7041
+  "outlines_enclose_m2": 0.7044
  },
  "light_fit": {
   "reused": "results/light_fit.json",
@@ -207,7 +214,7 @@
    "blend": 1.0
   },
   "error_when_fitted": 0.2338,
-  "error_now": 0.2342
+  "error_now": 0.2336
  },
  "spot_colour": {
   "photo_slopes_at_fit_size": [
@@ -230,101 +237,101 @@
   "steps": [
    {
     "spot_w": 2524.8,
-    "stone_y": 0.3368,
-    "opening_y_lower": 0.4804,
-    "opening_y_upper": 0.4873,
-    "seconds": 1.1,
+    "stone_y": 0.3346,
+    "opening_y_lower": 0.476,
+    "opening_y_upper": 0.4832,
+    "seconds": 1.3,
     "curve": [
      1.0,
      1.0
     ]
    },
    {
-    "spot_w": 365.45,
+    "spot_w": 370.55,
     "stone_y": 0.2357,
-    "opening_y_lower": 0.5305,
-    "opening_y_upper": 0.4778,
-    "seconds": 1.0,
+    "opening_y_lower": 0.5299,
+    "opening_y_upper": 0.4789,
+    "seconds": 1.5,
     "curve": [
      1.0,
      1.0
     ]
    },
    {
-    "spot_w": 108.27,
+    "spot_w": 109.78,
     "stone_y": 0.1243,
-    "opening_y_lower": 0.5129,
-    "opening_y_upper": 0.4523,
-    "seconds": 1.1,
+    "opening_y_lower": 0.5128,
+    "opening_y_upper": 0.4528,
+    "seconds": 1.7,
     "curve": [
      1.0,
      1.0
     ]
    },
    {
-    "spot_w": 102.32,
-    "stone_y": 0.1205,
-    "opening_y_lower": 0.5522,
-    "opening_y_upper": 0.4747,
-    "seconds": 1.1,
+    "spot_w": 103.74,
+    "stone_y": 0.1204,
+    "opening_y_lower": 0.5512,
+    "opening_y_upper": 0.4757,
+    "seconds": 1.4,
     "curve": [
-     0.9265,
-     2.5834
+     0.925,
+     2.5368
     ]
    },
    {
-    "spot_w": 101.76,
+    "spot_w": 103.3,
     "stone_y": 0.1202,
-    "opening_y_lower": 0.5523,
-    "opening_y_upper": 0.4747,
+    "opening_y_lower": 0.5513,
+    "opening_y_upper": 0.4757,
+    "seconds": 1.3,
+    "curve": [
+     0.925,
+     2.5368
+    ]
+   },
+   {
+    "spot_w": 103.2,
+    "stone_y": 0.1201,
+    "opening_y_lower": 0.5513,
+    "opening_y_upper": 0.4756,
+    "seconds": 1.2,
+    "curve": [
+     0.9209,
+     2.5783
+    ]
+   },
+   {
+    "spot_w": 103.17,
+    "stone_y": 0.1201,
+    "opening_y_lower": 0.5513,
+    "opening_y_upper": 0.4756,
+    "seconds": 1.4,
+    "curve": [
+     0.9209,
+     2.5783
+    ]
+   },
+   {
+    "spot_w": 103.16,
+    "stone_y": 0.1201,
+    "opening_y_lower": 0.5513,
+    "opening_y_upper": 0.4756,
     "seconds": 1.1,
     "curve": [
-     0.9265,
-     2.5834
+     0.9206,
+     2.5812
     ]
    },
    {
-    "spot_w": 101.65,
-    "stone_y": 0.1202,
-    "opening_y_lower": 0.5523,
-    "opening_y_upper": 0.4746,
-    "seconds": 1.0,
-    "curve": [
-     0.9214,
-     2.6368
-    ]
-   },
-   {
-    "spot_w": 101.54,
+    "spot_w": 103.16,
     "stone_y": 0.1201,
-    "opening_y_lower": 0.5523,
-    "opening_y_upper": 0.4746,
-    "seconds": 1.0,
+    "opening_y_lower": 0.5513,
+    "opening_y_upper": 0.4756,
+    "seconds": 1.4,
     "curve": [
-     0.9214,
-     2.6368
-    ]
-   },
-   {
-    "spot_w": 101.51,
-    "stone_y": 0.1201,
-    "opening_y_lower": 0.5523,
-    "opening_y_upper": 0.4745,
-    "seconds": 1.1,
-    "curve": [
-     0.9203,
-     2.6485
-    ]
-   },
-   {
-    "spot_w": 101.5,
-    "stone_y": 0.1201,
-    "opening_y_lower": 0.5523,
-    "opening_y_upper": 0.4745,
-    "seconds": 1.1,
-    "curve": [
-     0.9203,
-     2.6485
+     0.9206,
+     2.5812
     ]
    }
   ]
@@ -335,225 +342,225 @@
   "photo_p90": 0.1864,
   "rounds": [
    {
-    "a": 0.9265,
-    "b": 2.5834,
+    "a": 0.925,
+    "b": 2.5368,
     "untoned_p10": 0.0551,
+    "untoned_p90": 0.1481
+   },
+   {
+    "a": 0.9209,
+    "b": 2.5783,
+    "untoned_p10": 0.0549,
     "untoned_p90": 0.1476
    },
    {
-    "a": 0.9214,
-    "b": 2.6368,
+    "a": 0.9206,
+    "b": 2.5812,
     "untoned_p10": 0.0549,
-    "untoned_p90": 0.1471
-   },
-   {
-    "a": 0.9203,
-    "b": 2.6485,
-    "untoned_p10": 0.0548,
-    "untoned_p90": 0.147
+    "untoned_p90": 0.1476
    }
   ],
-  "a": 0.9203,
-  "b": 2.6485
+  "a": 0.9206,
+  "b": 2.5812
  },
  "saturation": {
   "k": 0.05,
   "photo_slopes": [
    -0.0506,
-   0.2089
+   0.2088
   ],
   "render_slopes": [
-   -0.0559,
-   0.1786
+   -0.056,
+   0.1805
   ],
-  "error": 0.2563,
+  "error": 0.2468,
   "tries": [
    {
     "k": 0.0,
     "slopes": [
-     -0.0431,
-     0.1411
+     -0.0433,
+     0.1428
     ]
    },
    {
     "k": 0.05,
     "slopes": [
-     -0.0559,
-     0.1786
+     -0.056,
+     0.1805
     ]
    },
    {
     "k": 0.1,
     "slopes": [
-     -0.0691,
-     0.2193
+     -0.0692,
+     0.2216
     ]
    },
    {
     "k": 0.15,
     "slopes": [
-     -0.0827,
-     0.2644
+     -0.0828,
+     0.267
     ]
    },
    {
     "k": 0.2,
     "slopes": [
      -0.0968,
-     0.3153
+     0.3184
     ]
    },
    {
     "k": 0.25,
     "slopes": [
-     -0.1113,
-     0.3743
+     -0.1112,
+     0.378
     ]
    },
    {
     "k": 0.3,
     "slopes": [
-     -0.1263,
-     0.4438
+     -0.1262,
+     0.4484
     ]
    },
    {
     "k": 0.35,
     "slopes": [
-     -0.1418,
-     0.5247
+     -0.1417,
+     0.5297
     ]
    },
    {
     "k": 0.4,
     "slopes": [
-     -0.158,
-     0.6083
+     -0.1578,
+     0.6132
     ]
    },
    {
     "k": 0.45,
     "slopes": [
-     -0.1747,
-     0.6919
+     -0.1745,
+     0.6969
     ]
    },
    {
     "k": 0.5,
     "slopes": [
-     -0.1921,
-     0.7742
+     -0.1918,
+     0.7797
     ]
    },
    {
     "k": 0.55,
     "slopes": [
-     -0.2102,
-     0.8544
+     -0.2099,
+     0.8603
     ]
    },
    {
     "k": 0.6,
     "slopes": [
-     -0.229,
-     0.9328
+     -0.2287,
+     0.9389
     ]
    },
    {
     "k": 0.65,
     "slopes": [
-     -0.2486,
-     1.0095
+     -0.2483,
+     1.0159
     ]
    },
    {
     "k": 0.7,
     "slopes": [
-     -0.2691,
-     1.0848
+     -0.2688,
+     1.0916
     ]
    },
    {
     "k": 0.75,
     "slopes": [
-     -0.2905,
-     1.159
+     -0.2902,
+     1.1661
     ]
    },
    {
     "k": 0.8,
     "slopes": [
-     -0.3129,
-     1.2314
+     -0.3125,
+     1.2386
     ]
    },
    {
     "k": 0.85,
     "slopes": [
-     -0.3364,
-     1.3008
+     -0.336,
+     1.308
     ]
    },
    {
     "k": 0.9,
     "slopes": [
-     -0.361,
-     1.3666
+     -0.3606,
+     1.3739
     ]
    },
    {
     "k": 0.95,
     "slopes": [
-     -0.387,
-     1.429
+     -0.3866,
+     1.4365
     ]
    },
    {
     "k": 1.0,
     "slopes": [
-     -0.4143,
-     1.4883
+     -0.4139,
+     1.4959
     ]
    },
    {
     "k": 1.05,
     "slopes": [
-     -0.4429,
-     1.5444
+     -0.4425,
+     1.5522
     ]
    },
    {
     "k": 1.1,
     "slopes": [
-     -0.473,
-     1.598
+     -0.4725,
+     1.6059
     ]
    },
    {
     "k": 1.15,
     "slopes": [
-     -0.5042,
-     1.6494
+     -0.5038,
+     1.6574
     ]
    },
    {
     "k": 1.2,
     "slopes": [
-     -0.5365,
-     1.6983
+     -0.5362,
+     1.7062
     ]
    }
   ]
  },
  "render": {
-  "seconds": 9.8,
+  "seconds": 14.3,
   "samples": 256,
   "size": [
    1402,
    1052
   ],
-  "spot_w": 101.5,
-  "wall_strength": 0.235,
+  "spot_w": 103.16,
+  "wall_strength": 0.2425,
   "albedo": [
    0.45,
    0.288,
@@ -562,5 +569,5 @@
   "look": "None",
   "filter_px": 1.8
  },
- "seconds": 537.0
+ "seconds": 637.0
 }
