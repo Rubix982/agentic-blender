@@ -2010,6 +2010,10 @@ takes render.png outside the carved field (fix 29's mask, 3 px wider), where the
 (`--asset-everywhere`: not). 05 at that: SSIM 0.724, openings IoU 0.882, its strips 0.008 in both. Left for the user's
 eye: under the arch's crown the photo's shadowed gap between the arch and the lattice reads as opening, so the asset
 shows a band of white there with a few stone fragments in it. Ours and the 18 to be rebuilt with fixes 27 to 29.
+The user, on that sheet: "we should have made the background black, not white". asset.png is now over black
+(`--asset-bg white`: as first made); 05's recomposed from its asset_rgba.png, no render needed. On black the band under
+the crown reads as the photo's dark gap. Still visible: the bushes behind 05's lower lattice are read as stone (dark
+olive patches where the photo shows leaves through the holes).
 
 *Open, not yet fixed.* The tone curve's upper exponent sits at its limit of 4.0 in 8 of the 13 renders that C-022
 measured (ours 2.12), and with the fit's stone corrected 03, 05, 09 and 15 end at both limits (0.3 and 4.0); the

@@ -1699,7 +1699,8 @@ log["render"] = dict(seconds=round(sec, 1), samples=SAMPLES, size=[W, H], spot_w
 # photo's (05's upper bands were brown, linear 0.084, 0.050, 0.037, and its colour step tripled that). The asset is
 # rendered once more from the same scene: on camera rays the wall is a holdout, so where the camera would see the wall
 # or the world the asset is empty (asset_rgba.png, alpha 0), while the wall still lights the stone as it did. Then
-# the same tone curve, colour step and toe as render.png, and over white: asset.png. --no-asset: none.
+# the same tone curve, colour step and toe as render.png, and over black: asset.png (first over white; the user, on
+# 05: "we should have made the background black, not white"). --asset-bg white: over white. --no-asset: none.
 if "--no-asset" not in argv:
     _out_node = next(n for n in wn.nodes if n.type == "OUTPUT_MATERIAL")
     _lp = wn.nodes.new("ShaderNodeLightPath")
@@ -1729,9 +1730,10 @@ if "--no-asset" not in argv:
         _st = np.where(_away[..., None], _rd, _st)
         _al = np.where(_away, 1.0, _al)
     C.write_png(os.path.join(OUT, "asset_rgba.png"), np.concatenate([_st * _al[..., None], _al[..., None]], -1))   # and
-    C.write_png(os.path.join(OUT, "asset.png"), _st * _al[..., None] + (1.0 - _al[..., None]))     # un-premultiplies
+    ASSET_BG = 1.0 if "--asset-bg" in argv and argv[argv.index("--asset-bg") + 1] == "white" else 0.0
+    C.write_png(os.path.join(OUT, "asset.png"), _st * _al[..., None] + ASSET_BG * (1.0 - _al[..., None]))   # un-premultiplies
     log["asset"] = dict(seconds=round(sec_a, 1), empty_share=round(float((_al < 0.5).mean()), 4),
-                        finish=len(FINISH), files=["asset.png (over white)", "asset_rgba.png"])
+                        finish=len(FINISH), background="white" if ASSET_BG else "black", files=["asset.png", "asset_rgba.png"])
     print("ASSET", log["asset"], flush=True)
 log["seconds"] = round(time.time() - T0, 1)
 for path in (os.path.join(OUT, "build.json"), os.path.join(shot.RESULTS, "build.json")):
