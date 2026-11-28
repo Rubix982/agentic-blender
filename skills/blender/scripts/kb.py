@@ -18,6 +18,13 @@
                                    colour spaces, GPU devices)
   kb.py factory [SECTION]          a fresh file's values (render, cycles, eevee, view_settings, ...)
   kb.py meta                       version, build, libraries, add-ons, counts
+  kb.py keys KEYS [--map NAME]     what a key press does in the default keymap ("shift a", "ctrl r", "alt click",
+                                   "numpad 1", "g"), in every editor and mode, with the operator call and, for a key
+                                   that opens a menu, the menu
+  kb.py keys --op OPERATOR         which keys run an operator;  kb.py keys --map NAME  everything in one keymap
+  kb.py menu "Add > Mesh > Cylinder" [--in VIEW3D]   follow a menu path as a tutorial gives it, to the call it makes
+  kb.py menu MENU_ID               one menu's entries (VIEW3D_MT_add);  kb.py menu --op OPERATOR  where an operator
+                                   sits in the menus, with the key that opens each top menu
 
 Everything printed was read from Blender 4.5.14 LTS by inventory.py; nothing is from memory. "default" is the value
 Blender registers; "(a new one starts at X)" is what a node, modifier or constraint made from Python really starts with.
@@ -485,6 +492,328 @@ def cmd_meta(_):
     a = m["addons"]
     print("add-ons on in a fresh Blender:", ", ".join(a["on_by_default"]))
     print("bundled, off by default:", ", ".join(a["enabled_for_this_read"]))
+
+
+# --- the interface: keys and menus (inventory_ui.py) ----------------------------------------------------------------
+
+KEYNAMES = {
+    **{c: c.upper() for c in "abcdefghijklmnopqrstuvwxyz"},
+    **{str(i): w for i, w in enumerate("ZERO ONE TWO THREE FOUR FIVE SIX SEVEN EIGHT NINE".split())},
+    **{f"f{i}": f"F{i}" for i in range(1, 25)},
+    **{f"numpad_{i}": f"NUMPAD_{i}" for i in range(10)},
+    "numpad_plus": "NUMPAD_PLUS", "numpad_minus": "NUMPAD_MINUS", "numpad_period": "NUMPAD_PERIOD",
+    "numpad_slash": "NUMPAD_SLASH", "numpad_asterisk": "NUMPAD_ASTERIX", "numpad_enter": "NUMPAD_ENTER",
+    "tab": "TAB", "space": "SPACE", "spacebar": "SPACE", "esc": "ESC", "escape": "ESC", "enter": "RET",
+    "return": "RET", "del": "DEL", "delete": "DEL", "backspace": "BACK_SPACE", "home": "HOME", "end": "END",
+    "page_up": "PAGE_UP", "pgup": "PAGE_UP", "page_down": "PAGE_DOWN", "pgdn": "PAGE_DOWN", "insert": "INSERT",
+    "up": "UP_ARROW", "down": "DOWN_ARROW", "left": "LEFT_ARROW", "right": "RIGHT_ARROW",
+    ".": "PERIOD", "period": "PERIOD", ",": "COMMA", "comma": "COMMA", "/": "SLASH", "slash": "SLASH",
+    "\\": "BACK_SLASH", "-": "MINUS", "minus": "MINUS", "=": "EQUAL", "equal": "EQUAL", "plus": "PLUS",
+    "`": "ACCENT_GRAVE", "~": "ACCENT_GRAVE", "grave": "ACCENT_GRAVE", "tilde": "ACCENT_GRAVE",
+    "[": "LEFT_BRACKET", "]": "RIGHT_BRACKET", ";": "SEMI_COLON", "'": "QUOTE",
+    "lmb": "LEFTMOUSE", "click": "LEFTMOUSE", "rmb": "RIGHTMOUSE", "mmb": "MIDDLEMOUSE",
+    "wheel_up": "WHEELUPMOUSE", "wheel_down": "WHEELDOWNMOUSE", "wheel_in": "WHEELINMOUSE", "wheel_out": "WHEELOUTMOUSE",
+}
+PHRASES = [  # longest first: words a tutorial uses, turned into one token
+    (r"num(?:ber)?\s*pad\s*\+|numpad\s*plus", "numpad_plus"), (r"num(?:ber)?\s*pad\s*-|numpad\s*minus", "numpad_minus"),
+    (r"num(?:ber)?\s*pad\s*(?:\.|period|del(?:ete)?)", "numpad_period"), (r"num(?:ber)?\s*pad\s*/", "numpad_slash"),
+    (r"num(?:ber)?\s*pad\s*\*", "numpad_asterisk"), (r"num(?:ber)?\s*pad\s*enter", "numpad_enter"),
+    (r"(?:num(?:ber)?\s*pad|numpad|num|np)\s*([0-9])", r"numpad_\1"),
+    (r"double[\s-]*click", "click double"), (r"left[\s-]*click|left\s*mouse(?:\s*button)?", "lmb"),
+    (r"right[\s-]*click|right\s*mouse(?:\s*button)?", "rmb"), (r"middle[\s-]*(?:click|mouse(?:\s*button)?)", "mmb"),
+    (r"(?:scroll|wheel|mouse\s*wheel)\s*up", "wheel_up"), (r"(?:scroll|wheel|mouse\s*wheel)\s*down", "wheel_down"),
+    (r"page\s*up", "page_up"), (r"page\s*down", "page_down"), (r"(?:up|down|left|right)\s*arrow", None),
+]
+MODS = {"shift": "shift", "ctrl": "ctrl", "control": "ctrl", "ctl": "ctrl", "alt": "alt", "option": "alt", "opt": "alt",
+        "cmd": "oskey", "command": "oskey", "oskey": "oskey", "super": "oskey", "win": "oskey", "meta": "oskey"}
+EDIT_HINT = {"Mesh": "edit mode, mesh", "Curve": "edit mode, curve", "Curves": "edit mode, hair curves",
+             "Armature": "edit mode, armature", "Lattice": "edit mode, lattice", "Font": "edit mode, text",
+             "Metaball": "edit mode, metaball", "Point Cloud": "edit mode, point cloud", "Object Mode": "object mode",
+             "Grease Pencil Edit Mode": "edit mode, grease pencil"}
+EDITORS = {"VIEW3D": "3D Viewport", "NODE": "Node Editor", "IMAGE": "Image / UV Editor", "SEQUENCER": "Video Sequencer",
+           "GRAPH": "Graph Editor", "DOPESHEET": "Dope Sheet", "NLA": "NLA Editor", "CLIP": "Movie Clip Editor",
+           "TEXT": "Text Editor", "OUTLINER": "Outliner", "TOPBAR": "top bar", "PROPERTIES": "Properties",
+           "INFO": "Info", "CONSOLE": "Python Console", "FILEBROWSER": "File Browser", "USERPREF": "Preferences",
+           "ASSETBROWSER": "Asset Browser", "SPREADSHEET": "Spreadsheet", "TIME": "Timeline", "MASK": "Mask",
+           "GREASE_PENCIL": "Grease Pencil", "CURVES": "hair curves", "POINTCLOUD": "point cloud", "WM": "any editor",
+           "SCREEN": "any editor", "RENDER": "render settings", "ANIM": "animation editors"}
+
+
+def parse_keys(text):
+    t = " " + text.lower().replace("+", " + ") + " "
+    t = re.sub(r"num(?:ber)?\s*pad\s*\+\s*\+?", " numpad_plus ", t)        # "numpad +" before + becomes a separator
+    for pat, rep in PHRASES:
+        if rep is None:
+            t = re.sub(r"\b(up|down|left|right)\s*arrow\b", r"\1", t)
+        else:
+            t = re.sub(pat, f" {rep} ", t)
+    mods, keys, value = set(), [], None
+    for tok in t.replace("+", " ").split():
+        if tok in MODS:
+            mods.add(MODS[tok])
+        elif tok == "double":
+            value = "DOUBLE_CLICK"
+        elif tok in ("drag", "tweak"):
+            value = "CLICK_DRAG"
+        elif tok in ("hold", "press"):
+            continue
+        elif tok in KEYNAMES:
+            keys.append(KEYNAMES[tok])
+        elif tok.upper() in {r["type"] for r in load("keymap.jsonl.gz")}:
+            keys.append(tok.upper())
+        else:
+            sys.exit(f"unknown key {tok!r} in {text!r}: use names like a, 1, f2, tab, numpad 1, click, rmb, wheel up")
+    return mods, keys, value
+
+
+def key_text(r):
+    m = [n for n, k in (("Ctrl", "ctrl"), ("Shift", "shift"), ("Alt", "alt"), ("Cmd", "oskey")) if r.get(k) is True]
+    if r.get("any"):
+        m = ["(any modifiers)"]
+    if r.get("key_modifier"):
+        m.append(f"{r['key_modifier']} held")
+    v = r.get("value")
+    tail = "" if v in (None, "PRESS") else f" ({v.lower().replace('_', ' ')})"
+    return " ".join(m + [r["type"]]) + tail
+
+
+def call_text(r):
+    props = r.get("props") or {}
+    if r.get("modal"):
+        return f"modal action {r['op']} (while the operator that owns this map runs)"
+    args = ", ".join(f"{k}={v!r}" for k, v in props.items())
+    out = f"bpy.ops.{r['op']}({args})"
+    if r["op"] in ("wm.call_menu", "wm.call_menu_pie", "wm.call_panel") and props.get("name"):
+        m = menus_by_id().get(props["name"])
+        if m:
+            out += f"   opens \"{m['label']}\" ({props['name']}; kb.py menu {props['name']})"
+    return out
+
+
+def menus_by_id():
+    if "M" not in _cache:
+        _cache["M"] = {m["id"]: m for m in load("menus.jsonl.gz")}
+    return _cache["M"]
+
+
+def print_key_rows(rows):
+    last = None
+    for r in sorted(rows, key=lambda r: (r["keymap"], r["type"], key_text(r))):
+        if r["keymap"] != last:
+            last = r["keymap"]
+            where = ", ".join(x for x in (r.get("space") if r.get("space") not in (None, "EMPTY") else "",
+                                          EDIT_HINT.get(last, ""), "modal map" if r.get("modal") else "") if x)
+            print(f"{last}" + (f"  [{where}]" if where else ""))
+        flag = "" if r.get("active", True) else "  (inactive by default)"
+        mac = "  (Cmd also, on macOS)" if r.get("mac_cmd") else ""
+        print(f"  {key_text(r):<26} {call_text(r)}{mac}{flag}")
+
+
+def cmd_keys(args):
+    km_filter = op_filter = None
+    rest = []
+    it = iter(args)
+    for a in it:
+        if a == "--map":
+            km_filter = next(it, "").lower()
+        elif a == "--op":
+            op_filter = next(it, "").removeprefix("bpy.ops.")
+        else:
+            rest.append(a)
+    rows = load("keymap.jsonl.gz")
+    if km_filter:
+        exact = [r for r in rows if r["keymap"].lower() == km_filter]
+        rows = exact or [r for r in rows if km_filter in r["keymap"].lower()]
+    if op_filter:
+        o = op_filter.lower()
+        if "_ot_" in o:
+            o = o.replace("_ot_", ".")
+        rows = [r for r in rows if r["op"].lower() == o or (r["op"] in ("wm.call_menu", "wm.call_menu_pie", "wm.call_panel")
+                                                          and (r.get("props") or {}).get("name", "").lower() == o)]
+    if rest:
+        mods, keys, value = parse_keys(" ".join(rest))
+        if len(keys) != 1:
+            sys.exit(f"give one key with its modifiers (got {keys or 'none'}); for a sequence, look each key up in turn")
+        k = keys[0]
+        want = {m: m in mods for m in ("shift", "ctrl", "alt", "oskey")}
+
+        def match(r, w):
+            if r["type"] != k or (value and r.get("value") != value) or r.get("any"):
+                return False
+            return all(bool(r.get(m) is True) == w[m] for m in w)
+        hit = [r for r in rows if match(r, want)]
+        if want["oskey"]:                                               # Cmd on a Mac stands for Ctrl in most items
+            w2 = dict(want, oskey=False, ctrl=True)
+            hit += [r for r in rows if match(r, w2) and r.get("mac_cmd")]
+        anyk = [r for r in rows if r.get("any") and r["type"] == k and (not value or r.get("value") == value)]
+        if not mods or not hit:                                         # "any modifiers" items, when they can apply
+            hit += anyk
+        rows = hit
+    if not rows:
+        sys.exit("nothing in the default keymap matches" + (" (try without --map)" if km_filter else ""))
+    plain_rows = [r for r in rows if not r.get("modal")]
+    modal_rows = [r for r in rows if r.get("modal")]
+    print_key_rows(plain_rows)
+    if modal_rows:
+        print("\nWhile an operator runs (its modal map; e.g. X after G constrains the move to X):" if plain_rows else
+              "Only inside a running operator (modal maps):")
+        print_key_rows(modal_rows)
+    print("\n(the default keymap, left-click select, as Blender 4.5 builds it; a user's own keymap may differ)")
+
+
+def norm(label):
+    return re.sub(r"[\s.…]+$", "", (label or "")).strip().lower()
+
+
+def entries_of(mid, depth=0):
+    """A menu's entries with inline menus expanded."""
+    m = menus_by_id().get(mid)
+    if not m or depth > 4:
+        return []
+    out = []
+    for e in m["entries"]:
+        out += entries_of(e["menu"], depth + 1) if e["kind"] == "inline" else [e]
+    return out
+
+
+def entry_call(e, item=None):
+    if e["kind"] == "op":
+        args = ", ".join(f"{k}={v!r}" for k, v in (e.get("props") or {}).items())
+        return f"bpy.ops.{e['op']}({args})"
+    if e["kind"] == "enum_menu" and item:
+        return f"bpy.ops.{e['op']}({e['prop']}={item!r})"
+    if e["kind"] in ("prop", "prop_menu", "prop_value"):
+        v = f" = {e['value']!r}" if e["kind"] == "prop_value" else ""
+        return f"a property: {e['struct']}.{e['prop']}{v}"
+    if e["kind"] == "menu":
+        return f"opens menu {e['menu']}"
+    return e["kind"]
+
+
+def follow(mid, parts, trail):
+    """Every way the labels in parts lead through menu mid. Yields (trail, entry, enum item)."""
+    if not parts:
+        return
+    want, rest = norm(parts[0]), parts[1:]
+    for e in entries_of(mid):
+        if e["kind"] == "enum_menu" and norm(e.get("label")) == want:
+            if not rest:
+                yield trail + [e["label"]], e, None
+            else:
+                for ident, name in e.get("items", []):
+                    if norm(name) == norm(rest[0]) and len(rest) == 1:
+                        yield trail + [e["label"], name], e, ident
+        elif norm(e.get("label")) == want:
+            if e["kind"] == "menu" and rest:
+                yield from follow(e["menu"], rest, trail + [e["label"]])
+            elif not rest:
+                yield trail + [e["label"]], e, None
+
+
+def openers():
+    """menu id -> the keys that open it."""
+    if "O" not in _cache:
+        o = {}
+        for r in load("keymap.jsonl.gz"):
+            if r["op"] in ("wm.call_menu", "wm.call_menu_pie") and (r.get("props") or {}).get("name"):
+                o.setdefault(r["props"]["name"], []).append(f"{key_text(r)} in {r['keymap']}")
+        _cache["O"] = o
+    return _cache["O"]
+
+
+def editor_of(mid):
+    pre = mid.split("_MT_")[0] if "_MT_" in mid else mid.split("_")[0]
+    return EDITORS.get(pre, pre)
+
+
+def print_menu(m):
+    print(f"{m['id']}  \"{m['label']}\"  [{editor_of(m['id'])}]")
+    keys = openers().get(m["id"])
+    if keys:
+        print("  opened by: " + "; ".join(keys[:6]))
+    for e in m["entries"]:
+        if e["kind"] == "label":
+            print(f"  -- {e['label']} --")
+        elif e["kind"] == "inline":
+            print(f"  (the entries of {e['menu']} appear here)")
+        elif e["kind"] == "enum_menu":
+            print(f"  {e.get('label') or '?':<28} > a list: " + ", ".join(n for _, n in e.get("items", [])[:12])
+                  + f"   -> bpy.ops.{e['op']}({e['prop']}=...)")
+        else:
+            print(f"  {(e.get('label') or '?') + (' >' if e['kind'] == 'menu' else ''):<28} {entry_call(e)}")
+    if m.get("error"):
+        print(f"  (read only this far headless: {m['error']})")
+
+
+def cmd_menu(args):
+    where = op = None
+    rest = []
+    it = iter(args)
+    for a in it:
+        if a == "--in":
+            where = next(it, "").upper()
+        elif a == "--op":
+            op = next(it, "").removeprefix("bpy.ops.").lower()
+        else:
+            rest.append(a)
+    M = menus_by_id()
+    if op:
+        parents = {}
+        for m in M.values():
+            for e in m["entries"]:
+                if e["kind"] in ("menu", "inline"):
+                    parents.setdefault(e["menu"], []).append((m["id"], e.get("label") if e["kind"] == "menu" else None))
+        paths = []
+
+        def up(mid, path, seen):
+            ps = parents.get(mid, [])
+            if not ps or len(path) > 6:
+                top = M[mid]["label"] if M.get(mid) else ""
+                paths.append((mid, ([top] if top else ["(header)"] if mid.endswith("_MT_editor_menus") else []) + path))
+                return
+            for pid, lab in ps:
+                if pid in seen:
+                    continue
+                up(pid, ([lab] if lab else []) + path, seen | {pid})
+        for m in M.values():
+            for e in m["entries"]:
+                if e.get("op", "").lower() == op and e["kind"] in ("op", "enum_menu"):
+                    up(m["id"], [e.get("label") or "?"], {m["id"]})
+        if where:
+            paths = [p for p in paths if p[0].startswith(where)]
+        if not paths:
+            sys.exit(f"{op} is in no menu" + (f" of {where}" if where else ""))
+        for root, path in sorted(set((r, tuple(p)) for r, p in paths)):
+            keys = openers().get(root)
+            print(f"{' > '.join(path)}   [{editor_of(root)}: {root}]" + (f"  opened by {keys[0]}" if keys else ""))
+        return
+    text = " ".join(rest)
+    if text in M:
+        print_menu(M[text])
+        return
+    parts = [p for p in re.split(r"\s*(?:>|›|→|/)\s*", text) if p]
+    if len(parts) == 1:
+        hits = [m for m in M.values() if norm(m["label"]) == norm(parts[0]) and (not where or m["id"].startswith(where))]
+        if not hits:
+            sys.exit(f"no menu called {parts[0]!r}; give a path like \"Add > Mesh > Cylinder\" or a menu id")
+        for m in hits:
+            print_menu(m)
+            print()
+        return
+    found = 0
+    for m in M.values():
+        if norm(m["label"]) != norm(parts[0]) or (where and not m["id"].startswith(where)):
+            continue
+        for trail, e, item in follow(m["id"], parts[1:], [m["label"]]):
+            found += 1
+            keys = openers().get(m["id"])
+            print(f"{' > '.join(trail)}   [{editor_of(m['id'])}: {m['id']}" + (f"; opened by {keys[0]}" if keys else "") + "]")
+            print(f"    {entry_call(e, item)}")
+            if e["kind"] == "menu":
+                print_menu(M[e["menu"]])
+    if not found:
+        sys.exit(f"no menu path {' > '.join(parts)}" + (f" in {where}" if where else "")
+                 + f"; see the top menu's entries with: kb.py menu \"{parts[0]}\"")
 
 
 def main():

@@ -224,13 +224,16 @@ overall, so none was added.)
 
 ### T-020 · Does this guide's method add anything when the vendor ships its own agent skills?
 
-**Status:** open
+**Status:** answered
 **Parent:** C-001
 **Opened:** 2026-11-24
 **Question:** Blender had no official skill to compare against. Mapbox publishes 27 (MIT), with evals that grade prose
 answers rather than run code. Test case: `~/code/agentic-mapbox`, C-001 (ten blind GL JS tasks, run in headless
 Chromium, with and without Mapbox's skills).
-**Answer:** —
+**Answer:** for that test case, the eval said not to build. C-001 in `~/code/agentic-mapbox` (2026-11-24): on ten
+blind GL JS tasks the model got 10 of 10 alone and 10 of 10 with Mapbox's 27 skills, which it never opened. The
+method's eval was still the useful part, because it found no gap for a guide to fill before one was written. Open
+behind it: the newer GL JS surface (agentic-mapbox T-004).
 
 ### T-021 · Can the read step tell an opening from a shadow without our photo's colours?
 
