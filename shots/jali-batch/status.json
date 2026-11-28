@@ -14,16 +14,6 @@
    "ok": true,
    "exit": 0,
    "seconds": 25.6
-  },
-  "build": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 153.6
-  },
-  "compare": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 36.0
   }
  },
  "02-louvre-ad-1": {
@@ -41,16 +31,6 @@
    "ok": true,
    "exit": 0,
    "seconds": 37.5
-  },
-  "build": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 123.5
-  },
-  "compare": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 44.6
   }
  },
  "03-sidi-saiyyed-a": {
@@ -68,16 +48,6 @@
    "ok": true,
    "exit": 0,
    "seconds": 348.3
-  },
-  "build": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 216.7
-  },
-  "compare": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 54.8
   }
  },
  "04-sidi-saiyyed-b": {
@@ -95,16 +65,6 @@
    "ok": true,
    "exit": 0,
    "seconds": 9.4
-  },
-  "build": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 80.6
-  },
-  "compare": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 23.6
   }
  },
  "05-sidi-saiyyed-c": {
@@ -122,16 +82,6 @@
    "ok": true,
    "exit": 0,
    "seconds": 105.8
-  },
-  "build": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 126.3
-  },
-  "compare": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 45.0
   }
  },
  "06-sidi-saiyyed-d": {
@@ -149,16 +99,6 @@
    "ok": true,
    "exit": 0,
    "seconds": 33.5
-  },
-  "build": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 108.3
-  },
-  "compare": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 36.5
   }
  },
  "07-humayun-doorway": {
@@ -176,16 +116,6 @@
    "ok": true,
    "exit": 0,
    "seconds": 20.0
-  },
-  "build": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 78.4
-  },
-  "compare": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 22.5
   }
  },
  "08-humayun-mihrab": {
@@ -203,16 +133,6 @@
    "ok": true,
    "exit": 0,
    "seconds": 23.2
-  },
-  "build": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 72.3
-  },
-  "compare": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 17.5
   }
  },
  "09-humayun-c": {
@@ -230,16 +150,6 @@
    "ok": true,
    "exit": 0,
    "seconds": 19.7
-  },
-  "build": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 70.1
-  },
-  "compare": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 17.6
   }
  },
  "10-humayun-d": {
@@ -257,16 +167,6 @@
    "ok": true,
    "exit": 0,
    "seconds": 21.9
-  },
-  "build": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 108.9
-  },
-  "compare": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 16.6
   }
  },
  "11-red-fort-marble": {
@@ -284,16 +184,6 @@
    "ok": true,
    "exit": 0,
    "seconds": 13.8
-  },
-  "build": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 94.9
-  },
-  "compare": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 22.6
   }
  },
  "12-jaisalmer-slide": {
@@ -311,16 +201,6 @@
    "ok": true,
    "exit": 0,
    "seconds": 97.4
-  },
-  "build": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 236.2
-  },
-  "compare": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 20.5
   }
  },
  "13-jaali-window-a": {
@@ -338,16 +218,6 @@
    "ok": true,
    "exit": 0,
    "seconds": 16.4
-  },
-  "build": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 90.3
-  },
-  "compare": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 17.4
   }
  },
  "14-jaali-window-b": {
@@ -365,16 +235,6 @@
    "ok": true,
    "exit": 0,
    "seconds": 14.6
-  },
-  "build": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 187.6
-  },
-  "compare": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 22.7
   }
  },
  "15-nilabagh-palace": {
@@ -392,16 +252,6 @@
    "ok": true,
    "exit": 0,
    "seconds": 19.7
-  },
-  "build": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 63.2
-  },
-  "compare": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 13.0
   }
  },
  "16-bibi-ka-maqbara": {
@@ -419,16 +269,6 @@
    "ok": true,
    "exit": 0,
    "seconds": 117.3
-  },
-  "build": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 154.5
-  },
-  "compare": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 32.1
   }
  },
  "17-fatehpur-sikri-a": {
@@ -446,16 +286,6 @@
    "ok": true,
    "exit": 0,
    "seconds": 67.7
-  },
-  "build": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 621.7
-  },
-  "compare": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 20.8
   }
  },
  "18-fatehpur-sikri-b": {
@@ -473,16 +303,6 @@
    "ok": true,
    "exit": 0,
    "seconds": 30.1
-  },
-  "build": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 237.8
-  },
-  "compare": {
-   "ok": true,
-   "exit": 0,
-   "seconds": 19.6
   }
  }
 }
