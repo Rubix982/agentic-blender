@@ -101,7 +101,9 @@ rgb = C.load(shot.PHOTO, (W, H))
 k = C.classify(rgb, np.load(NORMALS_NPY) if os.path.exists(NORMALS_NPY) else None)   # C-012: with the normals' veto
 _rp = json.load(open(os.path.join(shot.RESULTS, "read_photo.json"))) if os.path.exists(os.path.join(shot.RESULTS, "read_photo.json")) else {}
 if "field_box" in _rp and "--frame-openings" not in argv:              # C-014: the frame is solid (read_photo.py)
-    C.keep_field(k, _rp["field_box"], _rp["screen_box_for_field"])
+    _fmp = os.path.join(shot.OUT, "field_mask.npy")                    # C-023, fix 29: the openings' lattice
+    C.keep_field(k, _rp["field_box"], _rp["screen_box_for_field"],
+                 np.load(_fmp) if _rp.get("field_mask") and os.path.exists(_fmp) and "--field-box" not in argv else None)
 import symmetry  # noqa: E402
 if FORMS == "shading":                                                 # C-009: the photo averaged over its repeats
     LAVG, OAVG, HSHADE, SYM = symmetry.average(rgb, k)
@@ -126,6 +128,13 @@ dark[y0:y1 + 1, x0:x1 + 1] = k["outside"][y0:y1 + 1, x0:x1 + 1]
 if "--surround-dark" not in argv:
     gr_blur = C.blur(rgb[:, :, 1].astype(np.float32), 5) / np.maximum(C.blur(rgb[:, :, 0].astype(np.float32), 5), 1e-4)
     dark &= (gr_blur > 0.8) | (k["y"] < 0.02)
+# C-023, fix 30 (off): the surround's thin parts (common.keep_field: shadow lines on a facade) kept solid. Tried on 05:
+# lit, they rendered at 0.148 where the photo's are 0.008, and with the photo's darkness as their albedo at 0.110; SSIM
+# over the box 0.724 (fix 29) to 0.687 and 0.690, the facade's away from the strips 0.661 to 0.618. Cut, they look onto
+# the dark panel, as dark as the photo's; the asset takes render.png outside the field (fix 28). --thin-surround-solid.
+THIN_SOLID = "thin_surround" in k and "--thin-surround-solid" in argv
+if THIN_SOLID:
+    dark &= ~k["thin_surround"]
 sur = np.zeros_like(dark)
 sur[y0, :], sur[y1, :], sur[:, x0], sur[:, x1] = dark[y0, :], dark[y1, :], dark[:, x0], dark[:, x1]
 for _ in range(2000):                                                  # grow along dark pixels from the box's edge
@@ -848,6 +857,13 @@ if NORMAL_MAP:
         speck = np.clip(k["y"] / np.maximum(y_open, 0.03) - SPECK_FLOOR, 1.0, SPECK_MAX) ** 2.2   # at 2.5 some went white, and the
                                                                        # render's rule took them for wall (IoU 0.795)
         AL = np.clip(AL * np.where(st_box, speck, 1.0)[:, :, None], 0.0, 1.0)
+        # C-023, fix 30: the shadow lines kept solid (common.keep_field) are deep recesses under cornices and
+        # mouldings, which the relief does not cast: lit, 05's came out at 0.148 where the photo's are 0.008. Their
+        # albedo is the photo's darkness there: the stone's albedo times their linear luminance over the lit stone's.
+        if THIN_SOLID and k["thin_surround"].any() and "--thin-surround-lit" not in argv:
+            _yl = np.where(k["y"] <= 0.04045, k["y"] / 12.92, ((k["y"] + 0.055) / 1.055) ** 2.4)
+            _ts = k["thin_surround"]
+            AL[_ts] = np.clip(np.array(ALBEDO)[None, :] * (_yl[_ts] / max(float(np.median(_yl[st_box])), 1e-4))[:, None], 0.0, 1.0)
         aimg = bpy.data.images.new("photo albedo", W, H, alpha=False, float_buffer=True)
         aimg.colorspace_settings.name = "Non-Color"                    # linear values, as the model gives them
         apx = np.ones((H, W, 4), np.float32)
@@ -1567,8 +1583,10 @@ if FILTER_FIT:
     print("FILTER", log["filter_fit"], flush=True)
 bpy.ops.wm.save_as_mainfile(filepath=os.path.join(OUT, "scene.blend"))
 sec = render(UNTONED if TONE else os.path.join(OUT, "render.png"), 100, SAMPLES)
+FINISH = []                                                            # fix 28: the steps below, for the asset
 if TONE:
     toned = tone_rgb(C.load(UNTONED), curve)
+    FINISH.append(lambda im: tone_rgb(im, curve))
     # C-018: the processing's colour. Each pixel's colour (its distance from grey at the same luminance) scaled by
     # (Y / m)^-k: less above the stone's median, more below, luminance kept. In the photo log(R/G) falls and log(B/G)
     # rises with luminance over the stone (-0.100, 0.113), the render's far less; a cooler spot did not do it (C-017).
@@ -1631,6 +1649,7 @@ if TONE:
             SAT_REJECTED = dict(k=round(k_sat, 3), slopes=[round(v, 4) for v in sl])
             err, k_sat, sl = next(t for t in tries if t[1] == 0.0)
         toned = saturate(toned, k_sat)
+        FINISH.append(lambda im, kk=k_sat: saturate(im, kk))
         log["saturation"] = dict(k=round(k_sat, 3), photo_slopes=[round(v, 4) for v in sat_photo],
                                  render_slopes=[round(v, 4) for v in sl], error=round(err, 4),
                                  **({"y_floor": round(SAT_Y_FLOOR, 4)} if SAT_Y_FLOOR > 1e-3 else {}),
@@ -1661,6 +1680,11 @@ if TONE:
                     hi_t = mid_t
             T_TOE = (lo_t + hi_t) / 2
             toned = np.clip(toned * (toe(y_t, T_TOE) / y_t)[..., None], 0.0, 1.0)
+
+            def _toe_rgb(im, t=T_TOE):
+                yv = np.maximum(im @ LUM, 1e-6)
+                return np.clip(im * (toe(yv, t) / yv)[..., None], 0.0, 1.0)
+            FINISH.append(_toe_rgb)
             log["tone"]["toe"] = dict(t=round(T_TOE, 4), knee=round(K_TOE, 4), openings_before=round(r_med, 4),
                                       photo_openings=round(p_med, 4))
             print("TOE", log["tone"]["toe"], flush=True)
@@ -1669,6 +1693,46 @@ if TONE:
 log["render"] = dict(seconds=round(sec, 1), samples=SAMPLES, size=[W, H], spot_w=round(spot.energy, 2),
                      wall_strength=round(WALL_MAX, 4), albedo=[round(c, 4) for c in ALBEDO], look=LOOK,
                      filter_px=round(float(scene.cycles.filter_width), 3))
+# C-023, fix 28 (the user, on 05: "for the visuals BEHIND the jali ... it should become white as the asset we are
+# deriving in Blender is just the jali itself, not the area behind it"). render.png stays the photo's match: the wall
+# glows with what the photo shows through the openings, so the fits and compare.py measure the openings against the
+# photo's (05's upper bands were brown, linear 0.084, 0.050, 0.037, and its colour step tripled that). The asset is
+# rendered once more from the same scene: on camera rays the wall is a holdout, so where the camera would see the wall
+# or the world the asset is empty (asset_rgba.png, alpha 0), while the wall still lights the stone as it did. Then
+# the same tone curve, colour step and toe as render.png, and over white: asset.png. --no-asset: none.
+if "--no-asset" not in argv:
+    _out_node = next(n for n in wn.nodes if n.type == "OUTPUT_MATERIAL")
+    _lp = wn.nodes.new("ShaderNodeLightPath")
+    _hold = wn.nodes.new("ShaderNodeHoldout")
+    _msh = wn.nodes.new("ShaderNodeMixShader")
+    wn.links.new(_lp.outputs["Is Camera Ray"], _msh.inputs["Fac"])
+    wn.links.new(em.outputs["Emission"], _msh.inputs[1])
+    wn.links.new(_hold.outputs["Holdout"], _msh.inputs[2])
+    wn.links.new(_msh.outputs["Shader"], _out_node.inputs["Surface"])
+    scene.render.film_transparent = True
+    r.image_settings.color_mode = "RGBA"
+    r.image_settings.color_depth = "16"
+    _apath = os.path.join(OUT, "asset_untoned.png")
+    sec_a = render(_apath, 100, SAMPLES)
+    _px = C.oiio.ImageBuf(_apath).get_pixels(C.oiio.FLOAT)              # OpenImageIO premultiplies on reading
+    _al = np.clip(_px[:, :, 3], 0.0, 1.0).astype(np.float64)
+    _st = np.clip(_px[:, :, :3] / np.maximum(_al, 1e-4)[..., None], 0.0, 1.0).astype(np.float64)
+    for _f in FINISH:
+        _st = _f(_st)
+    # Outside the carved field (fix 29's mask, 3 px wider) the asset is render.png: the two are the same scene and
+    # light, and differ there only where the camera looks through the facade's shadow lines, cut as surround, which
+    # render.png shows as dark as the photo does (05: 0.008 both) and the asset showed white.
+    _fmp = os.path.join(shot.OUT, "field_mask.npy")
+    if _rp.get("field_mask") and os.path.exists(_fmp) and "--asset-everywhere" not in argv:
+        _away = ~C.dilate(np.load(_fmp), 3)
+        _rd = C.load(os.path.join(OUT, "render.png")).astype(np.float64)
+        _st = np.where(_away[..., None], _rd, _st)
+        _al = np.where(_away, 1.0, _al)
+    C.write_png(os.path.join(OUT, "asset_rgba.png"), np.concatenate([_st * _al[..., None], _al[..., None]], -1))   # and
+    C.write_png(os.path.join(OUT, "asset.png"), _st * _al[..., None] + (1.0 - _al[..., None]))     # un-premultiplies
+    log["asset"] = dict(seconds=round(sec_a, 1), empty_share=round(float((_al < 0.5).mean()), 4),
+                        finish=len(FINISH), files=["asset.png (over white)", "asset_rgba.png"])
+    print("ASSET", log["asset"], flush=True)
 log["seconds"] = round(time.time() - T0, 1)
 for path in (os.path.join(OUT, "build.json"), os.path.join(shot.RESULTS, "build.json")):
     os.makedirs(os.path.dirname(path), exist_ok=True)

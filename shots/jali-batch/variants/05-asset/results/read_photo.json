@@ -1,0 +1,139 @@
+{
+ "box": [
+  0,
+  0,
+  976,
+  1401
+ ],
+ "width_px": 977,
+ "height_px": 1402,
+ "opening_share": 0.2121,
+ "outside_share": 0.041,
+ "stone_y": [
+  0.3471,
+  0.7911,
+  0.9096
+ ],
+ "stone_y_p99": 0.9844,
+ "stone_rgb_median": [
+  0.8,
+  0.7882,
+  0.7961
+ ],
+ "opening_y": 0.0148,
+ "stone_y_bands": [
+  0.8473,
+  0.7037,
+  0.7607,
+  0.8619,
+  0.865,
+  0.8033,
+  0.7182,
+  0.6723,
+  0.6425,
+  0.7258
+ ],
+ "field_mask": {
+  "close_px": 12,
+  "min_holes": 12,
+  "share": 0.1,
+  "thick": 0.25,
+  "parts_kept": 2,
+  "kept_holes_radius": [
+   [
+    944,
+    325
+   ],
+   [
+    164,
+    33
+   ]
+  ],
+  "dropped_holes_radius": [
+   [
+    65,
+    65
+   ],
+   [
+    16,
+    21
+   ],
+   [
+    6,
+    23
+   ],
+   [
+    6,
+    23
+   ],
+   [
+    3,
+    10
+   ],
+   [
+    3,
+    6
+   ]
+  ],
+  "openings_dropped_px": 28781,
+  "openings_px": 319369
+ },
+ "field_box": [
+  25,
+  204,
+  961,
+  1386
+ ],
+ "screen_box_for_field": [
+  0,
+  0,
+  976,
+  1401
+ ],
+ "openings": {
+  "threshold": 0.4629,
+  "bright": {
+   "score": 0.0244,
+   "stone_one_piece": 0.604,
+   "openings_enclosed": 0.135,
+   "openings": 1135,
+   "opening_share": 0.65
+  },
+  "dark": {
+   "score": 0.0716,
+   "stone_one_piece": 0.357,
+   "openings_enclosed": 0.201,
+   "openings": 436,
+   "opening_share": 0.35
+  },
+  "side": "dark",
+  "colour_gap": 0.1162,
+  "separability": 0.7718,
+  "rule": "brightness"
+ },
+ "frame_openings_removed_px": 39944,
+ "size": [
+  977,
+  1402
+ ],
+ "rule": {
+  "dark": 0.08,
+  "green_red": 0.86,
+  "wall_dist": 0.12,
+  "wall_tex": 0.05,
+  "wall_green_red_min": 0.8,
+  "lit": 0.12,
+  "lit_abs": 0.03,
+  "dim": 0.15,
+  "dim_abs": 0.03
+ },
+ "cut_lines": {
+  "share_of_box": 0.0295,
+  "rule": {
+   "darker_by": 0.15,
+   "thin": 2,
+   "neighbours": 4,
+   "run": 8
+  }
+ }
+}

@@ -29,7 +29,11 @@ def field():
     if not os.path.exists(path):
         return None
     d = json.load(open(path))
-    return dict(field=d["field_box"], box=d["screen_box_for_field"]) if "field_box" in d else None
+    if "field_box" not in d:
+        return None
+    mp = os.path.join(shot.OUT, "field_mask.npy")                     # C-023, fix 29
+    return dict(field=d["field_box"], box=d["screen_box_for_field"],
+                mask=np.load(mp) if os.path.exists(mp) and d.get("field_mask") else None)
 
 
 def photo_normals():
@@ -40,7 +44,7 @@ def photo_normals():
 def stats(rgb, normals=None, field=None):
     k = C.classify(rgb, normals)
     if field is not None:                                               # C-014: the frame has no openings
-        C.keep_field(k, field["field"], field["box"])
+        C.keep_field(k, field["field"], field["box"], field.get("mask"))
     rows = np.nonzero(k["stone"].mean(axis=1) > 0.2)[0]
     cols = np.nonzero(k["stone"].mean(axis=0) > 0.2)[0]
     if not len(rows) or not len(cols):                                 # C-022: say why, rather than an IndexError
@@ -74,7 +78,15 @@ if __name__ == "__main__":
     k0, st0 = stats(rgb, NM)
     FIELD_INFO = {}
     FIELD = dict(field=C.field_box(k0["opening"], st0["box"], info=FIELD_INFO), box=st0["box"])   # C-014: the carved field
+    # C-023, fix 29: inside the box, the openings' lattice (common.field_mask), under the dark rule, where a facade's
+    # shadows read as openings. shot.json "field": "box" keeps the box; "mask" applies it under any rule.
+    FMASK_INFO = {}
+    if shot.META.get("field") == "mask" or (shot.META.get("field") != "box" and C.SIDE == "dark"):
+        FIELD["mask"] = C.field_mask(k0["opening"], FIELD["field"], info=FMASK_INFO)
+        np.save(os.path.join(OUT, "field_mask.npy"), FIELD["mask"])
     k, st = stats(rgb, NM, FIELD)
+    if FMASK_INFO:
+        st["field_mask"] = FMASK_INFO
     st["field_box"] = FIELD["field"]
     st["screen_box_for_field"] = FIELD["box"]
     if (SIDE["side"], SIDE["rule"]) != ("bright", "colour"):            # C-023: only when it is not ours

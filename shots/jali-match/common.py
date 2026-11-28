@@ -648,14 +648,122 @@ def field_box(opening, box, min_area=400, pad=6, info=None):
     return [int(max(xs.min() - pad, x0)), int(max(ys.min() - pad, y0)), int(min(xs.max() + pad, x1)), int(min(ys.max() + pad, y1))]
 
 
-def keep_field(k, fb, box):
+FIELD_CLOSE, FIELD_HOLES, FIELD_SHARE, FIELD_THICK = 12, 12, 0.1, 0.25   # C-023 (fix 29): see field_mask
+SURROUND_THICK = 20                                 # C-023 (fix 30): see keep_field
+
+
+def label_runs(mask):
+    """Connected parts of a boolean mask (4-neighbour), numbered 1..n, 0 outside: each row's runs, joined to the runs
+    they overlap in the row above (union-find over the runs), then painted back. The same parts as label() (its
+    numbering differs: label() names a part by its first pixel), in seconds where label() takes minutes on a large
+    field. Returns (labels, n)."""
+    m = np.asarray(mask, bool)
+    h, w = m.shape
+    pad = np.zeros((h, w + 2), np.int8)
+    pad[:, 1:-1] = m
+    d = np.diff(pad, axis=1)
+    sy, sx = np.nonzero(d == 1)                                         # each run's first x
+    _, ex = np.nonzero(d == -1)                                         # one past its last x (same order)
+    n = len(sy)
+    if n == 0:
+        return np.zeros((h, w), np.int64), 0
+    first = np.searchsorted(sy, np.arange(h + 1)).tolist()
+    sx_l, ex_l = sx.tolist(), ex.tolist()
+    parent = list(range(n))
+
+    def find(a):
+        while parent[a] != a:
+            parent[a] = parent[parent[a]]
+            a = parent[a]
+        return a
+    for y in range(1, h):
+        i, i1, j, j1 = first[y - 1], first[y], first[y], first[y + 1]
+        while i < i1 and j < j1:
+            if sx_l[i] < ex_l[j] and sx_l[j] < ex_l[i]:
+                a, b = find(i), find(j)
+                if a != b:
+                    if a < b:
+                        parent[b] = a
+                    else:
+                        parent[a] = b
+            if ex_l[i] < ex_l[j]:
+                i += 1
+            else:
+                j += 1
+    roots = np.array([find(a) for a in range(n)])
+    _, ids = np.unique(roots, return_inverse=True)
+    lab = np.zeros((h, w), np.int64)
+    lab[m] = np.repeat(ids + 1, ex - sx)
+    return lab, int(ids.max()) + 1
+
+
+
+def field_mask(opening, fb, close=FIELD_CLOSE, holes=FIELD_HOLES, share=FIELD_SHARE, thick=FIELD_THICK, info=None):
+    """C-023, fix 29 (the user, on 05: "the upper area has an orange tint"). The field box is the box around every
+    large opening away from the screen's edge. On a facade read by the dark rule every deep shadow is one: 05's shadow
+    under the cornice, a strip 900 px long, took the box up to row 204, and the build cut holes through the wall there
+    and showed the lit panel behind them (brown, its colour then tripled by the colour step). So inside the box the
+    field is the openings' lattice: the openings closed over gaps of up to 2 * close px (a lattice's bars) and filled;
+    of the parts that gives, those holding at least `holes` openings of 10 px or more, and either `share` of the most
+    any part holds or `thick` of the thickest part's thickness (its inscribed radius, 4-neighbour). 05: the arch 944
+    holes and radius 325, the pierced band under it 164 and 33 (kept), the cornice's shadow, broken up and with the
+    frieze's recesses, 65 and 65 (dropped; at the count alone, 12, it stayed); 15's eighteen panels, 88 to 944 holes,
+    all kept by their thickness (61 to 181 px against 181), where the count's share alone dropped four. Returns the mask
+    (False outside fb); info, when given, gets what was dropped."""
+    x0, y0, x1, y1 = fb
+    inbox = np.zeros(opening.shape, bool)
+    inbox[y0:y1 + 1, x0:x1 + 1] = True
+    o = opening & inbox
+    closed = erode(dilate(o, close), close) & inbox
+    bg, _ = label_runs(~closed)
+    edge_ids = np.unique(np.concatenate([bg[0], bg[-1], bg[:, 0], bg[:, -1]]))
+    filled = closed | (~np.isin(bg, edge_ids) & (bg > 0))
+    lab, n = label_runs(filled)
+    hl, nh = label_runs(o)
+    big = np.bincount(hl.ravel(), minlength=nh + 1) >= 10
+    big[0] = False
+    comp_of = np.zeros(nh + 1, np.int64)
+    np.maximum.at(comp_of, hl[o], lab[o])
+    n_in = np.bincount(comp_of[np.nonzero(big)[0]], minlength=n + 1)
+    depth = np.zeros(opening.shape, np.int32)                          # erosions survived: the inscribed radius
+    cur = filled
+    while cur.any():
+        depth += cur
+        cur = erode(cur, 1)
+    r_in = np.zeros(n + 1, np.int64)
+    np.maximum.at(r_in, lab[filled], depth[filled])
+    keep = (n_in >= holes) & ((n_in >= share * float(n_in.max())) | (r_in >= thick * float(r_in.max())))
+    keep[0] = False
+    mask = keep[lab]
+    if info is not None:
+        info.update(close_px=close, min_holes=holes, share=share, thick=thick, parts_kept=int(keep.sum()),
+                    kept_holes_radius=sorted([[int(n_in[i]), int(r_in[i])] for i in np.nonzero(keep)[0]], reverse=True)[:8],
+                    dropped_holes_radius=sorted([[int(n_in[i]), int(r_in[i])] for i in np.nonzero(~keep & (n_in >= 3))[0] if i], reverse=True)[:8],
+                    openings_dropped_px=int((o & ~mask).sum()), openings_px=int(o.sum()))
+    return mask
+
+
+def keep_field(k, fb, box, mask=None):
     """Inside the screen's box (x0, y0, x1, y1), openings only inside the carved field fb; the rest of the box that is
     not the dark surround is stone. Outside the box nothing changes (a first version turned the lit floor below the
-    screen to stone, and the screen's box grew to take it in)."""
+    screen to stone, and the screen's box grew to take it in). C-023 (fix 29): with mask (field_mask's), only inside
+    it, and (fix 30) the surround's thin parts marked (k["thin_surround"]), for build.py's --thin-surround-solid."""
     x0, y0, x1, y1 = fb
     m = np.ones_like(k["opening"])
     m[box[1]:box[3] + 1, box[0]:box[2] + 1] = False
-    m[y0:y1 + 1, x0:x1 + 1] = True
+    m[y0:y1 + 1, x0:x1 + 1] = True if mask is None else mask[y0:y1 + 1, x0:x1 + 1]
+    if mask is not None:
+        # C-023, fix 30: with the lattice's field, the dark surround is only its thick parts. On a facade that fills
+        # the frame the surround (dark, reaching the picture's edge) is shadow lines: 05's under its cornices and above
+        # its arch run the picture's width at an inscribed radius of 9 to 11 px, and were cut away with the surround;
+        # the asset (fix 28) showed them as white streaks. 15's black border is one part of radius 51; 03's and 12's
+        # largest 12 and 7. Parts that do not outlast SURROUND_THICK erosions are marked; build.py keeps them solid
+        # under --thin-surround-solid (off: see there). They stay out of the stone the fits read: counted as stone,
+        # 05's tenth percentile went from 0.428 to 0.150, the tone curve's lower exponent to 2.48, and the lattice in
+        # render.png to 0.098 where the photo is 0.262.
+        lab, _ = label_runs(k["outside"])
+        thick_ids = np.unique(lab[erode(k["outside"], SURROUND_THICK)])
+        k["thin_surround"] = k["outside"] & ~np.isin(lab, thick_ids[thick_ids > 0])
     k["frame_openings"] = k["opening"] & ~m
     k["opening"] = k["opening"] & m
     k["stone"] = ~k["outside"] & ~k["opening"]

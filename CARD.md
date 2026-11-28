@@ -1962,6 +1962,55 @@ correlation with the photo's 0.586 to 0.629 and its amplitude 0.51 to 0.75; ours
 0.5829, patches 0.611 to 0.622, openings IoU 0.806 to 0.822, its lines near the photo's 0.448 to 0.479, its fine
 amplitude 0.57 to 0.68. The 18 and ours to be rebuilt with it (held on battery).
 
+*Fixes 28 and 29, what is behind the screen (2026-11-28).* The user, on 05 at fix 27: "for the visuals BEHIND the jali,
+it is showing up as 'reddish', but really, it should become white as the asset we are deriving in Blender is just the
+jali itself, not the area behind it. Secondly, the upper area has an orange tint." Both came from the panel behind the
+screen. It glows with the colour the photo shows through the openings, in ten bands; 05's upper bands were brown
+(linear 0.084, 0.050, 0.037), so the holes near the arch's top looked onto brown. And the field box, the box around
+every large opening away from the screen's edge, ran from row 204 to 1386 of 1402: under the dark rule the shadow below
+the cornice, a strip about 900 px long, is one such opening. So the build cut holes through the facade wherever its
+shadows were dark (under the cornice, along the mouldings, the small plant on the frieze: 3.8 % of the picture), and
+through them the camera saw the panel's brown. The colour step (C-018, k 1.2 on 05) then tripled its colour: (102, 50,
+23) in the render where the photo is (12, 6, 5). That was the orange band; the albedo map there was grey all along.
+
+Fix 28: render.png stays the photo's match, the panel lit as before, since the fits and compare.py measure its openings
+against the photo's. The asset is rendered once more from the same scene, with the panel a holdout on camera rays: it
+still lights the stone as it did, but where the camera would see it, or the world, the asset is empty. The same tone
+curve, colour step and toe as render.png follow, and it is written over white (`asset.png`) and with its alpha
+(`asset_rgba.png`). `--no-asset`: none. Ours's render.png does not move.
+
+Fix 29: under the dark rule, the field is the openings' lattice inside the box, not the whole box (common.field_mask,
+saved by read_photo.py as out/field_mask.npy). The openings are closed over gaps of up to 24 px (a lattice's bars) and
+filled; of the parts that gives, those kept hold at least 12 openings of 10 px or more, and either a tenth as many as
+the part holding the most or a quarter of the thickest part's thickness (its inscribed radius). 05: the arch (944
+holes, radius 325 px) and the pierced band under it (164, 33) kept; the cornice's shadow, broken up and with the
+frieze's dark recesses (65 holes, radius 65) dropped, with the rosettes; 28,781 of 319,369 opening px become stone. On
+the count alone (12 holes) the cornice stayed; on the tenth alone, 15 lost four of its eighteen panels, whose finer
+patterns hold 88 to 98 large holes against 944, and the thickness keeps them (61 to 181 px against 181; 15 then drops
+304 px). 03 drops its frieze and rosettes (6.0 %), 12 a row of small dark squares in its lower border (1.0 %). Only the
+dark rule: under the others a facade's shadows are not openings, and on ours the closing does not bridge its wide bars
+(it would have dropped 63 % of its openings). `shot.json` "field": "box" keeps the box; "mask" applies it under any
+rule. The parts are labelled by runs, union-find over each row's runs (common.label_runs): the same parts as label()
+and scipy on six masks, in 0.05 s against minutes.
+
+On 05 (`variants/05-asset`, on battery at the user's word): SSIM over the box 0.715 to 0.724, patches 0.812 to 0.822,
+openings IoU 0.797 to 0.882, stone IoU 0.928 to 0.955 (both images read with the new field, so the cornice's shadow
+no longer counts as opening in either), the filter fitted to 0.6 px, the colour step refitted from k 1.2 to 0.65. The
+brown band is gone and the jali stands on white (`c023_asset.jpg`). The first asset showed a fault the old render hid:
+white streaks along the facade's shadow lines. They were the dark surround: dark pixels reaching the picture's edge,
+cut away as the museum's black around a screen; on a facade that fills the frame they are the shadows under the
+cornices and above the arch, thin strips the picture's width (inscribed radius 9 to 11 px; 15's real black border, 51).
+Fix 30 kept such thin parts solid (common.keep_field marks them, `k["thin_surround"]`). Counted as stone they moved
+the fits: the photo's stone's tenth percentile went from 0.428 to 0.150, the tone curve's lower exponent to 2.48, the
+lattice in render.png to 0.098 where the photo is 0.262, SSIM 0.656. Kept out of the stone the fits read, solid but
+lit, they rendered at 0.148 where the photo's are 0.008 (the relief has no cornice to cast them), SSIM 0.687; with the
+photo's darkness as their albedo, 0.110 and 0.690, the facade away from them 0.661 to 0.618. So fix 30 is off
+(`--thin-surround-solid`), the strips stay cut and look onto the dark panel as dark as the photo's, and the asset
+takes render.png outside the carved field (fix 29's mask, 3 px wider), where the two differ only through those strips
+(`--asset-everywhere`: not). 05 at that: SSIM 0.724, openings IoU 0.882, its strips 0.008 in both. Left for the user's
+eye: under the arch's crown the photo's shadowed gap between the arch and the lattice reads as opening, so the asset
+shows a band of white there with a few stone fragments in it. Ours and the 18 to be rebuilt with fixes 27 to 29.
+
 *Open, not yet fixed.* The tone curve's upper exponent sits at its limit of 4.0 in 8 of the 13 renders that C-022
 measured (ours 2.12), and with the fit's stone corrected 03, 05, 09 and 15 end at both limits (0.3 and 4.0); the
 cause is not found. The 25 % fit renders are not it: their stone's median is within about 10 % of the full render's
